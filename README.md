@@ -1,9 +1,11 @@
-#Numerical Any particle Molecular Orbital (APMO) package.#
+#Numerical Any particle Molecular Orbital (nAPMO) package.#
 
 * nAPMO is a numerical implementation of APMO - NEO - OMNE method.
 
-The basic idea is to implement some of the numerical analysis tools required to perform a  numerical Hartree-Fock calculation as first step to implement the numerical OMNE approach.
+The basic idea is to implement some of the numerical analysis tools required to perform a  numerical Hartree-Fock electronic calculation as first step to implement the numerical OMNE approach.
 
+* Edwin Fernando Posada
+* [eposada@sissa.it](mailto://eposada@sissa.it)
 * Version 0.0
 
 ### Compilation ###
@@ -17,4 +19,4 @@ One example using the code is provided in iphyton notebook format. (nAPMO-test.i
 
 Any suggestion and help is more than welcome and appreciated. 
 
-eposada@sissa.it
+[eposada@sissa.it](mailto://eposada@sissa.it)
