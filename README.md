@@ -1,4 +1,4 @@
-#Numerical Any particle Molecular Orbital (APMO) package.#
+#Numerical Any particle Molecular Orbital (nAPMO) package.#
 
 * nAPMO is a numerical implementation of APMO - NEO - OMNE method.
 
