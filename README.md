@@ -17,4 +17,4 @@ One example using the code is provided in iphyton notebook format. (nAPMO-test.i
 
 Any suggestion and help is more than welcome and appreciated. 
 
-eposada@sissa.it
+[eposada@sissa.it](mailto://eposada@sissa.it)
