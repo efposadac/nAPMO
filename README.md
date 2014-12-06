@@ -2,7 +2,7 @@
 
 * nAPMO is a numerical implementation of APMO - NEO - OMNE method.
 
-The basic idea is to implement some of the numerical analysis tools required to perform a  numerical Hartree-Fock calculation as first step to implement the numerical OMNE approach.
+The basic idea is to implement some of the numerical analysis tools required to perform a  numerical Hartree-Fock electronic calculation as first step to implement the numerical OMNE approach.
 
 * Edwin Fernando Posada
 * [eposada@sissa.it](mailto://eposada@sissa.it)
