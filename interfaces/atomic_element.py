@@ -8,8 +8,8 @@
 from __future__ import division
 import numpy as np
 
-from databases import AtomicElementsDatabase
-from databases import UnitsDatabase
+from utilities.databases import AtomicElementsDatabase
+from utilities.databases import UnitsDatabase
 
 
 class AtomicElement(object):
@@ -28,6 +28,12 @@ class AtomicElement(object):
         '''
         super(AtomicElement, self).__init__()
 
+        assert type(symbol) == type('str')
+        assert type(mass_number) == type(0)
+        assert type(BOA) == type(True)
+        assert len(position) == 3
+        assert type(units) == type('str')
+
         try:
             self.data = AtomicElementsDatabase[symbol]
         except KeyError:
@@ -37,6 +43,8 @@ class AtomicElement(object):
         # most abundant mass number (if mass number is not provided)
         aux = AtomicElementsDatabase['isotopes_'+symbol]['most_abundant']
         self.data['mass'] = AtomicElementsDatabase['isotopes_'+symbol][aux]['atomicWeight']
+
+        if mass_number != 0: BOA = False
 
         if not BOA:            
             if mass_number != 0:
@@ -63,18 +71,25 @@ class AtomicElement(object):
         except KeyError:
             return False
 
-    def getValue(self, key):
+    def get(self, key):
         """Returns the value stored in key
         """
+        assert type(key) == type('str')
+
         try:
             return self.data[key]
         except KeyError:
             raise
     
-    def setValue(self, key, value):
-        """Returns the value stored in key
+    def set(self, key, value):
+        """set a new value.
         """
-        self.data[key] = value
+        try:
+            self.data[key]
+        except KeyError:
+            self.data[key] = value
+        else:
+            print 'Info: Atomic data can not be changed. This function is only to set new values! '
 
     def show(self):
         """Shows the information of the object

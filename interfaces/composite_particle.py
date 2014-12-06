@@ -9,10 +9,10 @@ from __future__ import division
 import numpy as np
 from copy import deepcopy
 
-from atomic_element import AtomicElement
-from elementary_particle import ElementaryParticle
-from databases import UnitsDatabase
-from stack import Stack
+from interfaces.atomic_element import AtomicElement
+from interfaces.elementary_particle import ElementaryParticle
+from utilities.databases import UnitsDatabase
+from interfaces.stack import Stack
 
 class CompositeParticle(object):
 	"""Defines a composite particle, i.e. atoms, molecules or nuclei.
@@ -36,13 +36,13 @@ class CompositeParticle(object):
 		atom = {}
 		atom[symbol] = AtomicElement(symbol, position=position, BOA=BOA, mass_number=mass_number, units='Bohr')
 		self.atoms.push(deepcopy(atom))
-		self.add_elementary_particle('e-', position, atom[symbol].getValue('atomicNumber'), units='Bohr')
+		self.add_elementary_particle('e-', position, atom[symbol].get('atomicNumber'), units='Bohr')
 		if not BOA: self.add_nuclei(atom[symbol])
 
 	def add_nuclei(self, atom):
 		"""Adds a 'quantum nuclei'
 		"""
-		symbol = str(atom.getValue('symbol'))+'_'+str(atom.getValue('mass_number'))
+		symbol = str(atom.get('symbol'))+'_'+str(atom.get('mass_number'))
 
 		try:
 			self.data[symbol][len(self.data[symbol])-1].data['symbol']
@@ -85,6 +85,6 @@ class CompositeParticle(object):
 			print "Symbol     Position (Bohr)"
 			print ''
 			for i in xrange(self.atoms.size()):
-				for item in self.atoms.items[i]:
-					atom = self.atoms.items[i][item].getValue				
+				for item in self.atoms.get(i):
+					atom = self.atoms.get(i)[item].get
 					print '{0:10}'.format(atom('symbol')), atom('position')

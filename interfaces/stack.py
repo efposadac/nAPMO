@@ -17,8 +17,7 @@ class Stack(object):
         self.items = []
 
     def isEmpty(self):
-        """
-        Clean the stack
+        """ Check whether the stack is empty or not.
         """
         return self.items == []
 
@@ -28,12 +27,12 @@ class Stack(object):
         self.items.append(item)
 
     def pop(self):
-        """Return the last element in the stack
+        """Pop the last element in the stack
         """
         return self.items.pop()
 
     def peek(self):
-        """ Deletes the last element in the stack
+        """Return the last element in the stack
         """
         return self.items[len(self.items)-1]
 
@@ -41,4 +40,11 @@ class Stack(object):
         """ Returns the size of the stack
         """
         return len(self.items)
+
+    def get(self, i):
+        """ Returns the ith object in the stack
+        """
+        assert type(i) == type(1)
+        assert i < self.size()
+        return self.items[i]
 

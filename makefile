@@ -1,4 +1,4 @@
-SUBDIRS = utilities interfaces
+SUBDIRS = utilities interfaces tests
 
 default::
 	for dir in $(SUBDIRS); \

@@ -8,7 +8,7 @@
 from __future__ import division
 import numpy as np
 
-from databases import ElementaryParticlesDatabase
+from utilities.databases import ElementaryParticlesDatabase
 
 class ElementaryParticle(object):
 	"""An abstract python interface to create an elementary quantum particle
@@ -23,6 +23,9 @@ class ElementaryParticle(object):
 		"""
 		super(ElementaryParticle, self).__init__()
 
+		assert type(symbol) == type('str')
+		assert len(position) == 3
+
 		try:
 			self.data = ElementaryParticlesDatabase[symbol]
 		except KeyError:
@@ -31,15 +34,17 @@ class ElementaryParticle(object):
 
 		self.data['position'] = np.array(position, dtype=np.float64)
 
-	def getValue(self, key):
+	def get(self, key):
 		"""Returns the value stored in key
 		"""
+		assert type(key) == type('str')
+
 		try:
 			return self.data[key]
 		except KeyError:
 			raise
 
-	def setValue(self, key, value):
+	def set(self, key, value):
 		"""Returns the value stored in key
 		"""
 		self.data[key] = value
@@ -47,4 +52,13 @@ class ElementaryParticle(object):
 	def show(self):
 		"""Shows the information of the object
 		"""
-		print self.data
+		print '==================================='
+		print 'Object: '+type(self).__name__
+		print 'Name: '+self.get('name')
+		print 'Symbol: '+self.get('symbol')
+		print 'Category: '+self.get('category')
+		print 'Charge:',self.get('charge')
+		print 'Mass:',self.get('mass')
+		print 'Spin:',self.get('spin')
+		print 'Position:', self.get('position')
+		print '-----------------------------------'
