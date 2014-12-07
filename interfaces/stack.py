@@ -29,11 +29,13 @@ class Stack(object):
     def pop(self):
         """Pop the last element in the stack
         """
+        assert self.size() > 0
         return self.items.pop()
 
     def peek(self):
         """Return the last element in the stack
         """
+        assert self.size() > 0
         return self.items[len(self.items)-1]
 
     def size(self):

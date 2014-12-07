@@ -7,6 +7,7 @@
 
 from __future__ import division
 import numpy as np
+from copy import deepcopy
 
 from utilities.databases import ElementaryParticlesDatabase
 
@@ -27,7 +28,7 @@ class ElementaryParticle(object):
 		assert len(position) == 3
 
 		try:
-			self.data = ElementaryParticlesDatabase[symbol]
+			self.data = deepcopy(ElementaryParticlesDatabase[symbol])
 		except KeyError:
 			print 'Elementary particle: ', symbol, ' not present!, creating one.'
 			self.data = ElementaryParticlesDatabase['user'] 

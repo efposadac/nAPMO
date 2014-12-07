@@ -10,6 +10,7 @@ import numpy as np
 
 from utilities.databases import AtomicElementsDatabase
 from utilities.databases import UnitsDatabase
+from copy import deepcopy
 
 
 class AtomicElement(object):
@@ -35,14 +36,14 @@ class AtomicElement(object):
         assert type(units) == type('str')
 
         try:
-            self.data = AtomicElementsDatabase[symbol]
+            self.data = deepcopy(AtomicElementsDatabase[symbol])
         except KeyError:
             print 'Element: ', symbol, ' not present!'
             raise
 
         # most abundant mass number (if mass number is not provided)
         aux = AtomicElementsDatabase['isotopes_'+symbol]['most_abundant']
-        self.data['mass'] = AtomicElementsDatabase['isotopes_'+symbol][aux]['atomicWeight']
+        self.set('mass', AtomicElementsDatabase['isotopes_'+symbol][aux]['atomicWeight'])
 
         if mass_number != 0: BOA = False
 
@@ -50,17 +51,20 @@ class AtomicElement(object):
             if mass_number != 0:
                 try:
                     self.data.update(AtomicElementsDatabase['isotopes_'+symbol][mass_number])
-                    self.data['mass'] = self.data['atomicWeight']
+                    self.set('mass', self.data['atomicWeight'])
+                    self.set('symbol', symbol+'_'+str(mass_number))
+
                 except KeyError:
                     print 'Mass number: ', str(mass_number), symbol, ' not present!'
                     raise
             else:
                 self.data.update(AtomicElementsDatabase['isotopes_'+symbol][aux])
+                self.set('symbol', symbol+'_'+str(aux))                
 
         #converting to Bohr
         position = np.array(position, dtype=np.float64)
         if units == 'Angstroms' : position *= UnitsDatabase['Bohr']
-        self.data['position'] = position
+        self.set('position', position)
 
     def isQuantum(self): 
         """ Returns whether the nuclei of the atomic element is being treated in the 
@@ -84,14 +88,18 @@ class AtomicElement(object):
     def set(self, key, value):
         """set a new value.
         """
-        try:
-            self.data[key]
-        except KeyError:
-            self.data[key] = value
-        else:
-            print 'Info: Atomic data can not be changed. This function is only to set new values! '
+        #TODO: Improve this function!
+        self.data[key] = value
 
     def show(self):
         """Shows the information of the object
         """
-        print self.data
+        print '==================================='
+        print 'Object: '+type(self).__name__
+        print 'Name: '+self.get('name')
+        print 'Symbol: '+self.get('symbol')
+        print 'Is quantum: ', self.isQuantum()
+        print 'Z: ',self.get('atomicNumber')
+        print 'Mass:',self.get('mass')
+        print 'Position:', self.get('position')
+        print '-----------------------------------'

@@ -15,7 +15,7 @@ def test_atomic_element_interface():
 	except:
 		pass
 	try:
-		a = AtomicElement('XXX')
+		a = AtomicElement('UNKNOWN')
 		assert False, 'Failure expected'
 	except:
 		pass
@@ -31,7 +31,10 @@ def test_atomic_element_interface():
 	assert a.get('mass_number') == 1
 
 	a.set('mass_number',2)
-	assert a.get('mass_number') == 1
+	assert a.get('mass_number') == 2
+
+	a.set('symbol','none')
+	assert a.get('symbol') == 'none'
 
 	a = AtomicElement('H', mass_number = 3)
 	assert a.isQuantum() == True

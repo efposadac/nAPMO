@@ -10,10 +10,10 @@ The basic idea is to implement some of the numerical analysis tools required to 
 
 ### Compilation ###
 
-At this moment there is a module in FORTRAN code. I use f2py to interface it with Python. To perform compilation just run:
+At this moment there is a module in FORTRAN code. I used f2py to interface it with Python. To perform compilation just run:
 
-* ``make``
-* ``make clean`` is also supported.
+* ``make ``
+* ``make clean `` is also supported.
 
 One example using the code is provided in iphyton notebook format. (nAPMO-test.ipynb)
 
