@@ -1,5 +1,5 @@
 # file: atomic_element.py
-# nAPMO package 
+# nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.0
@@ -15,25 +15,22 @@ from copy import deepcopy
 
 class AtomicElement(object):
     '''This class handles all information related to atomic elements
-    
     Database information From: http://physics.nist.gov/constants
-
     symbol : Atomic element symbol
     mass_number : Mass number of element 'symbol' := A = p+ + n
     BOA : treat nuclei in the Born-Oppenheimer approximation framework.
-
     '''
-    def __init__(self, symbol, mass_number=0, BOA=True, position=[0.0,0.0,0.0], units='Angstroms'):
+    def __init__(self, symbol, mass_number=0, BOA=True, position=[0.0, 0.0, 0.0], units='Angstroms'):
         '''Returns an object with all information of the atomic element symbol.
         data: python dictionary with information related to atom 'symbol'
         '''
         super(AtomicElement, self).__init__()
 
-        assert type(symbol) == type('str')
-        assert type(mass_number) == type(0)
-        assert type(BOA) == type(True)
+        assert isinstance(symbol, str)
+        assert isinstance(mass_number, int)
+        assert isinstance(BOA, bool)
         assert len(position) == 3
-        assert type(units) == type('str')
+        assert isinstance(units, str)
 
         try:
             self.data = deepcopy(AtomicElementsDatabase[symbol])
@@ -45,9 +42,10 @@ class AtomicElement(object):
         aux = AtomicElementsDatabase['isotopes_'+symbol]['most_abundant']
         self.set('mass', AtomicElementsDatabase['isotopes_'+symbol][aux]['atomicWeight'])
 
-        if mass_number != 0: BOA = False
+        if mass_number != 0:
+            BOA = False
 
-        if not BOA:            
+        if not BOA:
             if mass_number != 0:
                 try:
                     self.data.update(AtomicElementsDatabase['isotopes_'+symbol][mass_number])
@@ -59,16 +57,17 @@ class AtomicElement(object):
                     raise
             else:
                 self.data.update(AtomicElementsDatabase['isotopes_'+symbol][aux])
-                self.set('symbol', symbol+'_'+str(aux))                
+                self.set('symbol', symbol+'_'+str(aux))
 
-        #converting to Bohr
+        # converting to Bohr
         position = np.array(position, dtype=np.float64)
-        if units == 'Angstroms' : position *= UnitsDatabase['Bohr']
+        if units == 'Angstroms':
+            position *= UnitsDatabase['Bohr']
         self.set('position', position)
 
-    def isQuantum(self): 
-        """ Returns whether the nuclei of the atomic element is being treated in the 
-        BOA framework or not"""       
+    def isQuantum(self):
+        """ Returns whether the nuclei of the atomic element is being
+        treated in the BOA framework or not"""
         try:
             self.data['mass_number']
             return True
@@ -78,17 +77,17 @@ class AtomicElement(object):
     def get(self, key):
         """Returns the value stored in key
         """
-        assert type(key) == type('str')
+        assert isinstance(key, str)
 
         try:
             return self.data[key]
         except KeyError:
             raise
-    
+
     def set(self, key, value):
         """set a new value.
         """
-        #TODO: Improve this function!
+        # TODO: Improve this function!
         self.data[key] = value
 
     def show(self):
@@ -99,7 +98,7 @@ class AtomicElement(object):
         print 'Name: '+self.get('name')
         print 'Symbol: '+self.get('symbol')
         print 'Is quantum: ', self.isQuantum()
-        print 'Z: ',self.get('atomicNumber')
-        print 'Mass:',self.get('mass')
+        print 'Z: ', self.get('atomicNumber')
+        print 'Mass:', self.get('mass')
         print 'Position:', self.get('position')
         print '-----------------------------------'

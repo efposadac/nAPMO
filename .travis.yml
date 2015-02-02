@@ -1,0 +1,8 @@
+language : python
+addons:
+  apt_packages:
+  - gfortran
+before_script:
+- make
+script:
+- nosetests
