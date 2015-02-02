@@ -1,4 +1,3 @@
-
 # file: nu-APMO.py
 # nAPMO package 
 # Copyright (c) 2014, Edwin Fernando Posada
@@ -7,7 +6,8 @@
 # efposadac@sissa.it
 
 FC=f2py
-FCFLAGS = --fcompiler=intelem
+
+#FCFLAGS = --fcompiler=intelem
 
 all: lebedev.so
 
