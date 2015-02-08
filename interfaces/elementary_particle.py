@@ -1,5 +1,5 @@
 # file: elementary_particle.py
-# nAPMO package 
+# nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.0
@@ -11,55 +11,57 @@ from copy import deepcopy
 
 from utilities.databases import ElementaryParticlesDatabase
 
+
 class ElementaryParticle(object):
-	"""An abstract python interface to create an elementary quantum particle
-	i.e Leptons as electron, muon, etc
+    """An abstract python interface to create an elementary quantum particle
+    i.e Leptons as electron, muon, etc
 
-	Database information from:
-	From: http://physics.nist.gov/constants
-	"""
-	def __init__(self, symbol='null', position=[0.0,0.0,0.0]):
+    Database information from:
+    From: http://physics.nist.gov/constants
+    """
 
-		"""Pure interface class. It generates an "generic" particle by default.
-		"""
-		super(ElementaryParticle, self).__init__()
+    def __init__(self, symbol='null', position=[0.0, 0.0, 0.0]):
 
-		assert type(symbol) == type('str')
-		assert len(position) == 3
+        """Pure interface class. It generates an "generic" particle by default.
+        """
+        super(ElementaryParticle, self).__init__()
 
-		try:
-			self.data = deepcopy(ElementaryParticlesDatabase[symbol])
-		except KeyError:
-			print 'Elementary particle: ', symbol, ' not present!, creating one.'
-			self.data = ElementaryParticlesDatabase['user'] 
+        assert isinstance(symbol, str)
+        assert len(position) == 3
 
-		self.data['position'] = np.array(position, dtype=np.float64)
+        try:
+            self.data = deepcopy(ElementaryParticlesDatabase[symbol])
+        except KeyError:
+            print 'Elementary particle: ', symbol, ' not present!, creating one.'
+            self.data = ElementaryParticlesDatabase['user']
 
-	def get(self, key):
-		"""Returns the value stored in key
-		"""
-		assert type(key) == type('str')
+        self.data['position'] = np.array(position, dtype=np.float64)
 
-		try:
-			return self.data[key]
-		except KeyError:
-			raise
+    def get(self, key):
+        """Returns the value stored in key
+        """
+        assert isinstance(key, str)
 
-	def set(self, key, value):
-		"""Returns the value stored in key
-		"""
-		self.data[key] = value
+        try:
+            return self.data[key]
+        except KeyError:
+            raise
 
-	def show(self):
-		"""Shows the information of the object
-		"""
-		print '==================================='
-		print 'Object: '+type(self).__name__
-		print 'Name: '+self.get('name')
-		print 'Symbol: '+self.get('symbol')
-		print 'Category: '+self.get('category')
-		print 'Charge:',self.get('charge')
-		print 'Mass:',self.get('mass')
-		print 'Spin:',self.get('spin')
-		print 'Position:', self.get('position')
-		print '-----------------------------------'
+    def set(self, key, value):
+        """Returns the value stored in key
+        """
+        self.data[key] = value
+
+    def show(self):
+        """Shows the information of the object
+        """
+        print '==================================='
+        print 'Object: '+type(self).__name__
+        print 'Name: '+self.get('name')
+        print 'Symbol: '+self.get('symbol')
+        print 'Category: '+self.get('category')
+        print 'Charge:', self.get('charge')
+        print 'Mass:', self.get('mass')
+        print 'Spin:', self.get('spin')
+        print 'Position:', self.get('position')
+        print '-----------------------------------'
