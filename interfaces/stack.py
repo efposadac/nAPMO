@@ -1,5 +1,5 @@
 # file: elementary_particle.py
-# nAPMO package 
+# nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.0
@@ -8,12 +8,13 @@
 from __future__ import division
 import numpy as np
 
+
 class Stack(object):
     """Defines a stack class as a list.
     """
     def __init__(self):
         super(Stack, self).__init__()
-        
+
         self.items = []
 
     def isEmpty(self):
@@ -46,7 +47,6 @@ class Stack(object):
     def get(self, i):
         """ Returns the ith object in the stack
         """
-        assert type(i) == type(1)
+        assert isinstance(i, int)
         assert i < self.size()
         return self.items[i]
-
