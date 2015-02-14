@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>elementary_particle &mdash; nAPMO a1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="nAPMO a1 documentation" href="../index.html" />
+    <link rel="up" title="Interfaces" href="interfaces.html" />
+    <link rel="next" title="slater_function" href="slater_function.html" />
+    <link rel="prev" title="composite_particle" href="composite_particle.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="slater_function.html" title="slater_function"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="composite_particle.html" title="composite_particle"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="interfaces.html" accesskey="U">Interfaces</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-elementary_particle">
+<span id="elementary-particle"></span><h1>elementary_particle<a class="headerlink" href="#module-elementary_particle" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="elementary_particle.ElementaryParticle">
+<em class="property">class </em><tt class="descclassname">elementary_particle.</tt><tt class="descname">ElementaryParticle</tt><big>(</big><em>symbol='null', position=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#elementary_particle.ElementaryParticle" title="Permalink to this definition">¶</a></dt>
+<dd><p>An abstract python interface to create an elementary quantum particle
+i.e Leptons as electron, muon, etc</p>
+<p>Database information from:</p>
+<p>From: <a class="reference external" href="http://physics.nist.gov/constants">http://physics.nist.gov/constants</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol for the particle.</li>
+<li><strong>position</strong> (<em>float64[3]</em>) &#8211; Origin for the particle (atomic units.)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="elementary_particle.ElementaryParticle.get">
+<tt class="descname">get</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#elementary_particle.ElementaryParticle.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Value stored with the key <tt class="docutils literal"><span class="pre">key</span></tt></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; Key associated to the value you want obtain.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the value stored in key</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">any</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="elementary_particle.ElementaryParticle.set">
+<tt class="descname">set</tt><big>(</big><em>key</em>, <em>value</em><big>)</big><a class="headerlink" href="#elementary_particle.ElementaryParticle.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a new item in the object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>key</strong> (<em>str</em>) &#8211; Key of the item.</li>
+<li><strong>value</strong> (<em>any</em>) &#8211; Value of the item.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="elementary_particle.ElementaryParticle.show">
+<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#elementary_particle.ElementaryParticle.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shows the information of the object</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="composite_particle.html"
+                        title="previous chapter">composite_particle</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="slater_function.html"
+                        title="next chapter">slater_function</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/interfaces/elementary_particle.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="slater_function.html" title="slater_function"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="composite_particle.html" title="composite_particle"
+             >previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="interfaces.html" >Interfaces</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Fernando Posada.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

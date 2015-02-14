@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>becke_grid &mdash; nAPMO a1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="nAPMO a1 documentation" href="../index.html" />
+    <link rel="up" title="Interfaces" href="interfaces.html" />
+    <link rel="next" title="composite_particle" href="composite_particle.html" />
+    <link rel="prev" title="atomic_element" href="atomic_element.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="composite_particle.html" title="composite_particle"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="atomic_element.html" title="atomic_element"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="interfaces.html" accesskey="U">Interfaces</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-becke_grid">
+<span id="becke-grid"></span><h1>becke_grid<a class="headerlink" href="#module-becke_grid" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="becke_grid.BeckeGrid">
+<em class="property">class </em><tt class="descclassname">becke_grid.</tt><tt class="descname">BeckeGrid</tt><big>(</big><em>n_radial=15, n_angular=110, position=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#becke_grid.BeckeGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class creates the Becke grid.</p>
+<p class="rubric">References</p>
+<p>Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>n_radial</strong> (<em>int, optional</em>) &#8211; Number of radial points. Default is 15</li>
+<li><strong>n_angular</strong> (<em>int, optional</em>) &#8211; Number of angular points. Default is 110</li>
+<li><strong>position</strong> (<em>numpy array, optional</em>) &#8211; origin of the grid. Default is 0.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="becke_grid.BeckeGrid.get">
+<tt class="descname">get</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#becke_grid.BeckeGrid.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value stored in <tt class="docutils literal"><span class="pre">key</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; key name in the dictionary.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The value stored in <tt class="docutils literal"><span class="pre">key</span></tt></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="becke_grid.BeckeGrid.weights">
+<tt class="descname">weights</tt><big>(</big><em>particle_stack</em>, <em>particleID</em><big>)</big><a class="headerlink" href="#becke_grid.BeckeGrid.weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Becke weights as described in:</p>
+<p class="rubric">References</p>
+<p>Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>particle_stack</strong> (<em>Stack</em>) &#8211; stack of particles. i.e. stack of <span class="math">\(e^-\)</span></li>
+<li><strong>particleID</strong> (<em>int</em>) &#8211; The particle index for which Becke Weights are being calculated.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="atomic_element.html"
+                        title="previous chapter">atomic_element</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="composite_particle.html"
+                        title="next chapter">composite_particle</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/interfaces/becke_grid.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="composite_particle.html" title="composite_particle"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="atomic_element.html" title="atomic_element"
+             >previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="interfaces.html" >Interfaces</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Fernando Posada.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>lebedev.lebedev &mdash; nAPMO a1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="nAPMO a1 documentation" href="../index.html" />
+    <link rel="up" title="Utilitites" href="utilitites.html" />
+    <link rel="prev" title="numerical_integration" href="numerical_integration.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="numerical_integration.html" title="numerical_integration"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="utilitites.html" accesskey="U">Utilitites</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="lebedev-lebedev">
+<h1>lebedev.lebedev<a class="headerlink" href="#lebedev-lebedev" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="f/_/lebedev_compute">
+<em class="property">function  </em><tt class="descname">lebedev_compute</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>w</em>, <em>numberofpoints</em><big>)</big><a class="headerlink" href="#f/_/lebedev_compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>This code was distributed through CCL. <a class="reference external" href="http://www.ccl.net/">http://www.ccl.net/</a>.</p>
+<p>References:</p>
+<ol class="arabic simple">
+<li>V.I. Lebedev, and D.N. Laikov, <strong>A quadrature formula for the sphere of the 131st algebraic order of accuracy</strong>, Doklady Mathematics, Vol. 59, No. 3, 1999, pp. 477-481.</li>
+<li>V.I. Lebedev, <strong>A quadrature formula for the sphere of 59th algebraic order of accuracy</strong>,  Russian Acad. Sci. Dokl. Math., Vol. 50, 1995, pp. 283-286.</li>
+<li>V.I. Lebedev, and A.L. Skorokhodov, <strong>Quadrature formulas of orders 41, 47, and 53 for the sphere</strong>, Russian Acad.Sci. Dokl. Math., Vol. 45, 1992, pp. 587-592.</li>
+<li>V.I. Lebedev, <strong>Spherical quadrature formulas exact to orders 25-29</strong>, Siberian Mathematical Journal, Vol. 18, 1977, pp. 99-107.</li>
+<li>V.I. Lebedev, <strong>Quadratures on a sphere</strong>, Computational Mathematics and Mathematical Physics, Vol. 16, 1976, pp. 10-24.</li>
+<li>V.I. Lebedev, <strong>Values of the nodes and weights of ninth to seventeenth order Gauss-Markov quadrature formulae invariant under the octahedron group with inversion</strong>, Computational Mathematics and Mathematical Physics, Vol. 15, 1975, pp. 44-51.</li>
+</ol>
+<p>Given a point on a sphere (specified by <tt class="docutils literal"><span class="pre">a</span></tt> and <tt class="docutils literal"><span class="pre">b</span></tt>), generate all the equivalent points under <tt class="docutils literal"><span class="pre">Oh</span></tt> symmetry,
+making grid points with weight <tt class="docutils literal"><span class="pre">v</span></tt>. The variable <tt class="docutils literal"><span class="pre">num</span></tt> is increased by the number of different points generated.</p>
+<p>Depending on code, there are <span class="math">\(6...48\)</span> different but equivalent points.</p>
+<div class="highlight-python"><div class="highlight"><pre>code=1:   (0,0,1) etc                                (  6 points)
+code=2:   (0,a,a) etc, a=1/sqrt(2)                   ( 12 points)
+code=3:   (a,a,a) etc, a=1/sqrt(3)                   (  8 points)
+code=4:   (a,a,b) etc, b=sqrt(1-2 a^2)               ( 24 points)
+code=5:   (a,b,0) etc, b=sqrt(1-a^2), a input        ( 24 points)
+code=6:   (a,b,c) etc, c=sqrt(1-a^2-b^2), a/b input  ( 48 points)
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (*)<em> [</em><em>real</em><em>]</em> :: Array of x coordinates.</li>
+<li><strong>y</strong> (*)<em> [</em><em>real</em><em>]</em> :: Array of y coordinates.</li>
+<li><strong>z</strong> (*)<em> [</em><em>real</em><em>]</em> :: Array of z coordinates.</li>
+<li><strong>w</strong> (*)<em> [</em><em>real</em><em>]</em> :: Array of weigths.</li>
+<li><strong>numberofpoints</strong><em> [</em><em>integer</em><em>]</em></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return:</th><td class="field-body"><p class="first"><strong>lebedev_compute</strong><em> [</em><em>logical</em><em>]</em></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Call to:</th><td class="field-body"><p class="first last"><tt class="xref f f-func docutils literal"><span class="pre">ld0006()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0014()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0026()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0038()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0050()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0074()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0086()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0110()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0146()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0170()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0194()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0230()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0266()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0302()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0350()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0434()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0590()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0770()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0974()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld1202()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld1454()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld1730()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld2030()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld2354()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld2702()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld3074()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld3470()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld3890()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld4334()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld4802()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld5294()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld5810()</span></tt></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="numerical_integration.html"
+                        title="previous chapter">numerical_integration</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/utilities/lebedev.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="numerical_integration.html" title="numerical_integration"
+             >previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="utilitites.html" >Utilitites</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Fernando Posada.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

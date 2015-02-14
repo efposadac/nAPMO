@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>composite_particle &mdash; nAPMO a1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="nAPMO a1 documentation" href="../index.html" />
+    <link rel="up" title="Interfaces" href="interfaces.html" />
+    <link rel="next" title="elementary_particle" href="elementary_particle.html" />
+    <link rel="prev" title="becke_grid" href="becke_grid.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="elementary_particle.html" title="elementary_particle"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="becke_grid.html" title="becke_grid"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="interfaces.html" accesskey="U">Interfaces</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-composite_particle">
+<span id="composite-particle"></span><h1>composite_particle<a class="headerlink" href="#module-composite_particle" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="composite_particle.CompositeParticle">
+<em class="property">class </em><tt class="descclassname">composite_particle.</tt><tt class="descname">CompositeParticle</tt><big>(</big><em>name='none'</em><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a composite particle, i.e. atoms, molecules or nuclei.
+Since a composite particle can be a molecule, it can be added different atoms and
+elementary particles to the molecule. The key for elementary particles are its symbols and for atoms
+the key is <tt class="docutils literal"><span class="pre">atoms</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; Name of the object.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="composite_particle.CompositeParticle.add_atom">
+<tt class="descname">add_atom</tt><big>(</big><em>symbol</em>, <em>position</em>, <em>BOA=True</em>, <em>mass_number=0</em>, <em>units='Angstroms'</em><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.add_atom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an atom to the composite particle.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol of the atom.</li>
+<li><strong>position</strong> (<em>float64[3]</em>) &#8211; Origin of the atom (cartesian coordinates)</li>
+<li><strong>BOA</strong> (<em>bool, optional</em>) &#8211; Whether the atom nuclei will be treated in the BOA approach or not. Default is True</li>
+<li><strong>mass_number</strong> (<em>int, optional</em>) &#8211; Mass number of element &#8216;symbol&#8217; <span class="math">\(:= A = p^+ + n^o\)</span>.
+If 0 the system will choose the most abundant one. Default is 0.</li>
+<li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are &#8216;Angstroms&#8217; or &#8216;Bohr&#8217;</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="composite_particle.CompositeParticle.add_elementary_particle">
+<tt class="descname">add_elementary_particle</tt><big>(</big><em>symbol</em>, <em>position</em>, <em>size=1</em>, <em>units='Angstroms'</em><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.add_elementary_particle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an elementary particle into the composite particle.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol of the elementary particle.</li>
+<li><strong>position</strong> (<em>float64[3]</em>) &#8211; Origin of the elementary particle (cartesian coordinates)</li>
+<li><strong>size</strong> (<em>int</em>) &#8211; Number of elementary particle to be added.</li>
+<li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are &#8216;Angstroms&#8217; or &#8216;Bohr&#8217;</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="composite_particle.CompositeParticle.get_particle">
+<tt class="descname">get_particle</tt><big>(</big><em>key</em>, <em>iterator=-1</em><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.get_particle" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>str</em>) &#8211; key of a given kind of particle.</li>
+<li><strong>iterator</strong> (<em>int, optional</em>) &#8211; Number of the particle.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If iterator is not given, the result will be an Stack of particles of kind <tt class="docutils literal"><span class="pre">key</span></tt>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">Stack</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=</span> <span class="pre">atoms</span></tt> and <tt class="docutils literal"><span class="pre">iterator</span> <span class="pre">&gt;</span> <span class="pre">-1</span></tt>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">AtomicElement</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If <tt class="docutils literal"><span class="pre">key</span></tt> is a symbol of a given particle and <tt class="docutils literal"><span class="pre">iterator</span> <span class="pre">&gt;</span> <span class="pre">-1</span></tt>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">ElementaryParticle</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211;
+If <tt class="docutils literal"><span class="pre">key</span></tt> is not present in the object.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="composite_particle.CompositeParticle.iter_symbol">
+<tt class="descname">iter_symbol</tt><big>(</big><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.iter_symbol" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Array with symbols of &#8216;kind of particles&#8217; in the composite object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="composite_particle.CompositeParticle.n_particles">
+<tt class="descname">n_particles</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.n_particles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of particles of kind &#8216;key&#8217;. (Here atoms are equivalents to particles)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; key of the particle. Read the class documentation for <tt class="docutils literal"><span class="pre">key</span></tt> definition.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of particles with key <tt class="docutils literal"><span class="pre">key</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211;
+If <tt class="docutils literal"><span class="pre">key</span></tt> is not present in the object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="composite_particle.CompositeParticle.name">
+<tt class="descname">name</tt><big>(</big><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.name" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the name of the object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="composite_particle.CompositeParticle.show">
+<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shows information about particles</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="composite_particle.CompositeParticle.size">
+<tt class="descname">size</tt><big>(</big><em>key='all'</em><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the number of kinds of particles composing the object. A &#8216;kind of particles&#8217; can be <tt class="docutils literal"><span class="pre">atoms</span></tt>, <tt class="docutils literal"><span class="pre">e-</span></tt>, etc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str, optional</em>) &#8211; Can be <tt class="docutils literal"><span class="pre">atoms</span></tt> or the key (symbol) of a given elementary particle.
+Default is <tt class="docutils literal"><span class="pre">'all'</span></tt></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">If <tt class="docutils literal"><span class="pre">all</span></tt> is given  The size will be the number of kinds of particles.
+If key is given, size will be the size o the stack of a given kind of particles.
+For instance, in a CompositeParticle composed by <tt class="docutils literal"><span class="pre">atoms:{O,</span> <span class="pre">O},</span> <span class="pre">e-:{e-(O),</span> <span class="pre">e-(O),</span> <span class="pre">e-}</span></tt>
+the key <tt class="docutils literal"><span class="pre">all</span></tt> will return 2 <tt class="docutils literal"><span class="pre">e-</span></tt> and <tt class="docutils literal"><span class="pre">atoms</span></tt>,but if key <tt class="docutils literal"><span class="pre">e-</span></tt> is given the result will be 3.
+note that is <strong>NOT</strong> the number of particles, because each <tt class="docutils literal"><span class="pre">O</span></tt> atom has 8 <tt class="docutils literal"><span class="pre">e-</span></tt>, in total there are
+17 <tt class="docutils literal"><span class="pre">e-</span></tt>. To calculate that number use <tt class="docutils literal"><span class="pre">CompositeParticle.n_particles</span></tt>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211;
+If <tt class="docutils literal"><span class="pre">key</span></tt> is not present in the object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="becke_grid.html"
+                        title="previous chapter">becke_grid</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="elementary_particle.html"
+                        title="next chapter">elementary_particle</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/interfaces/composite_particle.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="elementary_particle.html" title="elementary_particle"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="becke_grid.html" title="becke_grid"
+             >previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="interfaces.html" >Interfaces</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Fernando Posada.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

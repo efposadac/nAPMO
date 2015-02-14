@@ -1,0 +1,13 @@
+Compilation
+===========
+
+At this moment there is a module in FORTRAN code. I used f2py to interface it with Python. To perform compilation just run:
+
+* ``make``
+* ``make clean`` is also supported.
+
+One example using the code is provided in iphyton notebook format. (nAPMO-test.ipynb)
+
+Any suggestion and help is more than welcome and appreciated. 
+
+eposada@sissa.it

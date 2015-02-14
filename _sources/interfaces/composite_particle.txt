@@ -1,0 +1,6 @@
+composite_particle
+==================
+
+.. automodule:: composite_particle 
+.. autoclass:: CompositeParticle
+    :members:

@@ -1,0 +1,222 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>stack &mdash; nAPMO a1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="nAPMO a1 documentation" href="../index.html" />
+    <link rel="up" title="Interfaces" href="interfaces.html" />
+    <link rel="next" title="Utilitites" href="../utilities/utilitites.html" />
+    <link rel="prev" title="slater_function" href="slater_function.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../utilities/utilitites.html" title="Utilitites"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="slater_function.html" title="slater_function"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="interfaces.html" accesskey="U">Interfaces</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-stack">
+<span id="stack"></span><h1>stack<a class="headerlink" href="#module-stack" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="stack.Stack">
+<em class="property">class </em><tt class="descclassname">stack.</tt><tt class="descname">Stack</tt><a class="headerlink" href="#stack.Stack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a stack class as a list.</p>
+<dl class="method">
+<dt id="stack.Stack.get">
+<tt class="descname">get</tt><big>(</big><em>i</em><big>)</big><a class="headerlink" href="#stack.Stack.get" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The ith object in the stack</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">any</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack.Stack.isEmpty">
+<tt class="descname">isEmpty</tt><big>(</big><big>)</big><a class="headerlink" href="#stack.Stack.isEmpty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the stack is empty or not.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether the stack is empty or not.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack.Stack.peek">
+<tt class="descname">peek</tt><big>(</big><big>)</big><a class="headerlink" href="#stack.Stack.peek" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The last element in the stack</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">any</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack.Stack.pop">
+<tt class="descname">pop</tt><big>(</big><big>)</big><a class="headerlink" href="#stack.Stack.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pop the last element in the stack</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The actual stack without the las element.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Stack</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">AssertionError</span></tt> &#8211;
+If the size of the Stack is &lt; 0</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack.Stack.push">
+<tt class="descname">push</tt><big>(</big><em>item</em><big>)</big><a class="headerlink" href="#stack.Stack.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a new item in the stack</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>item</strong> (<em>any</em>) &#8211; Item to be added in the stack.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack.Stack.size">
+<tt class="descname">size</tt><big>(</big><big>)</big><a class="headerlink" href="#stack.Stack.size" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The size of the stack</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="slater_function.html"
+                        title="previous chapter">slater_function</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="../utilities/utilitites.html"
+                        title="next chapter">Utilitites</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/interfaces/stack.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="../utilities/utilitites.html" title="Utilitites"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="slater_function.html" title="slater_function"
+             >previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="interfaces.html" >Interfaces</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Fernando Posada.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

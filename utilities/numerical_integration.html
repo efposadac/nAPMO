@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>numerical_integration &mdash; nAPMO a1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="nAPMO a1 documentation" href="../index.html" />
+    <link rel="up" title="Utilitites" href="utilitites.html" />
+    <link rel="next" title="lebedev.lebedev" href="lebedev.html" />
+    <link rel="prev" title="databases" href="databases.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="lebedev.html" title="lebedev.lebedev"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="databases.html" title="databases"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="utilitites.html" accesskey="U">Utilitites</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-numerical_integration">
+<span id="numerical-integration"></span><h1>numerical_integration<a class="headerlink" href="#module-numerical_integration" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="numerical_integration.chebgauss_integrate">
+<tt class="descclassname">numerical_integration.</tt><tt class="descname">chebgauss_integrate</tt><big>(</big><em>f</em>, <em>eps=1e-10</em>, <em>max_iter=10</em><big>)</big><a class="headerlink" href="#numerical_integration.chebgauss_integrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the integral of f(x) by using Gauss-Chebyshev quadrature of second kind.</p>
+<p class="rubric">References</p>
+<p>Perez-Jorda, J., San-Fabian, E. &amp; Moscardo, F. A simple, reliable and efficient scheme for automatic numerical integration. Comput. Phys. Commun. 70, 271-284 (1992).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>f</strong> (<em>function, auto-callable</em>) &#8211; Function <span class="math">\(f(x)\)</span>, to be integrate.</li>
+<li><strong>eps</strong> (<em>float64, optional</em>) &#8211; Tolerance, Default is <span class="math">\(10^{-10}\)</span></li>
+<li><strong>max_iter</strong> (<em>int, optional</em>) &#8211; Maximum number of iterations. Default is <span class="math">\(10\)</span></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Integral value and error (out, err).</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">tuple</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="numerical_integration.chebgauss_t_q_w">
+<tt class="descclassname">numerical_integration.</tt><tt class="descname">chebgauss_t_q_w</tt><big>(</big><em>n</em>, <em>rescale=False</em><big>)</big><a class="headerlink" href="#numerical_integration.chebgauss_t_q_w" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the abscissas and weights for transformed Gauss-Chebyshev quadrature of second kind.</p>
+<p>Special case for the integral <span class="math">\(\int f(x) dx\)</span>. since Gauss-Chebyshev is for <span class="math">\(\int f(x) \sqrt{1-x^2}\)</span>.</p>
+<p class="rubric">References</p>
+<p>Perez-Jorda, J., San-Fabian, E. &amp; Moscardo, F. A simple, reliable and efficient scheme for automatic numerical integration. Comput. Phys. Commun. 70, 271-284 (1992).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rescale</strong> (<em>bool, optional</em>) &#8211; Whether the standard interval <span class="math">\(-1&lt;x&lt;+1\)</span> has to be rescaled to the semi-infinite
+interval <span class="math">\(1&lt;x&lt;\infty\)</span>. Default is False.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Array with the abscissas and weights(r, w).</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="numerical_integration.lebedev_q_w">
+<tt class="descclassname">numerical_integration.</tt><tt class="descname">lebedev_q_w</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#numerical_integration.lebedev_q_w" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Lebedev points and weights for spherical integration.</p>
+<p class="rubric">References</p>
+<p>V.I. Lebedev, and D.N. Laikov, Doklady Mathematics, 59, No. 3, 477 (1999)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>n</strong> (<em>int</em>) &#8211; Number of angular points.</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Other Parameters:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<em>float64</em>) &#8211;
+Cartesian coordinates, x.</li>
+<li><strong>y</strong> (<em>float64</em>) &#8211;
+Cartesian coordinates, y.</li>
+<li><strong>z</strong> (<em>float64</em>) &#8211;
+Cartesian coordinates, z.</li>
+<li><strong>w</strong> (<em>float64</em>) &#8211;
+weights</li>
+</ul>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Array with the coordinates and weights (x, y, z, w).</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">tuple</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">ValueError</span></tt> &#8211;
+if n is not supported.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="databases.html"
+                        title="previous chapter">databases</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="lebedev.html"
+                        title="next chapter">lebedev.lebedev</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/utilities/numerical_integration.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="lebedev.html" title="lebedev.lebedev"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="databases.html" title="databases"
+             >previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="utilitites.html" >Utilitites</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Fernando Posada.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

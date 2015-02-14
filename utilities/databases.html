@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>databases &mdash; nAPMO a1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="nAPMO a1 documentation" href="../index.html" />
+    <link rel="up" title="Utilitites" href="utilitites.html" />
+    <link rel="next" title="numerical_integration" href="numerical_integration.html" />
+    <link rel="prev" title="Utilitites" href="utilitites.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="numerical_integration.html" title="numerical_integration"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="utilitites.html" title="Utilitites"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="utilitites.html" accesskey="U">Utilitites</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-databases">
+<span id="databases"></span><h1>databases<a class="headerlink" href="#module-databases" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="atomicelementsdatabase">
+<h2>AtomicElementsDatabase<a class="headerlink" href="#atomicelementsdatabase" title="Permalink to this headline">¶</a></h2>
+<p>This data base contains all information related to atomic elements.
+Database information taken from: <a class="reference external" href="http://physics.nist.gov/constants">http://physics.nist.gov/constants</a></p>
+<p class="rubric">Example</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">utilities.databases</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">utilities</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">AtomicElementsDatabase</span><span class="p">[</span><span class="s">&#39;H&#39;</span><span class="p">]</span>
+<span class="go">{&#39;vanderwaals_radius&#39;: 1.2, &#39;symbol&#39;: &#39;H&#39;, &#39;covalent_radius&#39;: 0.3, &#39;atomicNumber&#39;: 1, &#39;ionization_energy_1&#39;: 1312, &#39;melting_point&#39;: 13.81, &#39;electron_affinity&#39;: -73, &#39;electronegativity&#39;: 2.1, &#39;name&#39;: &#39;Hydrogen&#39;, &#39;density&#39;: 0.084, &#39;boiling_point&#39;: 20.28, &#39;mass&#39;: 1.00794, &#39;atomic_radius&#39;: 0.25}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="elementaryparticlesdatabase">
+<h2>ElementaryParticlesDatabase<a class="headerlink" href="#elementaryparticlesdatabase" title="Permalink to this headline">¶</a></h2>
+<p>This database contains all information related to quatum species, ie. electrons, muons, etc.</p>
+<p class="rubric">Example</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">utilities.databases</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">utilities</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">ElementaryParticlesDatabase</span><span class="p">[</span><span class="s">&#39;e-&#39;</span><span class="p">]</span>
+<span class="go">{&#39;category&#39;: &#39;lepton&#39;, &#39;name&#39;: &#39;electron&#39;, &#39;symbol&#39;: &#39;e-&#39;, &#39;charge&#39;: -1.0, &#39;mass&#39;: 1.0, &#39;spin&#39;: 0.5}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="unitsdatabase">
+<h2>UnitsDatabase<a class="headerlink" href="#unitsdatabase" title="Permalink to this headline">¶</a></h2>
+<p>This database contains factors to covert between Bohr and Angstroms.</p>
+<p class="rubric">Example</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">utilities.databases</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">utilities</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">UnitsDatabase</span><span class="p">[</span><span class="s">&#39;Angstroms&#39;</span><span class="p">]</span>
+<span class="go">0.52917721092</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">databases</a><ul>
+<li><a class="reference internal" href="#atomicelementsdatabase">AtomicElementsDatabase</a></li>
+<li><a class="reference internal" href="#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
+<li><a class="reference internal" href="#unitsdatabase">UnitsDatabase</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="utilitites.html"
+                        title="previous chapter">Utilitites</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="numerical_integration.html"
+                        title="next chapter">numerical_integration</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/utilities/databases.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="numerical_integration.html" title="numerical_integration"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="utilitites.html" title="Utilitites"
+             >previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="utilitites.html" >Utilitites</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Fernando Posada.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

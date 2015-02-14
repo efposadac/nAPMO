@@ -1,0 +1,4 @@
+lebedev.lebedev
+===============
+
+.. f:autofunction:: Lebedev_compute

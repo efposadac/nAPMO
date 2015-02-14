@@ -1,0 +1,7 @@
+slater_function
+===============
+
+.. automodule:: slater_function
+ 
+.. autoclass:: SlaterFunction
+    :members:

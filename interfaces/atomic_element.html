@@ -1,0 +1,206 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>atomic_element &mdash; nAPMO a1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     'a1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="nAPMO a1 documentation" href="../index.html" />
+    <link rel="up" title="Interfaces" href="interfaces.html" />
+    <link rel="next" title="becke_grid" href="becke_grid.html" />
+    <link rel="prev" title="Interfaces" href="interfaces.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="becke_grid.html" title="becke_grid"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="interfaces.html" title="Interfaces"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="interfaces.html" accesskey="U">Interfaces</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-atomic_element">
+<span id="atomic-element"></span><h1>atomic_element<a class="headerlink" href="#module-atomic_element" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="atomic_element.AtomicElement">
+<em class="property">class </em><tt class="descclassname">atomic_element.</tt><tt class="descname">AtomicElement</tt><big>(</big><em>symbol, mass_number=0, BOA=True, position=[0.0, 0.0, 0.0], units='Angstroms'</em><big>)</big><a class="headerlink" href="#atomic_element.AtomicElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class handles all information related to atomic elements Database.</p>
+<p>Information From: <a class="reference external" href="http://physics.nist.gov/constants">http://physics.nist.gov/constants</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol of the atom.</li>
+<li><strong>position</strong> (<em>float64[3]</em>) &#8211; Origin of the atom (cartesian coordinates)</li>
+<li><strong>BOA</strong> (<em>bool, optional</em>) &#8211; Whether the atom nuclei will be treated in the BOA approach or not. Default is True</li>
+<li><strong>mass_number</strong> (<em>int, optional</em>) &#8211; Mass number of element &#8216;symbol&#8217; <span class="math">\(:= A = p^+ + n^o\)</span>.
+If 0 the system will choose the most abundant one. Default is 0.</li>
+<li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are &#8216;Angstroms&#8217; or &#8216;Bohr&#8217;</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="atomic_element.AtomicElement.get">
+<tt class="descname">get</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#atomic_element.AtomicElement.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the value stored in <tt class="docutils literal"><span class="pre">key</span></tt>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; key name in the dictionary.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The value stored in <tt class="docutils literal"><span class="pre">key</span></tt></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211;
+If <tt class="docutils literal"><span class="pre">key</span></tt> is not present in the object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atomic_element.AtomicElement.isQuantum">
+<tt class="descname">isQuantum</tt><big>(</big><big>)</big><a class="headerlink" href="#atomic_element.AtomicElement.isQuantum" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether the nuclei of the atomic element is being treated in the BOA framework or not</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atomic_element.AtomicElement.set">
+<tt class="descname">set</tt><big>(</big><em>key</em>, <em>value</em><big>)</big><a class="headerlink" href="#atomic_element.AtomicElement.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>set a new value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> (<em>str</em>) &#8211; New key in the dictionary.</li>
+<li><strong>value</strong> (<em>any</em>) &#8211; The value to store in the key <tt class="docutils literal"><span class="pre">key</span></tt></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body"><p class="first last">Improve this Function!</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="atomic_element.AtomicElement.show">
+<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#atomic_element.AtomicElement.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints out the information of the object</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="interfaces.html"
+                        title="previous chapter">Interfaces</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="becke_grid.html"
+                        title="next chapter">becke_grid</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/interfaces/atomic_element.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="becke_grid.html" title="becke_grid"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="interfaces.html" title="Interfaces"
+             >previous</a> |</li>
+        <li><a href="../index.html">nAPMO a1 documentation</a> &raquo;</li>
+          <li><a href="../API.html" >API</a> &raquo;</li>
+          <li><a href="interfaces.html" >Interfaces</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2015, Fernando Posada.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
