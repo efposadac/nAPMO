@@ -111,6 +111,7 @@
 <em class="property">class </em><tt class="descclassname">atomic_element.</tt><tt class="descname">AtomicElement</tt><big>(</big><em>symbol, mass_number=0, BOA=True, position=[0.0, 0.0, 0.0], units='Angstroms'</em><big>)</big><a class="headerlink" href="#atomic_element.AtomicElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class handles all information related to atomic elements Database.</p>
 <p>Information From: <a class="reference external" href="http://physics.nist.gov/constants">http://physics.nist.gov/constants</a></p>
+<p>This class inherits methods form ElementaryParticle class. See elementary_particle interface for further information.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -127,25 +128,10 @@ If 0 the system will choose the most abundant one. Default is 0.</li>
 </tr>
 </tbody>
 </table>
-<dl class="method">
-<dt id="atomic_element.AtomicElement.get">
-<tt class="descname">get</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#atomic_element.AtomicElement.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the value stored in <tt class="docutils literal"><span class="pre">key</span></tt>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; key name in the dictionary.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The value stored in <tt class="docutils literal"><span class="pre">key</span></tt></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211;
-If <tt class="docutils literal"><span class="pre">key</span></tt> is not present in the object.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
+<dl class="docutils">
+<dt>see:</dt>
+<dd>elementary_particle</dd>
+</dl>
 <dl class="method">
 <dt id="atomic_element.AtomicElement.isQuantum">
 <tt class="descname">isQuantum</tt><big>(</big><big>)</big><a class="headerlink" href="#atomic_element.AtomicElement.isQuantum" title="Permalink to this definition">¶</a></dt>
@@ -156,27 +142,6 @@ If <tt class="docutils literal"><span class="pre">key</span></tt> is not present
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether the nuclei of the atomic element is being treated in the BOA framework or not</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="atomic_element.AtomicElement.set">
-<tt class="descname">set</tt><big>(</big><em>key</em>, <em>value</em><big>)</big><a class="headerlink" href="#atomic_element.AtomicElement.set" title="Permalink to this definition">¶</a></dt>
-<dd><p>set a new value.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>key</strong> (<em>str</em>) &#8211; New key in the dictionary.</li>
-<li><strong>value</strong> (<em>any</em>) &#8211; The value to store in the key <tt class="docutils literal"><span class="pre">key</span></tt></li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">TODO:</th><td class="field-body"><p class="first last">Improve this Function!</p>
-</td>
 </tr>
 </tbody>
 </table>
