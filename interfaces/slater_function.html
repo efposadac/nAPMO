@@ -108,7 +108,7 @@
 <span id="slater-function"></span><h1>slater_function<a class="headerlink" href="#module-slater_function" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="slater_function.SlaterFunction">
-<em class="property">class </em><tt class="descclassname">slater_function.</tt><tt class="descname">SlaterFunction</tt><big>(</big><em>arg</em><big>)</big><a class="headerlink" href="#slater_function.SlaterFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><tt class="descclassname">slater_function.</tt><tt class="descname">SlaterFunction</tt><big>(</big><em>zeta</em>, <em>n=1</em>, <em>l=0</em>, <em>m=0</em><big>)</big><a class="headerlink" href="#slater_function.SlaterFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Slater-Type orbitals:
 The slater orbital function is:</p>
 <p><span class="math">\(\chi_{p \lambda \alpha}(r, \theta, \phi) = R_{ \lambda p}(r) Y_{ \lambda \alpha}( \theta, \phi)\)</span></p>
@@ -117,6 +117,95 @@ The slater orbital function is:</p>
 [(2n_{\lambda p})!]^{-1/2}(2\zeta_{\lambda p})^{n_{\lambda p}+1/2} r^{\lambda p -1} e^{-\zeta_{\lambda p} r}\)</span></p>
 <p>And,</p>
 <p><span class="math">\(Y_{\lambda \alpha}(\theta,\phi)\)</span> is an spherical harmonic.</p>
+<p class="rubric">References</p>
+<ol class="arabic simple">
+<li><ol class="first upperalpha" start="5">
+<li>Clementi, C. Roetti, Roothaan-Hartree-Fock atomic wavefunctions. At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).</li>
+</ol>
+</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>zeta</strong> (<em>float64</em>) &#8211; Slater exponent.</li>
+<li><strong>n</strong> (<em>int</em>) &#8211; Quantum number n = 1, 2, 3, etc.</li>
+<li><strong>l</strong> (<em>int</em>) &#8211; Quantum number l = S=0, P=1, D=2, etc.</li>
+<li><strong>m</strong> (<em>int</em>) &#8211; Quantum number m = order of the harmonic, &lt;= lambda</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="slater_function.SlaterFunction.orbital">
+<tt class="descname">orbital</tt><big>(</big><em>r</em>, <em>theta</em>, <em>phi</em><big>)</big><a class="headerlink" href="#slater_function.SlaterFunction.orbital" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the value of SlaterFunction at given coordinates (spherical)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>theta</strong> (<em>float</em>) &#8211; [0, 2*pi]; the azimuthal (longitudinal) coordinate.</li>
+<li><strong>phi</strong> (<em>float</em>) &#8211; [0, pi]; the polar (colatitudinal) coordinate.</li>
+<li><strong>r</strong> (<em>float</em>) &#8211; The r coordinate.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns:
+X (complex float): The value of <span class="math">\(\chi_{p \lambda \alpha}(r, \theta, \phi)\)</span> sampled at <tt class="docutils literal"><span class="pre">r</span></tt>, <tt class="docutils literal"><span class="pre">theta</span></tt> and <tt class="docutils literal"><span class="pre">phi</span></tt></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="slater_function.SlaterFunction.radial">
+<tt class="descname">radial</tt><big>(</big><em>r</em><big>)</big><a class="headerlink" href="#slater_function.SlaterFunction.radial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the radial part of the Slater orbital.</p>
+<p><span class="math">\(R_{\lambda p} = N_{\lambda p} r^{\lambda p -1} e^{-\zeta_{\lambda p} r}\)</span></p>
+<p>were, N is the Normalization given by:</p>
+<p><span class="math">\(N_{\lambda p} = [(2n_{\lambda p})!]^{-1/2}(2\zeta_{\lambda p})^{n_{\lambda p}+1/2}\)</span></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r</strong> (<em>float</em>) &#8211; The r coordinate.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>R</strong> &#8211;
+The NORMALIZED radial <span class="math">\(R_{\lambda p}`value sampled at ``r`\)</span>.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="slater_function.SlaterFunction.spherical">
+<tt class="descname">spherical</tt><big>(</big><em>theta</em>, <em>phi</em><big>)</big><a class="headerlink" href="#slater_function.SlaterFunction.spherical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the harmonic spherical part of the Slater orbital. Uses scipy.special.sph_harm</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>theta</strong> (<em>float</em>) &#8211; [0, 2*pi]; the azimuthal (longitudinal) coordinate.</li>
+<li><strong>phi</strong> (<em>float</em>) &#8211; [0, pi]; the polar (colatitudinal) coordinate.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>y</strong> &#8211;
+The harmonic <span class="math">\(Y^m_n\)</span> sampled at <tt class="docutils literal"><span class="pre">theta</span></tt> and <tt class="docutils literal"><span class="pre">phi</span></tt></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">complex float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </dd></dl>
 
 </div>
