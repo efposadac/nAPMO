@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -25,6 +25,8 @@
   
   
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
   
 
   
@@ -45,9 +47,12 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> nAPMO</a>
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        
+          <a href="../index.html" class="fa fa-home"> nAPMO</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -57,8 +62,9 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
         
-        
-            <ul class="current">
+          
+          
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../interfaces/interfaces.html">Interfaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="utilitites.html">Utilitites</a></li>
@@ -68,6 +74,7 @@
 <ul class="simple">
 </ul>
 
+          
         
       </div>
       &nbsp;
@@ -102,7 +109,7 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="module-databases">
 <span id="databases"></span><h1>databases<a class="headerlink" href="#module-databases" title="Permalink to this headline">¶</a></h1>
@@ -110,10 +117,11 @@
 <h2>AtomicElementsDatabase<a class="headerlink" href="#atomicelementsdatabase" title="Permalink to this headline">¶</a></h2>
 <p>This data base contains all information related to atomic elements.
 Database information taken from: <a class="reference external" href="http://physics.nist.gov/constants">http://physics.nist.gov/constants</a></p>
+<p>Atomic radii from J. C. Slater, J. Chem. Phys. 41, 3199 (1964).</p>
 <p class="rubric">Example</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">utilities.databases</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">utilities</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">AtomicElementsDatabase</span><span class="p">[</span><span class="s">&#39;H&#39;</span><span class="p">]</span>
-<span class="go">{&#39;vanderwaals_radius&#39;: 1.2, &#39;symbol&#39;: &#39;H&#39;, &#39;covalent_radius&#39;: 0.3, &#39;atomicNumber&#39;: 1, &#39;ionization_energy_1&#39;: 1312, &#39;melting_point&#39;: 13.81, &#39;electron_affinity&#39;: -73, &#39;electronegativity&#39;: 2.1, &#39;name&#39;: &#39;Hydrogen&#39;, &#39;density&#39;: 0.084, &#39;boiling_point&#39;: 20.28, &#39;mass&#39;: 1.00794, &#39;atomic_radius&#39;: 0.25}</span>
+<span class="go">{&#39;vanderwaals_radius&#39;: 1.2, &#39;symbol&#39;: &#39;H&#39;, &#39;covalent_radius&#39;: 0.3, &#39;atomic_number&#39;: 1, &#39;atomic_radii&#39;: 0.35, &#39;ionization_energy_1&#39;: 1312, &#39;melting_point&#39;: 13.81, &#39;electron_affinity&#39;: -73, &#39;electronegativity&#39;: 2.1, &#39;name&#39;: &#39;Hydrogen&#39;, &#39;density&#39;: 0.084, &#39;boiling_point&#39;: 20.28, &#39;mass&#39;: 1.00794}</span>
 </pre></div>
 </div>
 </div>
@@ -145,7 +153,7 @@ Database information taken from: <a class="reference external" href="http://phys
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="numerical_integration.html" class="btn btn-neutral float-right" title="numerical_integration"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="numerical_integration.html" class="btn btn-neutral float-right" title="numerical_integration">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="utilitites.html" class="btn btn-neutral" title="Utilitites"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -161,7 +169,8 @@ Database information taken from: <a class="reference external" href="http://phys
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

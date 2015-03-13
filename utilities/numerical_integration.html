@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -25,6 +25,8 @@
   
   
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
   
 
   
@@ -45,9 +47,12 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> nAPMO</a>
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        
+          <a href="../index.html" class="fa fa-home"> nAPMO</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -57,8 +62,9 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
         
-        
-            <ul class="current">
+          
+          
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../interfaces/interfaces.html">Interfaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="utilitites.html">Utilitites</a></li>
@@ -68,6 +74,7 @@
 <ul class="simple">
 </ul>
 
+          
         
       </div>
       &nbsp;
@@ -102,13 +109,13 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="module-numerical_integration">
 <span id="numerical-integration"></span><h1>numerical_integration<a class="headerlink" href="#module-numerical_integration" title="Permalink to this headline">¶</a></h1>
 <dl class="function">
 <dt id="numerical_integration.chebgauss_integrate">
-<tt class="descclassname">numerical_integration.</tt><tt class="descname">chebgauss_integrate</tt><big>(</big><em>f</em>, <em>eps=1e-10</em>, <em>max_iter=10</em><big>)</big><a class="headerlink" href="#numerical_integration.chebgauss_integrate" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">numerical_integration.</code><code class="descname">chebgauss_integrate</code><span class="sig-paren">(</span><em>f</em>, <em>eps=1e-10</em>, <em>max_iter=10</em><span class="sig-paren">)</span><a class="headerlink" href="#numerical_integration.chebgauss_integrate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the integral of f(x) by using Gauss-Chebyshev quadrature of second kind.</p>
 <p class="rubric">References</p>
 <p>Perez-Jorda, J., San-Fabian, E. &amp; Moscardo, F. A simple, reliable and efficient scheme for automatic numerical integration. Comput. Phys. Commun. 70, 271-284 (1992).</p>
@@ -134,8 +141,8 @@
 </dd></dl>
 
 <dl class="function">
-<dt id="numerical_integration.chebgauss_t_q_w">
-<tt class="descclassname">numerical_integration.</tt><tt class="descname">chebgauss_t_q_w</tt><big>(</big><em>n</em>, <em>rescale=False</em><big>)</big><a class="headerlink" href="#numerical_integration.chebgauss_t_q_w" title="Permalink to this definition">¶</a></dt>
+<dt id="numerical_integration.chebgauss_rq">
+<code class="descclassname">numerical_integration.</code><code class="descname">chebgauss_rq</code><span class="sig-paren">(</span><em>n</em>, <em>rescale=False</em><span class="sig-paren">)</span><a class="headerlink" href="#numerical_integration.chebgauss_rq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the abscissas and weights for transformed Gauss-Chebyshev quadrature of second kind.</p>
 <p>Special case for the integral <span class="math">\(\int f(x) dx\)</span>. since Gauss-Chebyshev is for <span class="math">\(\int f(x) \sqrt{1-x^2}\)</span>.</p>
 <p class="rubric">References</p>
@@ -156,8 +163,8 @@ interval <span class="math">\(1&lt;x&lt;\infty\)</span>. Default is False.</td>
 </dd></dl>
 
 <dl class="function">
-<dt id="numerical_integration.lebedev_q_w">
-<tt class="descclassname">numerical_integration.</tt><tt class="descname">lebedev_q_w</tt><big>(</big><em>n</em><big>)</big><a class="headerlink" href="#numerical_integration.lebedev_q_w" title="Permalink to this definition">¶</a></dt>
+<dt id="numerical_integration.lebedev_lq">
+<code class="descclassname">numerical_integration.</code><code class="descname">lebedev_lq</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#numerical_integration.lebedev_lq" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the Lebedev points and weights for spherical integration.</p>
 <p class="rubric">References</p>
 <p>V.I. Lebedev, and D.N. Laikov, Doklady Mathematics, 59, No. 3, 477 (1999)</p>
@@ -165,31 +172,15 @@ interval <span class="math">\(1&lt;x&lt;\infty\)</span>. Default is False.</td>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>n</strong> (<em>int</em>) &#8211; Number of angular points.</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) &#8211; Number of angular points.</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Other Parameters:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> (<em>float64</em>) &#8211;
-Cartesian coordinates, x.</li>
-<li><strong>y</strong> (<em>float64</em>) &#8211;
-Cartesian coordinates, y.</li>
-<li><strong>z</strong> (<em>float64</em>) &#8211;
-Cartesian coordinates, z.</li>
-<li><strong>w</strong> (<em>float64</em>) &#8211;
-weights</li>
-</ul>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>lq</strong> &#8211;
+Array with the coordinates and weights ([:,0] phi, [:,1] theta, [:,2] w).</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Array with the coordinates and weights (x, y, z, w).</p>
-</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy.ndarray</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">tuple</p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">ValueError</span></tt> &#8211;
-if n is not supported.</p>
-</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">ValueError</span></code> &#8211;
+If <code class="docutils literal"><span class="pre">n</span></code> is not supported.</td>
 </tr>
 </tbody>
 </table>
@@ -203,7 +194,7 @@ if n is not supported.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="lebedev.html" class="btn btn-neutral float-right" title="lebedev.lebedev"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="lebedev.html" class="btn btn-neutral float-right" title="lebedev.lebedev">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="databases.html" class="btn btn-neutral" title="databases"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -219,7 +210,8 @@ if n is not supported.</p>
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -25,6 +25,8 @@
   
   
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
   
 
   
@@ -44,9 +46,12 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> nAPMO</a>
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        
+          <a href="../index.html" class="fa fa-home"> nAPMO</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -56,8 +61,9 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
         
-        
-            <ul class="current">
+          
+          
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../interfaces/interfaces.html">Interfaces</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="utilitites.html">Utilitites</a></li>
@@ -67,6 +73,7 @@
 <ul class="simple">
 </ul>
 
+          
         
       </div>
       &nbsp;
@@ -101,51 +108,50 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="lebedev-lebedev">
 <h1>lebedev.lebedev<a class="headerlink" href="#lebedev-lebedev" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="subroutine">
 <dt id="f/_/lebedev_compute">
-<em class="property">function  </em><tt class="descname">lebedev_compute</tt><big>(</big><em>x</em>, <em>y</em>, <em>z</em>, <em>w</em>, <em>numberofpoints</em><big>)</big><a class="headerlink" href="#f/_/lebedev_compute" title="Permalink to this definition">¶</a></dt>
-<dd><p>This code was distributed through CCL. <a class="reference external" href="http://www.ccl.net/">http://www.ccl.net/</a>.</p>
-<p>References:</p>
-<ol class="arabic simple">
-<li>V.I. Lebedev, and D.N. Laikov, <strong>A quadrature formula for the sphere of the 131st algebraic order of accuracy</strong>, Doklady Mathematics, Vol. 59, No. 3, 1999, pp. 477-481.</li>
-<li>V.I. Lebedev, <strong>A quadrature formula for the sphere of 59th algebraic order of accuracy</strong>,  Russian Acad. Sci. Dokl. Math., Vol. 50, 1995, pp. 283-286.</li>
-<li>V.I. Lebedev, and A.L. Skorokhodov, <strong>Quadrature formulas of orders 41, 47, and 53 for the sphere</strong>, Russian Acad.Sci. Dokl. Math., Vol. 45, 1992, pp. 587-592.</li>
-<li>V.I. Lebedev, <strong>Spherical quadrature formulas exact to orders 25-29</strong>, Siberian Mathematical Journal, Vol. 18, 1977, pp. 99-107.</li>
-<li>V.I. Lebedev, <strong>Quadratures on a sphere</strong>, Computational Mathematics and Mathematical Physics, Vol. 16, 1976, pp. 10-24.</li>
-<li>V.I. Lebedev, <strong>Values of the nodes and weights of ninth to seventeenth order Gauss-Markov quadrature formulae invariant under the octahedron group with inversion</strong>, Computational Mathematics and Mathematical Physics, Vol. 15, 1975, pp. 44-51.</li>
-</ol>
-<p>Given a point on a sphere (specified by <tt class="docutils literal"><span class="pre">a</span></tt> and <tt class="docutils literal"><span class="pre">b</span></tt>), generate all the equivalent points under <tt class="docutils literal"><span class="pre">Oh</span></tt> symmetry,
-making grid points with weight <tt class="docutils literal"><span class="pre">v</span></tt>. The variable <tt class="docutils literal"><span class="pre">num</span></tt> is increased by the number of different points generated.</p>
-<p>Depending on code, there are <span class="math">\(6...48\)</span> different but equivalent points.</p>
-<div class="highlight-python"><div class="highlight"><pre>code=1:   (0,0,1) etc                                (  6 points)
-code=2:   (0,a,a) etc, a=1/sqrt(2)                   ( 12 points)
-code=3:   (a,a,a) etc, a=1/sqrt(3)                   (  8 points)
-code=4:   (a,a,b) etc, b=sqrt(1-2 a^2)               ( 24 points)
-code=5:   (a,b,0) etc, b=sqrt(1-a^2), a input        ( 24 points)
-code=6:   (a,b,c) etc, c=sqrt(1-a^2-b^2), a/b input  ( 48 points)
-</pre></div>
-</div>
+<em class="property">subroutine  </em><code class="descname">lebedev_compute</code><span class="sig-paren">(</span><em>nlebedev</em>, <em>lorder</em>, <em>lq</em><span class="sig-paren">)</span><a class="headerlink" href="#f/_/lebedev_compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>!References:
+!
+!1. V.I. Lebedev, and D.N. Laikov, <strong>A quadrature formula for the sphere of the 131st algebraic order of accuracy</strong>, Doklady Mathematics, Vol. 59, No. 3, 1999, pp. 477-481.
+!2. V.I. Lebedev, <strong>A quadrature formula for the sphere of 59th algebraic order of accuracy</strong>,  Russian Acad. Sci. Dokl. Math., Vol. 50, 1995, pp. 283-286.
+!3. V.I. Lebedev, and A.L. Skorokhodov, <strong>Quadrature formulas of orders 41, 47, and 53 for the sphere</strong>, Russian Acad.Sci. Dokl. Math., Vol. 45, 1992, pp. 587-592.
+!4. V.I. Lebedev, <strong>Spherical quadrature formulas exact to orders 25-29</strong>, Siberian Mathematical Journal, Vol. 18, 1977, pp. 99-107.
+!5. V.I. Lebedev, <strong>Quadratures on a sphere</strong>, Computational Mathematics and Mathematical Physics, Vol. 16, 1976, pp. 10-24.
+!6. V.I. Lebedev, <strong>Values of the nodes and weights of ninth to seventeenth order Gauss-Markov quadrature formulae invariant under the octahedron group with inversion</strong>, Computational Mathematics and Mathematical Physics, Vol. 15, 1975, pp. 44-51.
+!
+!This subroutine takes the integers <code class="docutils literal"><span class="pre">nlebedev</span></code> and <code class="docutils literal"><span class="pre">lorder</span></code> as
+!input and returns <code class="docutils literal"><span class="pre">lorder</span></code> number of
+!abscissas and weights of the Lebedev quadrature in
+!the array LQ. The output is as follows:
+!
+!lq(i,1) = phi(i)
+!lq(i,2) = theta(i)
+!lq(i,3) = weight(i)
+!
+!Here the point, (x,y,x), on the surface of the sphere
+!is given by:
+!
+!x = sin[theta(i)]*cos[phi(i)]
+!y = sin[theta(i)]*sin[phi(i)]
+!z = cos[theta(i)]
+implicit none
+integer :: lorder !Number of angular points
+integer :: nlebedev !Order or Lebedev quadrature.
+real(8) :: lq(lorder,3) !Spherical grid, size 3. (<em>,1) = theta, (</em>,2) = phi, (<a href="#id1"><span class="problematic" id="id2">*</span></a>,3) = weigths</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>x</strong> (*)<em> [</em><em>real</em><em>]</em> :: Array of x coordinates.</li>
-<li><strong>y</strong> (*)<em> [</em><em>real</em><em>]</em> :: Array of y coordinates.</li>
-<li><strong>z</strong> (*)<em> [</em><em>real</em><em>]</em> :: Array of z coordinates.</li>
-<li><strong>w</strong> (*)<em> [</em><em>real</em><em>]</em> :: Array of weigths.</li>
-<li><strong>numberofpoints</strong><em> [</em><em>integer</em><em>]</em></li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>nlebedev</strong><em> [</em><em>integer</em><em>]</em></li>
+<li><strong>lorder</strong><em> [</em><em>integer</em><em>]</em></li>
+<li><strong>lq</strong><em> [</em><em>integer</em><em>]</em></li>
 </ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return:</th><td class="field-body"><p class="first"><strong>lebedev_compute</strong><em> [</em><em>logical</em><em>]</em></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Call to:</th><td class="field-body"><p class="first last"><tt class="xref f f-func docutils literal"><span class="pre">ld0006()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0014()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0026()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0038()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0050()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0074()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0086()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0110()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0146()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0170()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0194()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0230()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0266()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0302()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0350()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0434()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0590()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0770()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld0974()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld1202()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld1454()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld1730()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld2030()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld2354()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld2702()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld3074()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld3470()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld3890()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld4334()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld4802()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld5294()</span></tt>, <tt class="xref f f-func docutils literal"><span class="pre">ld5810()</span></tt></p>
 </td>
 </tr>
 </tbody>
@@ -174,7 +180,8 @@ code=6:   (a,b,c) etc, c=sqrt(1-a^2-b^2), a/b input  ( 48 points)
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

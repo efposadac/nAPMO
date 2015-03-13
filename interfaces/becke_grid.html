@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -25,6 +25,8 @@
   
   
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
   
 
   
@@ -45,9 +47,12 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> nAPMO</a>
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        
+          <a href="../index.html" class="fa fa-home"> nAPMO</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -57,8 +62,9 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
         
-        
-            <ul class="current">
+          
+          
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="interfaces.html">Interfaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilitites.html">Utilitites</a></li>
@@ -68,6 +74,7 @@
 <ul class="simple">
 </ul>
 
+          
         
       </div>
       &nbsp;
@@ -102,13 +109,13 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="module-becke_grid">
 <span id="becke-grid"></span><h1>becke_grid<a class="headerlink" href="#module-becke_grid" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="becke_grid.BeckeGrid">
-<em class="property">class </em><tt class="descclassname">becke_grid.</tt><tt class="descname">BeckeGrid</tt><big>(</big><em>n_radial=15, n_angular=110, position=[0.0, 0.0, 0.0]</em><big>)</big><a class="headerlink" href="#becke_grid.BeckeGrid" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">becke_grid.</code><code class="descname">BeckeGrid</code><span class="sig-paren">(</span><em>n_radial=15</em>, <em>n_angular=110</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class creates the Becke grid.</p>
 <p class="rubric">References</p>
 <p>Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).</p>
@@ -127,20 +134,48 @@
 </table>
 <dl class="method">
 <dt id="becke_grid.BeckeGrid.get">
-<tt class="descname">get</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#becke_grid.BeckeGrid.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the Value stored with the key <tt class="docutils literal"><span class="pre">key</span></tt></p>
+<code class="descname">get</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the Value stored with the key <code class="docutils literal"><span class="pre">key</span></code></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; Key associated to the value you want obtain.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the value stored in <tt class="docutils literal"><span class="pre">key</span></tt></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the value stored in <code class="docutils literal"><span class="pre">key</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">any</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211;
-If <tt class="docutils literal"><span class="pre">key</span></tt> is not present in the object.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211;
+If <code class="docutils literal"><span class="pre">key</span></code> is not present in the object.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="becke_grid.BeckeGrid.weight_n_r">
+<code class="descname">weight_n_r</code><span class="sig-paren">(</span><em>r</em>, <em>particleID</em>, <em>particle_stack</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.weight_n_r" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Becke weights <span class="math">\(w_n(r)\)</span> at point <code class="docutils literal"><span class="pre">r</span></code> as described in eq. 22 Becke, 1988:</p>
+<p class="rubric">References</p>
+<p>Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>r</strong> (<em>array[3]</em>) &#8211; Point of the grid.</li>
+<li><strong>particleID</strong> (<em>int</em>) &#8211; The particle index for which Becke Weights are being calculated.</li>
+<li><strong>particle_stack</strong> (<a class="reference internal" href="stack.html#stack.Stack" title="stack.Stack"><em>Stack</em></a>) &#8211; stack of particles. i.e. stack of <span class="math">\(e^-\)</span></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>P</strong> &#8211;
+The value of cell_function (eq. 13, Becke, 1988) at point <code class="docutils literal"><span class="pre">r</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float64</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -148,7 +183,7 @@ If <tt class="docutils literal"><span class="pre">key</span></tt> is not present
 
 <dl class="method">
 <dt id="becke_grid.BeckeGrid.weights">
-<tt class="descname">weights</tt><big>(</big><em>particle_stack</em>, <em>particleID</em><big>)</big><a class="headerlink" href="#becke_grid.BeckeGrid.weights" title="Permalink to this definition">¶</a></dt>
+<code class="descname">weights</code><span class="sig-paren">(</span><em>particle_stack</em>, <em>particleID</em>, <em>rcutt=100.0</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.weights" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the Becke weights as described in:</p>
 <p class="rubric">References</p>
 <p>Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).</p>
@@ -156,10 +191,18 @@ If <tt class="docutils literal"><span class="pre">key</span></tt> is not present
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>particle_stack</strong> (<em>Stack</em>) &#8211; stack of particles. i.e. stack of <span class="math">\(e^-\)</span></li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>particle_stack</strong> (<a class="reference internal" href="stack.html#stack.Stack" title="stack.Stack"><em>Stack</em></a>) &#8211; Stack of particles. i.e. stack of <span class="math">\(e^-\)</span></li>
 <li><strong>particleID</strong> (<em>int</em>) &#8211; The particle index for which Becke Weights are being calculated.</li>
+<li><strong>rcutt</strong> (<em>float</em>) &#8211; Cuttoff radius in a.u. for numerical quadrature.</li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>w_n</strong> &#8211;
+Array with the weights for <code class="docutils literal"><span class="pre">particleID</span></code>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.array</p>
 </td>
 </tr>
 </tbody>
@@ -176,7 +219,7 @@ If <tt class="docutils literal"><span class="pre">key</span></tt> is not present
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="composite_particle.html" class="btn btn-neutral float-right" title="composite_particle"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="composite_particle.html" class="btn btn-neutral float-right" title="composite_particle">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="atomic_element.html" class="btn btn-neutral" title="atomic_element"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -192,7 +235,8 @@ If <tt class="docutils literal"><span class="pre">key</span></tt> is not present
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

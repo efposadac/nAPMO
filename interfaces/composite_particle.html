@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -25,6 +25,8 @@
   
   
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
   
 
   
@@ -45,9 +47,12 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> nAPMO</a>
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        
+          <a href="../index.html" class="fa fa-home"> nAPMO</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -57,8 +62,9 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
         
-        
-            <ul class="current">
+          
+          
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="interfaces.html">Interfaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilitites.html">Utilitites</a></li>
@@ -68,6 +74,7 @@
 <ul class="simple">
 </ul>
 
+          
         
       </div>
       &nbsp;
@@ -102,17 +109,17 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="module-composite_particle">
 <span id="composite-particle"></span><h1>composite_particle<a class="headerlink" href="#module-composite_particle" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="composite_particle.CompositeParticle">
-<em class="property">class </em><tt class="descclassname">composite_particle.</tt><tt class="descname">CompositeParticle</tt><big>(</big><em>name='none'</em><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">composite_particle.</code><code class="descname">CompositeParticle</code><span class="sig-paren">(</span><em>name='none'</em><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines a composite particle, i.e. atoms, molecules or nuclei.
 Since a composite particle can be a molecule, it can be added different atoms and
 elementary particles to the molecule. The key for elementary particles are its symbols and for atoms
-the key is <tt class="docutils literal"><span class="pre">atoms</span></tt>.</p>
+the key is <code class="docutils literal"><span class="pre">atoms</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -123,7 +130,7 @@ the key is <tt class="docutils literal"><span class="pre">atoms</span></tt>.</p>
 </table>
 <dl class="method">
 <dt id="composite_particle.CompositeParticle.add_atom">
-<tt class="descname">add_atom</tt><big>(</big><em>symbol</em>, <em>position</em>, <em>BOA=True</em>, <em>mass_number=0</em>, <em>units='Angstroms'</em><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.add_atom" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_atom</code><span class="sig-paren">(</span><em>symbol</em>, <em>position</em>, <em>BOA=True</em>, <em>mass_number=0</em>, <em>units='Angstroms'</em><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.add_atom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds an atom to the composite particle.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -145,7 +152,7 @@ If 0 the system will choose the most abundant one. Default is 0.</li>
 
 <dl class="method">
 <dt id="composite_particle.CompositeParticle.add_elementary_particle">
-<tt class="descname">add_elementary_particle</tt><big>(</big><em>symbol</em>, <em>position</em>, <em>size=1</em>, <em>units='Angstroms'</em><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.add_elementary_particle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_elementary_particle</code><span class="sig-paren">(</span><em>symbol</em>, <em>position</em>, <em>size=1</em>, <em>units='Angstroms'</em><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.add_elementary_particle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds an elementary particle into the composite particle.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -165,7 +172,7 @@ If 0 the system will choose the most abundant one. Default is 0.</li>
 
 <dl class="method">
 <dt id="composite_particle.CompositeParticle.get_particle">
-<tt class="descname">get_particle</tt><big>(</big><em>key</em>, <em>iterator=-1</em><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.get_particle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">get_particle</code><span class="sig-paren">(</span><em>key</em>, <em>iterator=-1</em><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.get_particle" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -176,26 +183,26 @@ If 0 the system will choose the most abundant one. Default is 0.</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If iterator is not given, the result will be an Stack of particles of kind <tt class="docutils literal"><span class="pre">key</span></tt>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If iterator is not given, the result will be an Stack of particles of kind <code class="docutils literal"><span class="pre">key</span></code>.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">Stack</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="stack.html#stack.Stack" title="stack.Stack">Stack</a></p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If <tt class="docutils literal"><span class="pre">key</span> <span class="pre">=</span> <span class="pre">atoms</span></tt> and <tt class="docutils literal"><span class="pre">iterator</span> <span class="pre">&gt;</span> <span class="pre">-1</span></tt>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If <code class="docutils literal"><span class="pre">key</span> <span class="pre">=</span> <span class="pre">atoms</span></code> and <code class="docutils literal"><span class="pre">iterator</span> <span class="pre">&gt;</span> <span class="pre">-1</span></code>.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">AtomicElement</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="atomic_element.html#atomic_element.AtomicElement" title="atomic_element.AtomicElement">AtomicElement</a></p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If <tt class="docutils literal"><span class="pre">key</span></tt> is a symbol of a given particle and <tt class="docutils literal"><span class="pre">iterator</span> <span class="pre">&gt;</span> <span class="pre">-1</span></tt>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">If <code class="docutils literal"><span class="pre">key</span></code> is a symbol of a given particle and <code class="docutils literal"><span class="pre">iterator</span> <span class="pre">&gt;</span> <span class="pre">-1</span></code>.</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">ElementaryParticle</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first"><a class="reference internal" href="elementary_particle.html#elementary_particle.ElementaryParticle" title="elementary_particle.ElementaryParticle">ElementaryParticle</a></p>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211;
-If <tt class="docutils literal"><span class="pre">key</span></tt> is not present in the object.</p>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><p class="first last"><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211;
+If <code class="docutils literal"><span class="pre">key</span></code> is not present in the object.</p>
 </td>
 </tr>
 </tbody>
@@ -204,7 +211,7 @@ If <tt class="docutils literal"><span class="pre">key</span></tt> is not present
 
 <dl class="method">
 <dt id="composite_particle.CompositeParticle.iter_symbol">
-<tt class="descname">iter_symbol</tt><big>(</big><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.iter_symbol" title="Permalink to this definition">¶</a></dt>
+<code class="descname">iter_symbol</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.iter_symbol" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -219,20 +226,20 @@ If <tt class="docutils literal"><span class="pre">key</span></tt> is not present
 
 <dl class="method">
 <dt id="composite_particle.CompositeParticle.n_particles">
-<tt class="descname">n_particles</tt><big>(</big><em>key</em><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.n_particles" title="Permalink to this definition">¶</a></dt>
+<code class="descname">n_particles</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.n_particles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the number of particles of kind &#8216;key&#8217;. (Here atoms are equivalents to particles)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; key of the particle. Read the class documentation for <tt class="docutils literal"><span class="pre">key</span></tt> definition.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; key of the particle. Read the class documentation for <code class="docutils literal"><span class="pre">key</span></code> definition.</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of particles with key <tt class="docutils literal"><span class="pre">key</span></tt></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The number of particles with key <code class="docutils literal"><span class="pre">key</span></code></td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211;
-If <tt class="docutils literal"><span class="pre">key</span></tt> is not present in the object.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211;
+If <code class="docutils literal"><span class="pre">key</span></code> is not present in the object.</td>
 </tr>
 </tbody>
 </table>
@@ -240,7 +247,7 @@ If <tt class="docutils literal"><span class="pre">key</span></tt> is not present
 
 <dl class="method">
 <dt id="composite_particle.CompositeParticle.name">
-<tt class="descname">name</tt><big>(</big><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.name" title="Permalink to this definition">¶</a></dt>
+<code class="descname">name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.name" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -253,32 +260,32 @@ If <tt class="docutils literal"><span class="pre">key</span></tt> is not present
 
 <dl class="method">
 <dt id="composite_particle.CompositeParticle.show">
-<tt class="descname">show</tt><big>(</big><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.show" title="Permalink to this definition">¶</a></dt>
+<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shows information about particles</p>
 </dd></dl>
 
 <dl class="method">
 <dt id="composite_particle.CompositeParticle.size">
-<tt class="descname">size</tt><big>(</big><em>key='all'</em><big>)</big><a class="headerlink" href="#composite_particle.CompositeParticle.size" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the number of kinds of particles composing the object. A &#8216;kind of particles&#8217; can be <tt class="docutils literal"><span class="pre">atoms</span></tt>, <tt class="docutils literal"><span class="pre">e-</span></tt>, etc.</p>
+<code class="descname">size</code><span class="sig-paren">(</span><em>key='all'</em><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the number of kinds of particles composing the object. A &#8216;kind of particles&#8217; can be <code class="docutils literal"><span class="pre">atoms</span></code>, <code class="docutils literal"><span class="pre">e-</span></code>, etc.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str, optional</em>) &#8211; Can be <tt class="docutils literal"><span class="pre">atoms</span></tt> or the key (symbol) of a given elementary particle.
-Default is <tt class="docutils literal"><span class="pre">'all'</span></tt></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str, optional</em>) &#8211; Can be <code class="docutils literal"><span class="pre">atoms</span></code> or the key (symbol) of a given elementary particle.
+Default is <code class="docutils literal"><span class="pre">'all'</span></code></td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">If <tt class="docutils literal"><span class="pre">all</span></tt> is given  The size will be the number of kinds of particles.
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">If <code class="docutils literal"><span class="pre">all</span></code> is given  The size will be the number of kinds of particles.
 If key is given, size will be the size o the stack of a given kind of particles.
-For instance, in a CompositeParticle composed by <tt class="docutils literal"><span class="pre">atoms:{O,</span> <span class="pre">O},</span> <span class="pre">e-:{e-(O),</span> <span class="pre">e-(O),</span> <span class="pre">e-}</span></tt>
-the key <tt class="docutils literal"><span class="pre">all</span></tt> will return 2 <tt class="docutils literal"><span class="pre">e-</span></tt> and <tt class="docutils literal"><span class="pre">atoms</span></tt>,but if key <tt class="docutils literal"><span class="pre">e-</span></tt> is given the result will be 3.
-note that is <strong>NOT</strong> the number of particles, because each <tt class="docutils literal"><span class="pre">O</span></tt> atom has 8 <tt class="docutils literal"><span class="pre">e-</span></tt>, in total there are
-17 <tt class="docutils literal"><span class="pre">e-</span></tt>. To calculate that number use <tt class="docutils literal"><span class="pre">CompositeParticle.n_particles</span></tt>.</td>
+For instance, in a CompositeParticle composed by <code class="docutils literal"><span class="pre">atoms:{O,</span> <span class="pre">O},</span> <span class="pre">e-:{e-(O),</span> <span class="pre">e-(O),</span> <span class="pre">e-}</span></code>
+the key <code class="docutils literal"><span class="pre">all</span></code> will return 2 <code class="docutils literal"><span class="pre">e-</span></code> and <code class="docutils literal"><span class="pre">atoms</span></code>,but if key <code class="docutils literal"><span class="pre">e-</span></code> is given the result will be 3.
+note that is <strong>NOT</strong> the number of particles, because each <code class="docutils literal"><span class="pre">O</span></code> atom has 8 <code class="docutils literal"><span class="pre">e-</span></code>, in total there are
+17 <code class="docutils literal"><span class="pre">e-</span></code>. To calculate that number use <code class="docutils literal"><span class="pre">CompositeParticle.n_particles</span></code>.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><tt class="xref py py-exc docutils literal"><span class="pre">KeyError</span></tt> &#8211;
-If <tt class="docutils literal"><span class="pre">key</span></tt> is not present in the object.</td>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211;
+If <code class="docutils literal"><span class="pre">key</span></code> is not present in the object.</td>
 </tr>
 </tbody>
 </table>
@@ -294,7 +301,7 @@ If <tt class="docutils literal"><span class="pre">key</span></tt> is not present
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="elementary_particle.html" class="btn btn-neutral float-right" title="elementary_particle"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="elementary_particle.html" class="btn btn-neutral float-right" title="elementary_particle">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="becke_grid.html" class="btn btn-neutral" title="becke_grid"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -310,7 +317,8 @@ If <tt class="docutils literal"><span class="pre">key</span></tt> is not present
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>

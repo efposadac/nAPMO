@@ -14,7 +14,7 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -25,6 +25,8 @@
   
   
     <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
   
 
   
@@ -45,9 +47,12 @@
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
-        <a href="../index.html" class="fa fa-home"> nAPMO</a>
-        <div role="search">
-  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+        
+          <a href="../index.html" class="fa fa-home"> nAPMO</a>
+        
+        
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
@@ -57,8 +62,9 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
         
-        
-            <ul class="current">
+          
+          
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="interfaces.html">Interfaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilitites.html">Utilitites</a></li>
@@ -68,6 +74,7 @@
 <ul class="simple">
 </ul>
 
+          
         
       </div>
       &nbsp;
@@ -102,13 +109,13 @@
   </ul>
   <hr/>
 </div>
-          <div role="main">
+          <div role="main" class="document">
             
   <div class="section" id="module-slater_function">
 <span id="slater-function"></span><h1>slater_function<a class="headerlink" href="#module-slater_function" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="slater_function.SlaterFunction">
-<em class="property">class </em><tt class="descclassname">slater_function.</tt><tt class="descname">SlaterFunction</tt><big>(</big><em>zeta</em>, <em>n=1</em>, <em>l=0</em>, <em>m=0</em><big>)</big><a class="headerlink" href="#slater_function.SlaterFunction" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">slater_function.</code><code class="descname">SlaterFunction</code><span class="sig-paren">(</span><em>zeta</em>, <em>n=1</em>, <em>l=0</em>, <em>m=0</em><span class="sig-paren">)</span><a class="headerlink" href="#slater_function.SlaterFunction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Slater-Type orbitals:
 The slater orbital function is:</p>
 <p><span class="math">\(\chi_{p \lambda \alpha}(r, \theta, \phi) = R_{ \lambda p}(r) Y_{ \lambda \alpha}( \theta, \phi)\)</span></p>
@@ -140,7 +147,7 @@ The slater orbital function is:</p>
 </table>
 <dl class="method">
 <dt id="slater_function.SlaterFunction.orbital">
-<tt class="descname">orbital</tt><big>(</big><em>r</em>, <em>theta</em>, <em>phi</em><big>)</big><a class="headerlink" href="#slater_function.SlaterFunction.orbital" title="Permalink to this definition">¶</a></dt>
+<code class="descname">orbital</code><span class="sig-paren">(</span><em>r</em>, <em>theta</em>, <em>phi</em><span class="sig-paren">)</span><a class="headerlink" href="#slater_function.SlaterFunction.orbital" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the value of SlaterFunction at given coordinates (spherical)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -156,12 +163,12 @@ The slater orbital function is:</p>
 </tbody>
 </table>
 <p>Returns:
-x (complex float): The value of <span class="math">\(\chi_{p \lambda \alpha}(r, \theta, \phi)\)</span> sampled at <tt class="docutils literal"><span class="pre">r</span></tt>, <tt class="docutils literal"><span class="pre">theta</span></tt> and <tt class="docutils literal"><span class="pre">phi</span></tt></p>
+x (complex float): The value of <span class="math">\(\chi_{p \lambda \alpha}(r, \theta, \phi)\)</span> sampled at <code class="docutils literal"><span class="pre">r</span></code>, <code class="docutils literal"><span class="pre">theta</span></code> and <code class="docutils literal"><span class="pre">phi</span></code></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="slater_function.SlaterFunction.radial">
-<tt class="descname">radial</tt><big>(</big><em>r</em><big>)</big><a class="headerlink" href="#slater_function.SlaterFunction.radial" title="Permalink to this definition">¶</a></dt>
+<code class="descname">radial</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="headerlink" href="#slater_function.SlaterFunction.radial" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the radial part of the Slater orbital.</p>
 <p><span class="math">\(R_{\lambda p} = N_{\lambda p} r^{\lambda p -1} e^{-\zeta_{\lambda p} r}\)</span></p>
 <p>where, N is the Normalization given by:</p>
@@ -173,7 +180,7 @@ x (complex float): The value of <span class="math">\(\chi_{p \lambda \alpha}(r, 
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r</strong> (<em>float</em>) &#8211; The r coordinate.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>R</strong> &#8211;
-The NORMALIZED radial <span class="math">\(R_{\lambda p}\)</span> value sampled at <tt class="docutils literal"><span class="pre">r</span></tt>.</td>
+The NORMALIZED radial <span class="math">\(R_{\lambda p}\)</span> value sampled at <code class="docutils literal"><span class="pre">r</span></code>.</td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">float</td>
 </tr>
@@ -183,7 +190,7 @@ The NORMALIZED radial <span class="math">\(R_{\lambda p}\)</span> value sampled 
 
 <dl class="method">
 <dt id="slater_function.SlaterFunction.spherical">
-<tt class="descname">spherical</tt><big>(</big><em>theta</em>, <em>phi</em><big>)</big><a class="headerlink" href="#slater_function.SlaterFunction.spherical" title="Permalink to this definition">¶</a></dt>
+<code class="descname">spherical</code><span class="sig-paren">(</span><em>theta</em>, <em>phi</em><span class="sig-paren">)</span><a class="headerlink" href="#slater_function.SlaterFunction.spherical" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the harmonic spherical part of the Slater orbital. Uses scipy.special.sph_harm</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -196,7 +203,7 @@ The NORMALIZED radial <span class="math">\(R_{\lambda p}\)</span> value sampled 
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>y</strong> &#8211;
-The harmonic <span class="math">\(Y^m_l\)</span> sampled at <tt class="docutils literal"><span class="pre">theta</span></tt> and <tt class="docutils literal"><span class="pre">phi</span></tt></p>
+The harmonic <span class="math">\(Y^m_l\)</span> sampled at <code class="docutils literal"><span class="pre">theta</span></code> and <code class="docutils literal"><span class="pre">phi</span></code></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">complex float</p>
@@ -216,7 +223,7 @@ The harmonic <span class="math">\(Y^m_l\)</span> sampled at <tt class="docutils 
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="stack.html" class="btn btn-neutral float-right" title="stack"/>Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="stack.html" class="btn btn-neutral float-right" title="stack">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="elementary_particle.html" class="btn btn-neutral" title="elementary_particle"><span class="fa fa-arrow-circle-left"></span> Previous</a>
@@ -232,7 +239,8 @@ The harmonic <span class="math">\(Y^m_l\)</span> sampled at <tt class="docutils 
     </p>
   </div>
 
-  <a href="https://github.com/snide/sphinx_rtd_theme">Sphinx theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  
 </footer>
         </div>
       </div>
