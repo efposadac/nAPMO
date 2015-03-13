@@ -115,43 +115,36 @@
 <dl class="subroutine">
 <dt id="f/_/lebedev_compute">
 <em class="property">subroutine  </em><code class="descname">lebedev_compute</code><span class="sig-paren">(</span><em>nlebedev</em>, <em>lorder</em>, <em>lq</em><span class="sig-paren">)</span><a class="headerlink" href="#f/_/lebedev_compute" title="Permalink to this definition">¶</a></dt>
-<dd><p>!References:
-!
-!1. V.I. Lebedev, and D.N. Laikov, <strong>A quadrature formula for the sphere of the 131st algebraic order of accuracy</strong>, Doklady Mathematics, Vol. 59, No. 3, 1999, pp. 477-481.
-!2. V.I. Lebedev, <strong>A quadrature formula for the sphere of 59th algebraic order of accuracy</strong>,  Russian Acad. Sci. Dokl. Math., Vol. 50, 1995, pp. 283-286.
-!3. V.I. Lebedev, and A.L. Skorokhodov, <strong>Quadrature formulas of orders 41, 47, and 53 for the sphere</strong>, Russian Acad.Sci. Dokl. Math., Vol. 45, 1992, pp. 587-592.
-!4. V.I. Lebedev, <strong>Spherical quadrature formulas exact to orders 25-29</strong>, Siberian Mathematical Journal, Vol. 18, 1977, pp. 99-107.
-!5. V.I. Lebedev, <strong>Quadratures on a sphere</strong>, Computational Mathematics and Mathematical Physics, Vol. 16, 1976, pp. 10-24.
-!6. V.I. Lebedev, <strong>Values of the nodes and weights of ninth to seventeenth order Gauss-Markov quadrature formulae invariant under the octahedron group with inversion</strong>, Computational Mathematics and Mathematical Physics, Vol. 15, 1975, pp. 44-51.
-!
-!This subroutine takes the integers <code class="docutils literal"><span class="pre">nlebedev</span></code> and <code class="docutils literal"><span class="pre">lorder</span></code> as
-!input and returns <code class="docutils literal"><span class="pre">lorder</span></code> number of
-!abscissas and weights of the Lebedev quadrature in
-!the array LQ. The output is as follows:
-!
-!lq(i,1) = phi(i)
-!lq(i,2) = theta(i)
-!lq(i,3) = weight(i)
-!
-!Here the point, (x,y,x), on the surface of the sphere
-!is given by:
-!
-!x = sin[theta(i)]*cos[phi(i)]
-!y = sin[theta(i)]*sin[phi(i)]
-!z = cos[theta(i)]
-implicit none
-integer :: lorder !Number of angular points
-integer :: nlebedev !Order or Lebedev quadrature.
-real(8) :: lq(lorder,3) !Spherical grid, size 3. (<em>,1) = theta, (</em>,2) = phi, (<a href="#id1"><span class="problematic" id="id2">*</span></a>,3) = weigths</p>
+<dd><p>References:</p>
+<ol class="arabic simple">
+<li>V.I. Lebedev, and D.N. Laikov, <strong>A quadrature formula for the sphere of the 131st algebraic order of accuracy</strong>, Doklady Mathematics, Vol. 59, No. 3, 1999, pp. 477-481.</li>
+<li>V.I. Lebedev, <strong>A quadrature formula for the sphere of 59th algebraic order of accuracy</strong>,  Russian Acad. Sci. Dokl. Math., Vol. 50, 1995, pp. 283-286.</li>
+<li>V.I. Lebedev, and A.L. Skorokhodov, <strong>Quadrature formulas of orders 41, 47, and 53 for the sphere</strong>, Russian Acad.Sci. Dokl. Math., Vol. 45, 1992, pp. 587-592.</li>
+<li>V.I. Lebedev, <strong>Spherical quadrature formulas exact to orders 25-29</strong>, Siberian Mathematical Journal, Vol. 18, 1977, pp. 99-107.</li>
+<li>V.I. Lebedev, <strong>Quadratures on a sphere</strong>, Computational Mathematics and Mathematical Physics, Vol. 16, 1976, pp. 10-24.</li>
+<li>V.I. Lebedev, <strong>Values of the nodes and weights of ninth to seventeenth order Gauss-Markov quadrature formula invariant under the octahedron group with inversion</strong>, Computational Mathematics and Mathematical Physics, Vol. 15, 1975, pp. 44-51.</li>
+</ol>
+<p>This subroutine takes the integers <code class="docutils literal"><span class="pre">nlebedev</span></code> and <code class="docutils literal"><span class="pre">lorder</span></code> as input and returns <code class="docutils literal"><span class="pre">lorder</span></code> number of
+abscissas and weights of the Lebedev quadrature in the array LQ. The output is as follows:</p>
+<p><code class="docutils literal"><span class="pre">lq[:,0]</span> <span class="pre">=</span> <span class="pre">phi</span></code></p>
+<p><code class="docutils literal"><span class="pre">lq[:,1]</span> <span class="pre">=</span> <span class="pre">theta</span></code></p>
+<p><code class="docutils literal"><span class="pre">lq[:,2]</span> <span class="pre">=</span> <span class="pre">weight</span></code></p>
+<p>Here the point, <span class="math">\((x,y,x)\)</span>, on the surface of the sphere is given by:</p>
+<p><span class="math">\(x = sin \theta * cos \phi\)</span></p>
+<p><span class="math">\(y = sin \theta * sin \phi\)</span></p>
+<p><span class="math">\(z = cos \theta\)</span></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>nlebedev</strong><em> [</em><em>integer</em><em>]</em></li>
-<li><strong>lorder</strong><em> [</em><em>integer</em><em>]</em></li>
-<li><strong>lq</strong><em> [</em><em>integer</em><em>]</em></li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>nlebedev</strong><em> [</em><em>integer</em><em>]</em> :: Order or Lebedev quadrature.</li>
+<li><strong>lorder</strong><em> [</em><em>integer</em><em>]</em> :: Spherical grid, size 3. (:,1) = theta, (:,2) = phi, (:,3) = weights</li>
+<li><strong>lq</strong> (lorder,3)<em> [</em><em>real</em><em>]</em></li>
 </ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Call to:</th><td class="field-body"><p class="first last"><code class="xref f f-func docutils literal"><span class="pre">lebedev1()</span></code>, <code class="xref f f-func docutils literal"><span class="pre">lebedev2()</span></code>, <code class="xref f f-func docutils literal"><span class="pre">lebedev3()</span></code>, <code class="xref f f-func docutils literal"><span class="pre">lebedev4()</span></code>, <code class="xref f f-func docutils literal"><span class="pre">lebedev5()</span></code></p>
 </td>
 </tr>
 </tbody>
