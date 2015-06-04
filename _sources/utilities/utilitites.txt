@@ -5,4 +5,5 @@ Utilitites
 
    databases
    numerical_integration
+   analytical_integration
    lebedev
