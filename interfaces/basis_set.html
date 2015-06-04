@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>atomic_element &mdash; nAPMO a1 documentation</title>
+  <title>basis_set &mdash; nAPMO a1 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
         <link rel="up" title="Interfaces" href="interfaces.html"/>
         <link rel="next" title="becke_grid" href="becke_grid.html"/>
-        <link rel="prev" title="Interfaces" href="interfaces.html"/> 
+        <link rel="prev" title="atomic_element" href="atomic_element.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -75,7 +75,8 @@
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="interfaces.html">Interfaces</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="">atomic_element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">basis_set</a></li>
 <li class="toctree-l3"><a class="reference internal" href="becke_grid.html">becke_grid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="composite_particle.html">composite_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
@@ -130,11 +131,11 @@
       
           <li><a href="interfaces.html">Interfaces</a> &raquo;</li>
       
-    <li>atomic_element</li>
+    <li>basis_set</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/interfaces/atomic_element.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/interfaces/basis_set.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -143,87 +144,106 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="module-atomic_element">
-<span id="atomic-element"></span><h1>atomic_element<a class="headerlink" href="#module-atomic_element" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-basis_set">
+<span id="basis-set"></span><h1>basis_set<a class="headerlink" href="#module-basis_set" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="atomic_element.AtomicElement">
-<em class="property">class </em><code class="descclassname">atomic_element.</code><code class="descname">AtomicElement</code><span class="sig-paren">(</span><em>symbol, mass_number=0, BOA=True, position=[0.0, 0.0, 0.0], units='Angstroms'</em><span class="sig-paren">)</span><a class="headerlink" href="#atomic_element.AtomicElement" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class handles all information related to atomic elements Database.</p>
-<p>Information From: <a class="reference external" href="http://physics.nist.gov/constants">http://physics.nist.gov/constants</a></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol of the atom.</li>
-<li><strong>position</strong> (<em>float64[3]</em>) &#8211; Origin of the atom (cartesian coordinates)</li>
-<li><strong>BOA</strong> (<em>bool, optional</em>) &#8211; Whether the atom nuclei will be treated in the BOA approach or not. Default is True</li>
-<li><strong>mass_number</strong> (<em>int, optional</em>) &#8211; Mass number of element <code class="docutils literal"><span class="pre">symbol</span></code> <span class="math">\(:= A = p^+ + n^o\)</span>.
-If 0 the system will choose the most abundant one. Default is 0.</li>
-<li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are &#8216;Angstroms&#8217; or &#8216;Bohr&#8217;</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+<dt id="basis_set.BasisSet">
+<em class="property">class </em><code class="descclassname">basis_set.</code><code class="descname">BasisSet</code><span class="sig-paren">(</span><em>particle</em>, <em>origin</em>, <em>name='user'</em><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basis set functions helper</p>
 <dl class="method">
-<dt id="atomic_element.AtomicElement.get_key">
-<code class="descname">get_key</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#atomic_element.AtomicElement.get_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the Value stored with the key <code class="docutils literal"><span class="pre">key</span></code></p>
+<dt id="basis_set.BasisSet.compute">
+<code class="descname">compute</code><span class="sig-paren">(</span><em>coord=array([ 0.</em>, <em>0.</em>, <em>0.])</em><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute all the basis-set functions at given <code class="docutils literal"><span class="pre">coord</span></code>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; Key associated to the value you want obtain.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the value stored in <code class="docutils literal"><span class="pre">key</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">any</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211;
-If <code class="docutils literal"><span class="pre">key</span></code> is not present in the object.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coord</strong> (<em>numpy.darray[3]</em>) &#8211; coordinates in which the basis set will be evaluated.</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="atomic_element.AtomicElement.isQuantum">
-<code class="descname">isQuantum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atomic_element.AtomicElement.isQuantum" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether the nuclei of the atomic element is being treated in the BOA framework or not</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
+<dt id="basis_set.BasisSet.get_function">
+<code class="descname">get_function</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.get_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the <code class="docutils literal"><span class="pre">index</span></code> function of the basis-set.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="atomic_element.AtomicElement.set_key">
-<code class="descname">set_key</code><span class="sig-paren">(</span><em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#atomic_element.AtomicElement.set_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a new item in the object.</p>
+<dt id="basis_set.BasisSet.get_kind">
+<code class="descname">get_kind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.get_kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the kind of the basis-set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="basis_set.BasisSet.get_length">
+<code class="descname">get_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.get_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the length (number of contractions) of the basis-set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="basis_set.BasisSet.get_name">
+<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.get_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the name of the basis-set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="basis_set.BasisSet.get_origin">
+<code class="descname">get_origin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.get_origin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the origin of the basis-set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="basis_set.BasisSet.get_particle">
+<code class="descname">get_particle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.get_particle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the symbol of the particle who owns the basis-set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="basis_set.BasisSet.get_total_length">
+<code class="descname">get_total_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.get_total_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the length (number of primitives) of the basis-set</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="basis_set.BasisSet.load_gaussian">
+<code class="descname">load_gaussian</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.load_gaussian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a Gaussian Type Orbital (GTO) basis-set.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>key</strong> (<em>str</em>) &#8211; Key of the item.</li>
-<li><strong>value</strong> (<em>any</em>) &#8211; Value of the item.</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>json</em>) &#8211; json formatted data to be loaded.</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="atomic_element.AtomicElement.show">
-<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atomic_element.AtomicElement.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints out the information of the object</p>
+<dt id="basis_set.BasisSet.load_slater">
+<code class="descname">load_slater</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.load_slater" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load a Slater Type Orbital (STO) basis-set.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>json</em>) &#8211; json formatted data to be loaded.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="basis_set.BasisSet.show">
+<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.show" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints extended information of the basis-set object.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="basis_set.BasisSet.show_json">
+<code class="descname">show_json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.show_json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints the basis-set in json format.</p>
 </dd></dl>
 
 </dd></dl>
@@ -239,7 +259,7 @@ If <code class="docutils literal"><span class="pre">key</span></code> is not pre
         <a href="becke_grid.html" class="btn btn-neutral float-right" title="becke_grid" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="interfaces.html" class="btn btn-neutral" title="Interfaces" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="atomic_element.html" class="btn btn-neutral" title="atomic_element" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

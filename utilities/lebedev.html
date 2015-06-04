@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>lebedev.lebedev &mdash; nAPMO a1 documentation</title>
@@ -14,7 +15,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -35,7 +35,7 @@
         <link rel="prev" title="numerical_integration" href="numerical_integration.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -47,8 +47,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
         
-          <a href="../index.html" class="fa fa-home"> nAPMO</a>
+
         
+          <a href="../index.html" class="icon icon-home"> nAPMO
+        
+
+        
+        </a>
+
         
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -57,6 +63,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
+
+        
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
@@ -65,8 +73,30 @@
           
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../interfaces/interfaces.html">Interfaces</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="utilitites.html">Utilitites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interfaces/interfaces.html">Interfaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/atomic_element.html">atomic_element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/becke_grid.html">becke_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/composite_particle.html">composite_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/contracted_gaussian.html">contracted_gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/contracted_slater.html">contracted_slater</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/csystem.html">csystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/elementary_particle.html">elementary_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/primitive_gaussian.html">primitive_gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/primitive_slater.html">primitive_slater</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/stack.html">stack</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="utilitites.html">Utilitites</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="databases.html">databases</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="databases.html#atomicelementsdatabase">AtomicElementsDatabase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="databases.html#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="databases.html#unitsdatabase">UnitsDatabase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="numerical_integration.html">numerical_integration</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">lebedev.lebedev</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -102,7 +132,9 @@
     <li>lebedev.lebedev</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/utilities/lebedev.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/utilities/lebedev.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
@@ -112,45 +144,6 @@
             
   <div class="section" id="lebedev-lebedev">
 <h1>lebedev.lebedev<a class="headerlink" href="#lebedev-lebedev" title="Permalink to this headline">¶</a></h1>
-<dl class="subroutine">
-<dt id="f/_/lebedev_compute">
-<em class="property">subroutine  </em><code class="descname">lebedev_compute</code><span class="sig-paren">(</span><em>nlebedev</em>, <em>lorder</em>, <em>lq</em><span class="sig-paren">)</span><a class="headerlink" href="#f/_/lebedev_compute" title="Permalink to this definition">¶</a></dt>
-<dd><p>References:</p>
-<ol class="arabic simple">
-<li>V.I. Lebedev, and D.N. Laikov, <strong>A quadrature formula for the sphere of the 131st algebraic order of accuracy</strong>, Doklady Mathematics, Vol. 59, No. 3, 1999, pp. 477-481.</li>
-<li>V.I. Lebedev, <strong>A quadrature formula for the sphere of 59th algebraic order of accuracy</strong>,  Russian Acad. Sci. Dokl. Math., Vol. 50, 1995, pp. 283-286.</li>
-<li>V.I. Lebedev, and A.L. Skorokhodov, <strong>Quadrature formulas of orders 41, 47, and 53 for the sphere</strong>, Russian Acad.Sci. Dokl. Math., Vol. 45, 1992, pp. 587-592.</li>
-<li>V.I. Lebedev, <strong>Spherical quadrature formulas exact to orders 25-29</strong>, Siberian Mathematical Journal, Vol. 18, 1977, pp. 99-107.</li>
-<li>V.I. Lebedev, <strong>Quadratures on a sphere</strong>, Computational Mathematics and Mathematical Physics, Vol. 16, 1976, pp. 10-24.</li>
-<li>V.I. Lebedev, <strong>Values of the nodes and weights of ninth to seventeenth order Gauss-Markov quadrature formula invariant under the octahedron group with inversion</strong>, Computational Mathematics and Mathematical Physics, Vol. 15, 1975, pp. 44-51.</li>
-</ol>
-<p>This subroutine takes the integers <code class="docutils literal"><span class="pre">nlebedev</span></code> and <code class="docutils literal"><span class="pre">lorder</span></code> as input and returns <code class="docutils literal"><span class="pre">lorder</span></code> number of
-abscissas and weights of the Lebedev quadrature in the array LQ. The output is as follows:</p>
-<p><code class="docutils literal"><span class="pre">lq[:,0]</span> <span class="pre">=</span> <span class="pre">phi</span></code></p>
-<p><code class="docutils literal"><span class="pre">lq[:,1]</span> <span class="pre">=</span> <span class="pre">theta</span></code></p>
-<p><code class="docutils literal"><span class="pre">lq[:,2]</span> <span class="pre">=</span> <span class="pre">weight</span></code></p>
-<p>Here the point, <span class="math">\((x,y,x)\)</span>, on the surface of the sphere is given by:</p>
-<p><span class="math">\(x = sin \theta * cos \phi\)</span></p>
-<p><span class="math">\(y = sin \theta * sin \phi\)</span></p>
-<p><span class="math">\(z = cos \theta\)</span></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>nlebedev</strong><em> [</em><em>integer</em><em>]</em> :: Order or Lebedev quadrature.</li>
-<li><strong>lorder</strong><em> [</em><em>integer</em><em>]</em> :: Number of angular points</li>
-<li><strong>lq</strong> (lorder,3)<em> [</em><em>real</em><em>]</em> :: Spherical grid, size 3. (:,1) = theta, (:,2) = phi, (:,3) = weights</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Call to:</th><td class="field-body"><p class="first last"><code class="xref f f-func docutils literal"><span class="pre">lebedev1()</span></code>, <code class="xref f f-func docutils literal"><span class="pre">lebedev2()</span></code>, <code class="xref f f-func docutils literal"><span class="pre">lebedev3()</span></code>, <code class="xref f f-func docutils literal"><span class="pre">lebedev4()</span></code>, <code class="xref f f-func docutils literal"><span class="pre">lebedev5()</span></code></p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 </div>
 
 
@@ -160,7 +153,7 @@ abscissas and weights of the Lebedev quadrature in the array LQ. The output is a
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="numerical_integration.html" class="btn btn-neutral" title="numerical_integration"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="numerical_integration.html" class="btn btn-neutral" title="numerical_integration" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -172,10 +165,10 @@ abscissas and weights of the Lebedev quadrature in the array LQ. The output is a
         &copy; Copyright 2015, Fernando Posada.
     </p>
   </div>
-
   Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+
 </footer>
+
         </div>
       </div>
 

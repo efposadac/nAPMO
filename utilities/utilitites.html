@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Utilitites &mdash; nAPMO a1 documentation</title>
@@ -14,7 +15,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -36,7 +36,7 @@
         <link rel="prev" title="stack" href="../interfaces/stack.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -48,8 +48,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
         
-          <a href="../index.html" class="fa fa-home"> nAPMO</a>
+
         
+          <a href="../index.html" class="icon icon-home"> nAPMO
+        
+
+        
+        </a>
+
         
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -58,6 +64,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
+
+        
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
@@ -66,8 +74,30 @@
           
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../interfaces/interfaces.html">Interfaces</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="">Utilitites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interfaces/interfaces.html">Interfaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/atomic_element.html">atomic_element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/becke_grid.html">becke_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/composite_particle.html">composite_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/contracted_gaussian.html">contracted_gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/contracted_slater.html">contracted_slater</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/csystem.html">csystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/elementary_particle.html">elementary_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/primitive_gaussian.html">primitive_gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/primitive_slater.html">primitive_slater</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/stack.html">stack</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="">Utilitites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="databases.html">databases</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="databases.html#atomicelementsdatabase">AtomicElementsDatabase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="databases.html#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="databases.html#unitsdatabase">UnitsDatabase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="numerical_integration.html">numerical_integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lebedev.html">lebedev.lebedev</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -101,7 +131,9 @@
     <li>Utilitites</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/utilities/utilitites.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/utilities/utilitites.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
@@ -131,10 +163,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="databases.html" class="btn btn-neutral float-right" title="databases">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="databases.html" class="btn btn-neutral float-right" title="databases" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../interfaces/stack.html" class="btn btn-neutral" title="stack"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../interfaces/stack.html" class="btn btn-neutral" title="stack" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -146,10 +178,10 @@
         &copy; Copyright 2015, Fernando Posada.
     </p>
   </div>
-
   Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+
 </footer>
+
         </div>
       </div>
 

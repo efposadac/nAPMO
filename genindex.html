@@ -6,6 +6,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>Index &mdash; nAPMO a1 documentation</title>
@@ -15,7 +16,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -34,7 +34,7 @@
     <link rel="top" title="nAPMO a1 documentation" href="index.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -46,8 +46,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
         
-          <a href="index.html" class="fa fa-home"> nAPMO</a>
+
         
+          <a href="index.html" class="icon icon-home"> nAPMO
+        
+
+        
+        </a>
+
         
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -56,6 +62,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
+
+        
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
@@ -64,8 +72,31 @@
           
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="API.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="interfaces/interfaces.html">Interfaces</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utilities/utilitites.html">Utilitites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="interfaces/interfaces.html">Interfaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="interfaces/atomic_element.html">atomic_element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interfaces/basis_set.html">basis_set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interfaces/becke_grid.html">becke_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interfaces/composite_particle.html">composite_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interfaces/contracted_gaussian.html">contracted_gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interfaces/contracted_slater.html">contracted_slater</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interfaces/csystem.html">csystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interfaces/elementary_particle.html">elementary_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interfaces/primitive_gaussian.html">primitive_gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interfaces/primitive_slater.html">primitive_slater</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interfaces/stack.html">stack</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utilities/utilitites.html">Utilitites</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="utilities/databases.html">databases</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="utilities/databases.html#atomicelementsdatabase">AtomicElementsDatabase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="utilities/databases.html#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="utilities/databases.html#unitsdatabase">UnitsDatabase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="utilities/numerical_integration.html">numerical_integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="utilities/lebedev.html">lebedev.lebedev</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -96,6 +127,8 @@
       
     <li></li>
       <li class="wy-breadcrumbs-aside">
+        
+          
         
       </li>
   </ul>
@@ -151,11 +184,19 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="interfaces/becke_grid.html#module-becke_grid">becke_grid (module)</a>
+  <dt><a href="interfaces/basis_set.html#module-basis_set">basis_set (module)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/basis_set.html#basis_set.BasisSet">BasisSet (class in basis_set)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="interfaces/becke_grid.html#module-becke_grid">becke_grid (module)</a>
+  </dt>
+
       
   <dt><a href="interfaces/becke_grid.html#becke_grid.BeckeGrid">BeckeGrid (class in becke_grid)</a>
   </dt>
@@ -167,6 +208,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="utilities/numerical_integration.html#numerical_integration.chebgauss">chebgauss() (in module numerical_integration)</a>
+  </dt>
+
+      
   <dt><a href="utilities/numerical_integration.html#numerical_integration.chebgauss_integrate">chebgauss_integrate() (in module numerical_integration)</a>
   </dt>
 
@@ -174,14 +219,60 @@
   <dt><a href="utilities/numerical_integration.html#numerical_integration.chebgauss_rq">chebgauss_rq() (in module numerical_integration)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="interfaces/composite_particle.html#module-composite_particle">composite_particle (module)</a>
   </dt>
 
       
   <dt><a href="interfaces/composite_particle.html#composite_particle.CompositeParticle">CompositeParticle (class in composite_particle)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/basis_set.html#basis_set.BasisSet.compute">compute() (basis_set.BasisSet method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="interfaces/contracted_gaussian.html#contracted_gaussian.ContractedGaussian.compute">(contracted_gaussian.ContractedGaussian method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/contracted_slater.html#contracted_slater.ContractedSlater.compute">(contracted_slater.ContractedSlater method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/primitive_gaussian.html#primitive_gaussian.PrimitiveGaussian.compute">(primitive_gaussian.PrimitiveGaussian method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater.compute">(primitive_slater.PrimitiveSlater method)</a>
+  </dt>
+
+      </dl></dd>
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="interfaces/contracted_gaussian.html#module-contracted_gaussian">contracted_gaussian (module)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/contracted_slater.html#module-contracted_slater">contracted_slater (module)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/contracted_gaussian.html#contracted_gaussian.ContractedGaussian">ContractedGaussian (class in contracted_gaussian)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/contracted_slater.html#contracted_slater.ContractedSlater">ContractedSlater (class in contracted_slater)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/csystem.html#csystem.CSystem">CSystem (class in csystem)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/csystem.html#module-csystem">csystem (module)</a>
   </dt>
 
   </dl></td>
@@ -217,27 +308,175 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="interfaces/atomic_element.html#atomic_element.AtomicElement.get">get() (atomic_element.AtomicElement method)</a>
+  <dt><a href="interfaces/stack.html#stack.Stack.get">get() (stack.Stack method)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/primitive_gaussian.html#primitive_gaussian.PrimitiveGaussian.get_coefficient">get_coefficient() (primitive_gaussian.PrimitiveGaussian method)</a>
   </dt>
 
       <dd><dl>
         
-  <dt><a href="interfaces/becke_grid.html#becke_grid.BeckeGrid.get">(becke_grid.BeckeGrid method)</a>
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater.get_coefficient">(primitive_slater.PrimitiveSlater method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="interfaces/primitive_gaussian.html#primitive_gaussian.PrimitiveGaussian.get_exponent">get_exponent() (primitive_gaussian.PrimitiveGaussian method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater.get_exponent">(primitive_slater.PrimitiveSlater method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="interfaces/basis_set.html#basis_set.BasisSet.get_function">get_function() (basis_set.BasisSet method)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/atomic_element.html#atomic_element.AtomicElement.get_key">get_key() (atomic_element.AtomicElement method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="interfaces/elementary_particle.html#elementary_particle.ElementaryParticle.get_key">(elementary_particle.ElementaryParticle method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="interfaces/basis_set.html#basis_set.BasisSet.get_kind">get_kind() (basis_set.BasisSet method)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/contracted_gaussian.html#contracted_gaussian.ContractedGaussian.get_l">get_l() (contracted_gaussian.ContractedGaussian method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="interfaces/contracted_slater.html#contracted_slater.ContractedSlater.get_l">(contracted_slater.ContractedSlater method)</a>
   </dt>
 
         
-  <dt><a href="interfaces/elementary_particle.html#elementary_particle.ElementaryParticle.get">(elementary_particle.ElementaryParticle method)</a>
+  <dt><a href="interfaces/primitive_gaussian.html#primitive_gaussian.PrimitiveGaussian.get_l">(primitive_gaussian.PrimitiveGaussian method)</a>
   </dt>
 
         
-  <dt><a href="interfaces/stack.html#stack.Stack.get">(stack.Stack method)</a>
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater.get_l">(primitive_slater.PrimitiveSlater method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="interfaces/basis_set.html#basis_set.BasisSet.get_length">get_length() (basis_set.BasisSet method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="interfaces/contracted_gaussian.html#contracted_gaussian.ContractedGaussian.get_length">(contracted_gaussian.ContractedGaussian method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/contracted_slater.html#contracted_slater.ContractedSlater.get_length">(contracted_slater.ContractedSlater method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="interfaces/contracted_slater.html#contracted_slater.ContractedSlater.get_m">get_m() (contracted_slater.ContractedSlater method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater.get_m">(primitive_slater.PrimitiveSlater method)</a>
   </dt>
 
       </dl></dd>
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="interfaces/composite_particle.html#composite_particle.CompositeParticle.get_particle">get_particle() (composite_particle.CompositeParticle method)</a>
+  <dt><a href="interfaces/contracted_slater.html#contracted_slater.ContractedSlater.get_n">get_n() (contracted_slater.ContractedSlater method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater.get_n">(primitive_slater.PrimitiveSlater method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="interfaces/composite_particle.html#composite_particle.CompositeParticle.get_n_species">get_n_species() (composite_particle.CompositeParticle method)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/basis_set.html#basis_set.BasisSet.get_name">get_name() (basis_set.BasisSet method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="interfaces/composite_particle.html#composite_particle.CompositeParticle.get_name">(composite_particle.CompositeParticle method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="interfaces/contracted_gaussian.html#contracted_gaussian.ContractedGaussian.get_normalization">get_normalization() (contracted_gaussian.ContractedGaussian method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="interfaces/contracted_slater.html#contracted_slater.ContractedSlater.get_normalization">(contracted_slater.ContractedSlater method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/primitive_gaussian.html#primitive_gaussian.PrimitiveGaussian.get_normalization">(primitive_gaussian.PrimitiveGaussian method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater.get_normalization">(primitive_slater.PrimitiveSlater method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="interfaces/basis_set.html#basis_set.BasisSet.get_origin">get_origin() (basis_set.BasisSet method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="interfaces/contracted_gaussian.html#contracted_gaussian.ContractedGaussian.get_origin">(contracted_gaussian.ContractedGaussian method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/contracted_slater.html#contracted_slater.ContractedSlater.get_origin">(contracted_slater.ContractedSlater method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/primitive_gaussian.html#primitive_gaussian.PrimitiveGaussian.get_origin">(primitive_gaussian.PrimitiveGaussian method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater.get_origin">(primitive_slater.PrimitiveSlater method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="interfaces/basis_set.html#basis_set.BasisSet.get_particle">get_particle() (basis_set.BasisSet method)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/contracted_gaussian.html#contracted_gaussian.ContractedGaussian.get_primitive">get_primitive() (contracted_gaussian.ContractedGaussian method)</a>
+  </dt>
+
+      <dd><dl>
+        
+  <dt><a href="interfaces/contracted_slater.html#contracted_slater.ContractedSlater.get_primitive">(contracted_slater.ContractedSlater method)</a>
+  </dt>
+
+      </dl></dd>
+      
+  <dt><a href="interfaces/composite_particle.html#composite_particle.CompositeParticle.get_species">get_species() (composite_particle.CompositeParticle method)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/basis_set.html#basis_set.BasisSet.get_total_length">get_total_length() (basis_set.BasisSet method)</a>
   </dt>
 
   </dl></td>
@@ -247,15 +486,23 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="interfaces/stack.html#stack.Stack.isEmpty">isEmpty() (stack.Stack method)</a>
+  <dt><a href="interfaces/becke_grid.html#becke_grid.BeckeGrid.integrate_c">integrate_c() (becke_grid.BeckeGrid method)</a>
   </dt>
 
       
-  <dt><a href="interfaces/atomic_element.html#atomic_element.AtomicElement.isQuantum">isQuantum() (atomic_element.AtomicElement method)</a>
+  <dt><a href="interfaces/becke_grid.html#becke_grid.BeckeGrid.integrate_p">integrate_p() (becke_grid.BeckeGrid method)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/stack.html#stack.Stack.isEmpty">isEmpty() (stack.Stack method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="interfaces/atomic_element.html#atomic_element.AtomicElement.isQuantum">isQuantum() (atomic_element.AtomicElement method)</a>
+  </dt>
+
       
   <dt><a href="interfaces/composite_particle.html#composite_particle.CompositeParticle.iter_symbol">iter_symbol() (composite_particle.CompositeParticle method)</a>
   </dt>
@@ -267,13 +514,17 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="utilities/lebedev.html#f/_/lebedev_compute"><strong>lebedev_compute() (fortran subroutine)</strong></a>
+  <dt><a href="utilities/numerical_integration.html#numerical_integration.lebedev_lq">lebedev_lq() (in module numerical_integration)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/basis_set.html#basis_set.BasisSet.load_gaussian">load_gaussian() (basis_set.BasisSet method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="utilities/numerical_integration.html#numerical_integration.lebedev_lq">lebedev_lq() (in module numerical_integration)</a>
+  <dt><a href="interfaces/basis_set.html#basis_set.BasisSet.load_slater">load_slater() (basis_set.BasisSet method)</a>
   </dt>
 
   </dl></td>
@@ -283,13 +534,23 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="interfaces/composite_particle.html#composite_particle.CompositeParticle.n_particles">n_particles() (composite_particle.CompositeParticle method)</a>
+  <dt><a href="interfaces/contracted_gaussian.html#contracted_gaussian.ContractedGaussian.normalize">normalize() (contracted_gaussian.ContractedGaussian method)</a>
   </dt>
 
-      
-  <dt><a href="interfaces/composite_particle.html#composite_particle.CompositeParticle.name">name() (composite_particle.CompositeParticle method)</a>
+      <dd><dl>
+        
+  <dt><a href="interfaces/contracted_slater.html#contracted_slater.ContractedSlater.normalize">(contracted_slater.ContractedSlater method)</a>
   </dt>
 
+        
+  <dt><a href="interfaces/primitive_gaussian.html#primitive_gaussian.PrimitiveGaussian.normalize">(primitive_gaussian.PrimitiveGaussian method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater.normalize">(primitive_slater.PrimitiveSlater method)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
@@ -303,9 +564,19 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="interfaces/slater_function.html#slater_function.SlaterFunction.orbital">orbital() (slater_function.SlaterFunction method)</a>
+  <dt><a href="interfaces/contracted_gaussian.html#contracted_gaussian.ContractedGaussian.overlap">overlap() (contracted_gaussian.ContractedGaussian method)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="interfaces/primitive_gaussian.html#primitive_gaussian.PrimitiveGaussian.overlap">(primitive_gaussian.PrimitiveGaussian method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater.overlap">(primitive_slater.PrimitiveSlater method)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -320,8 +591,24 @@
   <dt><a href="interfaces/stack.html#stack.Stack.pop">pop() (stack.Stack method)</a>
   </dt>
 
+      
+  <dt><a href="interfaces/primitive_gaussian.html#module-primitive_gaussian">primitive_gaussian (module)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/primitive_slater.html#module-primitive_slater">primitive_slater (module)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="interfaces/primitive_gaussian.html#primitive_gaussian.PrimitiveGaussian">PrimitiveGaussian (class in primitive_gaussian)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater">PrimitiveSlater (class in primitive_slater)</a>
+  </dt>
+
       
   <dt><a href="interfaces/stack.html#stack.Stack.push">push() (stack.Stack method)</a>
   </dt>
@@ -333,7 +620,7 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="interfaces/slater_function.html#slater_function.SlaterFunction.radial">radial() (slater_function.SlaterFunction method)</a>
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater.radial">radial() (primitive_slater.PrimitiveSlater method)</a>
   </dt>
 
   </dl></td>
@@ -343,12 +630,12 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="interfaces/atomic_element.html#atomic_element.AtomicElement.set">set() (atomic_element.AtomicElement method)</a>
+  <dt><a href="interfaces/atomic_element.html#atomic_element.AtomicElement.set_key">set_key() (atomic_element.AtomicElement method)</a>
   </dt>
 
       <dd><dl>
         
-  <dt><a href="interfaces/elementary_particle.html#elementary_particle.ElementaryParticle.set">(elementary_particle.ElementaryParticle method)</a>
+  <dt><a href="interfaces/elementary_particle.html#elementary_particle.ElementaryParticle.set_key">(elementary_particle.ElementaryParticle method)</a>
   </dt>
 
       </dl></dd>
@@ -358,36 +645,46 @@
 
       <dd><dl>
         
+  <dt><a href="interfaces/basis_set.html#basis_set.BasisSet.show">(basis_set.BasisSet method)</a>
+  </dt>
+
+        
   <dt><a href="interfaces/composite_particle.html#composite_particle.CompositeParticle.show">(composite_particle.CompositeParticle method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/contracted_gaussian.html#contracted_gaussian.ContractedGaussian.show">(contracted_gaussian.ContractedGaussian method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/contracted_slater.html#contracted_slater.ContractedSlater.show">(contracted_slater.ContractedSlater method)</a>
   </dt>
 
         
   <dt><a href="interfaces/elementary_particle.html#elementary_particle.ElementaryParticle.show">(elementary_particle.ElementaryParticle method)</a>
   </dt>
 
-      </dl></dd>
-      
-  <dt><a href="interfaces/composite_particle.html#composite_particle.CompositeParticle.size">size() (composite_particle.CompositeParticle method)</a>
-  </dt>
-
-      <dd><dl>
         
-  <dt><a href="interfaces/stack.html#stack.Stack.size">(stack.Stack method)</a>
+  <dt><a href="interfaces/primitive_gaussian.html#primitive_gaussian.PrimitiveGaussian.show">(primitive_gaussian.PrimitiveGaussian method)</a>
+  </dt>
+
+        
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater.show">(primitive_slater.PrimitiveSlater method)</a>
   </dt>
 
       </dl></dd>
       
-  <dt><a href="interfaces/slater_function.html#module-slater_function">slater_function (module)</a>
+  <dt><a href="interfaces/basis_set.html#basis_set.BasisSet.show_json">show_json() (basis_set.BasisSet method)</a>
+  </dt>
+
+      
+  <dt><a href="interfaces/stack.html#stack.Stack.size">size() (stack.Stack method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="interfaces/slater_function.html#slater_function.SlaterFunction">SlaterFunction (class in slater_function)</a>
-  </dt>
-
-      
-  <dt><a href="interfaces/slater_function.html#slater_function.SlaterFunction.spherical">spherical() (slater_function.SlaterFunction method)</a>
+  <dt><a href="interfaces/primitive_slater.html#primitive_slater.PrimitiveSlater.spherical">spherical() (primitive_slater.PrimitiveSlater method)</a>
   </dt>
 
       
@@ -398,6 +695,10 @@
   <dt><a href="interfaces/stack.html#module-stack">stack (module)</a>
   </dt>
 
+      
+  <dt><a href="interfaces/becke_grid.html#becke_grid.BeckeGrid.step_function">step_function() (becke_grid.BeckeGrid method)</a>
+  </dt>
+
   </dl></td>
 </tr></table>
 
@@ -405,13 +706,13 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="interfaces/becke_grid.html#becke_grid.BeckeGrid.weight_n_r">weight_n_r() (becke_grid.BeckeGrid method)</a>
+  <dt><a href="interfaces/becke_grid.html#becke_grid.BeckeGrid.weight_c">weight_c() (becke_grid.BeckeGrid method)</a>
   </dt>
 
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="interfaces/becke_grid.html#becke_grid.BeckeGrid.weights">weights() (becke_grid.BeckeGrid method)</a>
+  <dt><a href="interfaces/becke_grid.html#becke_grid.BeckeGrid.weight_p">weight_p() (becke_grid.BeckeGrid method)</a>
   </dt>
 
   </dl></td>
@@ -430,10 +731,10 @@
         &copy; Copyright 2015, Fernando Posada.
     </p>
   </div>
-
   Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+
 </footer>
+
         </div>
       </div>
 

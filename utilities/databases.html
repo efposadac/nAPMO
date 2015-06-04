@@ -5,6 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
+  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
   <title>databases &mdash; nAPMO a1 documentation</title>
@@ -14,7 +15,6 @@
   
 
   
-  <link href='https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic|Roboto+Slab:400,700|Inconsolata:400,700&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
 
   
   
@@ -36,7 +36,7 @@
         <link rel="prev" title="Utilitites" href="utilitites.html"/> 
 
   
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+  <script src="_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -48,8 +48,14 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-nav-search">
         
-          <a href="../index.html" class="fa fa-home"> nAPMO</a>
+
         
+          <a href="../index.html" class="icon icon-home"> nAPMO
+        
+
+        
+        </a>
+
         
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -58,6 +64,8 @@
     <input type="hidden" name="area" value="default" />
   </form>
 </div>
+
+        
       </div>
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
@@ -66,8 +74,30 @@
           
               <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../interfaces/interfaces.html">Interfaces</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="utilitites.html">Utilitites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../interfaces/interfaces.html">Interfaces</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/atomic_element.html">atomic_element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/becke_grid.html">becke_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/composite_particle.html">composite_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/contracted_gaussian.html">contracted_gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/contracted_slater.html">contracted_slater</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/csystem.html">csystem</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/elementary_particle.html">elementary_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/primitive_gaussian.html">primitive_gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/primitive_slater.html">primitive_slater</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/stack.html">stack</a></li>
+</ul>
+</li>
+<li class="toctree-l2 current"><a class="reference internal" href="utilitites.html">Utilitites</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="">databases</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#atomicelementsdatabase">AtomicElementsDatabase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#unitsdatabase">UnitsDatabase</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="numerical_integration.html">numerical_integration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lebedev.html">lebedev.lebedev</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -103,7 +133,9 @@
     <li>databases</li>
       <li class="wy-breadcrumbs-aside">
         
-          <a href="../_sources/utilities/databases.txt" rel="nofollow"> View page source</a>
+          
+            <a href="../_sources/utilities/databases.txt" rel="nofollow"> View page source</a>
+          
         
       </li>
   </ul>
@@ -120,8 +152,8 @@ Database information taken from: <a class="reference external" href="http://phys
 <p>Atomic radii from J. C. Slater, J. Chem. Phys. 41, 3199 (1964).</p>
 <p class="rubric">Example</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">utilities.databases</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">utilities</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">AtomicElementsDatabase</span><span class="p">[</span><span class="s">&#39;H&#39;</span><span class="p">]</span>
-<span class="go">{&#39;vanderwaals_radius&#39;: 1.2, &#39;symbol&#39;: &#39;H&#39;, &#39;covalent_radius&#39;: 0.3, &#39;atomic_number&#39;: 1, &#39;atomic_radii&#39;: 0.35, &#39;ionization_energy_1&#39;: 1312, &#39;melting_point&#39;: 13.81, &#39;electron_affinity&#39;: -73, &#39;electronegativity&#39;: 2.1, &#39;name&#39;: &#39;Hydrogen&#39;, &#39;density&#39;: 0.084, &#39;boiling_point&#39;: 20.28, &#39;mass&#39;: 1.00794}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">utilities</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">AtomicElementsDatabase</span><span class="p">[</span><span class="s">&#39;H&#39;</span><span class="p">]</span> 
+<span class="go">{&#39;vanderwaals_radius&#39;: 1.2, &#39;atomic_number&#39;: 1, &#39;symbol&#39;: &#39;H&#39;, &#39;covalent_radius&#39;: 0.3, &#39;atomic_radii&#39;: 0.35, &#39;ionization_energy_1&#39;: 1312, &#39;melting_point&#39;: 13.81, &#39;electron_affinity&#39;: -73, &#39;electronegativity&#39;: 2.1, &#39;name&#39;: &#39;Hydrogen&#39;, &#39;density&#39;: 0.084, &#39;boiling_point&#39;: 20.28, &#39;mass&#39;: 1.00794}</span>
 </pre></div>
 </div>
 </div>
@@ -130,7 +162,7 @@ Database information taken from: <a class="reference external" href="http://phys
 <p>This database contains all information related to quatum species, ie. electrons, muons, etc.</p>
 <p class="rubric">Example</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">utilities.databases</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">utilities</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">ElementaryParticlesDatabase</span><span class="p">[</span><span class="s">&#39;e-&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">utilities</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">ElementaryParticlesDatabase</span><span class="p">[</span><span class="s">&#39;e-&#39;</span><span class="p">]</span> 
 <span class="go">{&#39;category&#39;: &#39;lepton&#39;, &#39;name&#39;: &#39;electron&#39;, &#39;symbol&#39;: &#39;e-&#39;, &#39;charge&#39;: -1.0, &#39;mass&#39;: 1.0, &#39;spin&#39;: 0.5}</span>
 </pre></div>
 </div>
@@ -153,10 +185,10 @@ Database information taken from: <a class="reference external" href="http://phys
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="numerical_integration.html" class="btn btn-neutral float-right" title="numerical_integration">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="numerical_integration.html" class="btn btn-neutral float-right" title="numerical_integration" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="utilitites.html" class="btn btn-neutral" title="Utilitites"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="utilitites.html" class="btn btn-neutral" title="Utilitites" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -168,10 +200,10 @@ Database information taken from: <a class="reference external" href="http://phys
         &copy; Copyright 2015, Fernando Posada.
     </p>
   </div>
-
   Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
-  
+
 </footer>
+
         </div>
       </div>
 
