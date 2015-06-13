@@ -1,0 +1,1718 @@
+{
+    "H": {
+        "atomic_radii": 0.35,
+        "electron_affinity": -73,
+        "atomic_number": 1,
+        "ionization_energy_1": 1312,
+        "covalent_radius": 0.3,
+        "vanderwaals_radius": 1.2,
+        "symbol": "H",
+        "boiling_point": 20.28,
+        "electronegativity": 2.1,
+        "mass": 1.00794,
+        "density": 0.084,
+        "melting_point": 13.81,
+        "name": "Hydrogen"
+    },
+    "isotopes_H": {
+        "1": {
+            "atomic_weight": 1.0078250321,
+            "nuclearSpin": 0.5,
+            "mass_number": 1,
+            "abundance": 99.9885
+        },
+        "2": {
+            "atomic_weight": 2.014101778,
+            "nuclearSpin": 1,
+            "mass_number": 2,
+            "abundance": 0.0115
+        },
+        "3": {
+            "atomic_weight": 3.0160492675,
+            "nuclearSpin": 0.5,
+            "mass_number": 3,
+            "abundance": 0.0
+        },
+        "4": {
+            "atomic_weight": 4.02783,
+            "nuclearSpin": -2.0,
+            "mass_number": 4,
+            "abundance": 0
+        },
+        "5": {
+            "atomic_weight": 5.03954,
+            "nuclearSpin": 0,
+            "mass_number": 5,
+            "abundance": 0
+        },
+        "6": {
+            "atomic_weight": 6.04494,
+            "nuclearSpin": 0,
+            "mass_number": 6,
+            "abundance": 0
+        },
+        "most_abundant": 1
+    },
+    "He": {
+        "electronegativity": 0,
+        "electron_affinity": 21,
+        "atomic_number": 2,
+        "ionization_energy_1": 2375.1,
+        "covalent_radius": 1.22,
+        "vanderwaals_radius": 1.4,
+        "symbol": "He",
+        "boiling_point": 4.216,
+        "atomic_radii": 1.31,
+        "mass": 4.002602,
+        "density": 0.1785,
+        "melting_point": 0.95,
+        "name": "Helium"
+    },
+    "isotopes_He": {
+        "most_abundant": 4,
+        "3": {
+            "atomic_weight": 3.0160293097,
+            "nuclearSpin": 0.5,
+            "mass_number": 3,
+            "abundance": 0.000137
+        },
+        "4": {
+            "atomic_weight": 4.0026032497,
+            "nuclearSpin": 0.0,
+            "mass_number": 4,
+            "abundance": 99.999863
+        },
+        "5": {
+            "atomic_weight": 5.01222,
+            "nuclearSpin": -1.5,
+            "mass_number": 5,
+            "abundance": 0
+        },
+        "6": {
+            "atomic_weight": 6.0188881,
+            "nuclearSpin": 0.0,
+            "mass_number": 6,
+            "abundance": 0
+        },
+        "7": {
+            "atomic_weight": 7.02803,
+            "nuclearSpin": -1.5,
+            "mass_number": 7,
+            "abundance": 0
+        },
+        "8": {
+            "atomic_weight": 8.033922,
+            "nuclearSpin": 0.0,
+            "mass_number": 8,
+            "abundance": 0
+        },
+        "9": {
+            "atomic_weight": 9.04382,
+            "nuclearSpin": -0.5,
+            "mass_number": 9,
+            "abundance": 0
+        },
+        "10": {
+            "atomic_weight": 10.0524,
+            "nuclearSpin": 0.0,
+            "mass_number": 10,
+            "abundance": 0
+        }
+    },
+    "Li": {
+        "electronegativity": 0.98,
+        "electron_affinity": -60,
+        "atomic_number": 3,
+        "ionization_energy_1": 520.867,
+        "covalent_radius": 1.23,
+        "vanderwaals_radius": 1.82,
+        "symbol": "Li",
+        "boiling_point": 1615,
+        "atomic_radii": 1.45,
+        "mass": 6.941,
+        "density": 0.53,
+        "melting_point": 453.7,
+        "name": "Lithium"
+    },
+    "isotopes_Li": {
+        "most_abundant": 7,
+        "4": {
+            "atomic_weight": 4.02718,
+            "nuclearSpin": -2.0,
+            "mass_number": 4,
+            "abundance": 0
+        },
+        "5": {
+            "atomic_weight": 5.01254,
+            "nuclearSpin": -1.5,
+            "mass_number": 5,
+            "abundance": 0
+        },
+        "6": {
+            "atomic_weight": 6.0151223,
+            "nuclearSpin": 1.0,
+            "mass_number": 6,
+            "abundance": 7.59
+        },
+        "7": {
+            "atomic_weight": 7.016004,
+            "nuclearSpin": -1.5,
+            "mass_number": 7,
+            "abundance": 92.41
+        },
+        "8": {
+            "atomic_weight": 8.0224867,
+            "nuclearSpin": 2.0,
+            "mass_number": 8,
+            "abundance": 0
+        },
+        "9": {
+            "atomic_weight": 9.0267891,
+            "nuclearSpin": -1.5,
+            "mass_number": 9,
+            "abundance": 0
+        },
+        "10": {
+            "atomic_weight": 10.035481,
+            "nuclearSpin": 0,
+            "mass_number": 10,
+            "abundance": 0
+        },
+        "11": {
+            "atomic_weight": 11.043796,
+            "nuclearSpin": -1.5,
+            "mass_number": 11,
+            "abundance": 0
+        },
+        "12": {
+            "atomic_weight": 12.05378,
+            "nuclearSpin": 0,
+            "mass_number": 12,
+            "abundance": 0
+        }
+    },
+    "Be": {
+        "electronegativity": 0.98,
+        "electron_affinity": -60,
+        "atomic_number": 4,
+        "ionization_energy_1": 520.867,
+        "covalent_radius": 0.89,
+        "vanderwaals_radius": 1.82,
+        "symbol": "Be",
+        "boiling_point": 1615,
+        "atomic_radii": 1.05,
+        "density": 0.53,
+        "melting_point": 453.7,
+        "name": "Beryllium",
+        "standarAtomic_weight": 9.012182
+    },
+    "isotopes_Be": {
+        "most_abundant": 9,
+        "5": {
+            "atomic_weight": 5.04079,
+            "nuclearSpin": 0,
+            "mass_number": 5,
+            "abundance": 0
+        },
+        "6": {
+            "atomic_weight": 6.019726,
+            "nuclearSpin": 0,
+            "mass_number": 6,
+            "abundance": 0
+        },
+        "7": {
+            "atomic_weight": 7.0169292,
+            "nuclearSpin": 0,
+            "mass_number": 7,
+            "abundance": 0
+        },
+        "8": {
+            "atomic_weight": 8.00530509,
+            "nuclearSpin": 0,
+            "mass_number": 8,
+            "abundance": 0
+        },
+        "9": {
+            "atomic_weight": 9.0121821,
+            "nuclearSpin": 0,
+            "mass_number": 9,
+            "abundance": 100
+        },
+        "10": {
+            "atomic_weight": 10.0135337,
+            "nuclearSpin": 0,
+            "mass_number": 10,
+            "abundance": 0
+        },
+        "11": {
+            "atomic_weight": 11.021658,
+            "nuclearSpin": 0,
+            "mass_number": 11,
+            "abundance": 0
+        },
+        "12": {
+            "atomic_weight": 12.026921,
+            "nuclearSpin": 0,
+            "mass_number": 12,
+            "abundance": 0
+        },
+        "13": {
+            "atomic_weight": 13.03613,
+            "nuclearSpin": 0,
+            "mass_number": 13,
+            "abundance": 0
+        },
+        "14": {
+            "atomic_weight": 14.04282,
+            "nuclearSpin": 0,
+            "mass_number": 14,
+            "abundance": 0
+        }
+    },
+    "B": {
+        "electronegativity": 2.04,
+        "electron_affinity": -27,
+        "atomic_number": 5,
+        "ionization_energy_1": 801.587,
+        "covalent_radius": 0.88,
+        "vanderwaals_radius": 0,
+        "symbol": "B",
+        "boiling_point": 4275,
+        "atomic_radii": 0.85,
+        "density": 2.46,
+        "melting_point": 2365,
+        "name": "Boron",
+        "standarAtomic_weight": 10.811
+    },
+    "isotopes_B": {
+        "most_abundant": 11,
+        "7": {
+            "atomic_weight": 7.02992,
+            "nuclearSpin": 0,
+            "mass_number": 7,
+            "abundance": 0
+        },
+        "8": {
+            "atomic_weight": 8.0246067,
+            "nuclearSpin": 0,
+            "mass_number": 8,
+            "abundance": 0
+        },
+        "9": {
+            "atomic_weight": 9.0133288,
+            "nuclearSpin": 0,
+            "mass_number": 9,
+            "abundance": 0
+        },
+        "10": {
+            "atomic_weight": 10.012937,
+            "nuclearSpin": 0,
+            "mass_number": 10,
+            "abundance": 19.9
+        },
+        "11": {
+            "atomic_weight": 11.0093055,
+            "nuclearSpin": 0,
+            "mass_number": 11,
+            "abundance": 80.1
+        },
+        "12": {
+            "atomic_weight": 12.0143521,
+            "nuclearSpin": 0,
+            "mass_number": 12,
+            "abundance": 0
+        },
+        "13": {
+            "atomic_weight": 13.0177803,
+            "nuclearSpin": 0,
+            "mass_number": 13,
+            "abundance": 0
+        },
+        "14": {
+            "atomic_weight": 14.025404,
+            "nuclearSpin": 0,
+            "mass_number": 14,
+            "abundance": 0
+        },
+        "15": {
+            "atomic_weight": 15.031097,
+            "nuclearSpin": 0,
+            "mass_number": 15,
+            "abundance": 0
+        },
+        "16": {
+            "atomic_weight": 16.03981,
+            "nuclearSpin": 0,
+            "mass_number": 16,
+            "abundance": 0
+        },
+        "17": {
+            "atomic_weight": 17.04693,
+            "nuclearSpin": 0,
+            "mass_number": 17,
+            "abundance": 0
+        },
+        "18": {
+            "atomic_weight": 18.05617,
+            "nuclearSpin": 0,
+            "mass_number": 18,
+            "abundance": 0
+        },
+        "19": {
+            "atomic_weight": 19.06373,
+            "nuclearSpin": 0,
+            "mass_number": 19,
+            "abundance": 0
+        }
+    },
+    "C": {
+        "electronegativity": 2.55,
+        "electron_affinity": -122,
+        "atomic_number": 6,
+        "ionization_energy_1": 1087.72,
+        "covalent_radius": 0.77,
+        "vanderwaals_radius": 1.7,
+        "symbol": "C",
+        "boiling_point": 5100,
+        "atomic_radii": 0.7,
+        "mass": 12.0107,
+        "density": 3.51,
+        "melting_point": 3825,
+        "name": "Carbon"
+    },
+    "isotopes_C": {
+        "most_abundant": 12,
+        "8": {
+            "atomic_weight": 8.037675,
+            "nuclearSpin": 0,
+            "mass_number": 8,
+            "abundance": 0
+        },
+        "9": {
+            "atomic_weight": 9.0310401,
+            "nuclearSpin": 0,
+            "mass_number": 9,
+            "abundance": 0
+        },
+        "10": {
+            "atomic_weight": 10.0168531,
+            "nuclearSpin": 0,
+            "mass_number": 10,
+            "abundance": 0
+        },
+        "11": {
+            "atomic_weight": 11.0114338,
+            "nuclearSpin": 0,
+            "mass_number": 11,
+            "abundance": 0
+        },
+        "12": {
+            "atomic_weight": 12.0,
+            "nuclearSpin": 0,
+            "mass_number": 12,
+            "abundance": 98.93
+        },
+        "13": {
+            "atomic_weight": 13.0033548378,
+            "nuclearSpin": 0,
+            "mass_number": 13,
+            "abundance": 1.07
+        },
+        "14": {
+            "atomic_weight": 14.003241988,
+            "nuclearSpin": 0,
+            "mass_number": 14,
+            "abundance": 0
+        },
+        "15": {
+            "atomic_weight": 15.0105993,
+            "nuclearSpin": 0,
+            "mass_number": 15,
+            "abundance": 0
+        },
+        "16": {
+            "atomic_weight": 16.014701,
+            "nuclearSpin": 0,
+            "mass_number": 16,
+            "abundance": 0
+        },
+        "17": {
+            "atomic_weight": 17.022584,
+            "nuclearSpin": 0,
+            "mass_number": 17,
+            "abundance": 0
+        },
+        "18": {
+            "atomic_weight": 18.02676,
+            "nuclearSpin": 0,
+            "mass_number": 18,
+            "abundance": 0
+        },
+        "19": {
+            "atomic_weight": 19.03525,
+            "nuclearSpin": 0,
+            "mass_number": 19,
+            "abundance": 0
+        },
+        "20": {
+            "atomic_weight": 20.04032,
+            "nuclearSpin": 0,
+            "mass_number": 20,
+            "abundance": 0
+        },
+        "21": {
+            "atomic_weight": 21.04934,
+            "nuclearSpin": 0,
+            "mass_number": 21,
+            "abundance": 0
+        },
+        "22": {
+            "atomic_weight": 22.05645,
+            "nuclearSpin": 0,
+            "mass_number": 22,
+            "abundance": 0
+        }
+    },
+    "N": {
+        "electronegativity": 3.04,
+        "electron_affinity": 7,
+        "atomic_number": 7,
+        "ionization_energy_1": 1403.98,
+        "covalent_radius": 0.7,
+        "vanderwaals_radius": 1.55,
+        "symbol": "N",
+        "boiling_point": 77.344,
+        "atomic_radii": 0.65,
+        "mass": 14.0067,
+        "density": 1.17,
+        "melting_point": 63.15,
+        "name": "Nitrogen"
+    },
+    "isotopes_N": {
+        "most_abundant": 14,
+        "10": {
+            "atomic_weight": 10.04262,
+            "nuclearSpin": 0,
+            "mass_number": 10,
+            "abundance": 0
+        },
+        "11": {
+            "atomic_weight": 11.0268,
+            "nuclearSpin": 0,
+            "mass_number": 11,
+            "abundance": 0
+        },
+        "12": {
+            "atomic_weight": 12.0186132,
+            "nuclearSpin": 1.0,
+            "mass_number": 12,
+            "abundance": 0
+        },
+        "13": {
+            "atomic_weight": 13.00573858,
+            "nuclearSpin": -0.5,
+            "mass_number": 13,
+            "abundance": 0
+        },
+        "14": {
+            "atomic_weight": 14.0030740052,
+            "nuclearSpin": 1.0,
+            "mass_number": 14,
+            "abundance": 99.632
+        },
+        "15": {
+            "atomic_weight": 15.0001088984,
+            "nuclearSpin": -0.5,
+            "mass_number": 15,
+            "abundance": 0.368
+        },
+        "16": {
+            "atomic_weight": 16.0061014,
+            "nuclearSpin": -2.0,
+            "mass_number": 16,
+            "abundance": 0
+        },
+        "17": {
+            "atomic_weight": 17.00845,
+            "nuclearSpin": -0.5,
+            "mass_number": 17,
+            "abundance": 0
+        },
+        "18": {
+            "atomic_weight": 18.014082,
+            "nuclearSpin": -1,
+            "mass_number": 18,
+            "abundance": 0
+        },
+        "19": {
+            "atomic_weight": 19.017027,
+            "nuclearSpin": 0,
+            "mass_number": 19,
+            "abundance": 0
+        },
+        "20": {
+            "atomic_weight": 20.02337,
+            "nuclearSpin": 0,
+            "mass_number": 20,
+            "abundance": 0
+        },
+        "21": {
+            "atomic_weight": 21.02709,
+            "nuclearSpin": 0,
+            "mass_number": 21,
+            "abundance": 0
+        },
+        "22": {
+            "atomic_weight": 22.03444,
+            "nuclearSpin": 0,
+            "mass_number": 22,
+            "abundance": 0
+        },
+        "23": {
+            "atomic_weight": 23.04051,
+            "nuclearSpin": 0,
+            "mass_number": 23,
+            "abundance": 0
+        },
+        "24": {
+            "atomic_weight": 24.0505,
+            "nuclearSpin": 0,
+            "mass_number": 24,
+            "abundance": 0
+        }
+    },
+    "O": {
+        "electronegativity": 3.44,
+        "electron_affinity": -141,
+        "atomic_number": 8,
+        "ionization_energy_1": 1315.5,
+        "covalent_radius": 0.66,
+        "vanderwaals_radius": 1.52,
+        "symbol": "O",
+        "boiling_point": 90.188,
+        "atomic_radii": 0.6,
+        "mass": 15.9994,
+        "density": 1.33,
+        "melting_point": 54.8,
+        "name": "Oxygen"
+    },
+    "isotopes_O": {
+        "most_abundant": 16,
+        "12": {
+            "atomic_weight": 12.034405,
+            "nuclearSpin": 0,
+            "mass_number": 12,
+            "abundance": 0
+        },
+        "13": {
+            "atomic_weight": 13.02481,
+            "nuclearSpin": 0,
+            "mass_number": 13,
+            "abundance": 0
+        },
+        "14": {
+            "atomic_weight": 14.00859529,
+            "nuclearSpin": 0,
+            "mass_number": 14,
+            "abundance": 0
+        },
+        "15": {
+            "atomic_weight": 15.0030654,
+            "nuclearSpin": 0,
+            "mass_number": 15,
+            "abundance": 0
+        },
+        "16": {
+            "atomic_weight": 15.9949146221,
+            "nuclearSpin": 0,
+            "mass_number": 16,
+            "abundance": 99.757
+        },
+        "17": {
+            "atomic_weight": 16.9991315,
+            "nuclearSpin": 0,
+            "mass_number": 17,
+            "abundance": 0.038
+        },
+        "18": {
+            "atomic_weight": 17.9991604,
+            "nuclearSpin": 0,
+            "mass_number": 18,
+            "abundance": 0.205
+        },
+        "19": {
+            "atomic_weight": 19.003579,
+            "nuclearSpin": 0,
+            "mass_number": 19,
+            "abundance": 0
+        },
+        "20": {
+            "atomic_weight": 20.0040762,
+            "nuclearSpin": 0,
+            "mass_number": 20,
+            "abundance": 0
+        },
+        "21": {
+            "atomic_weight": 21.008655,
+            "nuclearSpin": 0,
+            "mass_number": 21,
+            "abundance": 0
+        },
+        "22": {
+            "atomic_weight": 22.00997,
+            "nuclearSpin": 0,
+            "mass_number": 22,
+            "abundance": 0
+        },
+        "23": {
+            "atomic_weight": 23.01569,
+            "nuclearSpin": 0,
+            "mass_number": 23,
+            "abundance": 0
+        },
+        "24": {
+            "atomic_weight": 24.02037,
+            "nuclearSpin": 0,
+            "mass_number": 24,
+            "abundance": 0
+        },
+        "25": {
+            "atomic_weight": 25.02914,
+            "nuclearSpin": 0,
+            "mass_number": 25,
+            "abundance": 0
+        },
+        "26": {
+            "atomic_weight": 26.03775,
+            "nuclearSpin": 0,
+            "mass_number": 26,
+            "abundance": 0
+        }
+    },
+    "F": {
+        "electronegativity": 3.98,
+        "electron_affinity": -328,
+        "atomic_number": 9,
+        "ionization_energy_1": 1682.97,
+        "covalent_radius": 0.58,
+        "vanderwaals_radius": 1.47,
+        "symbol": "F",
+        "boiling_point": 85,
+        "atomic_radii": 0.5,
+        "mass": 18.9984032,
+        "density": 1.58,
+        "melting_point": 53.55,
+        "name": "Fluorine"
+    },
+    "isotopes_F": {
+        "most_abundant": 19,
+        "14": {
+            "atomic_weight": 14.03608,
+            "nuclearSpin": 0,
+            "mass_number": 14,
+            "abundance": 0
+        },
+        "15": {
+            "atomic_weight": 15.01801,
+            "nuclearSpin": 0,
+            "mass_number": 15,
+            "abundance": 0
+        },
+        "16": {
+            "atomic_weight": 16.011466,
+            "nuclearSpin": 0,
+            "mass_number": 16,
+            "abundance": 0
+        },
+        "17": {
+            "atomic_weight": 17.00209524,
+            "nuclearSpin": 0,
+            "mass_number": 17,
+            "abundance": 0
+        },
+        "18": {
+            "atomic_weight": 18.0009377,
+            "nuclearSpin": 0,
+            "mass_number": 18,
+            "abundance": 0
+        },
+        "19": {
+            "atomic_weight": 18.9984032,
+            "nuclearSpin": 0,
+            "mass_number": 19,
+            "abundance": 100
+        },
+        "20": {
+            "atomic_weight": 19.99998132,
+            "nuclearSpin": 0,
+            "mass_number": 20,
+            "abundance": 0
+        },
+        "21": {
+            "atomic_weight": 20.9999489,
+            "nuclearSpin": 0,
+            "mass_number": 21,
+            "abundance": 0
+        },
+        "22": {
+            "atomic_weight": 22.002999,
+            "nuclearSpin": 0,
+            "mass_number": 22,
+            "abundance": 0
+        },
+        "23": {
+            "atomic_weight": 23.00357,
+            "nuclearSpin": 0,
+            "mass_number": 23,
+            "abundance": 0
+        },
+        "24": {
+            "atomic_weight": 24.0081,
+            "nuclearSpin": 0,
+            "mass_number": 24,
+            "abundance": 0
+        },
+        "25": {
+            "atomic_weight": 25.01209,
+            "nuclearSpin": 0,
+            "mass_number": 25,
+            "abundance": 0
+        },
+        "26": {
+            "atomic_weight": 26.01963,
+            "nuclearSpin": 0,
+            "mass_number": 26,
+            "abundance": 0
+        },
+        "27": {
+            "atomic_weight": 27.02689,
+            "nuclearSpin": 0,
+            "mass_number": 27,
+            "abundance": 0
+        },
+        "28": {
+            "atomic_weight": 28.03567,
+            "nuclearSpin": 0,
+            "mass_number": 28,
+            "abundance": 0
+        },
+        "29": {
+            "atomic_weight": 29.04326,
+            "nuclearSpin": 0,
+            "mass_number": 29,
+            "abundance": 0
+        }
+    },
+    "Ne": {
+        "electronegativity": 0,
+        "electron_affinity": 29,
+        "atomic_number": 10,
+        "ionization_energy_1": 2083.08,
+        "covalent_radius": 1.6,
+        "vanderwaals_radius": 1.54,
+        "symbol": "Ne",
+        "boiling_point": 27.1,
+        "atomic_radii": 0.38,
+        "mass": 20.1797,
+        "density": 0.8999,
+        "melting_point": 24.55,
+        "name": "Neon"
+    },
+    "isotopes_Ne": {
+        "32": {
+            "atomic_weight": 32.03991,
+            "nuclearSpin": 0,
+            "mass_number": 32,
+            "abundance": 0
+        },
+        "most_abundant": 20,
+        "16": {
+            "atomic_weight": 16.025757,
+            "nuclearSpin": 0,
+            "mass_number": 16,
+            "abundance": 0
+        },
+        "17": {
+            "atomic_weight": 17.0177,
+            "nuclearSpin": 0,
+            "mass_number": 17,
+            "abundance": 0
+        },
+        "18": {
+            "atomic_weight": 18.0056971,
+            "nuclearSpin": 0,
+            "mass_number": 18,
+            "abundance": 0
+        },
+        "19": {
+            "atomic_weight": 19.0018798,
+            "nuclearSpin": 0,
+            "mass_number": 19,
+            "abundance": 0
+        },
+        "20": {
+            "atomic_weight": 19.9924401759,
+            "nuclearSpin": 0,
+            "mass_number": 20,
+            "abundance": 90.48
+        },
+        "21": {
+            "atomic_weight": 20.99384674,
+            "nuclearSpin": 0,
+            "mass_number": 21,
+            "abundance": 0.27
+        },
+        "22": {
+            "atomic_weight": 21.99138551,
+            "nuclearSpin": 0,
+            "mass_number": 22,
+            "abundance": 9.25
+        },
+        "23": {
+            "atomic_weight": 22.99446734,
+            "nuclearSpin": 0,
+            "mass_number": 23,
+            "abundance": 0
+        },
+        "24": {
+            "atomic_weight": 23.993615,
+            "nuclearSpin": 0,
+            "mass_number": 24,
+            "abundance": 0
+        },
+        "25": {
+            "atomic_weight": 24.99779,
+            "nuclearSpin": 0,
+            "mass_number": 25,
+            "abundance": 0
+        },
+        "26": {
+            "atomic_weight": 26.00046,
+            "nuclearSpin": 0,
+            "mass_number": 26,
+            "abundance": 0
+        },
+        "27": {
+            "atomic_weight": 27.00762,
+            "nuclearSpin": 0,
+            "mass_number": 27,
+            "abundance": 0
+        },
+        "28": {
+            "atomic_weight": 28.01211,
+            "nuclearSpin": 0,
+            "mass_number": 28,
+            "abundance": 0
+        },
+        "29": {
+            "atomic_weight": 29.01935,
+            "nuclearSpin": 0,
+            "mass_number": 29,
+            "abundance": 0
+        },
+        "30": {
+            "atomic_weight": 30.02387,
+            "nuclearSpin": 0,
+            "mass_number": 30,
+            "abundance": 0
+        },
+        "31": {
+            "atomic_weight": 31.03311,
+            "nuclearSpin": 0,
+            "mass_number": 31,
+            "abundance": 0
+        }
+    },
+    "Na": {
+        "electronegativity": 0.93,
+        "electron_affinity": -53.0,
+        "atomic_number": 11,
+        "ionization_energy_1": 496.4274,
+        "covalent_radius": 1.66,
+        "vanderwaals_radius": 2.27,
+        "symbol": "Na",
+        "boiling_point": 1156.0,
+        "atomic_radii": 1.8,
+        "mass": 22.98977,
+        "density": 0.97,
+        "melting_point": 371.0,
+        "name": "Sodium"
+    },
+    "isotopes_Na": {
+        "most_abundant": 23,
+        "23": {
+            "atomic_weight": 22.98976967,
+            "nuclearSpin": 0,
+            "mass_number": 23,
+            "abundance": 100
+        }
+    },
+    "Mg": {
+        "electronegativity": 1.31,
+        "electron_affinity": 19,
+        "atomic_number": 12,
+        "ionization_energy_1": 738.6036,
+        "covalent_radius": 1.36,
+        "vanderwaals_radius": 1.73,
+        "symbol": "Mg",
+        "boiling_point": 1380,
+        "atomic_radii": 1.5,
+        "mass": 24.305,
+        "density": 1.74,
+        "melting_point": 922,
+        "name": "Magnesium"
+    },
+    "isotopes_Mg": {
+        "24": {
+            "atomic_weight": 23.9850419,
+            "nuclearSpin": 0,
+            "mass_number": 24,
+            "abundance": 78.99
+        },
+        "25": {
+            "atomic_weight": 24.98583702,
+            "nuclearSpin": 0,
+            "mass_number": 25,
+            "abundance": 10.0
+        },
+        "26": {
+            "atomic_weight": 25.98259304,
+            "nuclearSpin": 0,
+            "mass_number": 26,
+            "abundance": 11.01
+        },
+        "most_abundant": 24
+    },
+    "Al": {
+        "electronegativity": 1.61,
+        "electron_affinity": -43.0,
+        "atomic_number": 13,
+        "ionization_energy_1": 578.2476,
+        "covalent_radius": 1.25,
+        "vanderwaals_radius": 0,
+        "symbol": "Al",
+        "boiling_point": 2740,
+        "atomic_radii": 1.25,
+        "mass": 26.981538,
+        "density": 2.7,
+        "melting_point": 933.5,
+        "name": "Aluminum"
+    },
+    "isotopes_Al": {
+        "most_abundant": 27,
+        "27": {
+            "atomic_weight": 26.98153844,
+            "nuclearSpin": 0,
+            "mass_number": 27,
+            "abundance": 100
+        }
+    },
+    "Si": {
+        "electronegativity": 1.91,
+        "electron_affinity": -134.0,
+        "atomic_number": 14,
+        "ionization_energy_1": 787.3866,
+        "covalent_radius": 1.17,
+        "vanderwaals_radius": 2.1,
+        "symbol": "Si",
+        "boiling_point": 2630,
+        "atomic_radii": 1.1,
+        "mass": 28.0855,
+        "density": 2.33,
+        "melting_point": 1683,
+        "name": "Silicon"
+    },
+    "isotopes_Si": {
+        "most_abundant": 28,
+        "28": {
+            "atomic_weight": 27.9769265327,
+            "nuclearSpin": 0,
+            "mass_number": 28,
+            "abundance": 92.2297
+        },
+        "29": {
+            "atomic_weight": 28.97649472,
+            "nuclearSpin": 0,
+            "mass_number": 29,
+            "abundance": 4.6832
+        },
+        "30": {
+            "atomic_weight": 29.97377022,
+            "nuclearSpin": 0,
+            "mass_number": 30,
+            "abundance": 3.0872
+        }
+    },
+    "P": {
+        "electronegativity": 2.19,
+        "electron_affinity": -72.0,
+        "atomic_number": 15,
+        "ionization_energy_1": 1012.7496,
+        "covalent_radius": 1.1,
+        "vanderwaals_radius": 1.8,
+        "symbol": "P",
+        "boiling_point": 553.0,
+        "atomic_radii": 1.0,
+        "mass": 30.973761,
+        "density": 1.82,
+        "melting_point": 317.3,
+        "name": "Phosphorus"
+    },
+    "isotopes_P": {
+        "most_abundant": 31,
+        "31": {
+            "atomic_weight": 30.97376151,
+            "nuclearSpin": 0,
+            "mass_number": 31,
+            "abundance": 100
+        }
+    },
+    "S": {
+        "electronegativity": 2.58,
+        "electron_affinity": -200,
+        "atomic_number": 16,
+        "ionization_energy_1": 1000.78,
+        "covalent_radius": 1.04,
+        "vanderwaals_radius": 1.8,
+        "symbol": "S",
+        "boiling_point": 717.82,
+        "atomic_radii": 1.0,
+        "mass": 32.065,
+        "density": 2.06,
+        "melting_point": 392.2,
+        "name": "Sulfur"
+    },
+    "isotopes_S": {
+        "most_abundant": 32,
+        "26": {
+            "atomic_weight": 26.02788,
+            "nuclearSpin": 0,
+            "mass_number": 26,
+            "abundance": 0
+        },
+        "27": {
+            "atomic_weight": 27.0188,
+            "nuclearSpin": 0,
+            "mass_number": 27,
+            "abundance": 0
+        },
+        "28": {
+            "atomic_weight": 28.00437,
+            "nuclearSpin": 0,
+            "mass_number": 28,
+            "abundance": 0
+        },
+        "29": {
+            "atomic_weight": 28.99661,
+            "nuclearSpin": 0,
+            "mass_number": 29,
+            "abundance": 0
+        },
+        "30": {
+            "atomic_weight": 29.984903,
+            "nuclearSpin": 0,
+            "mass_number": 30,
+            "abundance": 0
+        },
+        "31": {
+            "atomic_weight": 30.9795544,
+            "nuclearSpin": 0,
+            "mass_number": 31,
+            "abundance": 0
+        },
+        "32": {
+            "atomic_weight": 31.97207069,
+            "nuclearSpin": 0,
+            "mass_number": 32,
+            "abundance": 94.93
+        },
+        "33": {
+            "atomic_weight": 32.9714585,
+            "nuclearSpin": 0,
+            "mass_number": 33,
+            "abundance": 0.76
+        },
+        "34": {
+            "atomic_weight": 33.96786683,
+            "nuclearSpin": 0,
+            "mass_number": 34,
+            "abundance": 4.29
+        },
+        "35": {
+            "atomic_weight": 34.96903214,
+            "nuclearSpin": 0,
+            "mass_number": 35,
+            "abundance": 0
+        },
+        "36": {
+            "atomic_weight": 35.96708088,
+            "nuclearSpin": 0,
+            "mass_number": 36,
+            "abundance": 0.02
+        },
+        "37": {
+            "atomic_weight": 36.97112572,
+            "nuclearSpin": 0,
+            "mass_number": 37,
+            "abundance": 0
+        },
+        "38": {
+            "atomic_weight": 37.971163,
+            "nuclearSpin": 0,
+            "mass_number": 38,
+            "abundance": 0
+        },
+        "39": {
+            "atomic_weight": 38.97514,
+            "nuclearSpin": 0,
+            "mass_number": 39,
+            "abundance": 0
+        },
+        "40": {
+            "atomic_weight": 39.97547,
+            "nuclearSpin": 0,
+            "mass_number": 40,
+            "abundance": 0
+        },
+        "41": {
+            "atomic_weight": 40.98003,
+            "nuclearSpin": 0,
+            "mass_number": 41,
+            "abundance": 0
+        },
+        "42": {
+            "atomic_weight": 41.98149,
+            "nuclearSpin": 0,
+            "mass_number": 42,
+            "abundance": 0
+        },
+        "43": {
+            "atomic_weight": 42.9866,
+            "nuclearSpin": 0,
+            "mass_number": 43,
+            "abundance": 0
+        },
+        "44": {
+            "atomic_weight": 43.98832,
+            "nuclearSpin": 0,
+            "mass_number": 44,
+            "abundance": 0
+        },
+        "45": {
+            "atomic_weight": 44.99482,
+            "nuclearSpin": 0,
+            "mass_number": 45,
+            "abundance": 0
+        },
+        "46": {
+            "atomic_weight": 45.99957,
+            "nuclearSpin": 0,
+            "mass_number": 46,
+            "abundance": 0
+        },
+        "47": {
+            "atomic_weight": 47.00762,
+            "nuclearSpin": 0,
+            "mass_number": 47,
+            "abundance": 0
+        },
+        "48": {
+            "atomic_weight": 48.01299,
+            "nuclearSpin": 0,
+            "mass_number": 48,
+            "abundance": 0
+        },
+        "49": {
+            "atomic_weight": 49.02201,
+            "nuclearSpin": 0,
+            "mass_number": 49,
+            "abundance": 0
+        }
+    },
+    "Cl": {
+        "electronegativity": 3.16,
+        "electron_affinity": -349,
+        "atomic_number": 17,
+        "ionization_energy_1": 1252.61,
+        "covalent_radius": 0.994,
+        "vanderwaals_radius": 1.75,
+        "symbol": "Cl",
+        "boiling_point": 239.18,
+        "atomic_radii": 1.0,
+        "mass": 35.453,
+        "density": 2.95,
+        "melting_point": 172.17,
+        "name": "Chlorine"
+    },
+    "isotopes_Cl": {
+        "most_abundant": 35,
+        "28": {
+            "atomic_weight": 28.02851,
+            "nuclearSpin": 0,
+            "mass_number": 28,
+            "abundance": 0
+        },
+        "29": {
+            "atomic_weight": 29.01411,
+            "nuclearSpin": 0,
+            "mass_number": 29,
+            "abundance": 0
+        },
+        "30": {
+            "atomic_weight": 30.00477,
+            "nuclearSpin": 0,
+            "mass_number": 30,
+            "abundance": 0
+        },
+        "31": {
+            "atomic_weight": 30.99242,
+            "nuclearSpin": 0,
+            "mass_number": 31,
+            "abundance": 0
+        },
+        "32": {
+            "atomic_weight": 31.985689,
+            "nuclearSpin": 0,
+            "mass_number": 32,
+            "abundance": 0
+        },
+        "33": {
+            "atomic_weight": 32.9774518,
+            "nuclearSpin": 0,
+            "mass_number": 33,
+            "abundance": 0
+        },
+        "34": {
+            "atomic_weight": 33.97376197,
+            "nuclearSpin": 0,
+            "mass_number": 34,
+            "abundance": 0
+        },
+        "35": {
+            "atomic_weight": 34.96885271,
+            "nuclearSpin": 0,
+            "mass_number": 35,
+            "abundance": 75.78
+        },
+        "36": {
+            "atomic_weight": 35.96830695,
+            "nuclearSpin": 0,
+            "mass_number": 36,
+            "abundance": 0
+        },
+        "37": {
+            "atomic_weight": 36.9659026,
+            "nuclearSpin": 0,
+            "mass_number": 37,
+            "abundance": 24.22
+        },
+        "38": {
+            "atomic_weight": 37.96801055,
+            "nuclearSpin": 0,
+            "mass_number": 38,
+            "abundance": 0
+        },
+        "39": {
+            "atomic_weight": 38.9680077,
+            "nuclearSpin": 0,
+            "mass_number": 39,
+            "abundance": 0
+        },
+        "40": {
+            "atomic_weight": 39.97042,
+            "nuclearSpin": 0,
+            "mass_number": 40,
+            "abundance": 0
+        },
+        "41": {
+            "atomic_weight": 40.97065,
+            "nuclearSpin": 0,
+            "mass_number": 41,
+            "abundance": 0
+        },
+        "42": {
+            "atomic_weight": 41.97317,
+            "nuclearSpin": 0,
+            "mass_number": 42,
+            "abundance": 0
+        },
+        "43": {
+            "atomic_weight": 42.9742,
+            "nuclearSpin": 0,
+            "mass_number": 43,
+            "abundance": 0
+        },
+        "44": {
+            "atomic_weight": 43.97854,
+            "nuclearSpin": 0,
+            "mass_number": 44,
+            "abundance": 0
+        },
+        "45": {
+            "atomic_weight": 44.9797,
+            "nuclearSpin": 0,
+            "mass_number": 45,
+            "abundance": 0
+        },
+        "46": {
+            "atomic_weight": 45.98412,
+            "nuclearSpin": 0,
+            "mass_number": 46,
+            "abundance": 0
+        },
+        "47": {
+            "atomic_weight": 46.98795,
+            "nuclearSpin": 0,
+            "mass_number": 47,
+            "abundance": 0
+        },
+        "48": {
+            "atomic_weight": 47.99485,
+            "nuclearSpin": 0,
+            "mass_number": 48,
+            "abundance": 0
+        },
+        "49": {
+            "atomic_weight": 48.99989,
+            "nuclearSpin": 0,
+            "mass_number": 49,
+            "abundance": 0
+        },
+        "50": {
+            "atomic_weight": 50.00773,
+            "nuclearSpin": 0,
+            "mass_number": 50,
+            "abundance": 0
+        },
+        "51": {
+            "atomic_weight": 51.01353,
+            "nuclearSpin": 0,
+            "mass_number": 51,
+            "abundance": 0
+        }
+    },
+    "Ar": {
+        "electronegativity": 0,
+        "electron_affinity": 29.0,
+        "atomic_number": 18,
+        "ionization_energy_1": 1522.3194,
+        "covalent_radius": 1.91,
+        "vanderwaals_radius": 1.88,
+        "symbol": "Ar",
+        "boiling_point": 87.45,
+        "atomic_radii": 0.71,
+        "mass": 39.948,
+        "density": 1.66,
+        "melting_point": 83.95,
+        "name": "Argon"
+    },
+    "isotopes_Ar": {
+        "40": {
+            "atomic_weight": 39.962383123,
+            "nuclearSpin": 0,
+            "mass_number": 40,
+            "abundance": 99.6003
+        },
+        "most_abundant": 39,
+        "36": {
+            "atomic_weight": 35.96754628,
+            "nuclearSpin": 0,
+            "mass_number": 36,
+            "abundance": 0.3365
+        },
+        "38": {
+            "atomic_weight": 37.9627322,
+            "nuclearSpin": 0,
+            "mass_number": 38,
+            "abundance": 0.0632
+        }
+    },
+    "K": {
+        "electronegativity": 0.82,
+        "electron_affinity": 0,
+        "atomic_number": 19,
+        "ionization_energy_1": 0,
+        "covalent_radius": 2.03,
+        "vanderwaals_radius": 2.75,
+        "symbol": "K",
+        "boiling_point": 1033,
+        "atomic_radii": 2.2,
+        "mass": 39.0983,
+        "density": 0.86,
+        "melting_point": 336.8,
+        "name": "Potassium"
+    },
+    "isotopes_K": {
+        "most_abundant": 39,
+        "39": {
+            "atomic_weight": 38.9637,
+            "nuclearSpin": 0,
+            "mass_number": 39,
+            "abundance": 93.2581
+        }
+    },
+    "Ca": {
+        "electronegativity": 1.0,
+        "electron_affinity": 10.0,
+        "atomic_number": 20,
+        "ionization_energy_1": 590.5158,
+        "covalent_radius": 1.74,
+        "vanderwaals_radius": 0,
+        "symbol": "Ca",
+        "boiling_point": 1757,
+        "atomic_radii": 1.8,
+        "mass": 40.078,
+        "density": 1.74,
+        "melting_point": 1112,
+        "name": "Calcium"
+    },
+    "isotopes_Ca": {
+        "48": {
+            "atomic_weight": 46.9545465,
+            "nuclearSpin": 0,
+            "mass_number": 48,
+            "abundance": 0.187
+        },
+        "most_abundant": 40,
+        "40": {
+            "atomic_weight": 39.9625912,
+            "nuclearSpin": 0,
+            "mass_number": 40,
+            "abundance": 96.941
+        },
+        "42": {
+            "atomic_weight": 41.9586183,
+            "nuclearSpin": 0,
+            "mass_number": 42,
+            "abundance": 0.647
+        },
+        "43": {
+            "atomic_weight": 42.9587668,
+            "nuclearSpin": 0,
+            "mass_number": 43,
+            "abundance": 0.135
+        },
+        "44": {
+            "atomic_weight": 43.9554811,
+            "nuclearSpin": 0,
+            "mass_number": 44,
+            "abundance": 2.086
+        },
+        "46": {
+            "atomic_weight": 45.9536928,
+            "nuclearSpin": 0,
+            "mass_number": 46,
+            "abundance": 0.004
+        }
+    },
+    "Sc": {
+        "electronegativity": 1.36,
+        "electron_affinity": -18,
+        "atomic_number": 21,
+        "ionization_energy_1": 631.764,
+        "covalent_radius": 1.44,
+        "vanderwaals_radius": 0,
+        "symbol": "Sc",
+        "boiling_point": 3109,
+        "atomic_radii": 1.6,
+        "mass": 44.95591,
+        "density": 2.99,
+        "melting_point": 1814,
+        "name": "Scandium"
+    },
+    "isotopes_Sc": {
+        "most_abundant": 45,
+        "45": {
+            "atomic_weight": 44.9559102,
+            "nuclearSpin": 0,
+            "mass_number": 45,
+            "abundance": 100
+        }
+    },
+    "Br": {
+        "electronegativity": 2.96,
+        "electron_affinity": -325,
+        "atomic_number": 35,
+        "ionization_energy_1": 1141.23,
+        "covalent_radius": 1.145,
+        "vanderwaals_radius": 1.85,
+        "symbol": "Br",
+        "boiling_point": 331.85,
+        "atomic_radii": 1.15,
+        "mass": 79.904,
+        "density": 3.14,
+        "melting_point": 265.95,
+        "name": "Bromine"
+    },
+    "isotopes_Br": {
+        "67": {
+            "atomic_weight": 66.964795,
+            "nuclearSpin": 0,
+            "mass_number": 67,
+            "abundance": 0
+        },
+        "68": {
+            "atomic_weight": 67.9582558,
+            "nuclearSpin": 0,
+            "mass_number": 68,
+            "abundance": 0
+        },
+        "69": {
+            "atomic_weight": 68.9501834,
+            "nuclearSpin": 0,
+            "mass_number": 69,
+            "abundance": 0
+        },
+        "70": {
+            "atomic_weight": 69.9446239,
+            "nuclearSpin": 0,
+            "mass_number": 70,
+            "abundance": 0
+        },
+        "71": {
+            "atomic_weight": 70.9392532,
+            "nuclearSpin": 0,
+            "mass_number": 71,
+            "abundance": 0
+        },
+        "72": {
+            "atomic_weight": 71.9365028,
+            "nuclearSpin": 0,
+            "mass_number": 72,
+            "abundance": 0
+        },
+        "73": {
+            "atomic_weight": 72.9317914,
+            "nuclearSpin": 0,
+            "mass_number": 73,
+            "abundance": 0
+        },
+        "74": {
+            "atomic_weight": 73.92989116,
+            "nuclearSpin": 0,
+            "mass_number": 74,
+            "abundance": 0
+        },
+        "75": {
+            "atomic_weight": 74.92577615,
+            "nuclearSpin": 0,
+            "mass_number": 75,
+            "abundance": 0
+        },
+        "76": {
+            "atomic_weight": 75.9245421,
+            "nuclearSpin": 0,
+            "mass_number": 76,
+            "abundance": 0
+        },
+        "77": {
+            "atomic_weight": 76.9213803,
+            "nuclearSpin": 0,
+            "mass_number": 77,
+            "abundance": 0
+        },
+        "78": {
+            "atomic_weight": 77.9211464,
+            "nuclearSpin": 0,
+            "mass_number": 78,
+            "abundance": 0
+        },
+        "79": {
+            "atomic_weight": 78.91833762,
+            "nuclearSpin": 0,
+            "mass_number": 79,
+            "abundance": 50.697
+        },
+        "80": {
+            "atomic_weight": 79.91853002,
+            "nuclearSpin": 0,
+            "mass_number": 80,
+            "abundance": 0
+        },
+        "81": {
+            "atomic_weight": 80.9162913,
+            "nuclearSpin": 0,
+            "mass_number": 81,
+            "abundance": 49.317
+        },
+        "82": {
+            "atomic_weight": 81.9168053,
+            "nuclearSpin": 0,
+            "mass_number": 82,
+            "abundance": 0
+        },
+        "83": {
+            "atomic_weight": 82.9151805,
+            "nuclearSpin": 0,
+            "mass_number": 83,
+            "abundance": 0
+        },
+        "84": {
+            "atomic_weight": 83.91650427,
+            "nuclearSpin": 0,
+            "mass_number": 84,
+            "abundance": 0
+        },
+        "85": {
+            "atomic_weight": 84.91560821,
+            "nuclearSpin": 0,
+            "mass_number": 85,
+            "abundance": 0
+        },
+        "86": {
+            "atomic_weight": 85.91879712,
+            "nuclearSpin": 0,
+            "mass_number": 86,
+            "abundance": 0
+        },
+        "87": {
+            "atomic_weight": 86.92071119,
+            "nuclearSpin": 0,
+            "mass_number": 87,
+            "abundance": 0
+        },
+        "88": {
+            "atomic_weight": 87.9240704,
+            "nuclearSpin": 0,
+            "mass_number": 88,
+            "abundance": 0
+        },
+        "89": {
+            "atomic_weight": 88.9263906,
+            "nuclearSpin": 0,
+            "mass_number": 89,
+            "abundance": 0
+        },
+        "90": {
+            "atomic_weight": 89.9306308,
+            "nuclearSpin": 0,
+            "mass_number": 90,
+            "abundance": 0
+        },
+        "91": {
+            "atomic_weight": 90.9339708,
+            "nuclearSpin": 0,
+            "mass_number": 91,
+            "abundance": 0
+        },
+        "92": {
+            "atomic_weight": 91.9392605,
+            "nuclearSpin": 0,
+            "mass_number": 92,
+            "abundance": 0
+        },
+        "93": {
+            "atomic_weight": 92.9431032,
+            "nuclearSpin": 0,
+            "mass_number": 93,
+            "abundance": 0
+        },
+        "94": {
+            "atomic_weight": 93.9486843,
+            "nuclearSpin": 0,
+            "mass_number": 94,
+            "abundance": 0
+        },
+        "most_abundant": 79
+    }
+}

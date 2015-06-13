@@ -7,108 +7,147 @@
 
 from __future__ import division
 import numpy as np
-from copy import deepcopy
-from utilities import numerical_integration as nint
+
+from interfaces.stack import Stack
+from utilities.constants import *
+from utilities.numerical_integration import *
 
 
 class BeckeGrid(object):
-    """This class creates the Becke grid.
-    see: Becke, A. D. A multicenter numerical integration scheme for polyatomic
-    molecules. J. Chem. Phys. 88, 2547 (1988).
     """
-    def __init__(self, n_radial=15, n_angular=110, position=[0., 0., 0.]):
+    This class creates the Becke grid.
+
+    References:
+        Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
+
+    Args:
+            n_radial (int, optional): Number of radial points. Default is 15
+            n_angular (int, optional): Number of angular points. Default is 110
+    """
+
+    def __init__(self, n_radial=40, n_angular=110):
         super(BeckeGrid, self).__init__()
+        self.n_radial = n_radial
+        self.n_angular = n_angular
+        self.radial_abscissas, self.radial_weights = chebgauss(n_radial)
+        self.angular_theta, self.angular_phi, self.angular_weights = lebedev_q(n_angular)
 
-        self.data = {}
-        self.data['n_radial'] = n_radial
-        self.data['n_angular'] = n_angular
-        self.data['size'] = n_radial * n_angular
+    def weight(self, r, particleID, particle_stack):
+        """Computes the Becke weights :math:`w(r)` at point ``r`` for particle ``particleID`` as described in eq. 22 Becke, 1988
+        using Python routine.
 
-        self.data['x'] = np.zeros(self.data['size'], dtype=np.float64)
-        self.data['y'] = np.zeros(self.data['size'], dtype=np.float64)
-        self.data['z'] = np.zeros(self.data['size'], dtype=np.float64)
-        self.data['w'] = np.zeros(self.data['size'], dtype=np.float64)
 
-        # Radial distribution
-        q_r, w_r = nint.chebgauss_t_q_w(n_radial, rescale=True)
+        References:
+            Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
 
-        # Angular distribution
-        x, y, z, w_a = nint.lebedev_q_w(n_angular)
+        Args:
+            r (array[3]): Point of the grid in which the weight will be calculated.
+            particleID (int): The particle index who owns the ``r`` point.
+            particle_stack (Stack): stack of particles of same species as ``particleID``
 
-        count = 0
-        for i in xrange(n_radial):
-            solid_angle = 8.0 * np.arccos(0.0) * q_r[i] * q_r[i]
-            for j in xrange(n_angular):
-                self.data['x'][count] = x[j] * q_r[i]
-                self.data['y'][count] = y[j] * q_r[i]
-                self.data['z'][count] = z[j] * q_r[i]
-                self.data['w'][count] = w_a[j] * w_r[i] * solid_angle
-                count += 1
-
-        for i in xrange(self.get('size')):
-            self.data['x'][i] += position[0]
-            self.data['y'][i] += position[1]
-            self.data['z'][i] += position[2]
-
-    def weights(self, particle_stack, particleID):
-        """Computes the Becke weights as described in:
-        Becke, A. D. A multicenter numerical integration scheme for polyatomic
-        molecules. J. Chem. Phys. 88, 2547 (1988).
-        particle_stack: stack of particles. i.e. stack of e-
+        Returns:
+            P (float64): The value of cell_function (eq. 13, Becke, 1988) at point ``r``
         """
-        def cutoff_profile(mu):
-            """Iterated cutoff profile. eq. 21
-            """
-            return 0.5 * mu * (3.0 - (mu * mu))
+        assert isinstance(particleID, int)
+        assert isinstance(particle_stack, Stack)
 
-        distance_to_particle = np.zeros(particle_stack.size(), dtype=np.float64)
+        P = np.ones([len(particle_stack)], dtype=np.float64)
 
-        for point in xrange(self.get('size')):
-            cell_function = np.ones(particle_stack.size(), dtype=np.float64)
-            # Distance from grid point i to particle (distance_to_particle) (eq. 11)
-            for i in xrange(particle_stack.size()):
-                distance_to_particle[i] = np.sqrt(
-                    (self.get('x')[point] - particle_stack.get(i).get('position')[0])**2 +
-                    (self.get('y')[point] - particle_stack.get(i).get('position')[1])**2 +
-                    (self.get('z')[point] - particle_stack.get(i).get('position')[2])**2, dtype=np.float64)
-
-            for i in xrange(1, particle_stack.size()):
-                for j in xrange(i):
+        for i in range(len(particle_stack)):
+            P[i] = 1.0
+            for j in range(len(particle_stack)):
+                if i != j:
                     # Internuclear distance (R_ij eq. 11)
-                    R_ij = np.sqrt(
-                        (particle_stack.get(j).get('position')[0] - particle_stack.get(i).get('position')[0]) ** 2 +
-                        (particle_stack.get(j).get('position')[1] - particle_stack.get(i).get('position')[1]) ** 2 +
-                        (particle_stack.get(j).get('position')[2] - particle_stack.get(i).get('position')[2]) ** 2)
+                    x_i = particle_stack[i].get('origin')
+                    x_j = particle_stack[j].get('origin')
+                    r_i = np.sqrt(np.dot(r - x_i, r - x_i))
+                    r_j = np.sqrt(np.dot(r - x_j, r - x_j))
+                    R_ij = np.sqrt(np.dot(x_i - x_j, x_i - x_j))
 
                     # \mu_ij eq. 11
-                    mu_ij = (distance_to_particle[i] - distance_to_particle[j]) / R_ij
+                    mu_ij = (r_i - r_j) / R_ij
 
-                    # Missing atomic size adjustment.
+                    # Atomic size adustment. see apendix, Becke, 1988.
+                    rm_i = particle_stack[i].get('atomic_radii') * ANGSTROM_TO_BOHR
+                    rm_j = particle_stack[j].get('atomic_radii') * ANGSTROM_TO_BOHR
 
-                    # f_k(\mu_ij) K = 3 eq. 20
-                    f_ij = cutoff_profile(cutoff_profile(cutoff_profile(mu_ij)))
+                    # eq. A4
+                    chi = rm_i / rm_j
+                    # eq. A6
+                    u_ij = (chi - 1.0) / (chi + 1.0)
+                    # eq. A5
+                    a_ij = u_ij / ((u_ij * u_ij) - 1.0)
+                    # eq. A3
+                    if (np.abs(a_ij) > 0.50):
+                        a_ij = 0.50 * a_ij / np.abs(a_ij)
+                    # eq. A2
+                    nu_ij = mu_ij + a_ij * (1.0 - mu_ij * mu_ij)
 
-                    # Cutoff profile s_k(\mu_ij) eq. 21
-                    s_ij = 0.5 * (1.0 - f_ij)
+                    P[i] = P[i] * self.step_function(3, nu_ij)
 
-                    # Cell function P_i(r) eq. 13
-                    cell_function[i] *= s_ij
+        # eq. 22
+        return P[particleID] / np.sum(P)
 
-            # cell_function sum denominator eq. 22
-            cell_function_sum = 0.0
-            for i in xrange(particle_stack.size()):
-                cell_function_sum += cell_function[i]
-
-            # Weight calculation for each point eq. 22
-            self.get('w')[point] *= cell_function[particleID]/cell_function_sum
-
-    def get(self, key):
-        """Returns the value stored in key
+    def integrate(self, particle_stack, F):
         """
+        Perform an integration of function :math:`F(r)` using BeckeGrid. (Function coded on Python)
+        """
+        r = np.zeros([3], dtype=np.float64)
+        integral = 0.0
+        for n in range(self.n_radial):
+            x = self.radial_abscissas[n]
+            r_w = self.radial_weights[n]
+            for m in range(int(self.n_angular)):
+                phi = self.angular_phi[m]
+                theta = self.angular_theta[m]
+                a_w = self.angular_weights[m]
+                for i in range(len(particle_stack)):
+                    particle = particle_stack[i]
+                    rm = particle.get('atomic_radii') * ANGSTROM_TO_BOHR
 
-        assert isinstance(key, str)
+                    if particle.get("atomic_number") != 1:
+                        rm *= 0.5
 
-        try:
-            return self.data[key]
-        except KeyError:
-            raise
+                    aux = (x + 1.0) * 0.5
+                    aux2 = aux * aux
+                    rad = -rm * np.log(1.0 - (aux2 * aux2))
+
+                    aux3 = np.sin(theta)
+                    r[0] = rad * aux3 * np.cos(phi)
+                    r[1] = rad * aux3 * np.sin(phi)
+                    r[2] = rad * np.cos(theta)
+
+                    # Move grid points
+                    r += particle.get("origin")
+
+                    # Calculate Becke weigths
+                    p = self.weight(r, i, particle_stack)
+
+                    # This factor comes from the variable change r ! --> x ,
+                    # and from using chebyshev-gauss radial quadrature of second order
+                    factor = 2.0 * rm * (aux2 * aux)/(np.sqrt(1.0 - x * x) * (1.0 - (aux2 * aux2)))
+                    integral += 4.0 * np.pi * rad * rad * p * r_w * a_w * F(r, particle_stack) * factor
+
+        return integral
+
+    def step_function(self, order, mu):
+        """
+        Iterated cutoff profile. eq. 21, Becke 1988.
+        """
+        # eq. 19
+        def P(_mu):
+            return 1.5 * _mu - 0.5 * _mu * _mu * _mu
+
+        f = mu
+        for k in range(order):
+            f = P(f)
+        return 0.5 * (1. - f)
+
+    def show(self):
+        """
+        Prints information of the object.
+        """
+        print("Grid Information:")
+        print("-----------------")
+        print("Radial Points: ", self.get_n_radial())
+        print("Angular Points: ", self.get_n_angular())
