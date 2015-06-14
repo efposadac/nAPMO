@@ -39,7 +39,7 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
         origin (numpy.darray[3]) : coordinates (spherical)
 
     """
-    def __init__(self, exponent, coefficient, n=1, l=0, m=0, origin=np.array([0.0, 0.0, 0.0])):
+    def __init__(self, exponent, coefficient=1.0, n=1, l=0, m=0, origin=np.array([0.0, 0.0, 0.0])):
         super(PrimitiveSlater, self).__init__()
 
         self['n'] = n

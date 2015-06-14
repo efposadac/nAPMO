@@ -56,7 +56,7 @@ class MolecularSystem(dict):
         atom['size'] = 1
 
         # load basis-set
-        atom['basis'] = BasisSet(symbol, origin, basis_name)
+        atom['basis'] = BasisSet(basis_name)
 
         if basis_file != 'none':
             file = open(basis_file)
@@ -64,12 +64,13 @@ class MolecularSystem(dict):
             file.close()
 
             if basis_kind == 'GTO':
-                atom.get('basis').load_gaussian(basis_data)
+                atom.get('basis').load_gaussian(symbol, basis_data, origin)
             elif basis_kind == 'STO':
-                atom.get('basis').load_slater(basis_data)
+                atom.get('basis').load_slater(symbol, basis_data, origin)
 
-        self['atoms'].push(atom)
+        self.get('atoms').push(atom)
         self.add_elementary_particle('e-', origin, size=atom.get('atomic_number'), units='Bohr')
+        self.get('e-').peek()['basis'] = self.get('atoms').peek().get('basis')
 
     def add_elementary_particle(self, symbol, origin, size=1, units='Angstroms',
                                 basis_kind='GTO', basis_name='none', basis_file='none'):
@@ -102,7 +103,7 @@ class MolecularSystem(dict):
         self[symbol].peek()['size'] = size
 
         # load basis-set
-        self[symbol].peek()['basis'] = BasisSet(symbol, origin, basis_name)
+        self[symbol].peek()['basis'] = BasisSet(basis_name)
 
         if basis_file != 'none':
             file = open(basis_file)
@@ -110,9 +111,9 @@ class MolecularSystem(dict):
             file.close()
 
             if basis_kind == 'GTO':
-                self[symbol].peek().get('basis').load_gaussian(basis_data)
+                self[symbol].peek().get('basis').load_gaussian(symbol, basis_data, origin)
             elif basis_kind == 'STO':
-                self[symbol].peek().get('basis').load_slater(basis_data)
+                self[symbol].peek().get('basis').load_slater(symbol, basis_data, origin)
 
     def n_elementary_particles(self):
         """
@@ -158,19 +159,24 @@ class MolecularSystem(dict):
         """
         Shows information about particles
         """
-        print('===============================================')
+        print('==================================================================')
         print('Object: ' + type(self).__name__)
+        print('------------------------------------------------------------------')
         for symbol in self.keys():
-            if symbol != 'atoms':
-                particle = self.get(symbol)
-                print(type(particle.peek()).__name__, ': ', symbol, end=" ")
-                print('  n. particles: ', self.n_particles(symbol))
-            else:
-                particle = self.get('atoms')
-                print('-----------------------------------------------')
-                print(type(particle.peek()).__name__)
-                print("Symbol     origin (Bohr)                       Basis-set")
-                for i in particle:
-                    atoms = i.get
-                    print('{0:10}'.format(atoms('symbol')), atoms('origin'), atoms('basis')['name'])
-                print('-----------------------------------------------')
+            particles = self.get(symbol)
+            print(type(particles.peek()).__name__, ': ', symbol, end=" ")
+            print('  n. particles: ', self.n_particles(symbol))
+            print(
+                    '{0:7}'.format("Symbol"),
+                    '{0:5}'.format("n."),
+                    '{0:40}'.format("origin (Bohr)"),
+                    '{0:10}'.format("Basis-set")
+                )
+            for particle in particles:
+                print(
+                        '{0:7}'.format(particle.get('symbol')),
+                        '{0:5}'.format(str(particle.get('size'))),
+                        '{0:40}'.format(str(particle.get('origin'))),
+                        '{0:10}'.format(particle.get('basis')['name'])
+                    )
+            print('------------------------------------------------------------------')

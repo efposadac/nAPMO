@@ -36,6 +36,7 @@ class ElementaryParticle(dict):
         except KeyError:
             print('Elementary particle: ', symbol, ' not present!, creating one.')
             self.update(ElementaryParticlesDatabase()['user'])
+            self['symbol'] = symbol
 
         self['origin'] = np.array(origin, dtype=np.float64)
 

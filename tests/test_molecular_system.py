@@ -48,12 +48,68 @@ def test_molecular_system_interface():
     except:
         pass
 
-    assert a['u-'].peek().get('name') == 'muon'
+    assert a.get('u-').peek().get('name') == 'muon'
 
-    assert a['atoms'][0].isQuantum() is False
+    assert a.get('atoms')[0].isQuantum() is False
 
     a.add_atom('H', [0., 0., 0.], BOA=False)
 
-    assert a['atoms'][1].isQuantum() is True
+    assert a.get('atoms')[1].isQuantum() is True
 
-test_molecular_system_interface()
+    # More real test
+    particle = "N"
+    basis_name = "STO-3G"
+    basis_file = "basis.json"
+    basis_kind = "GTO"
+
+    molecule = MolecularSystem()
+
+    molecule.add_atom(
+                    particle, [0.000000, 0.000000, 0.70997005],
+                    basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
+                    )
+
+    molecule.add_atom(
+                    particle, [0.000000, 0.000000, -0.70997005],
+                    basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
+                    )
+
+    molecule.add_elementary_particle(
+                                    'u+', [0.000000, 0.000000, -0.70997005],
+                                    basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
+                                    )
+
+    assert molecule.n_particles('e-') == 14
+    assert molecule.n_elementary_particles() == 2
+    assert molecule.n_atoms() == 2
+    molecule.show()
+
+    particle = "N"
+    basis_name = "STO-3G"
+    basis_file = "basis.json"
+    basis_kind = "STO"
+
+    molecule = MolecularSystem()
+
+    molecule.add_atom(
+                    particle, [0.000000, 0.000000, 0.70997005],
+                    basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
+                    )
+
+    molecule.add_atom(
+                    particle, [0.000000, 0.000000, -0.70997005],
+                    basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
+                    )
+
+    molecule.add_elementary_particle(
+                                    'u-', [0.000000, 0.000000, -0.70997005],
+                                    basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
+                                    )
+
+    assert molecule.n_particles('e-') == 14
+    assert molecule.n_particles('u-') == 1
+    assert molecule.n_elementary_particles() == 2
+    assert molecule.n_atoms() == 2
+    molecule.show()
+
+# test_molecular_system_interface()

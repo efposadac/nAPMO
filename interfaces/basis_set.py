@@ -18,14 +18,14 @@ class BasisSet(dict):
     """
     Basis set functions helper
     """
-    def __init__(self, particle, origin=[0.0, 0.0, 0.0], name='user'):
+    def __init__(self, name='user'):
         super(BasisSet, self).__init__()
         self['name'] = name
-        self['particle'] = particle
-        self['origin'] = np.array(origin)
+        self['particle'] = None
         self['function'] = Stack()
         self['kind'] = None
         self['json'] = None
+        self['length'] = 0
 
     def __add__(self, other):
         self['name'] += ', '+other.get('name')
@@ -37,15 +37,16 @@ class BasisSet(dict):
 
         return self
 
-    def load_gaussian(self, data):
+    def load_gaussian(self, particle, data, origin=[0.0, 0.0, 0.0]):
         """
         Load a Gaussian Type Orbital (GTO) basis-set.
 
         Args:
             data (json): json formatted data to be loaded.
         """
+        self['particle'] = particle
         self['kind'] = 'GTO'
-        self['json'] = json.loads(data)[self.get('particle')]
+        self['json'] = json.loads(data)[particle]
 
         lvalue = {'s': 0, 'p': 1, 'd': 2, 'f': 3, 'g': 4}
 
@@ -59,21 +60,22 @@ class BasisSet(dict):
                     self['function'].push(ContractedGaussian(
                         np.array(self['json'][k]['prim']),
                         np.array(self['json'][k]['cont']),
-                        self['origin'],
+                        np.array(origin),
                         np.array([x, y, z])
                         ))
 
         self['length'] = len(self.get('function'))
 
-    def load_slater(self, data):
+    def load_slater(self, particle, data, origin=[0.0, 0.0, 0.0]):
         """
         Load a Slater Type Orbital (STO) basis-set.
 
         Args:
             data (json): json formatted data to be loaded.
         """
+        self['particle'] = particle
         self["kind"] = 'STO'
-        self["json"] = json.loads(data)[self.get('particle')]
+        self["json"] = json.loads(data)[particle]
 
         lvalue = {"s": 0, "p": 1, "d": 2, "f": 3, "g": 4}
 
@@ -83,7 +85,7 @@ class BasisSet(dict):
                 self["function"].append(ContractedSlater(
                     np.array(self["json"][k]["prim"]),
                     np.array(self["json"][k]["cont"]),
-                    self['origin'],
+                    np.array(origin),
                     np.array(self["json"][k]["n"]),
                     l,
                     m
@@ -108,8 +110,8 @@ class BasisSet(dict):
         Return the length (number of primitives) of the basis-set
         """
         output = 0
-        for i in range(self.get('length')):
-            output += self.get('function')[i].get('length')
+        for function in self.get('function'):
+            output += function.get('length')
 
         return output
 
@@ -117,7 +119,6 @@ class BasisSet(dict):
         """
         Prints the basis-set in json format.
         """
-        print(self.get_origin())
         print(json.dumps(self["json"], sort_keys=True, indent=4))
 
     def show(self):

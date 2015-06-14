@@ -17,35 +17,36 @@ from interfaces.basis_set import BasisSet
 
 
 def tests_basis_set_interface():
-    try:
-        test = BasisSet()
-        assert False, 'Failure expected!'
-    except:
-        pass
 
-    test = BasisSet('H')
+    test = BasisSet()
     assert test.get('name') == 'user'
-    assert test.get('particle') == 'H'
+    assert test.get('particle') == None
     assert test.get('kind') == None
 
     file = open('basis.json')
     basis_data = file.read().replace('\n', '')
     file.close()
 
-    test.load_gaussian(basis_data)
+    test.load_gaussian('H', basis_data)
     assert test.get('kind') == 'GTO'
     assert test.get('length') == 1
+
+    try:
+        test.show()
+        assert True
+    except:
+        pass
 
     value = 0.42377721
     np.testing.assert_allclose(test.compute(), value)
 
-    test = BasisSet('N', name='STO-3G')
+    test = BasisSet('STO-3G')
 
     assert test.get('name') == 'STO-3G'
-    assert test.get('particle') == 'N'
+    assert test.get('particle') == None
     assert test.get('kind') == None
 
-    test.load_slater(basis_data)
+    test.load_slater('N', basis_data)
 
     assert test.get('kind') == 'STO'
     assert test.get('length') == 5
@@ -53,5 +54,23 @@ def tests_basis_set_interface():
     value = np.array([9.91422306, -11.93017788, 0.0, 0.0, 0.0])
     np.testing.assert_allclose(test.compute(), value)
 
+    test2 = BasisSet()
+    test2.load_slater('N', basis_data, origin=[1.0, 1.0, 1.0])
 
-tests_basis_set_interface()
+    test += test2
+    assert test.get('length') == 10
+    assert test.get_total_length() == 48
+
+    try:
+        test2.show()
+        assert True
+    except:
+        pass
+
+    try:
+        test2.show_json()
+        assert True
+    except:
+        pass
+
+# tests_basis_set_interface()

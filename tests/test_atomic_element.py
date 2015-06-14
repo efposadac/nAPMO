@@ -14,7 +14,7 @@ lib_path = os.path.abspath('../')
 sys.path.append(lib_path)
 
 from interfaces.atomic_element import AtomicElement
-
+from interfaces.basis_set import BasisSet
 
 def test_atomic_element_interface():
 
@@ -66,6 +66,9 @@ def test_atomic_element_interface():
 
     a['address'] = 'sky'
     assert a.get('address') == 'sky'
+
+    basis = BasisSet()
+    a['basis'] = basis
 
     try:
         a.show()
