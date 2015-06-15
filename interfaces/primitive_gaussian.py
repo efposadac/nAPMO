@@ -13,7 +13,22 @@ from utilities import analytical_integration as aint
 
 class PrimitiveGaussian(dict):
     """
-    Defines a Cartesian primitive Gaussian type orbital (GTO).
+    Defines a Cartesian primitive Gaussian type orbital (GTO). (dict)
+
+    Following Obara and Saika (1986) we write an unnormalized primitive Cartesian Gaussian function centered at :math:`\\bf A` as
+
+    :math:`\phi ({\\bf r}; \zeta, {\\bf n}, {\\bf A}) = (x - A_x)^{n_x} (y - A_y)^{n_y} (z - A_z)^{n_z}
+    \\times \exp[-\zeta({\\bf r}-{\\bf A})^2]`
+
+    where :math:`{\\bf r}` is the coordinate vector of the electron, :math:`\zeta` is the orbital exponent, and :math:`\\bf n`
+    is a set of non-negative integers. The sum of :math:`n_x`, :math:`n_y`, and :math:`n_z` is denoted as :math:`\\bf n`
+    and be referred to as the angular momentum or orbital quantum number of the Gaussian function.
+
+    Args:
+        exponent (float64): GTO exponent.
+        coefficient (float64): GTO coefficients.
+        origin (numpy.ndarray(3)) : coordinates (cartesian)
+        l (numpy.ndarray(3)) : :math:`\\bf n`. Angular moment (x, y, and z components)
     """
     def __init__(self, exponent=0.0, coefficient=1.0, l=np.array([0, 0, 0]), origin=np.array([0.0, 0.0, 0.0])):
         super(PrimitiveGaussian, self).__init__()
@@ -57,6 +72,9 @@ class PrimitiveGaussian(dict):
     def overlap(self, other):
         """
         Calculates analytically the overlap integral between primitives.
+
+        Args:
+            other (PrimitiveGaussian) : function to perform :math:`<\phi_{self} | \phi_{other}>`
         """
         gamma = self.get('exponent') + other.get('exponent')
         gammaInv = 1.0/gamma

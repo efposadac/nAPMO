@@ -26,13 +26,16 @@ def test_stack_interface():
     a.push(1)
     a.push(2)
     assert len(a) == 3
+
     for i in range(len(a)):
         assert a[i] == i
+
     try:
         a[100]
         assert False, 'Expecting Failure!'
     except:
-        pass
+        assert True
+
     assert a.peek() == 2
     assert len(a) == 3
 

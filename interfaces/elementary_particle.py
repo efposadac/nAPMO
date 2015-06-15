@@ -14,7 +14,7 @@ from utilities.databases import ElementaryParticlesDatabase
 class ElementaryParticle(dict):
     """
     An abstract python interface to create an elementary quantum particle
-    i.e Leptons as electron, muon, etc
+    i.e Leptons as electron, muon, etc. (dict)
 
     Database information from:
 
@@ -22,7 +22,7 @@ class ElementaryParticle(dict):
 
     Args:
             symbol (str): Symbol for the particle.
-            origin (array[3]): Origin for the particle (atomic units.)
+            origin (numpy.ndarray(3)): Origin for the particle (atomic units.)
     """
 
     def __init__(self, symbol='null', origin=[0.0, 0.0, 0.0]):

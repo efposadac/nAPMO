@@ -17,7 +17,7 @@ from interfaces.basis_set import BasisSet
 
 class MolecularSystem(dict):
     """
-    Defines a molecular system, containing different kinds of quantum 'species' i.e. atoms, muons, positrons, etc.
+    Defines a molecular system, containing different kinds of quantum 'species' i.e. atoms, muons, positrons, etc. (dict)
 
     Args:
         name (str): Name of the object.
@@ -32,7 +32,7 @@ class MolecularSystem(dict):
 
         Args:
             symbol (str): Symbol of the atom.
-            origin (array[3]): Origin of the atom (Cartesian coordinates)
+            origin (numpy.ndarray(3)): Origin of the atom (Cartesian coordinates)
             BOA (bool, optional): Whether the atom nuclei will be treated in the BOA approach or not. Default is True
             mass_number (int, optional): Mass number of element 'symbol' :math:`:= A = p^+ + n^o`.
                 If 0 the system will choose the most abundant one. Default is 0.
@@ -117,7 +117,7 @@ class MolecularSystem(dict):
 
     def n_elementary_particles(self):
         """
-        Calculates the number of elementary particles in the system.
+        Returns the number of elementary particles in the system.
 
         Returns:
             int: Number of quantum species in the system.
@@ -130,7 +130,7 @@ class MolecularSystem(dict):
 
     def n_atoms(self):
         """
-        Calculates the number of atoms in the system
+        Returns the number of atoms in the system
 
         Returns:
             int: Number of atoms in the object.
@@ -143,7 +143,7 @@ class MolecularSystem(dict):
 
     def n_particles(self, symbol):
         """
-        Return the number of particles of a given ``symbol`` if this is present in the object.
+        Returns the number of particles of a given ``symbol`` if this is present in the object.
 
         Returns:
             int: Number of particles of symbol ``symbol``

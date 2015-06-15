@@ -11,6 +11,23 @@ from math import *
 
 
 def obaraSaika_recursion(PA, PB, gamma, l_a, l_b):
+    """
+    Perform the Obara-Saika (1988) recursion to calculate the overlap integral:
+
+    :math:`<\phi_A|\phi_B>`
+
+    Where each :math:`\phi` corresponds to a GTO PrimitiveGaussian
+
+    Args:
+        PA (numpy.ndarray(3)) : Origin of :math:`\phi_A`
+        PB (numpy.ndarray(3)) : Origin of :math:`\phi_B`
+        gamma (float64) : Reduced exponent (see: Gaussian product theorem)
+        l_a (int) : Angular moment index of :math:`\phi_A`
+        l_b (int) : Angular moment index of :math:`\phi_B`
+
+    Returns:
+        x, y, z (tuple) : x, y, and z components of the recursion.
+    """
     pp = 1./(2.*gamma)
 
     max_l = max(l_a, l_b)
@@ -71,6 +88,15 @@ def obaraSaika_recursion(PA, PB, gamma, l_a, l_b):
 
 
 def kronecker_delta(a, b):
+    """
+    Calculates the delta of Kronecker for `a` and `b`.
+
+    :math:`\delta_{ij} = 0`  if :math:`i \\neq j`, otherwise, :math:`\delta_{ij} = 1`
+
+    Args:
+        a (int) : i in  :math:`\delta_{ij}`
+        b (int) : j in  :math:`\delta_{ij}`
+    """
     aa = np.abs(a)
     bb = np.abs(b)
     output = int((float((aa+bb+2)-np.abs(aa-bb))) / (float((aa+bb+2) + np.abs(aa-bb))))

@@ -32,21 +32,20 @@ def test_molecular_system_interface():
 
     try:
         a.n_particles('x-')
-        assert False, 'Failure expected!'
+        assert False, 'Expecting Failure!'
     except:
-        pass
+        assert True
 
     try:
         a.show()
-        assert True
     except:
-        pass
+        raise
 
     try:
         test = a['e+']
-        assert False, 'Failure expected!'
+        assert False, 'Expecting Failure!'
     except:
-        pass
+        assert True
 
     assert a.get('u-').peek().get('name') == 'muon'
 
@@ -110,6 +109,10 @@ def test_molecular_system_interface():
     assert molecule.n_particles('u-') == 1
     assert molecule.n_elementary_particles() == 2
     assert molecule.n_atoms() == 2
-    molecule.show()
+
+    try:
+        a.show()
+    except:
+        raise
 
 # test_molecular_system_interface()

@@ -13,7 +13,8 @@ from utilities import analytical_integration as aint
 
 
 class PrimitiveSlater(dict):
-    """Slater-Type orbitals:
+    """Slater-Type orbitals. (dict):
+
     The slater orbital function is:
 
     :math:`\chi_{p \lambda \\alpha}(r, \\theta, \phi) = R_{ \lambda p}(r) Y_{ \lambda \\alpha}( \\theta, \phi)`
@@ -36,7 +37,7 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
         n (int): Quantum number n = 1, 2, 3, etc.
         l (int): Quantum number l = S=0, P=1, D=2, etc.
         m (int): Quantum number m = order of the harmonic, m <= l
-        origin (numpy.darray[3]) : coordinates (spherical)
+        origin (numpy.ndarray(3)) : coordinates (spherical)
 
     """
     def __init__(self, exponent, coefficient=1.0, n=1, l=0, m=0, origin=np.array([0.0, 0.0, 0.0])):
@@ -96,6 +97,9 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
     def overlap(self, other):
         """
         Calculates analytically the overlap integral between two SlaterPrimitives.
+
+        Args:
+            other (PrimitiveSlater) : function to perform :math:`<\phi_{self} | \phi_{other}>`
         """
         l = aint.kronecker_delta(self['l'], other['l'])
         m = aint.kronecker_delta(self['m'], other['m'])

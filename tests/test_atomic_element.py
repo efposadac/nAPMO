@@ -16,24 +16,25 @@ sys.path.append(lib_path)
 from interfaces.atomic_element import AtomicElement
 from interfaces.basis_set import BasisSet
 
+
 def test_atomic_element_interface():
 
     try:
         a = AtomicElement()
-        assert False, 'Failure expected!'
+        assert False, 'Expecting Failure!'
     except:
-        pass
+        assert True
 
     try:
         a = AtomicElement('UNKNOWN')
-        assert False, 'Failure expected'
+        assert False, 'Expecting Failure!'
     except:
-        pass
+        assert True
 
     a = AtomicElement('C')
 
     assert a.get('name') == 'Carbon'
-    assert a.isQuantum() is False
+    assert a.isQuantum() is False, 'Expecting Failure!'
 
     for i in range(3):
         assert a.get('origin')[i] == 0.
@@ -54,15 +55,15 @@ def test_atomic_element_interface():
 
     try:
         a = AtomicElement('H', mass_number=100)
-        assert False, 'Failure expected'
+        assert False, 'Expecting Failure!'
     except:
-        pass
+        assert True
 
     try:
         a.get('address')
-        assert False, 'Failure expected'
+        assert False, 'Expecting Failure!'
     except:
-        pass
+        assert True
 
     a['address'] = 'sky'
     assert a.get('address') == 'sky'
@@ -72,8 +73,7 @@ def test_atomic_element_interface():
 
     try:
         a.show()
-        assert True
     except:
-        pass
+        raise
 
 # test_atomic_element_interface()

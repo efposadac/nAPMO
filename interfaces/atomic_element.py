@@ -15,16 +15,16 @@ from utilities.constants import ANGSTROM_TO_BOHR
 
 class AtomicElement(dict):
     '''
-    This class handles all information related to atomic elements Database.
+    This class handles all information related to atomic elements Database. (dict)
 
     Information From: http://physics.nist.gov/constants
 
     Args:
         symbol (str): Symbol of the atom.
-        origin (array[3]): Origin of the atom (cartesian coordinates)
+        origin (numpy.ndarray(3)): Origin of the atom (cartesian coordinates)
         BOA (bool, optional): Whether the atom nuclei will be treated in the BOA approach or not. Default is True
         mass_number (int, optional): Mass number of element ``symbol`` :math:`:= A = p^+ + n^o`.
-            If 0 the system will choose the most abundant one. Default is 0.
+            If 0 the system will choose the most abundant isotope. Default is 0.
         units (str, optional): Units of the origin, valid values are 'Angstroms' or 'Bohr'
     '''
     def __init__(self, symbol, mass_number=0, BOA=True, origin=[0.0, 0.0, 0.0], units='Angstroms'):
@@ -95,5 +95,5 @@ class AtomicElement(dict):
         print('Mass:', self.get('mass'))
         print('origin:', self.get('origin'))
         if 'basis' in self:
-            print('Basis set:', self.get('basis').get_name())
+            print('Basis set:', self.get('basis').get('name'))
         print('-----------------------------------')

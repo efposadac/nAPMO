@@ -14,7 +14,31 @@ from interfaces.primitive_gaussian import PrimitiveGaussian
 
 class ContractedGaussian(dict):
     """
-    Defines a linear combination of Cartesian Gaussian type orbitals GTO.
+    Defines a linear combination of Cartesian Gaussian type orbitals GTO (dict).
+
+    A contracted Gaussian function is just a linear combination of primitive Gaussians (also termed primitives)
+    centered at the same center :math:`{\\bf A}` and with the same momentum indices  :math:`{\\bf n}`
+    but with different exponents :math:`\zeta_i`:
+
+    :math:`\phi ({\\bf r}; {\\bf \zeta}, {\\bf C}, {\\bf n}, {\\bf A}) = (x - A_x)^{n_x} (y - A_y)^{n_y} (z - A_z)^{n_z} \\times
+    \sum_{i=1}^M C_i \exp[-\zeta_i ({\\bf r}-{\\bf A})^2]`
+
+    Contracted Gaussians form shells the same way as primitives. The contraction coefficients :math:`\\bf C`
+    already include normalization constants so that the resulting combination is properly normalized.
+    Published contraction coefficients :math:`\\bf c` are linear coefficients for normalized primitives,
+    hence the normalization-including contraction coefficients :math:`\\bf C` have to be computed from them as
+
+    :math:`C_i = c_i N(\zeta_i,{\\bf n})`
+
+    where :math:`N` is:
+
+    :math:`N = \\dfrac{1}{\sqrt{<\phi | \phi>}}`
+
+    Args:
+        exponents (numpy.ndarray): GTO exponent.
+        coefficients (numpy.ndarray): GTO coefficients.
+        origin (numpy.ndarray(3)) : coordinates (cartesian)
+        l (numpy.ndarray(3)) : :math:`\\bf n`. Angular moment (x, y, and z components)
     """
     def __init__(self, exponents=np.array([0.5]), coefficients=np.array([1.0]), origin=np.array([0.0, 0.0, 0.0]), l=np.array([0, 0, 0])):
         super(ContractedGaussian, self).__init__()
@@ -41,6 +65,9 @@ class ContractedGaussian(dict):
     def overlap(self, other):
         """
         Calculates the overlap integral between two contractions.
+
+        Args:
+            other (ContractedGaussian) : Contracted function to perform :math:`<\phi_{self} | \phi_{other}>`
         """
         output = 0.0
         for pa in self.get('primitive'):

@@ -33,9 +33,8 @@ def tests_basis_set_interface():
 
     try:
         test.show()
-        assert True
     except:
-        pass
+        raise
 
     value = 0.42377721
     np.testing.assert_allclose(test.compute(), value)
@@ -59,18 +58,16 @@ def tests_basis_set_interface():
 
     test += test2
     assert test.get('length') == 10
-    assert test.get_total_length() == 48
+    assert test.get('t_length') == 48
 
     try:
         test2.show()
-        assert True
     except:
-        pass
+        raise
 
     try:
         test2.show_json()
-        assert True
     except:
-        pass
+        raise
 
 # tests_basis_set_interface()

@@ -16,7 +16,9 @@ from interfaces.contracted_gaussian import ContractedGaussian
 
 class BasisSet(dict):
     """
-    Basis set functions helper
+    Basis-set interface. (dict)
+
+    This class allows the management of STO and GTO basis-sets.
     """
     def __init__(self, name='user'):
         super(BasisSet, self).__init__()
@@ -34,6 +36,7 @@ class BasisSet(dict):
         self['function'] += other.get('function')
         self['json'] += other.get('json')
         self['length'] += other.get('length')
+        self['t_length'] += other.get('t_length')
 
         return self
 
@@ -42,6 +45,7 @@ class BasisSet(dict):
         Load a Gaussian Type Orbital (GTO) basis-set.
 
         Args:
+            particle (str): Symbol of the particle.
             data (json): json formatted data to be loaded.
         """
         self['particle'] = particle
@@ -66,11 +70,16 @@ class BasisSet(dict):
 
         self['length'] = len(self.get('function'))
 
+        self['t_length'] = 0
+        for function in self.get('function'):
+            self['t_length'] += function.get('length')
+
     def load_slater(self, particle, data, origin=[0.0, 0.0, 0.0]):
         """
         Load a Slater Type Orbital (STO) basis-set.
 
         Args:
+            particle (str): Symbol of the particle.
             data (json): json formatted data to be loaded.
         """
         self['particle'] = particle
@@ -92,26 +101,21 @@ class BasisSet(dict):
                 ))
         self['length'] = len(self.get('function'))
 
+        self['t_length'] = 0
+        for function in self.get('function'):
+            self['t_length'] += function.get('length')
+
     def compute(self, coord=np.array([0.0, 0.0, 0.0])):
         """
         Compute all the basis-set functions at given ``coord``.
 
         Args:
-            coord (numpy.darray[3]): coordinates in which the basis set will be evaluated.
+            coord (numpy.ndarray(3)): coordinates in which the basis set will be evaluated.
+
         """
         output = np.zeros(self.get('length'))
         for i in range(self.get('length')):
             output[i] = self.get('function')[i].compute(coord)
-
-        return output
-
-    def get_total_length(self):
-        """
-        Return the length (number of primitives) of the basis-set
-        """
-        output = 0
-        for function in self.get('function'):
-            output += function.get('length')
 
         return output
 

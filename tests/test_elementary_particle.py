@@ -33,17 +33,16 @@ def test_elementary_particle_interface():
 
     try:
         a.get('address')
-        assert False, 'Failure expected!'
+        assert False, 'Expecting Failure!'
     except:
-        pass
+        assert True
 
     basis = BasisSet()
     a['basis'] = basis
 
     try:
         a.show()
-        assert True
     except:
-        pass
+        raise
 
 # test_elementary_particle_interface()

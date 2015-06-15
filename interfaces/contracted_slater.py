@@ -13,7 +13,15 @@ from interfaces.primitive_slater import PrimitiveSlater
 
 class ContractedSlater(dict):
     """
-    Defines a Slater Type Orbital (STO)  as a combination of PrimitiveSlater Functions (spherical coordinates)
+    Defines a Slater Type Orbital (STO)  as a combination of PrimitiveSlater Functions (spherical coordinates). (dict)
+
+    Args:
+        exponents (numpy.ndarray): Slater exponent.
+        coefficient (numpy.ndarray): Slater coefficients.
+        origin (numpy.ndarray(3)) : coordinates (spherical)
+        n (numpy.ndarray): Quantum number n = 1, 2, 3, etc. (one for each primitive)
+        l (int): Quantum number l = S=0, P=1, D=2, etc.
+        m (int): Quantum number m = order of the harmonic, m <= l
     """
     def __init__(self, exponents=np.array([0.5]), coefficients=np.array([1.0]), origin=np.array([0.0, 0.0, 0.0]), n=np.array([0]), l=0, m=0):
         super(ContractedSlater, self).__init__()
@@ -43,6 +51,9 @@ class ContractedSlater(dict):
     def overlap(self, other):
         """
         Calculates the overlap integral between two contractions.
+
+        Args:
+            other (ContractedSlater) : Contracted function to perform :math:`<\phi_{self} | \phi_{other}>`
         """
         output = 0.0
         for pa in self.get('primitive'):
