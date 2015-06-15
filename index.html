@@ -148,18 +148,21 @@
 <ul class="simple">
 <li>Edwin Fernando Posada</li>
 <li><a class="reference external" href="mailto:eposada&#37;&#52;&#48;sissa&#46;it">eposada<span>&#64;</span>sissa<span>&#46;</span>it</a></li>
-<li>Version 0.0</li>
+<li>Version 0.1</li>
 </ul>
 </div>
 <div class="section" id="compilation">
 <h1>Compilation<a class="headerlink" href="#compilation" title="Permalink to this headline">¶</a></h1>
 <p>At this moment there is a module in FORTRAN code. I used f2py to interface it with Python. To perform compilation just run:</p>
-<ul class="simple">
-<li><code class="docutils literal"><span class="pre">make</span></code></li>
-<li><code class="docutils literal"><span class="pre">make</span> <span class="pre">clean</span></code> is also supported.</li>
-</ul>
-<p>One example using the code is provided in iphyton notebook format. (nAPMO-test.ipynb)</p>
+<p><code class="docutils literal"><span class="pre">make</span></code></p>
+<p>To check the code go to the <code class="docutils literal"><span class="pre">tests</span></code> folder and run:</p>
+<p><code class="docutils literal"><span class="pre">nosetests</span> <span class="pre">--with-coverage</span> <span class="pre">--with-doctest</span></code></p>
+</div>
+<div class="section" id="notes">
+<h1>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h1>
+<p>This version contains a complete and functional molecular multicenter integrator. At this moment it can be calculated overlap integrals over GTOs and STOs. As well the calculation of <span class="math">\(\int \rho(\bf r)\)</span>. Some examples are provided in the folder <a class="reference external" href="examples">examples</a>.</p>
 <p>Any suggestion and help is more than welcome and appreciated.</p>
+<p>Code documentation can be found at <a class="reference external" href="http://efposadac.github.io/nAPMO/">http://efposadac.github.io/nAPMO/</a></p>
 <p><a class="reference external" href="mailto:eposada&#37;&#52;&#48;sissa&#46;it">eposada<span>&#64;</span>sissa<span>&#46;</span>it</a></p>
 </div>
 <div class="section" id="contents">
