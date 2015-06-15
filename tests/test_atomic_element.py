@@ -5,36 +5,49 @@
 # Version: 0.0
 # efposadac@sissa.it
 
-from interfaces.atomic_element import AtomicElement
 import numpy as np
+
+import os
+import sys
+
+lib_path = os.path.abspath('../')
+sys.path.append(lib_path)
+
+from interfaces.atomic_element import AtomicElement
+from interfaces.basis_set import BasisSet
 
 
 def test_atomic_element_interface():
+
     try:
         a = AtomicElement()
-        assert False, 'Failure expected!'
+        assert False, 'Expecting Failure!'
     except:
-        pass
+        assert True
+
     try:
         a = AtomicElement('UNKNOWN')
-        assert False, 'Failure expected'
+        assert False, 'Expecting Failure!'
     except:
-        pass
+        assert True
+
     a = AtomicElement('C')
+
     assert a.get('name') == 'Carbon'
-    assert a.isQuantum() is False
-    for i in xrange(3):
-        assert a.get('position')[i] == 0.
+    assert a.isQuantum() is False, 'Expecting Failure!'
+
+    for i in range(3):
+        assert a.get('origin')[i] == 0.
 
     a = AtomicElement('H', BOA=False)
 
     assert a.isQuantum() is True
     assert a.get('mass_number') == 1
 
-    a.set('mass_number', 2)
+    a['mass_number'] = 2
     assert a.get('mass_number') == 2
 
-    a.set('symbol', 'none')
+    a['symbol'] = 'none'
     assert a.get('symbol') == 'none'
 
     a = AtomicElement('H', mass_number=3)
@@ -42,21 +55,25 @@ def test_atomic_element_interface():
 
     try:
         a = AtomicElement('H', mass_number=100)
-        assert False, 'Failure expected'
+        assert False, 'Expecting Failure!'
     except:
-        pass
+        assert True
 
     try:
         a.get('address')
-        assert False, 'Failure expected'
+        assert False, 'Expecting Failure!'
     except:
-        pass
+        assert True
 
-    a.set('address', 'sky')
+    a['address'] = 'sky'
     assert a.get('address') == 'sky'
+
+    basis = BasisSet()
+    a['basis'] = basis
 
     try:
         a.show()
-        assert True
     except:
-        pass
+        raise
+
+# test_atomic_element_interface()

@@ -1,0 +1,58 @@
+{
+    "p": {
+        "name": "proton",
+        "mass": 1836.15267247,
+        "category": "baryon",
+        "charge": 1.0,
+        "spin": 0.5,
+        "symbol": "p"
+    },
+    "n": {
+        "name": "neutron",
+        "mass": 1838.6836605,
+        "category": "baryon",
+        "charge": 0.0,
+        "spin": 0.5,
+        "symbol": "n"
+    },
+    "user": {
+        "name": "user",
+        "mass": 0.0,
+        "category": " ",
+        "charge": 0.0,
+        "spin": 1.0,
+        "symbol": " "
+    },
+    "e+": {
+        "name": "positron",
+        "mass": 1.0,
+        "category": "lepton",
+        "charge": 1.0,
+        "spin": 0.5,
+        "symbol": "e+"
+    },
+    "e-": {
+        "name": "electron",
+        "mass": 1.0,
+        "category": "lepton",
+        "charge": -1.0,
+        "spin": 0.5,
+        "symbol": "e-"
+    },
+    "u-": {
+        "name": "muon",
+        "mass": 206.76828235,
+        "category": "lepton",
+        "charge": -1.0,
+        "spin": 0.5,
+        "symbol": "u-"
+    },
+    "t-": {
+        "name": "tau",
+        "mass": 3477.48,
+        "category": "lepton",
+        "charge": -1.0,
+        "spin": 0.5,
+        "symbol": "t-"
+    }
+}
