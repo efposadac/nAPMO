@@ -14,12 +14,12 @@ Compilation
 ===========
 
 At this moment there is a module in FORTRAN code. I used f2py to interface it with Python. To perform compilation just run:
-::
-	make
+
+``make``
 
 To check the code go to the ``tests`` folder and run:
-::
-	nosetests --with-coverage --with-doctest
+
+``nosetests --with-coverage --with-doctest``
 
 Notes
 ======
@@ -27,6 +27,8 @@ Notes
 This version contains a complete and functional molecular multicenter integrator. At this moment it can be calculated overlap integrals over GTOs and STOs. As well the calculation of :math:`\int \rho(\bf r)`. Some examples are provided in the folder examples_.
 
 Any suggestion and help is more than welcome and appreciated. 
+
+Code documentation can be found at http://efposadac.github.io/nAPMO/
 
 eposada@sissa.it
 
