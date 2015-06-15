@@ -32,7 +32,7 @@
   
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
         <link rel="up" title="Interfaces" href="interfaces.html"/>
-        <link rel="next" title="becke_grid" href="becke_grid.html"/>
+        <link rel="next" title="basis_set" href="basis_set.html"/>
         <link rel="prev" title="Interfaces" href="interfaces.html"/> 
 
   
@@ -76,26 +76,21 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="interfaces.html">Interfaces</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="">atomic_element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
 <li class="toctree-l3"><a class="reference internal" href="becke_grid.html">becke_grid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="composite_particle.html">composite_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_slater.html">contracted_slater</a></li>
-<li class="toctree-l3"><a class="reference internal" href="csystem.html">csystem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="molecular_system.html">molecular_system</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_slater.html">primitive_slater</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stack.html">stack</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilitites.html">Utilitites</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../utilities/databases.html">databases</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#atomicelementsdatabase">AtomicElementsDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#unitsdatabase">UnitsDatabase</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../utilities/databases.html">databases</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../utilities/numerical_integration.html">numerical_integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../utilities/lebedev.html">lebedev.lebedev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../utilities/analytical_integration.html">analytical_integration</a></li>
 </ul>
 </li>
 </ul>
@@ -147,8 +142,8 @@
 <span id="atomic-element"></span><h1>atomic_element<a class="headerlink" href="#module-atomic_element" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="atomic_element.AtomicElement">
-<em class="property">class </em><code class="descclassname">atomic_element.</code><code class="descname">AtomicElement</code><span class="sig-paren">(</span><em>symbol, mass_number=0, BOA=True, position=[0.0, 0.0, 0.0], units='Angstroms'</em><span class="sig-paren">)</span><a class="headerlink" href="#atomic_element.AtomicElement" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class handles all information related to atomic elements Database.</p>
+<em class="property">class </em><code class="descclassname">atomic_element.</code><code class="descname">AtomicElement</code><span class="sig-paren">(</span><em>symbol, mass_number=0, BOA=True, origin=[0.0, 0.0, 0.0], units='Angstroms'</em><span class="sig-paren">)</span><a class="headerlink" href="#atomic_element.AtomicElement" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class handles all information related to atomic elements Database. (dict)</p>
 <p>Information From: <a class="reference external" href="http://physics.nist.gov/constants">http://physics.nist.gov/constants</a></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -156,37 +151,16 @@
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol of the atom.</li>
-<li><strong>position</strong> (<em>float64[3]</em>) &#8211; Origin of the atom (cartesian coordinates)</li>
+<li><strong>origin</strong> (<em>numpy.ndarray(3)</em>) &#8211; Origin of the atom (cartesian coordinates)</li>
 <li><strong>BOA</strong> (<em>bool, optional</em>) &#8211; Whether the atom nuclei will be treated in the BOA approach or not. Default is True</li>
 <li><strong>mass_number</strong> (<em>int, optional</em>) &#8211; Mass number of element <code class="docutils literal"><span class="pre">symbol</span></code> <span class="math">\(:= A = p^+ + n^o\)</span>.
-If 0 the system will choose the most abundant one. Default is 0.</li>
+If 0 the system will choose the most abundant isotope. Default is 0.</li>
 <li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are &#8216;Angstroms&#8217; or &#8216;Bohr&#8217;</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<dl class="method">
-<dt id="atomic_element.AtomicElement.get_key">
-<code class="descname">get_key</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#atomic_element.AtomicElement.get_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the Value stored with the key <code class="docutils literal"><span class="pre">key</span></code></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; Key associated to the value you want obtain.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the value stored in <code class="docutils literal"><span class="pre">key</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">any</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211;
-If <code class="docutils literal"><span class="pre">key</span></code> is not present in the object.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="method">
 <dt id="atomic_element.AtomicElement.isQuantum">
 <code class="descname">isQuantum</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#atomic_element.AtomicElement.isQuantum" title="Permalink to this definition">¶</a></dt>
@@ -197,24 +171,6 @@ If <code class="docutils literal"><span class="pre">key</span></code> is not pre
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether the nuclei of the atomic element is being treated in the BOA framework or not</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="atomic_element.AtomicElement.set_key">
-<code class="descname">set_key</code><span class="sig-paren">(</span><em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#atomic_element.AtomicElement.set_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a new item in the object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>key</strong> (<em>str</em>) &#8211; Key of the item.</li>
-<li><strong>value</strong> (<em>any</em>) &#8211; Value of the item.</li>
-</ul>
-</td>
 </tr>
 </tbody>
 </table>
@@ -236,7 +192,7 @@ If <code class="docutils literal"><span class="pre">key</span></code> is not pre
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="becke_grid.html" class="btn btn-neutral float-right" title="becke_grid" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="basis_set.html" class="btn btn-neutral float-right" title="basis_set" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="interfaces.html" class="btn btn-neutral" title="Interfaces" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

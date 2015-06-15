@@ -76,11 +76,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../interfaces/interfaces.html">Interfaces</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/atomic_element.html">atomic_element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/basis_set.html">basis_set</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/becke_grid.html">becke_grid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/composite_particle.html">composite_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/contracted_gaussian.html">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/contracted_slater.html">contracted_slater</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/csystem.html">csystem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/elementary_particle.html">elementary_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/primitive_gaussian.html">primitive_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/primitive_slater.html">primitive_slater</a></li>
@@ -88,14 +87,9 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="utilitites.html">Utilitites</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="">databases</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#atomicelementsdatabase">AtomicElementsDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#unitsdatabase">UnitsDatabase</a></li>
-</ul>
-</li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">databases</a></li>
 <li class="toctree-l3"><a class="reference internal" href="numerical_integration.html">numerical_integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lebedev.html">lebedev.lebedev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analytical_integration.html">analytical_integration</a></li>
 </ul>
 </li>
 </ul>
@@ -145,30 +139,18 @@
             
   <div class="section" id="module-databases">
 <span id="databases"></span><h1>databases<a class="headerlink" href="#module-databases" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="atomicelementsdatabase">
-<h2>AtomicElementsDatabase<a class="headerlink" href="#atomicelementsdatabase" title="Permalink to this headline">¶</a></h2>
-<p>This data base contains all information related to atomic elements.
-Database information taken from: <a class="reference external" href="http://physics.nist.gov/constants">http://physics.nist.gov/constants</a></p>
-<p>Atomic radii from J. C. Slater, J. Chem. Phys. 41, 3199 (1964).</p>
-<p class="rubric">Example</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">utilities.databases</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">utilities</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">AtomicElementsDatabase</span><span class="p">[</span><span class="s">&#39;H&#39;</span><span class="p">]</span> 
-<span class="go">{&#39;vanderwaals_radius&#39;: 1.2, &#39;atomic_number&#39;: 1, &#39;symbol&#39;: &#39;H&#39;, &#39;covalent_radius&#39;: 0.3, &#39;atomic_radii&#39;: 0.35, &#39;ionization_energy_1&#39;: 1312, &#39;melting_point&#39;: 13.81, &#39;electron_affinity&#39;: -73, &#39;electronegativity&#39;: 2.1, &#39;name&#39;: &#39;Hydrogen&#39;, &#39;density&#39;: 0.084, &#39;boiling_point&#39;: 20.28, &#39;mass&#39;: 1.00794}</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="elementaryparticlesdatabase">
-<h2>ElementaryParticlesDatabase<a class="headerlink" href="#elementaryparticlesdatabase" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="databases.ElementaryParticlesDatabase">
+<code class="descclassname">databases.</code><code class="descname">ElementaryParticlesDatabase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#databases.ElementaryParticlesDatabase" title="Permalink to this definition">¶</a></dt>
+<dd><blockquote>
+<div>ElementaryParticlesDatabase</div></blockquote>
 <p>This database contains all information related to quatum species, ie. electrons, muons, etc.</p>
 <p class="rubric">Example</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">utilities.databases</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">utilities</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">ElementaryParticlesDatabase</span><span class="p">[</span><span class="s">&#39;e-&#39;</span><span class="p">]</span> 
+<span class="gp">&gt;&gt;&gt; </span><span class="n">utilities</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">ElementaryParticlesDatabase</span><span class="p">()[</span><span class="s">&#39;e-&#39;</span><span class="p">]</span> 
 <span class="go">{&#39;category&#39;: &#39;lepton&#39;, &#39;name&#39;: &#39;electron&#39;, &#39;symbol&#39;: &#39;e-&#39;, &#39;charge&#39;: -1.0, &#39;mass&#39;: 1.0, &#39;spin&#39;: 0.5}</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="unitsdatabase">
-<h2>UnitsDatabase<a class="headerlink" href="#unitsdatabase" title="Permalink to this headline">¶</a></h2>
 <p>This database contains factors to covert between Bohr and Angstroms.</p>
 <p class="rubric">Example</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">utilities.databases</span>
@@ -176,7 +158,8 @@ Database information taken from: <a class="reference external" href="http://phys
 <span class="go">0.52917721092</span>
 </pre></div>
 </div>
-</div>
+</dd></dl>
+
 </div>
 
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>composite_particle &mdash; nAPMO a1 documentation</title>
+  <title>molecular_system &mdash; nAPMO a1 documentation</title>
   
 
   
@@ -32,8 +32,8 @@
   
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
         <link rel="up" title="Interfaces" href="interfaces.html"/>
-        <link rel="next" title="contracted_gaussian" href="contracted_gaussian.html"/>
-        <link rel="prev" title="becke_grid" href="becke_grid.html"/> 
+        <link rel="next" title="primitive_gaussian" href="primitive_gaussian.html"/>
+        <link rel="prev" title="elementary_particle" href="elementary_particle.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -78,22 +78,17 @@
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
 <li class="toctree-l3"><a class="reference internal" href="becke_grid.html">becke_grid</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">composite_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_slater.html">contracted_slater</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">molecular_system</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_slater.html">primitive_slater</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stack.html">stack</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilitites.html">Utilitites</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../utilities/databases.html">databases</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#atomicelementsdatabase">AtomicElementsDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#unitsdatabase">UnitsDatabase</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../utilities/databases.html">databases</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../utilities/numerical_integration.html">numerical_integration</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../utilities/analytical_integration.html">analytical_integration</a></li>
 </ul>
@@ -130,11 +125,11 @@
       
           <li><a href="interfaces.html">Interfaces</a> &raquo;</li>
       
-    <li>composite_particle</li>
+    <li>molecular_system</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/interfaces/composite_particle.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/interfaces/molecular_system.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -143,14 +138,12 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="module-composite_particle">
-<span id="composite-particle"></span><h1>composite_particle<a class="headerlink" href="#module-composite_particle" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-molecular_system">
+<span id="molecular-system"></span><h1>molecular_system<a class="headerlink" href="#module-molecular_system" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
-<dt id="composite_particle.CompositeParticle">
-<em class="property">class </em><code class="descclassname">composite_particle.</code><code class="descname">CompositeParticle</code><span class="sig-paren">(</span><em>name='none'</em><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a composite particle, i.e. atoms, molecules or nuclei.
-Since a composite particle can be a molecule, it can be added different atoms and
-elementary particles to the molecule. The key for elementary particles are its symbols.</p>
+<dt id="molecular_system.MolecularSystem">
+<em class="property">class </em><code class="descclassname">molecular_system.</code><code class="descname">MolecularSystem</code><a class="headerlink" href="#molecular_system.MolecularSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a molecular system, containing different kinds of quantum &#8216;species&#8217; i.e. atoms, muons, positrons, etc. (dict)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -160,16 +153,16 @@ elementary particles to the molecule. The key for elementary particles are its s
 </tbody>
 </table>
 <dl class="method">
-<dt id="composite_particle.CompositeParticle.add_atom">
-<code class="descname">add_atom</code><span class="sig-paren">(</span><em>symbol</em>, <em>position</em>, <em>BOA=True</em>, <em>mass_number=0</em>, <em>units='Angstroms'</em>, <em>basis_kind='GTO'</em>, <em>basis_name='none'</em>, <em>basis_file='none'</em><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.add_atom" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds an atom to the composite particle.</p>
+<dt id="molecular_system.MolecularSystem.add_atom">
+<code class="descname">add_atom</code><span class="sig-paren">(</span><em>symbol</em>, <em>origin</em>, <em>BOA=True</em>, <em>mass_number=0</em>, <em>units='Angstroms'</em>, <em>basis_kind='GTO'</em>, <em>basis_name='none'</em>, <em>basis_file='none'</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.add_atom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an atom to the molecular system.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol of the atom.</li>
-<li><strong>position</strong> (<em>float64[3]</em>) &#8211; Origin of the atom (Cartesian coordinates)</li>
+<li><strong>origin</strong> (<em>numpy.ndarray(3)</em>) &#8211; Origin of the atom (Cartesian coordinates)</li>
 <li><strong>BOA</strong> (<em>bool, optional</em>) &#8211; Whether the atom nuclei will be treated in the BOA approach or not. Default is True</li>
 <li><strong>mass_number</strong> (<em>int, optional</em>) &#8211; Mass number of element &#8216;symbol&#8217; <span class="math">\(:= A = p^+ + n^o\)</span>.
 If 0 the system will choose the most abundant one. Default is 0.</li>
@@ -182,16 +175,16 @@ If 0 the system will choose the most abundant one. Default is 0.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="composite_particle.CompositeParticle.add_elementary_particle">
-<code class="descname">add_elementary_particle</code><span class="sig-paren">(</span><em>symbol</em>, <em>position</em>, <em>size=1</em>, <em>units='Angstroms'</em>, <em>basis_kind='GTO'</em>, <em>basis_name='none'</em>, <em>basis_file='none'</em><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.add_elementary_particle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds an elementary particle into the composite particle.</p>
+<dt id="molecular_system.MolecularSystem.add_elementary_particle">
+<code class="descname">add_elementary_particle</code><span class="sig-paren">(</span><em>symbol</em>, <em>origin</em>, <em>size=1</em>, <em>units='Angstroms'</em>, <em>basis_kind='GTO'</em>, <em>basis_name='none'</em>, <em>basis_file='none'</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.add_elementary_particle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an elementary particle into the molecular system.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol of the elementary particle.</li>
-<li><strong>position</strong> (<em>float64[3]</em>) &#8211; Origin of the elementary particle (Cartesian coordinates)</li>
+<li><strong>origin</strong> (<em>array[3]</em>) &#8211; Origin of the elementary particle (Cartesian coordinates)</li>
 <li><strong>size</strong> (<em>int</em>) &#8211; Number of elementary particle to be added.</li>
 <li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are &#8216;Angstroms&#8217; or &#8216;Bohr&#8217;</li>
 </ul>
@@ -202,29 +195,9 @@ If 0 the system will choose the most abundant one. Default is 0.</li>
 </dd></dl>
 
 <dl class="method">
-<dt id="composite_particle.CompositeParticle.get_elementary_particle">
-<code class="descname">get_elementary_particle</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.get_elementary_particle" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; key of a given elementary particle.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Stack of particles of kind <code class="docutils literal"><span class="pre">key</span></code>. (see Stack class to handle it.)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="stack.html#stack.Stack" title="stack.Stack">Stack</a></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211;
-If <code class="docutils literal"><span class="pre">key</span></code> is not present in the object.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="composite_particle.CompositeParticle.get_n_atoms">
-<code class="descname">get_n_atoms</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.get_n_atoms" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the number of atoms in the object</p>
+<dt id="molecular_system.MolecularSystem.n_atoms">
+<code class="descname">n_atoms</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.n_atoms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of atoms in the system</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -238,14 +211,14 @@ If <code class="docutils literal"><span class="pre">key</span></code> is not pre
 </dd></dl>
 
 <dl class="method">
-<dt id="composite_particle.CompositeParticle.get_n_elementary_particles">
-<code class="descname">get_n_elementary_particles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.get_n_elementary_particles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the number of elementary particles composing the object.</p>
+<dt id="molecular_system.MolecularSystem.n_elementary_particles">
+<code class="descname">n_elementary_particles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.n_elementary_particles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of elementary particles in the system.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Number of kind of particles in the object.</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Number of quantum species in the system.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
@@ -254,9 +227,9 @@ If <code class="docutils literal"><span class="pre">key</span></code> is not pre
 </dd></dl>
 
 <dl class="method">
-<dt id="composite_particle.CompositeParticle.get_n_particles">
-<code class="descname">get_n_particles</code><span class="sig-paren">(</span><em>symbol</em><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.get_n_particles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of particles of a given <code class="docutils literal"><span class="pre">symbol</span></code> if this is present in the object.</p>
+<dt id="molecular_system.MolecularSystem.n_particles">
+<code class="descname">n_particles</code><span class="sig-paren">(</span><em>symbol</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.n_particles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of particles of a given <code class="docutils literal"><span class="pre">symbol</span></code> if this is present in the object.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -270,36 +243,8 @@ If <code class="docutils literal"><span class="pre">key</span></code> is not pre
 </dd></dl>
 
 <dl class="method">
-<dt id="composite_particle.CompositeParticle.get_name">
-<code class="descname">get_name</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">the name of the object.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="composite_particle.CompositeParticle.iter_symbol">
-<code class="descname">iter_symbol</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.iter_symbol" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Array with symbols of &#8216;kind of particles&#8217; in the composite object. (elementary_particles plus atoms)</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="composite_particle.CompositeParticle.show">
-<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#composite_particle.CompositeParticle.show" title="Permalink to this definition">¶</a></dt>
+<dt id="molecular_system.MolecularSystem.show">
+<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Shows information about particles</p>
 </dd></dl>
 
@@ -313,10 +258,10 @@ If <code class="docutils literal"><span class="pre">key</span></code> is not pre
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="contracted_gaussian.html" class="btn btn-neutral float-right" title="contracted_gaussian" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="primitive_gaussian.html" class="btn btn-neutral float-right" title="primitive_gaussian" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="becke_grid.html" class="btn btn-neutral" title="becke_grid" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="elementary_particle.html" class="btn btn-neutral" title="elementary_particle" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -32,8 +32,8 @@
   
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
         <link rel="up" title="Interfaces" href="interfaces.html"/>
-        <link rel="next" title="primitive_gaussian" href="primitive_gaussian.html"/>
-        <link rel="prev" title="csystem" href="csystem.html"/> 
+        <link rel="next" title="molecular_system" href="molecular_system.html"/>
+        <link rel="prev" title="contracted_slater" href="contracted_slater.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -76,26 +76,21 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="interfaces.html">Interfaces</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
 <li class="toctree-l3"><a class="reference internal" href="becke_grid.html">becke_grid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="composite_particle.html">composite_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_slater.html">contracted_slater</a></li>
-<li class="toctree-l3"><a class="reference internal" href="csystem.html">csystem</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">elementary_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="molecular_system.html">molecular_system</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_slater.html">primitive_slater</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stack.html">stack</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilitites.html">Utilitites</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../utilities/databases.html">databases</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#atomicelementsdatabase">AtomicElementsDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#unitsdatabase">UnitsDatabase</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../utilities/databases.html">databases</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../utilities/numerical_integration.html">numerical_integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../utilities/lebedev.html">lebedev.lebedev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../utilities/analytical_integration.html">analytical_integration</a></li>
 </ul>
 </li>
 </ul>
@@ -147,9 +142,9 @@
 <span id="elementary-particle"></span><h1>elementary_particle<a class="headerlink" href="#module-elementary_particle" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="elementary_particle.ElementaryParticle">
-<em class="property">class </em><code class="descclassname">elementary_particle.</code><code class="descname">ElementaryParticle</code><span class="sig-paren">(</span><em>symbol='null', position=[0.0, 0.0, 0.0]</em><span class="sig-paren">)</span><a class="headerlink" href="#elementary_particle.ElementaryParticle" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">elementary_particle.</code><code class="descname">ElementaryParticle</code><span class="sig-paren">(</span><em>symbol='null', origin=[0.0, 0.0, 0.0]</em><span class="sig-paren">)</span><a class="headerlink" href="#elementary_particle.ElementaryParticle" title="Permalink to this definition">¶</a></dt>
 <dd><p>An abstract python interface to create an elementary quantum particle
-i.e Leptons as electron, muon, etc</p>
+i.e Leptons as electron, muon, etc. (dict)</p>
 <p>Database information from:</p>
 <p>From: <a class="reference external" href="http://physics.nist.gov/constants">http://physics.nist.gov/constants</a></p>
 <table class="docutils field-list" frame="void" rules="none">
@@ -158,51 +153,12 @@ i.e Leptons as electron, muon, etc</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol for the particle.</li>
-<li><strong>position</strong> (<em>float64[3]</em>) &#8211; Origin for the particle (atomic units.)</li>
+<li><strong>origin</strong> (<em>numpy.ndarray(3)</em>) &#8211; Origin for the particle (atomic units.)</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<dl class="method">
-<dt id="elementary_particle.ElementaryParticle.get_key">
-<code class="descname">get_key</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="headerlink" href="#elementary_particle.ElementaryParticle.get_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the Value stored with the key <code class="docutils literal"><span class="pre">key</span></code></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) &#8211; Key associated to the value you want obtain.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the value stored in <code class="docutils literal"><span class="pre">key</span></code></td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">any</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">KeyError</span></code> &#8211;
-If <code class="docutils literal"><span class="pre">key</span></code> is not present in the object.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="elementary_particle.ElementaryParticle.set_key">
-<code class="descname">set_key</code><span class="sig-paren">(</span><em>key</em>, <em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#elementary_particle.ElementaryParticle.set_key" title="Permalink to this definition">¶</a></dt>
-<dd><p>Set a new item in the object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>key</strong> (<em>str</em>) &#8211; Key of the item.</li>
-<li><strong>value</strong> (<em>any</em>) &#8211; Value of the item.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
 <dl class="method">
 <dt id="elementary_particle.ElementaryParticle.show">
 <code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#elementary_particle.ElementaryParticle.show" title="Permalink to this definition">¶</a></dt>
@@ -219,10 +175,10 @@ If <code class="docutils literal"><span class="pre">key</span></code> is not pre
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="primitive_gaussian.html" class="btn btn-neutral float-right" title="primitive_gaussian" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="molecular_system.html" class="btn btn-neutral float-right" title="molecular_system" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="csystem.html" class="btn btn-neutral" title="csystem" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="contracted_slater.html" class="btn btn-neutral" title="contracted_slater" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

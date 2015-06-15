@@ -32,7 +32,7 @@
   
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
         <link rel="up" title="Interfaces" href="interfaces.html"/>
-        <link rel="next" title="composite_particle" href="composite_particle.html"/>
+        <link rel="next" title="contracted_gaussian" href="contracted_gaussian.html"/>
         <link rel="prev" title="basis_set" href="basis_set.html"/> 
 
   
@@ -78,25 +78,19 @@
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">becke_grid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="composite_particle.html">composite_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_slater.html">contracted_slater</a></li>
-<li class="toctree-l3"><a class="reference internal" href="csystem.html">csystem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="molecular_system.html">molecular_system</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_slater.html">primitive_slater</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stack.html">stack</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilitites.html">Utilitites</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../utilities/databases.html">databases</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#atomicelementsdatabase">AtomicElementsDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#unitsdatabase">UnitsDatabase</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../utilities/databases.html">databases</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../utilities/numerical_integration.html">numerical_integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../utilities/lebedev.html">lebedev.lebedev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../utilities/analytical_integration.html">analytical_integration</a></li>
 </ul>
 </li>
 </ul>
@@ -165,61 +159,21 @@
 </tbody>
 </table>
 <dl class="method">
-<dt id="becke_grid.BeckeGrid.get_angular_phi">
-<code class="descname">get_angular_phi</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.get_angular_phi" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an C array with all the phi coordinates.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="becke_grid.BeckeGrid.get_angular_theta">
-<code class="descname">get_angular_theta</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.get_angular_theta" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an C array with all the theta coordinates.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="becke_grid.BeckeGrid.get_angular_weights">
-<code class="descname">get_angular_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.get_angular_weights" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an C array with all angular weights.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="becke_grid.BeckeGrid.get_n_angular">
-<code class="descname">get_n_angular</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.get_n_angular" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of angular points.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="becke_grid.BeckeGrid.get_n_radial">
-<code class="descname">get_n_radial</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.get_n_radial" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of radial points.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="becke_grid.BeckeGrid.get_radial_abscissas">
-<code class="descname">get_radial_abscissas</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.get_radial_abscissas" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an C array with all radial abscissas.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="becke_grid.BeckeGrid.get_radial_weights">
-<code class="descname">get_radial_weights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.get_radial_weights" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an C array with all radial weights.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="becke_grid.BeckeGrid.integrate_c">
-<code class="descname">integrate_c</code><span class="sig-paren">(</span><em>csys</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.integrate_c" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform an integration of function <span class="math">\(F(r)\)</span> using BeckeGrid. (Function coded on C)</p>
-<dl class="docutils">
-<dt>Info:</dt>
-<dd>So far only implements density integration as a test, more functionals soon.</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="becke_grid.BeckeGrid.integrate_p">
-<code class="descname">integrate_p</code><span class="sig-paren">(</span><em>particle_stack</em>, <em>F</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.integrate_p" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform an integration of function <span class="math">\(F(r)\)</span> using BeckeGrid. (Function coded on Python)</p>
+<dt id="becke_grid.BeckeGrid.integrate">
+<code class="descname">integrate</code><span class="sig-paren">(</span><em>particle_stack</em>, <em>F</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.integrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an integration of function <span class="math">\(F(r)\)</span> using BeckeGrid.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>particle_stack</strong> (<a class="reference internal" href="stack.html#stack.Stack" title="stack.Stack"><em>Stack</em></a>) &#8211; Stack of AtomicElements or ElementaryParticles Objects.</li>
+<li><strong>F</strong> (<em>function</em>) &#8211; Functional to be integrated.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -235,37 +189,8 @@
 </dd></dl>
 
 <dl class="method">
-<dt id="becke_grid.BeckeGrid.weight_c">
-<code class="descname">weight_c</code><span class="sig-paren">(</span><em>csys</em>, <em>r</em>, <em>particleID</em>, <em>particle_stack</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.weight_c" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the Becke weights <span class="math">\(w(r)\)</span> at point <code class="docutils literal"><span class="pre">r</span></code> for particle <code class="docutils literal"><span class="pre">particleID</span></code> as described in eq. 22 Becke, 1988
-using C routine.</p>
-<p class="rubric">References</p>
-<p>Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>r</strong> (<em>array[3]</em>) &#8211; Point of the grid in which the weight will be calculated.</li>
-<li><strong>particleID</strong> (<em>int</em>) &#8211; The particle index who owns the <code class="docutils literal"><span class="pre">r</span></code> point.</li>
-<li><strong>particle_stack</strong> (<a class="reference internal" href="stack.html#stack.Stack" title="stack.Stack"><em>Stack</em></a>) &#8211; stack of particles of same species as <code class="docutils literal"><span class="pre">particleID</span></code></li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>P</strong> &#8211;
-The value of cell_function (eq. 13, Becke, 1988) at point <code class="docutils literal"><span class="pre">r</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float64</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="becke_grid.BeckeGrid.weight_p">
-<code class="descname">weight_p</code><span class="sig-paren">(</span><em>r</em>, <em>particleID</em>, <em>particle_stack</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.weight_p" title="Permalink to this definition">¶</a></dt>
+<dt id="becke_grid.BeckeGrid.weight">
+<code class="descname">weight</code><span class="sig-paren">(</span><em>r</em>, <em>particleID</em>, <em>particle_stack</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.weight" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the Becke weights <span class="math">\(w(r)\)</span> at point <code class="docutils literal"><span class="pre">r</span></code> for particle <code class="docutils literal"><span class="pre">particleID</span></code> as described in eq. 22 Becke, 1988
 using Python routine.</p>
 <p class="rubric">References</p>
@@ -275,13 +200,13 @@ using Python routine.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>r</strong> (<em>array[3]</em>) &#8211; Point of the grid in which the weight will be calculated.</li>
+<li><strong>r</strong> (<em>numpy.ndarray(3)</em>) &#8211; Point of the grid in which the weight will be calculated.</li>
 <li><strong>particleID</strong> (<em>int</em>) &#8211; The particle index who owns the <code class="docutils literal"><span class="pre">r</span></code> point.</li>
 <li><strong>particle_stack</strong> (<a class="reference internal" href="stack.html#stack.Stack" title="stack.Stack"><em>Stack</em></a>) &#8211; stack of particles of same species as <code class="docutils literal"><span class="pre">particleID</span></code></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>P</strong> &#8211;
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>p</strong> &#8211;
 The value of cell_function (eq. 13, Becke, 1988) at point <code class="docutils literal"><span class="pre">r</span></code></p>
 </td>
 </tr>
@@ -302,7 +227,7 @@ The value of cell_function (eq. 13, Becke, 1988) at point <code class="docutils 
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="composite_particle.html" class="btn btn-neutral float-right" title="composite_particle" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="contracted_gaussian.html" class="btn btn-neutral float-right" title="contracted_gaussian" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="basis_set.html" class="btn btn-neutral" title="basis_set" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

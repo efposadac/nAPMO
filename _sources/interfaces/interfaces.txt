@@ -6,11 +6,10 @@ Interfaces
    atomic_element
    basis_set
    becke_grid
-   composite_particle
    contracted_gaussian
    contracted_slater
-   csystem
    elementary_particle
+   molecular_system
    primitive_gaussian
    primitive_slater
    stack

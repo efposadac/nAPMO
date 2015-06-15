@@ -32,7 +32,7 @@
   
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
         <link rel="up" title="Utilitites" href="utilitites.html"/>
-        <link rel="next" title="lebedev.lebedev" href="lebedev.html"/>
+        <link rel="next" title="analytical_integration" href="analytical_integration.html"/>
         <link rel="prev" title="databases" href="databases.html"/> 
 
   
@@ -76,11 +76,10 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../interfaces/interfaces.html">Interfaces</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/atomic_element.html">atomic_element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interfaces/basis_set.html">basis_set</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/becke_grid.html">becke_grid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/composite_particle.html">composite_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/contracted_gaussian.html">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/contracted_slater.html">contracted_slater</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/csystem.html">csystem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/elementary_particle.html">elementary_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/primitive_gaussian.html">primitive_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../interfaces/primitive_slater.html">primitive_slater</a></li>
@@ -88,14 +87,9 @@
 </ul>
 </li>
 <li class="toctree-l2 current"><a class="reference internal" href="utilitites.html">Utilitites</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="databases.html">databases</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="databases.html#atomicelementsdatabase">AtomicElementsDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="databases.html#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="databases.html#unitsdatabase">UnitsDatabase</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="databases.html">databases</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">numerical_integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lebedev.html">lebedev.lebedev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="analytical_integration.html">analytical_integration</a></li>
 </ul>
 </li>
 </ul>
@@ -201,8 +195,8 @@ interval <span class="math">\(1&lt;x&lt;\infty\)</span>. Default is False.</td>
 </dd></dl>
 
 <dl class="function">
-<dt id="numerical_integration.lebedev_lq">
-<code class="descclassname">numerical_integration.</code><code class="descname">lebedev_lq</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#numerical_integration.lebedev_lq" title="Permalink to this definition">¶</a></dt>
+<dt id="numerical_integration.lebedev_q">
+<code class="descclassname">numerical_integration.</code><code class="descname">lebedev_q</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#numerical_integration.lebedev_q" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the Lebedev points and weights for spherical integration.</p>
 <p class="rubric">References</p>
 <p>V.I. Lebedev, and D.N. Laikov, Doklady Mathematics, 59, No. 3, 477 (1999)</p>
@@ -232,7 +226,7 @@ If <code class="docutils literal"><span class="pre">n</span></code> is not suppo
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="lebedev.html" class="btn btn-neutral float-right" title="lebedev.lebedev" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="analytical_integration.html" class="btn btn-neutral float-right" title="analytical_integration" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="databases.html" class="btn btn-neutral" title="databases" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -33,7 +33,7 @@
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
         <link rel="up" title="Interfaces" href="interfaces.html"/>
         <link rel="next" title="contracted_slater" href="contracted_slater.html"/>
-        <link rel="prev" title="composite_particle" href="composite_particle.html"/> 
+        <link rel="prev" title="becke_grid" href="becke_grid.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -76,26 +76,21 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="interfaces.html">Interfaces</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
 <li class="toctree-l3"><a class="reference internal" href="becke_grid.html">becke_grid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="composite_particle.html">composite_particle</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_slater.html">contracted_slater</a></li>
-<li class="toctree-l3"><a class="reference internal" href="csystem.html">csystem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="molecular_system.html">molecular_system</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_slater.html">primitive_slater</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stack.html">stack</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilitites.html">Utilitites</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../utilities/databases.html">databases</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#atomicelementsdatabase">AtomicElementsDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#unitsdatabase">UnitsDatabase</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../utilities/databases.html">databases</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../utilities/numerical_integration.html">numerical_integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../utilities/lebedev.html">lebedev.lebedev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../utilities/analytical_integration.html">analytical_integration</a></li>
 </ul>
 </li>
 </ul>
@@ -143,46 +138,42 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="contracted-gaussian">
-<h1>contracted_gaussian<a class="headerlink" href="#contracted-gaussian" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-contracted_gaussian"></span><dl class="class">
+  <div class="section" id="module-contracted_gaussian">
+<span id="contracted-gaussian"></span><h1>contracted_gaussian<a class="headerlink" href="#module-contracted_gaussian" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
 <dt id="contracted_gaussian.ContractedGaussian">
 <em class="property">class </em><code class="descclassname">contracted_gaussian.</code><code class="descname">ContractedGaussian</code><span class="sig-paren">(</span><em>exponents=array([ 0.5])</em>, <em>coefficients=array([ 1.])</em>, <em>origin=array([ 0.</em>, <em>0.</em>, <em>0.])</em>, <em>l=array([0</em>, <em>0</em>, <em>0])</em><span class="sig-paren">)</span><a class="headerlink" href="#contracted_gaussian.ContractedGaussian" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a linear combination of Cartesian Gaussian type orbitals GTO.</p>
+<dd><p>Defines a linear combination of Cartesian Gaussian type orbitals GTO (dict).</p>
+<p>A contracted Gaussian function is just a linear combination of primitive Gaussians (also termed primitives)
+centered at the same center <span class="math">\({\bf A}\)</span> and with the same momentum indices  <span class="math">\({\bf n}\)</span>
+but with different exponents <span class="math">\(\zeta_i\)</span>:</p>
+<p><span class="math">\(\phi ({\bf r}; {\bf \zeta}, {\bf C}, {\bf n}, {\bf A}) = (x - A_x)^{n_x} (y - A_y)^{n_y} (z - A_z)^{n_z} \times
+\sum_{i=1}^M C_i \exp[-\zeta_i ({\bf r}-{\bf A})^2]\)</span></p>
+<p>Contracted Gaussians form shells the same way as primitives. The contraction coefficients <span class="math">\(\bf C\)</span>
+already include normalization constants so that the resulting combination is properly normalized.
+Published contraction coefficients <span class="math">\(\bf c\)</span> are linear coefficients for normalized primitives,
+hence the normalization-including contraction coefficients <span class="math">\(\bf C\)</span> have to be computed from them as</p>
+<p><span class="math">\(C_i = c_i N(\zeta_i,{\bf n})\)</span></p>
+<p>where <span class="math">\(N\)</span> is:</p>
+<p><span class="math">\(N = \dfrac{1}{\sqrt{&lt;\phi | \phi&gt;}}\)</span></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>exponents</strong> (<em>numpy.ndarray</em>) &#8211; GTO exponent.</li>
+<li><strong>coefficients</strong> (<em>numpy.ndarray</em>) &#8211; GTO coefficients.</li>
+<li><strong>origin</strong> (<em>numpy.ndarray(3)</em>) &#8211; coordinates (cartesian)</li>
+<li><strong>l</strong> (<em>numpy.ndarray(3)</em>) &#8211; <span class="math">\(\bf n\)</span>. Angular moment (x, y, and z components)</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="contracted_gaussian.ContractedGaussian.compute">
 <code class="descname">compute</code><span class="sig-paren">(</span><em>coord</em><span class="sig-paren">)</span><a class="headerlink" href="#contracted_gaussian.ContractedGaussian.compute" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the value of the contracted Gaussian at <code class="docutils literal"><span class="pre">coord</span></code>.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="contracted_gaussian.ContractedGaussian.get_l">
-<code class="descname">get_l</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#contracted_gaussian.ContractedGaussian.get_l" title="Permalink to this definition">¶</a></dt>
-<dd><p>return the angular moment of the contraction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="contracted_gaussian.ContractedGaussian.get_length">
-<code class="descname">get_length</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#contracted_gaussian.ContractedGaussian.get_length" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the number of primitives in the contraction</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="contracted_gaussian.ContractedGaussian.get_normalization">
-<code class="descname">get_normalization</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#contracted_gaussian.ContractedGaussian.get_normalization" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the normalization constant for the contraction.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="contracted_gaussian.ContractedGaussian.get_origin">
-<code class="descname">get_origin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#contracted_gaussian.ContractedGaussian.get_origin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the origin of the contraction. r[3]</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="contracted_gaussian.ContractedGaussian.get_primitive">
-<code class="descname">get_primitive</code><span class="sig-paren">(</span><em>index</em><span class="sig-paren">)</span><a class="headerlink" href="#contracted_gaussian.ContractedGaussian.get_primitive" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the <code class="docutils literal"><span class="pre">index</span></code> primitive of contraction.</p>
 </dd></dl>
 
 <dl class="method">
@@ -195,6 +186,14 @@
 <dt id="contracted_gaussian.ContractedGaussian.overlap">
 <code class="descname">overlap</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#contracted_gaussian.ContractedGaussian.overlap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the overlap integral between two contractions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<a class="reference internal" href="#contracted_gaussian.ContractedGaussian" title="contracted_gaussian.ContractedGaussian"><em>ContractedGaussian</em></a>) &#8211; Contracted function to perform <span class="math">\(&lt;\phi_{self} | \phi_{other}&gt;\)</span></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -216,7 +215,7 @@
         <a href="contracted_slater.html" class="btn btn-neutral float-right" title="contracted_slater" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="composite_particle.html" class="btn btn-neutral" title="composite_particle" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="becke_grid.html" class="btn btn-neutral" title="becke_grid" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

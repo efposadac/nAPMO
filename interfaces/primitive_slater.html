@@ -76,26 +76,21 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="interfaces.html">Interfaces</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
 <li class="toctree-l3"><a class="reference internal" href="becke_grid.html">becke_grid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="composite_particle.html">composite_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_slater.html">contracted_slater</a></li>
-<li class="toctree-l3"><a class="reference internal" href="csystem.html">csystem</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="molecular_system.html">molecular_system</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">primitive_slater</a></li>
 <li class="toctree-l3"><a class="reference internal" href="stack.html">stack</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilitites.html">Utilitites</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../utilities/databases.html">databases</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#atomicelementsdatabase">AtomicElementsDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="../utilities/databases.html#unitsdatabase">UnitsDatabase</a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="../utilities/databases.html">databases</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../utilities/numerical_integration.html">numerical_integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../utilities/lebedev.html">lebedev.lebedev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../utilities/analytical_integration.html">analytical_integration</a></li>
 </ul>
 </li>
 </ul>
@@ -147,9 +142,9 @@
 <span id="primitive-slater"></span><h1>primitive_slater<a class="headerlink" href="#module-primitive_slater" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="primitive_slater.PrimitiveSlater">
-<em class="property">class </em><code class="descclassname">primitive_slater.</code><code class="descname">PrimitiveSlater</code><span class="sig-paren">(</span><em>exponent</em>, <em>coefficient</em>, <em>n=1</em>, <em>l=0</em>, <em>m=0</em>, <em>origin=array([ 0.</em>, <em>0.</em>, <em>0.])</em><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater" title="Permalink to this definition">¶</a></dt>
-<dd><p>Slater-Type orbitals:
-The slater orbital function is:</p>
+<em class="property">class </em><code class="descclassname">primitive_slater.</code><code class="descname">PrimitiveSlater</code><span class="sig-paren">(</span><em>exponent</em>, <em>coefficient=1.0</em>, <em>n=1</em>, <em>l=0</em>, <em>m=0</em>, <em>origin=array([ 0.</em>, <em>0.</em>, <em>0.])</em><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater" title="Permalink to this definition">¶</a></dt>
+<dd><p>Slater-Type orbitals. (dict):</p>
+<p>The slater orbital function is:</p>
 <p><span class="math">\(\chi_{p \lambda \alpha}(r, \theta, \phi) = R_{ \lambda p}(r) Y_{ \lambda \alpha}( \theta, \phi)\)</span></p>
 <p>Where,</p>
 <p><span class="math">\(R_{\lambda p} =
@@ -172,7 +167,7 @@ The slater orbital function is:</p>
 <li><strong>n</strong> (<em>int</em>) &#8211; Quantum number n = 1, 2, 3, etc.</li>
 <li><strong>l</strong> (<em>int</em>) &#8211; Quantum number l = S=0, P=1, D=2, etc.</li>
 <li><strong>m</strong> (<em>int</em>) &#8211; Quantum number m = order of the harmonic, m &lt;= l</li>
-<li><strong>origin</strong> (<em>numpy.darray[3]</em>) &#8211; coordinates (spherical)</li>
+<li><strong>origin</strong> (<em>numpy.ndarray(3)</em>) &#8211; coordinates (spherical)</li>
 </ul>
 </td>
 </tr>
@@ -201,48 +196,6 @@ x (complex float): The value of <span class="math">\(\chi_{p \lambda \alpha}(r, 
 </dd></dl>
 
 <dl class="method">
-<dt id="primitive_slater.PrimitiveSlater.get_coefficient">
-<code class="descname">get_coefficient</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.get_coefficient" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the coefficient.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="primitive_slater.PrimitiveSlater.get_exponent">
-<code class="descname">get_exponent</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.get_exponent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the exponent.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="primitive_slater.PrimitiveSlater.get_l">
-<code class="descname">get_l</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.get_l" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the angular moment l.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="primitive_slater.PrimitiveSlater.get_m">
-<code class="descname">get_m</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.get_m" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the quantum number m.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="primitive_slater.PrimitiveSlater.get_n">
-<code class="descname">get_n</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.get_n" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the quantum number n.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="primitive_slater.PrimitiveSlater.get_normalization">
-<code class="descname">get_normalization</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.get_normalization" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the normalization constant.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="primitive_slater.PrimitiveSlater.get_origin">
-<code class="descname">get_origin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.get_origin" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the coordinates of the object r[3].</p>
-</dd></dl>
-
-<dl class="method">
 <dt id="primitive_slater.PrimitiveSlater.normalize">
 <code class="descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the normalization constant given by:</p>
@@ -253,6 +206,14 @@ x (complex float): The value of <span class="math">\(\chi_{p \lambda \alpha}(r, 
 <dt id="primitive_slater.PrimitiveSlater.overlap">
 <code class="descname">overlap</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.overlap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates analytically the overlap integral between two SlaterPrimitives.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<a class="reference internal" href="#primitive_slater.PrimitiveSlater" title="primitive_slater.PrimitiveSlater"><em>PrimitiveSlater</em></a>) &#8211; function to perform <span class="math">\(&lt;\phi_{self} | \phi_{other}&gt;\)</span></td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
