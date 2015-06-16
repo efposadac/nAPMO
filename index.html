@@ -76,6 +76,7 @@
 <li class="toctree-l3"><a class="reference internal" href="interfaces/atomic_element.html">atomic_element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="interfaces/basis_set.html">basis_set</a></li>
 <li class="toctree-l3"><a class="reference internal" href="interfaces/becke_grid.html">becke_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="interfaces/c_binding.html">c_binding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="interfaces/contracted_gaussian.html">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="interfaces/contracted_slater.html">contracted_slater</a></li>
 <li class="toctree-l3"><a class="reference internal" href="interfaces/elementary_particle.html">elementary_particle</a></li>
@@ -153,7 +154,7 @@
 </div>
 <div class="section" id="compilation">
 <h1>Compilation<a class="headerlink" href="#compilation" title="Permalink to this headline">¶</a></h1>
-<p>At this moment there is a module in FORTRAN code. I used f2py to interface it with Python. To perform compilation just run:</p>
+<p>As all the numerical functions has been ported to C, the code need to be compiled:</p>
 <p><code class="docutils literal"><span class="pre">make</span></code></p>
 <p>To check the code go to the <code class="docutils literal"><span class="pre">tests</span></code> folder and run:</p>
 <p><code class="docutils literal"><span class="pre">nosetests</span> <span class="pre">--with-coverage</span> <span class="pre">--with-doctest</span></code></p>

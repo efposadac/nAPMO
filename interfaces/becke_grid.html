@@ -177,6 +177,16 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="becke_grid.BeckeGrid.integrate_c">
+<code class="descname">integrate_c</code><span class="sig-paren">(</span><em>csys</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.integrate_c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an integration of function <span class="math">\(F(r)\)</span> using BeckeGrid. (Function coded on C)</p>
+<dl class="docutils">
+<dt>Info:</dt>
+<dd>So far only implements density integration as a test, more functionals soon.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="becke_grid.BeckeGrid.show">
 <code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints information of the object.</p>
@@ -207,6 +217,35 @@ using Python routine.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>p</strong> &#8211;
+The value of cell_function (eq. 13, Becke, 1988) at point <code class="docutils literal"><span class="pre">r</span></code></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float64</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="becke_grid.BeckeGrid.weight_c">
+<code class="descname">weight_c</code><span class="sig-paren">(</span><em>csys</em>, <em>r</em>, <em>particleID</em>, <em>particle_stack</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.weight_c" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Becke weights <span class="math">\(w(r)\)</span> at point <code class="docutils literal"><span class="pre">r</span></code> for particle <code class="docutils literal"><span class="pre">particleID</span></code> as described in eq. 22 Becke, 1988
+using C routine.</p>
+<p class="rubric">References</p>
+<p>Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>r</strong> (<em>array[3]</em>) &#8211; Point of the grid in which the weight will be calculated.</li>
+<li><strong>particleID</strong> (<em>int</em>) &#8211; The particle index who owns the <code class="docutils literal"><span class="pre">r</span></code> point.</li>
+<li><strong>particle_stack</strong> (<a class="reference internal" href="stack.html#stack.Stack" title="stack.Stack"><em>Stack</em></a>) &#8211; stack of particles of same species as <code class="docutils literal"><span class="pre">particleID</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>P</strong> &#8211;
 The value of cell_function (eq. 13, Becke, 1988) at point <code class="docutils literal"><span class="pre">r</span></code></p>
 </td>
 </tr>
