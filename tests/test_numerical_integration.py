@@ -2,15 +2,10 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.0
+# Version: 0.1
 # efposadac@sissa.it
-import os
-import sys
 
-lib_path = os.path.abspath('../')
-sys.path.append(lib_path)
-
-from utilities import numerical_integration as nint
+import napmo.utilities.numerical_integration as nint
 import numpy as np
 
 
@@ -178,7 +173,7 @@ def test_numerical_integration_lebedev_q():
     except ValueError:
         assert True
 
-test_numerical_integration_chebgauss_rq()
-test_numerical_integration_chebgauss_integrate()
-test_numerical_integration_chebgauss()
-test_numerical_integration_lebedev_q()
+# test_numerical_integration_chebgauss_rq()
+# test_numerical_integration_chebgauss_integrate()
+# test_numerical_integration_chebgauss()
+# test_numerical_integration_lebedev_q()

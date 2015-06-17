@@ -2,16 +2,10 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.0
+# Version: 0.1
 # efposadac@sissa.it
 
-import os
-import sys
-
-lib_path = os.path.abspath('../')
-sys.path.append(lib_path)
-
-from interfaces.stack import *
+from napmo.interfaces.stack import *
 
 
 def test_stack_interface():

@@ -2,17 +2,12 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.0
+# Version: 0.1
 # efposadac@sissa.it
 
-import os
-import sys
 import numpy as np
 
-lib_path = os.path.abspath('../')
-sys.path.append(lib_path)
-
-from interfaces.primitive_gaussian import PrimitiveGaussian
+from napmo.interfaces.primitive_gaussian import PrimitiveGaussian
 
 
 def test_primitive_gaussian_interface():
