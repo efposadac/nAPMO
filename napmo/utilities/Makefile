@@ -2,7 +2,7 @@
 # nAPMO package 
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.0
+# Version: 0.1
 # efposadac@sissa.it
 
 default :: 

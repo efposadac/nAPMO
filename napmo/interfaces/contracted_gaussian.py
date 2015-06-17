@@ -8,8 +8,8 @@ from __future__ import division
 import numpy as np
 import scipy.misc
 
-from interfaces.stack import Stack
-from interfaces.primitive_gaussian import PrimitiveGaussian
+from napmo.interfaces.stack import Stack
+from napmo.interfaces.primitive_gaussian import PrimitiveGaussian
 
 
 class ContractedGaussian(dict):

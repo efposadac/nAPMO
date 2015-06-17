@@ -9,7 +9,7 @@ from scipy.special import sph_harm
 import scipy.misc
 import numpy as np
 
-from utilities import analytical_integration as aint
+import napmo.utilities.analytical_integration as aint
 
 
 class PrimitiveSlater(dict):

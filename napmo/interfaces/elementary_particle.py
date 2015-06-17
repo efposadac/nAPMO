@@ -8,7 +8,7 @@
 from __future__ import division
 import numpy as np
 
-from utilities.databases import ElementaryParticlesDatabase
+from napmo.utilities.databases import ElementaryParticlesDatabase
 
 
 class ElementaryParticle(dict):
@@ -21,8 +21,8 @@ class ElementaryParticle(dict):
     From: http://physics.nist.gov/constants
 
     Args:
-            symbol (str): Symbol for the particle.
-            origin (numpy.ndarray(3)): Origin for the particle (atomic units.)
+        symbol (str): Symbol for the particle.
+        origin (numpy.ndarray(3)): Origin for the particle (atomic units.)
     """
 
     def __init__(self, symbol='null', origin=[0.0, 0.0, 0.0]):

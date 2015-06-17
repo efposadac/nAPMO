@@ -8,9 +8,9 @@
 from __future__ import division
 import numpy as np
 
-import interfaces.elementary_particle
-from utilities.databases import AtomicElementsDatabase
-from utilities.constants import ANGSTROM_TO_BOHR
+import napmo.interfaces.elementary_particle
+from napmo.utilities.databases import AtomicElementsDatabase
+from napmo.utilities.constants import ANGSTROM_TO_BOHR
 
 
 class AtomicElement(dict):

@@ -6,7 +6,8 @@
 # efposadac@sissa.it
 from __future__ import division
 import numpy as np
-import utilities.lebedev as lebedev
+from ctypes import *
+from napmo.interfaces.c_binding import *
 
 
 def chebgauss(n):
@@ -24,20 +25,15 @@ def chebgauss(n):
 
 def chebgauss_rq(n, rescale=False):
     """Computes the abscissas and weights for transformed Gauss-Chebyshev quadrature of second kind.
-
     Special case for the integral :math:`\int f(x) dx`. since Gauss-Chebyshev is for :math:`\int f(x) \sqrt{1-x^2}`.
-
     References:
         Perez-Jorda, J., San-Fabian, E. & Moscardo, F. A simple, reliable and efficient scheme for \
 automatic numerical integration. Comput. Phys. Commun. 70, 271-284 (1992).
-
     Args:
         rescale (bool, optional): Whether the standard interval :math:`-1<x<+1` has to be rescaled to the semi-infinite
             interval :math:`1<x<\infty`. Default is False.
-
     Returns:
         tuple: Array with the abscissas and weights(r, w).
-
     """
 
     assert n > 0
@@ -67,16 +63,13 @@ automatic numerical integration. Comput. Phys. Commun. 70, 271-284 (1992).
 
 def chebgauss_integrate(f, eps=1.0e-10, max_iter=10):
     """Computes the integral of f(x) by using Gauss-Chebyshev quadrature of second kind.
-
     References:
         Perez-Jorda, J., San-Fabian, E. & Moscardo, F. A simple, reliable and efficient scheme for \
 automatic numerical integration. Comput. Phys. Commun. 70, 271-284 (1992).
-
     Args:
         f (function, auto-callable): Function :math:`f(x)`, to be integrate.
         eps(float64, optional): Tolerance, Default is :math:`10^{-10}`
         max_iter (int, optional): Maximum number of iterations. Default is :math:`10`
-
     Returns:
         tuple: Integral value and error (out, err).
     """
@@ -105,16 +98,12 @@ automatic numerical integration. Comput. Phys. Commun. 70, 271-284 (1992).
 
 def lebedev_q(n):
     """Computes the Lebedev points and weights for spherical integration.
-
     References:
         V.I. Lebedev, and D.N. Laikov, Doklady Mathematics, 59, No. 3, 477 (1999)
-
     Args:
         n (int): Number of angular points.
-
     Returns:
         lq (numpy.ndarray): Array with the coordinates and weights ([:,0] phi, [:,1] theta, [:,2] w).
-
     Raises:
         ValueError: If ``n`` is not supported.
     """
@@ -126,19 +115,29 @@ def lebedev_q(n):
         1730, 2030, 2354, 2702, 3074, 3470, 3890, 4334, 4802, 5294, 5810
     ]
 
-    try:
-        lorder = lebpoints.index(n) + 1
-    except ValueError:
+    if n not in lebpoints:
         print("Info: Number of angular points supported:...")
         print(lebpoints)
         raise ValueError('Invalid number of angular points', n)
 
-    lorder = lebpoints.index(n) + 1
+    size = (c_double * n)()
+    _t = cast(size, POINTER(c_double))
 
-    t = np.zeros([n], order='F', dtype=np.float64)
-    p = np.zeros([n], order='F', dtype=np.float64)
-    w = np.zeros([n], order='F', dtype=np.float64)
+    size = (c_double * n)()
+    _p = cast(size, POINTER(c_double))
 
-    lebedev.lebedev.lebedev_compute(lorder, n, t, p, w)
+    size = (c_double * n)()
+    _w = cast(size, POINTER(c_double))
+
+    napmo_library.lebedev(n, _t, _p, _w)
+
+    t = np.zeros([n], dtype=np.float64)
+    p = np.zeros([n], dtype=np.float64)
+    w = np.zeros([n], dtype=np.float64)
+
+    for i in range(n):
+        t[i] = _t[i]
+        p[i] = _p[i]
+        w[i] = _w[i]
 
     return t, p, w

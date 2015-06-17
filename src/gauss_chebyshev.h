@@ -10,8 +10,9 @@ efposadac@sissa.it*/
 #include <math.h>
 
 /*
-Computes abscissas and weights for the Gauss-Chebyshev quadrature of second kind.
+Computes abscissas and weights for the Gauss-Chebyshev quadrature of second
+kind.
 */
-void gaussChebyshev(int n, double * abscissas, double * weights);
+void gaussChebyshev(int n, double* abscissas, double* weights);
 
 #endif

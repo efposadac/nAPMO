@@ -9,13 +9,14 @@ efposadac@sissa.it*/
 
 #include "basis_set.h"
 
-struct _system{
-    int n_particles; // Number of particles in the system.
-    int * particle_number; // For atoms atomic number, else an identifier.
-    double * particle_radii; // Atomic radii, Particle radii?
-    double * particle_origin; // Origin of each atom / particle.
-    double * work_space; // Variable for convenience (avoid excessive malloc operations)
-    BasisSet basis;
+struct _system {
+  int n_particles;          // Number of particles in the system.
+  int* particle_number;     // For atoms atomic number, else an identifier.
+  double* particle_radii;   // Atomic radii, Particle radii?
+  double* particle_origin;  // Origin of each atom / particle.
+  double* work_space;       // Variable for convenience (avoid excessive malloc
+                            // operations)
+  BasisSet basis;
 };
 typedef struct _system System;
 

@@ -6,14 +6,9 @@
 
 # efposadac@sissa.it
 
-import os
-import sys
 import numpy as np
 
-lib_path = os.path.abspath('../')
-sys.path.append(lib_path)
-
-from interfaces.basis_set import BasisSet
+from napmo.interfaces.basis_set import BasisSet
 
 
 def tests_basis_set_interface():

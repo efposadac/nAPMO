@@ -7,8 +7,8 @@
 from __future__ import division
 import numpy as np
 
-from interfaces.stack import Stack
-from interfaces.primitive_slater import PrimitiveSlater
+from napmo.interfaces.stack import Stack
+from napmo.interfaces.primitive_slater import PrimitiveSlater
 
 
 class ContractedSlater(dict):

@@ -5,14 +5,9 @@
 # Version: 0.1
 # efposadac@sissa.it
 
-import os
-import sys
 import numpy as np
 
-lib_path = os.path.abspath('../')
-sys.path.append(lib_path)
-
-from interfaces.primitive_slater import PrimitiveSlater
+from napmo.interfaces.primitive_slater import PrimitiveSlater
 
 
 def test_primitive_slater_interface():

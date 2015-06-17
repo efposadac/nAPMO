@@ -9,9 +9,9 @@ from __future__ import division
 import numpy as np
 import json
 
-from interfaces.stack import Stack
-from interfaces.contracted_slater import ContractedSlater
-from interfaces.contracted_gaussian import ContractedGaussian
+from napmo.interfaces.stack import Stack
+from napmo.interfaces.contracted_slater import ContractedSlater
+from napmo.interfaces.contracted_gaussian import ContractedGaussian
 
 
 class BasisSet(dict):

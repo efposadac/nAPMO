@@ -1,4 +1,4 @@
-# file: analytica_integration.py
+# file: analytical_integration.py
 # nAPMO package
 # Copyright (c) 2015, Edwin Fernando Posada
 # All rights reserved.

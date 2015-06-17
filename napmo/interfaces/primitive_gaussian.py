@@ -8,7 +8,7 @@ from __future__ import division
 import numpy as np
 import scipy.misc
 
-from utilities import analytical_integration as aint
+import napmo.utilities.analytical_integration as aint
 
 
 class PrimitiveGaussian(dict):

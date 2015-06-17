@@ -13,7 +13,7 @@ The basic idea is to implement some of the numerical analysis tools required to 
 Compilation
 ===========
 
-At this moment there is a module in FORTRAN code. I used f2py to interface it with Python. To perform compilation just run:
+As all the numerical functions has been ported to C, the code need to be compiled:
 
 ``make``
 
@@ -24,7 +24,7 @@ To check the code go to the ``tests`` folder and run:
 Notes
 ======
 
-This version contains a complete and functional molecular multicenter integrator. At this moment it can be calculated overlap integrals over GTOs and STOs. As well the calculation of :math:`\int \rho({\bf r})`. Some examples are provided in the folder examples_.
+This version contains a complete and functional molecular multicenter integrator. At this moment it can be calculated overlap integrals over GTOs and STOs. As well the calculation of :math:`\int \rho(\bf r)`. Some examples are provided in the folder examples_.
 
 Any suggestion and help is more than welcome and appreciated. 
 

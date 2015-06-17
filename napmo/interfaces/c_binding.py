@@ -8,8 +8,10 @@
 from __future__ import division
 from ctypes import *
 from copy import deepcopy
+import os
+import sysconfig
 
-from utilities.constants import *
+from napmo.utilities.constants import *
 
 
 class C_BasisSet(Structure):
@@ -117,7 +119,10 @@ class CBinding(Structure):
 #################################################
 # Interface to napmo_library
 #################################################
+
 try:
-    napmo_library = CDLL("../src/libnapmo.so")
+    lp = os.path.join(os.path.dirname(__file__), '../../libnapmo'+sysconfig.get_config_var('SO'))
+    napmo_library = CDLL(lp)
 except OSError:
-    napmo_library = CDLL("./src/libnapmo.so")
+    lp = os.path.join(os.path.dirname(__file__), '../../src/libnapmo.so')
+    napmo_library = CDLL(lp)

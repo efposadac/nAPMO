@@ -5,13 +5,7 @@
 # Version: 0.1
 # efposadac@sissa.it
 
-import os
-import sys
-
-lib_path = os.path.abspath('../')
-sys.path.append(lib_path)
-
-from interfaces.molecular_system import *
+from napmo.interfaces.molecular_system import *
 
 
 def test_molecular_system_interface():

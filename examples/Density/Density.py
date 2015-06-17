@@ -11,14 +11,10 @@ import numpy as np
 from copy import deepcopy
 
 import os
-import sys
 import time
 
-lib_path = os.path.abspath('../')
-sys.path.append(lib_path)
-
-from interfaces.molecular_system import *
-from interfaces.becke_grid import *
+from napmo.interfaces.molecular_system import *
+from napmo.interfaces.becke_grid import *
 
 """
 Calcualtion of :math:`\int \\rho(\\bf r)` for several diatomic molecules.

@@ -7,44 +7,79 @@
 
 from __future__ import division
 import numpy as np
+from ctypes import *
 
-from interfaces.stack import Stack
-from utilities.constants import *
-from utilities.numerical_integration import *
+from napmo.interfaces.stack import Stack
+from napmo.interfaces.c_binding import *
+from napmo.utilities.constants import *
 
 
-class BeckeGrid(object):
+class BeckeGrid(Structure):
     """
     This class creates the Becke grid.
-
     References:
         Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
-
     Args:
-            n_radial (int, optional): Number of radial points. Default is 15
-            n_angular (int, optional): Number of angular points. Default is 110
+        n_radial (int, optional): Number of radial points. Default is 15
+        n_angular (int, optional): Number of angular points. Default is 110
     """
+    _fields_ = [
+        ("n_radial", c_int),
+        ("n_angular", c_int),
+        ("radial_abscissas", POINTER(c_double)),
+        ("radial_weights", POINTER(c_double)),
+        ("angular_theta", POINTER(c_double)),
+        ("angular_phi", POINTER(c_double)),
+        ("angular_weights", POINTER(c_double))
+    ]
 
     def __init__(self, n_radial=40, n_angular=110):
         super(BeckeGrid, self).__init__()
-        self.n_radial = n_radial
-        self.n_angular = n_angular
-        self.radial_abscissas, self.radial_weights = chebgauss(n_radial)
-        self.angular_theta, self.angular_phi, self.angular_weights = lebedev_q(n_angular)
+        self.n_radial = c_int(n_radial)
+        self.n_angular = c_int(n_angular)
+
+        napmo_library.grid_init(byref(self))
+
+    def free(self):
+        napmo_library.grid_free(byref(self))
+
+    def weight_c(self, csys, r, particleID, particle_stack):
+        """Computes the Becke weights :math:`w(r)` at point ``r`` for particle ``particleID`` as described in eq. 22 Becke, 1988
+        using C routine.
+        References:
+            Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
+        Args:
+            r (array[3]): Point of the grid in which the weight will be calculated.
+            particleID (int): The particle index who owns the ``r`` point.
+            particle_stack (Stack): stack of particles of same species as ``particleID``
+        Returns:
+            P (float64): The value of cell_function (eq. 13, Becke, 1988) at point ``r``
+        """
+        aux = (c_double*3)()
+
+        for i in range(3):
+            aux[i] = c_double(r[i])
+
+        return napmo_library.grid_weights(byref(csystem), aux, particleID)
+
+    def integrate_c(self, csys):
+        """
+        Perform an integration of function :math:`F(r)` using BeckeGrid. (Function coded on C)
+
+        Info:
+            So far only implements density integration as a test, more functionals soon.
+        """
+        return napmo_library.grid_integrate(byref(csys), byref(self))
 
     def weight(self, r, particleID, particle_stack):
         """Computes the Becke weights :math:`w(r)` at point ``r`` for particle ``particleID`` as described in eq. 22 Becke, 1988
         using Python routine.
-
-
         References:
             Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
-
         Args:
             r (numpy.ndarray(3)): Point of the grid in which the weight will be calculated.
             particleID (int): The particle index who owns the ``r`` point.
             particle_stack (Stack): stack of particles of same species as ``particleID``
-
         Returns:
             p (float64): The value of cell_function (eq. 13, Becke, 1988) at point ``r``
         """
@@ -91,7 +126,6 @@ class BeckeGrid(object):
     def integrate(self, particle_stack, F):
         """
         Perform an integration of function :math:`F(r)` using BeckeGrid.
-
         Args:
             particle_stack (Stack): Stack of AtomicElements or ElementaryParticles Objects.
             F (function): Functional to be integrated.
@@ -153,5 +187,21 @@ class BeckeGrid(object):
         """
         print("Grid Information:")
         print("-----------------")
-        print("Radial Points: ", self.get_n_radial())
-        print("Angular Points: ", self.get_n_angular())
+        print("Radial Points: ", self.n_radial)
+        print("Angular Points: ", self.n_angular)
+
+#################################################
+# Interface to napmo_library
+#################################################
+napmo_library.grid_weights.restype = c_double
+napmo_library.grid_weights.argtypes = [
+    POINTER(CBinding),
+    POINTER(c_double*3),
+    c_int
+]
+napmo_library.grid_integrate.restype = c_double
+napmo_library.grid_integrate.argtypes = [
+    POINTER(CBinding),
+    POINTER(BeckeGrid)
+    ]
+#################################################

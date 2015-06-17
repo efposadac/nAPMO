@@ -7,14 +7,8 @@
 
 import numpy as np
 
-import os
-import sys
-
-lib_path = os.path.abspath('../')
-sys.path.append(lib_path)
-
-from interfaces.atomic_element import AtomicElement
-from interfaces.basis_set import BasisSet
+from napmo.interfaces.atomic_element import AtomicElement
+from napmo.interfaces.basis_set import BasisSet
 
 
 def test_atomic_element_interface():

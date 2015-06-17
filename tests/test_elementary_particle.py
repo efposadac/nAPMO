@@ -5,14 +5,8 @@
 # Version: 0.1
 # efposadac@sissa.it
 
-import os
-import sys
-
-lib_path = os.path.abspath('../')
-sys.path.append(lib_path)
-
-from interfaces.elementary_particle import ElementaryParticle
-from interfaces.basis_set import BasisSet
+from napmo.interfaces.elementary_particle import ElementaryParticle
+from napmo.interfaces.basis_set import BasisSet
 
 
 def test_elementary_particle_interface():

@@ -8,11 +8,11 @@
 from __future__ import division
 import numpy as np
 
-from interfaces.atomic_element import AtomicElement
-from interfaces.elementary_particle import ElementaryParticle
-from utilities.constants import ANGSTROM_TO_BOHR
-from interfaces.stack import Stack
-from interfaces.basis_set import BasisSet
+from napmo.interfaces.atomic_element import AtomicElement
+from napmo.interfaces.elementary_particle import ElementaryParticle
+from napmo.utilities.constants import ANGSTROM_TO_BOHR
+from napmo.interfaces.stack import Stack
+from napmo.interfaces.basis_set import BasisSet
 
 
 class MolecularSystem(dict):
