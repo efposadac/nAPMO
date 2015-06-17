@@ -2,7 +2,7 @@
 # nAPMO package
 # Copyright (c) 2015, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.0
+# Version: 0.1
 # efposadac@sissa.it
 
 from __future__ import division

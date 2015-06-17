@@ -2,7 +2,7 @@
 # nAPMO package
 # Copyright (c) 2015, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.0
+# Version: 0.1
 # efposadac@sissa.it
 from __future__ import division
 from scipy.special import sph_harm
@@ -72,7 +72,7 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
         Args:
             coord (array[3]): spherical coordinates (see description below)
             theta (float): [0, 2*pi]; the azimuthal (longitudinal) coordinate.
-            phi (float): [0, pi]; the polar (colatitudinal) coordinate.
+            phi (float): [0, pi]; the polar (co-latitudinal) coordinate.
             r (float): The r coordinate.
 
         Returns:
@@ -146,7 +146,7 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
 
         Args:
             theta (float): [0, 2*pi]; the azimuthal (longitudinal) coordinate.
-            phi (float): [0, pi]; the polar (colatitudinal) coordinate.
+            phi (float): [0, pi]; the polar (co-latitudinal) coordinate.
 
         Returns:
             y (float): The harmonic :math:`Y^m_l` sampled at ``theta`` and ``phi``

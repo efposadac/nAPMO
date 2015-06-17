@@ -1,0 +1,11 @@
+*.pyc
+*.so
+.coverage
+*.o
+.ipynb*
+*.mod
+*.DS_Store
+nAPMO.py
+nAPMO.sublime-project
+nAPMO.sublime-workspace
+__pycache__

@@ -24,7 +24,7 @@ To check the code go to the ``tests`` folder and run:
 Notes
 ======
 
-This version contains a complete and functional molecular multicenter integrator. At this moment it can be calculated overlap integrals over GTOs and STOs. As well the calculation of :math:`\int \rho(\bf r)`. Some examples are provided in the folder examples_.
+This version contains a complete and functional molecular multicenter integrator. At this moment it can be calculated overlap integrals over GTOs and STOs. As well the calculation of :math:`\int \rho({\bf r})`. Some examples are provided in the folder examples_.
 
 Any suggestion and help is more than welcome and appreciated. 
 

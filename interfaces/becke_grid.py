@@ -2,7 +2,7 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.0
+# Version: 0.1
 # efposadac@sissa.it
 
 from __future__ import division
@@ -67,7 +67,7 @@ class BeckeGrid(object):
                     # \mu_ij eq. 11
                     mu_ij = (r_i - r_j) / R_ij
 
-                    # Atomic size adustment. see apendix, Becke, 1988.
+                    # Atomic size adjustment. see appendix, Becke, 1988.
                     rm_i = particle_stack[i].get('atomic_radii') * ANGSTROM_TO_BOHR
                     rm_j = particle_stack[j].get('atomic_radii') * ANGSTROM_TO_BOHR
 

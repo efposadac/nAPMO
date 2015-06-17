@@ -1,3 +1,10 @@
+# file: Density.py
+# nAPMO package
+# Copyright (c) 2014, Edwin Fernando Posada
+# All rights reserved.
+# Version: 0.1
+# efposadac@sissa.it
+
 from __future__ import division
 
 import numpy as np
@@ -12,6 +19,10 @@ sys.path.append(lib_path)
 
 from interfaces.molecular_system import *
 from interfaces.becke_grid import *
+
+"""
+Calcualtion of :math:`\int \\rho(\\bf r)` for several diatomic molecules.
+"""
 
 # Grid definition
 angularPoints = 194
