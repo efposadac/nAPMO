@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>nAPMO’s documentation. &mdash; nAPMO a1 documentation</title>
+  <title>Examples &mdash; nAPMO a1 documentation</title>
   
 
   
@@ -30,8 +30,8 @@
   
 
   
-    <link rel="top" title="nAPMO a1 documentation" href="#"/>
-        <link rel="next" title="API" href="API.html"/> 
+    <link rel="top" title="nAPMO a1 documentation" href="index.html"/>
+        <link rel="prev" title="analytical_integration" href="utilities/analytical_integration.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -48,7 +48,7 @@
         
 
         
-          <a href="#" class="icon icon-home"> nAPMO
+          <a href="index.html" class="icon icon-home"> nAPMO
         
 
         
@@ -70,7 +70,7 @@
         
           
           
-              <ul>
+              <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="API.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="interfaces/interfaces.html">Interfaces</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="interfaces/atomic_element.html">atomic_element</a></li>
@@ -94,7 +94,7 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Examples</a></li>
 </ul>
 <ul class="simple">
 </ul>
@@ -110,7 +110,7 @@
       
       <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
         <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="#">nAPMO</a>
+        <a href="index.html">nAPMO</a>
       </nav>
 
 
@@ -119,13 +119,13 @@
         <div class="rst-content">
           <div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
-    <li><a href="#">Docs</a> &raquo;</li>
+    <li><a href="index.html">Docs</a> &raquo;</li>
       
-    <li>nAPMO&#8217;s documentation.</li>
+    <li>Examples</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/index.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/examples.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -134,8 +134,8 @@
 </div>
           <div role="main" class="document">
             
-  <div class="section" id="napmo-s-documentation">
-<h1>nAPMO&#8217;s documentation.<a class="headerlink" href="#napmo-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
 <p><strong>Numerical Any particle Molecular Orbital (nAPMO) package.</strong></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -145,54 +145,41 @@
 </tr>
 </tbody>
 </table>
-<p>nAPMO is a numerical implementation of APMO - NEO - OMNE method.</p>
-<p>The basic idea is to implement some of the numerical analysis tools required to perform a  numerical Hartree-Fock electronic calculation as first step to implement the numerical OMNE approach.</p>
-<ul class="simple">
-<li>Edwin Fernando Posada</li>
-<li><a class="reference external" href="mailto:eposada&#37;&#52;&#48;sissa&#46;it">eposada<span>&#64;</span>sissa<span>&#46;</span>it</a></li>
-<li>Version 0.1</li>
-</ul>
-</div>
-<div class="section" id="compilation">
-<h1>Compilation<a class="headerlink" href="#compilation" title="Permalink to this headline">¶</a></h1>
-<p>To compile and install the code use (it will install the package in $USER/.local):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">make</span>
+<ol class="arabic simple">
+<li>the ipython notebook.</li>
+</ol>
+<p>This folder contains some examples using the code. The first one is a ipython notebook called <code class="docutils literal"><span class="pre">nAPMO.ipynb</span></code> which contains information step by step on how the code works.</p>
+<p>Link: <a class="reference download internal" href="_downloads/nAPMO.ipynb"><code class="xref download docutils literal"><span class="pre">nAPMO</span> <span class="pre">notebook</span> <span class="pre">example</span></code></a></p>
+<ol class="arabic simple" start="2">
+<li>Integration on diatomic Molecules</li>
+</ol>
+<p>The second example can be found in the folder <code class="docutils literal"><span class="pre">Density</span></code>. This contains examples for the calculation of <span class="math">\(\int \rho({\bf r})\)</span> for diatomic molecules for elements from Z = 1, up to Z = 8, with exception of Helium. The outcome of this test must be:</p>
+<div class="highlight-python"><div class="highlight"><pre>Grid Information:
+-----------------
+Radial Points:  100
+Angular Points:  194
+System Int C         Int Py        Error          Time Py       Time C
+H2   2.00010688    2.00010688    0.00010688     4.3246562     0.0331886
+Li2  6.00025286    6.00025286    0.00025286    10.3566766     0.1109531
+Be2  8.00023682    8.00023682    0.00023682    10.2098806     0.1123509
+B2  10.00049433   10.00049433    0.00049433    10.1175656     0.1098449
+C2  12.00127662   12.00127662    0.00127662    10.2129803     0.1131680
+N2  14.00085234   14.00085234    0.00085234    10.4540348     0.1119723
+O2  16.00068683   16.00068683    0.00068683    10.2155397     0.1107540
 </pre></div>
 </div>
-<p>To check the code go to the <code class="docutils literal"><span class="pre">tests</span></code> folder and run:</p>
-<div class="highlight-python"><div class="highlight"><pre>nosetests --with-coverage --with-doctest
-</pre></div>
-</div>
-</div>
-<div class="section" id="notes">
-<h1>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h1>
-<p>This version contains a complete and functional molecular multicenter integrator. At this moment can be calculated overlap integrals over GTOs and STOs. As well the calculation of <span class="math">\(\int \rho(\bf r)\)</span>. Some examples are provided in the folder <a class="reference external" href="examples">examples</a>.</p>
-<p>Any suggestion and help is more than welcome and appreciated.</p>
-<p>Code documentation can be found at <a class="reference external" href="http://efposadac.github.io/nAPMO/">http://efposadac.github.io/nAPMO/</a></p>
-<p><a class="reference external" href="mailto:eposada&#37;&#52;&#48;sissa&#46;it">eposada<span>&#64;</span>sissa<span>&#46;</span>it</a></p>
-</div>
-<div class="section" id="contents">
-<h1>Contents:<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="API.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="interfaces/interfaces.html">Interfaces</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utilities/utilitites.html">Utilitites</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
-</ul>
-</div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span>Index</span></a></li>
-<li><a class="reference internal" href="py-modindex.html"><span>Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span>Search Page</span></a></li>
-</ul>
-<div class="toctree-wrapper compound">
-</div>
+<p>The grid used for this calculation was 110-194 (rad.-ang.). It can be seen that the performance of Python code is really slow, taking in to account that for each molecule the code is calculating only one integral. On the other hand, the C code is two orders of magnitude faster.</p>
+<ol class="arabic simple" start="3">
+<li>Performance</li>
+</ol>
+<p>An script to plot the comparison of the performance (scaling with respect to the grid points) and comparison between timings of C and Python codes is provided in the <code class="docutils literal"><span class="pre">Performance</span></code> folder.</p>
+<p>This script produces the following graphs to show the scaling with respect to the number of grid points (radial and angular):</p>
+<p><img alt="radial_perf" src="_images/radial_points_scaling.png" /></p>
+<p><img alt="angular_perf" src="_images/angular_points_scaling.png" /></p>
+<p>Timing for Python code <code class="docutils literal"><span class="pre">Py</span></code> is in centiseconds (cs). As shown in the plots, the algorithm is linear with respect with the number of angular or radial points, the important thing here is the prefactor in booth cases, in the case of C code, the prefactor is two orders of magnitude smaller than the Python&#8217;s code prefactor. For the integral of this test case <span class="math">\(\int \rho({\bf r})\)</span> for a  H2 molecule, a grid of 110-194 is enough to reach the exact value, this integral takes 2.6 s in the Python code and 0.01 s in the C one.</p>
+<p>As conclusion it can be said that the use of C code has improve the calculation time.</p>
+<p>Note:</p>
+<p>All <code class="docutils literal"><span class="pre">*.dens</span></code> files are density matrices to perform the integration.</p>
 </div>
 
 
@@ -201,8 +188,8 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="API.html" class="btn btn-neutral float-right" title="API" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
+        <a href="utilities/analytical_integration.html" class="btn btn-neutral" title="analytical_integration" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
