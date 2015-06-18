@@ -14,7 +14,7 @@ def read(fname):
 napmo_module = Extension(
                       'libnapmo',
                       sources=['src/becke_grid.c', 'src/lebedev.c', 'src/gauss_chebyshev.c'],
-                      extra_compile_args=['-O3'],
+                      extra_compile_args=['-O3', '-ffast-math'],
                       )
 
 setup(name="napmo",

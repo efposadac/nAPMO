@@ -17,8 +17,10 @@ from napmo.utilities.constants import *
 class BeckeGrid(Structure):
     """
     This class creates the Becke grid.
+
     References:
         Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
+
     Args:
         n_radial (int, optional): Number of radial points. Default is 15
         n_angular (int, optional): Number of angular points. Default is 110
@@ -41,17 +43,23 @@ class BeckeGrid(Structure):
         napmo_library.grid_init(byref(self))
 
     def free(self):
+        """
+        Free memory allocated by C routines. Always use it after using a BeckeGrid object.
+        """
         napmo_library.grid_free(byref(self))
 
-    def weight_c(self, csys, r, particleID, particle_stack):
+    def weight_c(self, r, particleID, csys):
         """Computes the Becke weights :math:`w(r)` at point ``r`` for particle ``particleID`` as described in eq. 22 Becke, 1988
         using C routine.
+
         References:
             Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
+
         Args:
             r (array[3]): Point of the grid in which the weight will be calculated.
             particleID (int): The particle index who owns the ``r`` point.
-            particle_stack (Stack): stack of particles of same species as ``particleID``
+            csys (CBinding) : Information of the system in C structure. See CBinding.
+
         Returns:
             P (float64): The value of cell_function (eq. 13, Becke, 1988) at point ``r``
         """
@@ -66,6 +74,9 @@ class BeckeGrid(Structure):
         """
         Perform an integration of function :math:`F(r)` using BeckeGrid. (Function coded on C)
 
+        Args:
+            csys (CBinding) : Information of the system in C structure. See CBinding.
+
         Info:
             So far only implements density integration as a test, more functionals soon.
         """
@@ -74,12 +85,15 @@ class BeckeGrid(Structure):
     def weight(self, r, particleID, particle_stack):
         """Computes the Becke weights :math:`w(r)` at point ``r`` for particle ``particleID`` as described in eq. 22 Becke, 1988
         using Python routine.
+
         References:
             Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
+
         Args:
             r (numpy.ndarray(3)): Point of the grid in which the weight will be calculated.
             particleID (int): The particle index who owns the ``r`` point.
-            particle_stack (Stack): stack of particles of same species as ``particleID``
+            particle_stack (Stack): stack of particles. (AtomicElement or ElementaryParticle)
+
         Returns:
             p (float64): The value of cell_function (eq. 13, Becke, 1988) at point ``r``
         """
@@ -126,6 +140,7 @@ class BeckeGrid(Structure):
     def integrate(self, particle_stack, F):
         """
         Perform an integration of function :math:`F(r)` using BeckeGrid.
+
         Args:
             particle_stack (Stack): Stack of AtomicElements or ElementaryParticles Objects.
             F (function): Functional to be integrated.

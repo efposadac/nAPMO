@@ -143,7 +143,7 @@ class MolecularSystem(dict):
 
     def n_particles(self, symbol):
         """
-        Returns the number of particles of a given ``symbol`` if this is present in the object.
+        Returns the number of particles of a given ``symbol`` in the object.
 
         Returns:
             int: Number of particles of symbol ``symbol``

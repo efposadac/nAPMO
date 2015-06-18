@@ -9,3 +9,7 @@ nAPMO.py
 nAPMO.sublime-project
 nAPMO.sublime-workspace
 __pycache__
+build
+dist
+files.txt
+napmo.egg-info
