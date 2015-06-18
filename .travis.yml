@@ -21,7 +21,6 @@ before_install:
 - export PATH=/home/travis/mc/bin:$PATH
 before_script:
 - pip install coverage
-- pip install scipy
 - make
 - cd tests
 script:

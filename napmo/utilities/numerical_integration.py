@@ -26,12 +26,15 @@ def chebgauss(n):
 def chebgauss_rq(n, rescale=False):
     """Computes the abscissas and weights for transformed Gauss-Chebyshev quadrature of second kind.
     Special case for the integral :math:`\int f(x) dx`. since Gauss-Chebyshev is for :math:`\int f(x) \sqrt{1-x^2}`.
+
     References:
         Perez-Jorda, J., San-Fabian, E. & Moscardo, F. A simple, reliable and efficient scheme for \
 automatic numerical integration. Comput. Phys. Commun. 70, 271-284 (1992).
+
     Args:
         rescale (bool, optional): Whether the standard interval :math:`-1<x<+1` has to be rescaled to the semi-infinite
             interval :math:`1<x<\infty`. Default is False.
+
     Returns:
         tuple: Array with the abscissas and weights(r, w).
     """
@@ -63,13 +66,17 @@ automatic numerical integration. Comput. Phys. Commun. 70, 271-284 (1992).
 
 def chebgauss_integrate(f, eps=1.0e-10, max_iter=10):
     """Computes the integral of f(x) by using Gauss-Chebyshev quadrature of second kind.
+
     References:
+
         Perez-Jorda, J., San-Fabian, E. & Moscardo, F. A simple, reliable and efficient scheme for \
 automatic numerical integration. Comput. Phys. Commun. 70, 271-284 (1992).
+
     Args:
         f (function, auto-callable): Function :math:`f(x)`, to be integrate.
         eps(float64, optional): Tolerance, Default is :math:`10^{-10}`
         max_iter (int, optional): Maximum number of iterations. Default is :math:`10`
+
     Returns:
         tuple: Integral value and error (out, err).
     """
@@ -98,12 +105,16 @@ automatic numerical integration. Comput. Phys. Commun. 70, 271-284 (1992).
 
 def lebedev_q(n):
     """Computes the Lebedev points and weights for spherical integration.
+
     References:
         V.I. Lebedev, and D.N. Laikov, Doklady Mathematics, 59, No. 3, 477 (1999)
+
     Args:
         n (int): Number of angular points.
+
     Returns:
         lq (numpy.ndarray): Array with the coordinates and weights ([:,0] phi, [:,1] theta, [:,2] w).
+
     Raises:
         ValueError: If ``n`` is not supported.
     """

@@ -13,18 +13,22 @@ The basic idea is to implement some of the numerical analysis tools required to 
 Compilation
 ===========
 
-As all the numerical functions has been ported to C, the code need to be compiled:
+To compile and install the code use (it will install the package in $USER/.local):
 
-``make``
+::
+
+	make
 
 To check the code go to the ``tests`` folder and run:
 
-``nosetests --with-coverage --with-doctest``
+::
+
+	nosetests --with-coverage --with-doctest
 
 Notes
 ======
 
-This version contains a complete and functional molecular multicenter integrator. At this moment it can be calculated overlap integrals over GTOs and STOs. As well the calculation of :math:`\int \rho(\bf r)`. Some examples are provided in the folder examples_.
+This version contains a complete and functional molecular multicenter integrator. At this moment can be calculated overlap integrals over GTOs and STOs. As well the calculation of :math:`\int \rho(\bf r)`. Some examples are provided in the folder examples_.
 
 Any suggestion and help is more than welcome and appreciated. 
 

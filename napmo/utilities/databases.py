@@ -11,11 +11,7 @@ import os
 
 
 def AtomicElementsDatabase():
-    pass
     """
-    AtomicElementsDatabase
-    ======================
-
     This data base contains all information related to atomic elements.
     Database information taken from: http://physics.nist.gov/constants
 
@@ -40,9 +36,6 @@ def AtomicElementsDatabase():
 
 def ElementaryParticlesDatabase():
     """
-        ElementaryParticlesDatabase
-    ===========================
-
     This database contains all information related to quatum species, ie. electrons, muons, etc.
 
     Example:
@@ -50,17 +43,6 @@ def ElementaryParticlesDatabase():
         >>> import utilities.databases
         >>> utilities.databases.ElementaryParticlesDatabase()['e-'] # doctest: +SKIP
         {'category': 'lepton', 'name': 'electron', 'symbol': 'e-', 'charge': -1.0, 'mass': 1.0, 'spin': 0.5}
-
-    UnitsDatabase
-    =============
-
-    This database contains factors to covert between Bohr and Angstroms.
-
-    Example:
-
-        >>> import utilities.databases
-        >>> utilities.databases.UnitsDatabase['Angstroms']
-        0.52917721092
     """
     fp = os.path.join(os.path.dirname(__file__), 'elementary_particles.json')
     file = open(fp)

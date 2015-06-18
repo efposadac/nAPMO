@@ -17,6 +17,9 @@ from napmo.utilities.constants import *
 class C_BasisSet(Structure):
     """
     C interface to the BasisSet class.
+
+    Args:
+        basis (BasisSet) : Basis-set of the system.
     """
     _fields_ = [
         ("n_cont", c_int),
@@ -71,6 +74,9 @@ class C_BasisSet(Structure):
 class CBinding(Structure):
     """
     Interfaces to C napmo library.
+
+    Args:
+        particle_stack (Stack): stack of particles. (AtomicElement or ElementaryParticle)
     """
     _fields_ = [
         ("n_particles", c_int),

@@ -22,6 +22,7 @@ import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath('../'))
 sys.path.insert(0, '../napmo/interfaces')
 sys.path.insert(0, '../napmo/utilities')
+sys.path.insert(0, '../napmo/examples')
 
 
 # -- General configuration ------------------------------------------------
@@ -41,7 +42,6 @@ extensions = [
 
 mathjax_path = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
 
-fortran_src = ['../utilities']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -64,7 +64,7 @@ copyright = u'2015, Fernando Posada'
 # built documents.
 #
 # The short X.Y version.
-version = '0.0'
+version = '0.1'
 # The full version, including alpha/beta/rc tags.
 release = 'a1'
 

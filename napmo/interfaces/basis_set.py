@@ -28,6 +28,7 @@ class BasisSet(dict):
         self['kind'] = None
         self['json'] = None
         self['length'] = 0
+        self['t_length'] = 0
 
     def __add__(self, other):
         self['name'] += ', '+other.get('name')
