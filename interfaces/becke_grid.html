@@ -32,7 +32,7 @@
   
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
         <link rel="up" title="Interfaces" href="interfaces.html"/>
-        <link rel="next" title="contracted_gaussian" href="contracted_gaussian.html"/>
+        <link rel="next" title="c_binding" href="c_binding.html"/>
         <link rel="prev" title="basis_set" href="basis_set.html"/> 
 
   
@@ -78,6 +78,7 @@
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="">becke_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="c_binding.html">c_binding</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_slater.html">contracted_slater</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
@@ -159,6 +160,12 @@
 </tbody>
 </table>
 <dl class="method">
+<dt id="becke_grid.BeckeGrid.free">
+<code class="descname">free</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.free" title="Permalink to this definition">¶</a></dt>
+<dd><p>Free memory allocated by C routines. Always use it after using a BeckeGrid object.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="becke_grid.BeckeGrid.integrate">
 <code class="descname">integrate</code><span class="sig-paren">(</span><em>particle_stack</em>, <em>F</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.integrate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform an integration of function <span class="math">\(F(r)\)</span> using BeckeGrid.</p>
@@ -180,6 +187,14 @@
 <dt id="becke_grid.BeckeGrid.integrate_c">
 <code class="descname">integrate_c</code><span class="sig-paren">(</span><em>csys</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.integrate_c" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform an integration of function <span class="math">\(F(r)\)</span> using BeckeGrid. (Function coded on C)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>csys</strong> (<a class="reference internal" href="c_binding.html#c_binding.CBinding" title="c_binding.CBinding"><em>CBinding</em></a>) &#8211; Information of the system in C structure. See CBinding.</td>
+</tr>
+</tbody>
+</table>
 <dl class="docutils">
 <dt>Info:</dt>
 <dd>So far only implements density integration as a test, more functionals soon.</dd>
@@ -229,7 +244,7 @@ The value of cell_function (eq. 13, Becke, 1988) at point <code class="docutils 
 
 <dl class="method">
 <dt id="becke_grid.BeckeGrid.weight_c">
-<code class="descname">weight_c</code><span class="sig-paren">(</span><em>csys</em>, <em>r</em>, <em>particleID</em>, <em>particle_stack</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.weight_c" title="Permalink to this definition">¶</a></dt>
+<code class="descname">weight_c</code><span class="sig-paren">(</span><em>r</em>, <em>particleID</em>, <em>csys</em><span class="sig-paren">)</span><a class="headerlink" href="#becke_grid.BeckeGrid.weight_c" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the Becke weights <span class="math">\(w(r)\)</span> at point <code class="docutils literal"><span class="pre">r</span></code> for particle <code class="docutils literal"><span class="pre">particleID</span></code> as described in eq. 22 Becke, 1988
 using C routine.</p>
 <p class="rubric">References</p>
@@ -241,7 +256,7 @@ using C routine.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>r</strong> (<em>array[3]</em>) &#8211; Point of the grid in which the weight will be calculated.</li>
 <li><strong>particleID</strong> (<em>int</em>) &#8211; The particle index who owns the <code class="docutils literal"><span class="pre">r</span></code> point.</li>
-<li><strong>particle_stack</strong> (<a class="reference internal" href="stack.html#stack.Stack" title="stack.Stack"><em>Stack</em></a>) &#8211; stack of particles of same species as <code class="docutils literal"><span class="pre">particleID</span></code></li>
+<li><strong>csys</strong> (<a class="reference internal" href="c_binding.html#c_binding.CBinding" title="c_binding.CBinding"><em>CBinding</em></a>) &#8211; Information of the system in C structure. See CBinding.</li>
 </ul>
 </td>
 </tr>
@@ -266,7 +281,7 @@ The value of cell_function (eq. 13, Becke, 1988) at point <code class="docutils 
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="contracted_gaussian.html" class="btn btn-neutral float-right" title="contracted_gaussian" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="c_binding.html" class="btn btn-neutral float-right" title="c_binding" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="basis_set.html" class="btn btn-neutral" title="basis_set" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
