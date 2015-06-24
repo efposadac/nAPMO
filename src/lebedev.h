@@ -10,6 +10,8 @@ efposadac@sissa.it*/
 
 #include <math.h>
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 /*
 returns the lorder number of abscissas and weights of the Lebedev quadrature

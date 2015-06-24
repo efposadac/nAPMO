@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # file: Density.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
@@ -58,10 +59,10 @@ def init_system(element, distance, basis_kind, basis_file):
 if __name__ == '__main__':
 
     # Grid definition
-    angularPoints = 194
-    radialPoints = 100
+    angularPoints = 110
+    radialPoints = 60
     grid = BeckeGrid(radialPoints, angularPoints)
-    grid.show()
+    # grid.show()
 
     # Test for diatomic molecules for the following elements:
     elements = ['H', 'Li', 'Be', 'B', 'C', 'N', 'O']
@@ -71,7 +72,7 @@ if __name__ == '__main__':
     basis_kind = "GTO"
 
     # Header for results.
-    print("System Int C         Int Py        Error          Time Py       Time C")
+    # print("System Int C         Int Py        Error          Time Py       Time C")
 
     for (element, distance) in zip(elements, distances):
         atoms, system, exact, rho = init_system(element, distance, basis_kind, basis_file)
@@ -92,5 +93,6 @@ if __name__ == '__main__':
 
         # Delete temporary files.
         os.system('rm data.dens')
+        # break
 
     grid.free()
