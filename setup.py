@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+# file: setup.py
+# nAPMO package
+# Copyright (c) 2014, Edwin Fernando Posada
+# All rights reserved.
+# Version: 0.1
+# efposadac@sissa.it
 """
 Script for installation of the python module.
 
@@ -14,7 +20,8 @@ def read(fname):
 napmo_module = Extension(
                       'libnapmo',
                       sources=['src/becke_grid.c', 'src/lebedev.c', 'src/gauss_chebyshev.c'],
-                      extra_compile_args=['-O3', '-ffast-math'],
+                      extra_compile_args=['-O3', '-ffast-math', '-D _OMP', '-fopenmp'],
+                      extra_link_args=['-lgomp']
                       )
 
 setup(name="napmo",

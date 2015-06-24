@@ -14,8 +14,6 @@ struct _system {
   int* particle_number;     // For atoms atomic number, else an identifier.
   double* particle_radii;   // Atomic radii, Particle radii?
   double* particle_origin;  // Origin of each atom / particle.
-  double* work_space;       // Variable for convenience (avoid excessive malloc
-                            // operations)
   BasisSet basis;
 };
 typedef struct _system System;

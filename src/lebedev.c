@@ -9,7 +9,6 @@ efposadac@sissa.it*/
 
 void lebedev(int lorder, double *t, double *p, double *w) {
   int i;
-
   if (lorder == 110) {
     const double t_110[] = {
         90.000000000000000,  90.000000000000000,  90.000000000000000,
@@ -46738,6 +46737,9 @@ void lebedev(int lorder, double *t, double *p, double *w) {
     memcpy(t, t_5810, 5810 * sizeof t[0]);
     memcpy(p, p_5810, 5810 * sizeof p[0]);
     memcpy(w, w_5810, 5810 * sizeof w[0]);
+  }else{
+    printf("Lebedev.c: Invalid number of angular points!\n");
+    exit(1);
   }
 
   for (i = 0; i < lorder; ++i) {

@@ -16,14 +16,29 @@ void grid_init(Grid *grid) {
   grid->angular_phi = (double *)malloc(grid->n_angular * sizeof(double));
   grid->angular_weights = (double *)malloc(grid->n_angular * sizeof(double));
 
-  lebedev(grid->n_angular, grid->angular_theta, grid->angular_phi,
-          grid->angular_weights);
-  gaussChebyshev(grid->n_radial, grid->radial_abscissas, grid->radial_weights);
+#ifdef _OMP
+#pragma omp parallel
+  {
+#pragma omp sections nowait
+    {
+#pragma omp section
+#endif
+      lebedev(grid->n_angular, grid->angular_theta, grid->angular_phi,
+              grid->angular_weights);
+#ifdef _OMP
+#pragma omp section
+#endif
+      gaussChebyshev(grid->n_radial, grid->radial_abscissas,
+                     grid->radial_weights);
+#ifdef _OMP
+    }
+  }
+#endif
 }
 
 double grid_weights(System *sys, double r[3], int particleID) {
   double x_i[3], x_j, r_i, r_j, R_ij, mu_ij, rm_i, rm_j, chi, u_ij, a_ij, nu_ij;
-  double sum = 0, output, aux1, aux2;
+  double sum = 0, output, aux1, aux2, aux3 = 0;
   int n_particles = sys->n_particles;
   int i, j, k;
 
@@ -54,7 +69,7 @@ double grid_weights(System *sys, double r[3], int particleID) {
         mu_ij = (r_i - r_j) / R_ij;
 
         // Atomic size adjustment. see appendix, Becke, 1988.
-        rm_j = sys->particle_radii[i];
+        rm_j = sys->particle_radii[j];
 
         // eq. A4
         chi = rm_i / rm_j;
@@ -74,15 +89,15 @@ double grid_weights(System *sys, double r[3], int particleID) {
       }
     }
     sum += aux1;
-    sys->work_space[i] = aux1;
+    if (i == particleID) aux3 = aux1;
   }
   // eq. 22
-  output = sys->work_space[particleID] / sum;
+  output = aux3 / sum;
   return output;
 }
 
 double grid_integrate(System *sys, Grid *grid) {
-  double integral = 0.0, rm, rad, r[3], factor;
+  double integral, rm, rad, r[3], factor;
   double aux1, aux2, aux3, aux4;
   double q_r, w_r, t_a, p_a, w_a, p;
   double sin_t, cos_t, sin_p, cos_p;
@@ -94,7 +109,6 @@ double grid_integrate(System *sys, Grid *grid) {
 
   // Fetch density file.
   int size = sys->basis.n_cont * sys->basis.n_cont;
-
   double *dens = (double *)malloc(size * sizeof(double));
 
   FILE *file;
@@ -104,6 +118,12 @@ double grid_integrate(System *sys, Grid *grid) {
     fscanf(file, "%lf", &dens[i]);
   }
 
+  integral = 0.0;
+#ifdef _OMP
+#pragma omp parallel for default(shared) private(                           \
+    i, j, k, q_r, w_r, aux1, aux2, aux3, aux4, t_a, p_a, w_a, sin_t, cos_t, \
+    sin_p, cos_p, rm, rad, aux5, r, p, factor) reduction(+ : integral)
+#endif
   for (i = 0; i < n_radial; ++i) {
     q_r = grid->radial_abscissas[i];
     w_r = grid->radial_weights[i];
@@ -138,7 +158,7 @@ double grid_integrate(System *sys, Grid *grid) {
         // Calculate Integral
         factor = rm * aux4;
         integral +=
-            rad * rad * p * w_r * w_a * factor * grid_density(sys, r, dens);
+            (rad * rad * p * w_r * w_a * factor * grid_density(sys, r, dens));
       }
     }
   }

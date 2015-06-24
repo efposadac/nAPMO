@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # file: Performance.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada

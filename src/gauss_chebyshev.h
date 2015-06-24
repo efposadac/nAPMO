@@ -9,6 +9,10 @@ efposadac@sissa.it*/
 
 #include <math.h>
 
+#ifdef _OMP
+#include <omp.h>
+#endif
+
 /*
 Computes abscissas and weights for the Gauss-Chebyshev quadrature of second
 kind.

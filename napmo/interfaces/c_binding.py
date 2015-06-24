@@ -83,7 +83,6 @@ class CBinding(Structure):
         ("particle_number", POINTER(c_int)),
         ("particle_radii", POINTER(c_double)),
         ("particle_origin", POINTER(c_double)),
-        ("work_space", POINTER(c_double)),
         ("basis_set", C_BasisSet)
     ]
 
@@ -102,9 +101,6 @@ class CBinding(Structure):
 
         size = (c_double * self.n_particles * 3)()
         self.particle_origin = cast(size, POINTER(c_double))
-
-        size = (c_double * self.n_particles)()
-        self.work_space = cast(size, POINTER(c_double))
 
         basis = deepcopy(particle_stack[0].get('basis'))
 

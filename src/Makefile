@@ -5,7 +5,7 @@
 # Version: 0.1
 # efposadac@sissa.it
 CC=gcc
-CFLAGS=-Wall -O3 -ffast-math -fPIC
+CFLAGS=-Wall -g -O3 -ffast-math -fPIC -fopenmp -D _OMP
 LDLIBS=-lm
 
 SRC=becke_grid.c gauss_chebyshev.c lebedev.c
@@ -15,7 +15,7 @@ OBJ=becke_grid.o gauss_chebyshev.o lebedev.o
 default: libnapmo.so
 
 clean:
-	rm -f *.o *.so
+	rm -f *.o *.so test
 
 libnapmo.so: $(OBJ)
 	$(CC) -o $@ $(CFLAGS) $^ -shared $(LDLIBS)
@@ -24,3 +24,6 @@ libnapmo.so: $(OBJ)
 	$(CC) -c $(CFLAGS) $<
 
 %.c: %.h
+
+test: test.c libnapmo.so
+	$(CC) -o $@ $(CFLAGS) $^

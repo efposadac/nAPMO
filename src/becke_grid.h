@@ -10,6 +10,10 @@ efposadac@sissa.it*/
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifdef _OMP
+#include <omp.h>
+#endif
+
 #include "lebedev.h"
 #include "gauss_chebyshev.h"
 #include "system.h"
