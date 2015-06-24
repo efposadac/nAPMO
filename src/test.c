@@ -40,16 +40,7 @@ void test_gauss_chebyshev() {
 
   free(abscissas);
   free(weights);
-
-  // Test for performance
-  n = 100000000;
-  abscissas = (double *)malloc(n * sizeof(double));
-  weights = (double *)malloc(n * sizeof(double));
-  for (i = 0; i < 10; ++i) {
-    gaussChebyshev(n, abscissas, weights);
-  }
-  free(abscissas);
-  free(weights);
+  
 }
 
 void test_gauss_chebyshev_perf() {
@@ -69,7 +60,7 @@ void test_gauss_chebyshev_perf() {
 
 int main(int argc, char const *argv[]) {
   // Results
-  test_gauss_chebyshev();
+  // test_gauss_chebyshev();
 
   // Perf
   test_gauss_chebyshev_perf();

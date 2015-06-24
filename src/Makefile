@@ -15,7 +15,7 @@ OBJ=becke_grid.o gauss_chebyshev.o lebedev.o
 default: libnapmo.so
 
 clean:
-	rm -f *.o *.so
+	rm -f *.o *.so test
 
 libnapmo.so: $(OBJ)
 	$(CC) -o $@ $(CFLAGS) $^ -shared $(LDLIBS)

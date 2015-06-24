@@ -22,7 +22,7 @@ import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath('../'))
 sys.path.insert(0, '../napmo/interfaces')
 sys.path.insert(0, '../napmo/utilities')
-sys.path.insert(0, '../napmo/examples')
+sys.path.insert(0, '../napmo/results')
 
 
 # -- General configuration ------------------------------------------------

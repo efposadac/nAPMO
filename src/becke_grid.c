@@ -38,7 +38,7 @@ void grid_init(Grid *grid) {
 
 double grid_weights(System *sys, double r[3], int particleID) {
   double x_i[3], x_j, r_i, r_j, R_ij, mu_ij, rm_i, rm_j, chi, u_ij, a_ij, nu_ij;
-  double sum = 0, output, aux1, aux2;
+  double sum = 0, output, aux1, aux2, aux3 = 0;
   int n_particles = sys->n_particles;
   int i, j, k;
 
@@ -69,7 +69,7 @@ double grid_weights(System *sys, double r[3], int particleID) {
         mu_ij = (r_i - r_j) / R_ij;
 
         // Atomic size adjustment. see appendix, Becke, 1988.
-        rm_j = sys->particle_radii[i];
+        rm_j = sys->particle_radii[j];
 
         // eq. A4
         chi = rm_i / rm_j;
@@ -89,10 +89,10 @@ double grid_weights(System *sys, double r[3], int particleID) {
       }
     }
     sum += aux1;
-    sys->work_space[i] = aux1;
+    if (i == particleID) aux3 = aux1;
   }
   // eq. 22
-  output = sys->work_space[particleID] / sum;
+  output = aux3 / sum;
   return output;
 }
 
@@ -109,7 +109,6 @@ double grid_integrate(System *sys, Grid *grid) {
 
   // Fetch density file.
   int size = sys->basis.n_cont * sys->basis.n_cont;
-
   double *dens = (double *)malloc(size * sizeof(double));
 
   FILE *file;
@@ -120,13 +119,11 @@ double grid_integrate(System *sys, Grid *grid) {
   }
 
   integral = 0.0;
-/*#ifdef _OMP
-#pragma omp parallel for default(none) private(                             \
+#ifdef _OMP
+#pragma omp parallel for default(shared) private(                           \
     i, j, k, q_r, w_r, aux1, aux2, aux3, aux4, t_a, p_a, w_a, sin_t, cos_t, \
-    sin_p, cos_p, rm, rad, aux5, r, p,                                      \
-    factor) shared(n_radial, n_angular, n_particles, sys, grid,             \
-                   dens) reduction(+ : integral)
-#endif*/
+    sin_p, cos_p, rm, rad, aux5, r, p, factor) reduction(+ : integral)
+#endif
   for (i = 0; i < n_radial; ++i) {
     q_r = grid->radial_abscissas[i];
     w_r = grid->radial_weights[i];
@@ -157,7 +154,6 @@ double grid_integrate(System *sys, Grid *grid) {
 
         // Calculate Becke weights
         p = grid_weights(sys, r, k);
-        // printf("%d %d %d %12.10f\n", i, j, k, p);
 
         // Calculate Integral
         factor = rm * aux4;

@@ -4,15 +4,15 @@
 
 1. the ipython notebook.
 
-This folder contains some examples using the code. The first one is a ipython notebook called ``nAPMO.ipynb`` which contains information step by step on how the code works.
+This folder contains some experiments/results using the code. The first one is a ipython notebook called ``nAPMO.ipynb`` which contains information step by step on how the code works.
 
-Link:  :download:`nAPMO notebook example <../examples/nAPMO.ipynb>`
+Link:  :download:`nAPMO notebook example <../results/nAPMO.ipynb>`
 
 nbviewer: http://nbviewer.ipython.org/url/efposadac.github.io/nAPMO/_downloads/nAPMO.ipynb
 
 2. Integration on diatomic Molecules
 
-The second example can be found in the folder ``Density``. This contains examples for the calculation of :math:`\int \rho({\bf r})` for diatomic molecules for elements from Z = 1, up to Z = 8, with exception of Helium. The outcome of this test must be:
+The second example can be found in the folder ``Density``. This contains results for the calculation of :math:`\int \rho({\bf r})` for diatomic molecules for elements from Z = 1, up to Z = 8, with exception of Helium. The outcome of this test must be:
 
 ::
 
@@ -51,5 +51,5 @@ Note:
 
 All ``*.dens`` files are density matrices to perform the integration.
 
-.. |radial_perf| image:: ../examples/Performance/radial_points_scaling.png
-.. |angular_perf| image:: ../examples/Performance/angular_points_scaling.png
+.. |radial_perf| image:: ../results/Perf_serial/radial_points_scaling.png
+.. |angular_perf| image:: ../results/Perf_serial/angular_points_scaling.png
