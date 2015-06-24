@@ -13,10 +13,13 @@ import sys
 
 
 def gauss_chebishev_omp():
-    nprocs = np.array([i for i in range(1, 9)])
+    nprocs = np.array([i for i in range(1, 21)])
     times = []
+    
+    os.system('cd ../../src; make test')
 
     for nproc in nprocs:
+        print(nproc)
         start_time = time.time()
         os.system(
                     'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../../src; ' +
@@ -27,10 +30,10 @@ def gauss_chebishev_omp():
     times = np.array(times)
     print(times)
     plt.title('Scaling in gauss_chebishev function')
-    plt.plot(nprocs, times[0]/times, '-s', label='1e8 gauss_chebishev quadrature calculation x 10 times')
+    plt.plot(nprocs, times[0]/times, '-s', label='1e8 gauss_chebishev quad. 10 rep.')
     plt.xlabel('nprocs')
-    plt.ylabel('time (s)')
-    plt.legend()
+    plt.ylabel('speedup')
+    plt.legend(loc=4)
     plt.savefig('gauss_chebishev.png')
     plt.close()
 
