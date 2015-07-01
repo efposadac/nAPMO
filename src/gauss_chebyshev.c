@@ -8,6 +8,9 @@ efposadac@sissa.it*/
 #include "gauss_chebyshev.h"
 
 void gaussChebyshev(int n, double* abscissas, double* weights) {
+  // #ifdef _CUDA
+  // 	gaussChebyshev_cuda(n, abscissas, weights);
+  // #else
   int i;
 
   double aux = M_PI * 1.0 / (n + 1.0);
@@ -19,4 +22,5 @@ void gaussChebyshev(int n, double* abscissas, double* weights) {
     abscissas[i] = cos((i + 1) * aux);
     weights[i] = (aux * (1.0 - abscissas[i] * abscissas[i]));
   }
+  // #endif
 }

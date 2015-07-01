@@ -11,5 +11,9 @@ efposadac@sissa.it*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include <time.h>
+
+#include "../gauss_chebyshev.h"
+#include "../wallclock.h"
 
 #endif

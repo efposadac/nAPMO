@@ -4,24 +4,19 @@ Copyright (c) 2015, Edwin Fernando Posada
 All rights reserved.
 Version: 0.1
 efposadac@sissa.it*/
-#ifndef GAUSS_CHEBYSHEV_H
-#define GAUSS_CHEBYSHEV_H
+#ifndef GAUSS_CHEBYSHEV_CUH
+#define GAUSS_CHEBYSHEV_CUH
 
 #include <math.h>
+#include <stdio.h>
 
-#ifdef _OMP
-#include <omp.h>
-#endif
+#define THREADS_PER_BLOCK 64
 
-#ifdef _CUDA
-#include "gauss_chebyshev.cuh"
-#endif
-
+#define double_t float
 /*
 Computes abscissas and weights for the Gauss-Chebyshev quadrature of second
 kind.
 */
-void gaussChebyshev(int n, double* abscissas, double* weights);
-
+void gaussChebyshev_cuda(int n, double_t *abscissas, double_t *weights);
 
 #endif

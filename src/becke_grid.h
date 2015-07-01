@@ -18,16 +18,16 @@ efposadac@sissa.it*/
 #include "gauss_chebyshev.h"
 #include "system.h"
 
-struct _grid {
-  int n_radial;              // Number of radial points.
-  int n_angular;             // Number of angular points.
-  double* radial_abscissas;  // Radial abscissas (len = n_radial)
-  double* radial_weights;    // Radial weights (len = n_radial)
-  double* angular_theta;     // theta coordinate of angular quadrature (len =
-                             // n_angular)
-  double*
-      angular_phi;  // phi coordinate of angular quadrature (len = n_angular)
-  double* angular_weights;  // Weights of angular quadrature (len = n_angular)
+struct _grid
+{
+    int n_radial;              // Number of radial points.
+    int n_angular;             // Number of angular points.
+    double* radial_abscissas;  // Radial abscissas (len = n_radial)
+    double* radial_weights;    // Radial weights (len = n_radial)
+    double* angular_theta;     // theta coordinate of angular quadrature (len =
+                               // n_angular)
+    double* angular_phi;       // phi coordinate of angular quadrature (len = n_angular)
+    double* angular_weights;   // Weights of angular quadrature (len = n_angular)
 };
 typedef struct _grid Grid;
 
@@ -78,8 +78,6 @@ double grid_density(System* sys, double* r, double* dens);
 /*
 Iterated cutoff profile. eq. 21, Becke 1988.
 */
-static inline double grid_soft_mu(const double mu) {
-  return 0.5 * mu * (3.0 - mu * mu);
-}
+static inline double grid_soft_mu(const double mu) { return 0.5 * mu * (3.0 - mu * mu); }
 
 #endif
