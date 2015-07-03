@@ -9,14 +9,14 @@ BUILD = SERIAL CUDA OMP
 LIBRARY = libnapmo.so
 
 CC := gcc
-CFLAGS := -Wall -O2 -ffast-math -fPIC
+CFLAGS := -Wall -O2 -ffast-math -fPIC -g -pg
 LDLIBS := -lm
 
 NVCC := $(CC)
 NVCFLAGS := $(CFLAGS)
 
 OBJ = $(patsubst %.c,%.o,$(wildcard *.c))
-NVOBJ = $(patsubst %.cu,%.cuda.o,$(wildcard *.cu))
+NVOBJ = $(patsubst %.cu,%.o,$(wildcard *.cu))
 
 OMP: CFLAGS += -fopenmp -D _OMP
 
@@ -30,7 +30,6 @@ CUDA: OBJ += $(NVOBJ)
 default: SERIAL
 
 $(BUILD): $$(OBJ)
-	@echo $@
 	$(NVCC) -o $(LIBRARY) $(NVCFLAGS) $^ -shared $(LDLIBS)
 
 %.o: %.c
@@ -38,13 +37,14 @@ $(BUILD): $$(OBJ)
 
 %.c: %.h
 
-%.cuda.o: %.cu
+%.o: %.cu
 	$(NVCC) -c $(NVCFLAGS) $< -o $@
 
 %.cu: %.cuh
 
 clean:
-	rm -f $(LIBRARY)
-	rm -f $(OBJ) $(NVOBJ)
+	rm -rf $(LIBRARY)
+	rm -rf $(OBJ) $(NVOBJ)
+	(cd test && $(MAKE) clean)
 
 .PHONY: default clean

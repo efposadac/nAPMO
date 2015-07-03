@@ -6,7 +6,6 @@ Version: 0.1
 efposadac@sissa.it*/
 
 #include "test_gauss_chebyshev.h"
-#include <omp.h>
 
 void test_gauss_chebyshev() {
   bool status = true;
@@ -77,7 +76,7 @@ void test_gauss_chebyshev_perf() {
     free(g_a);
     free(g_w);
 
-    printf("%g ", wallclock(&secs)/reps);
+    printf("%g ", wallclock(&secs) / reps);
 #endif
 
     abscissas = (double *)malloc(n * sizeof(double));
@@ -85,33 +84,38 @@ void test_gauss_chebyshev_perf() {
 
     secs = wallclock(NULL);
 
+#ifdef _OMP
     omp_set_num_threads(8);
+#endif
+
     for (i = 0; i < reps; ++i) {
       gaussChebyshev(n, abscissas, weights);
     }
 
-    printf("%g ", wallclock(&secs)/reps);
+#ifdef _OMP
+    printf("%g ", wallclock(&secs) / reps);
 
     secs = wallclock(NULL);
 
     omp_set_num_threads(1);
+
     for (i = 0; i < reps; ++i) {
       gaussChebyshev(n, abscissas, weights);
     }
+#endif
 
-    printf("%g \n", wallclock(&secs)/reps);
+    printf("%g \n", wallclock(&secs) / reps);
 
     free(abscissas);
     free(weights);
-
   }
 }
 
 int main(int argc, char const *argv[]) {
   // Results
-  // test_gauss_chebyshev();
+  test_gauss_chebyshev();
 
   // Perf
-  test_gauss_chebyshev_perf();
+  // test_gauss_chebyshev_perf();
   return 0;
 }

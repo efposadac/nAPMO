@@ -14,7 +14,7 @@ efposadac@sissa.it*/
 #endif
 
 #ifdef _CUDA
-#include "gauss_chebyshev.cuh"
+#include "gauss_chebyshev_cuda.cuh"
 #endif
 
 /*

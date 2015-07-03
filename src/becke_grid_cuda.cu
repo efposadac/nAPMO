@@ -1,13 +1,13 @@
-/*file: becke_grid.c
+/*file: becke_grid_cuda.cu
 nAPMO package
 Copyright (c) 2015, Edwin Fernando Posada
 All rights reserved.
 Version: 0.1
 efposadac@sissa.it*/
 
-#include "becke_grid.h"
+#include "becke_grid_cuda.cuh"
 
-void grid_init(Grid *grid) {
+/*void grid_init(Grid *grid) {
   grid->radial_abscissas = (double *)malloc(grid->n_radial * sizeof(double));
   grid->radial_weights = (double *)malloc(grid->n_radial * sizeof(double));
 
@@ -215,4 +215,4 @@ void grid_free(Grid *grid) {
   free(grid->angular_theta);
   free(grid->angular_phi);
   free(grid->angular_weights);
-}
+}*/

@@ -12,6 +12,7 @@ import time
 import os
 import sys
 import subprocess
+import cProfile
 
 from napmo.interfaces.stack import Stack
 
@@ -20,14 +21,14 @@ def gauss_chebishev_omp():
     nprocs = np.array([i for i in range(1, 9)])
     times = Stack()
 
-    os.system('cd ../../src; make test')
+    os.system('cd ../../src/test/; make')
 
     for nproc in nprocs:
         start_time = time.time()
         os.system(
                     'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../../src; ' +
                     'export OMP_NUM_THREADS=' + str(nproc) +
-                    '; ../../src/test')
+                    '; ../../src/test/test_gauss_chebyshev.x')
         times.append(time.time() - start_time)
 
         print(nproc, times.peek())
@@ -43,7 +44,7 @@ def gauss_chebishev_omp():
 
 
 def mmi_omp():
-    nprocs = np.array([i for i in range(1, 21)])
+    nprocs = np.array([i for i in range(1, 5)])
     times = Stack()
 
     for nproc in nprocs:

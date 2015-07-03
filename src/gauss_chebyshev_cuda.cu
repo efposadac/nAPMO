@@ -1,4 +1,4 @@
-/*file: gauss_chebyshev.cu
+/*file: gauss_chebyshev_cuda.cu
 nAPMO package
 Copyright (c) 2015, Edwin Fernando Posada
 All rights reserved.
@@ -8,7 +8,7 @@ efposadac@sissa.it*/
 #include <cuda_runtime.h>
 
 extern "C"{
-#include "gauss_chebyshev.cuh"
+#include "gauss_chebyshev_cuda.cuh"
 }
 
 __global__ void kernel_gaussChebyshev_cuda(const int n, double_t *abscissas,
@@ -17,11 +17,11 @@ __global__ void kernel_gaussChebyshev_cuda(const int n, double_t *abscissas,
   double_t aux_1 =  M_PI / (n + 1.0);
   double_t aux_2;
 
-  // if (i < n) {
+  if (i < n) {
     aux_2 = cos((i + 1) * aux_1);
     weights[i] = (aux_1 * (1.0 - aux_2 * aux_2));
     abscissas[i] = aux_2;
-  // }
+  }
 }
 
 void gaussChebyshev_cuda(int n, double_t *abscissas, double_t *weights) {

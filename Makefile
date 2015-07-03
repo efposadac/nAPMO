@@ -6,15 +6,20 @@
 # efposadac@sissa.it
 
 SUBDIRS = napmo tests src
+BUILD = SERIAL CUDA OMP
 
-default::
-	python setup.py install --record files.txt --user
-	cd src && $(MAKE)
+default: SERIAL
 
-clean::
+$(BUILD):
+	./setup.py install --record files.txt --user build_type --kind=$@
+	cd src && $(MAKE) $@
+
+clean:
 	for dir in $(SUBDIRS); \
 	  do \
 	    (cd $${dir} && $(MAKE) $(DODEPENDOPT) clean) || exit 1; \
 	  done
 	cat files.txt | xargs rm -rf
 	rm -rf __pycache__ build dist napmo.egg-info files.txt
+
+.PHONY: clean default

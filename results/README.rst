@@ -57,11 +57,25 @@ The following graphs show the scaling of OpenMP implementation on the generation
 
 The Scaling seems to be linear up to 18 threads for a 5810-1000 grid, which is the biggest grid used so far (in a real case scenario unnecessary). The time for one thread was  42.38 s and for 20, 3.30 s, supposing a speedup of approx. 12x.
 
+For a real case scenario, i.e. a 1202-100 grid (next plot), the speed up goes up to 4x because for such grid the serial part of the code becomes to be more relevant than the  parallel part. Times: one thread: 1.11 s and for 20 threads 0.28 s
+
+|mmi_omp_small|
+
+
+5. **CUDA Implementation**
+
+|gauss_cuda_single|
+
+|gauss_cuda_double|
+
 Note:
 
 All ``*.dens`` files are density matrices to perform the integration.
 
-.. |radial_perf| image:: ../results/Perf_Serial/radial_points_scaling.png
-.. |angular_perf| image:: ../results/Perf_Serial/angular_points_scaling.png
-.. |gauss_omp| image:: ../results/Perf_OMP/gauss_chebishev.png
-.. |mmi_omp| image:: ../results/Perf_OMP/mmi.png
+.. |radial_perf| image:: ../results/Perf_Serial/images/radial_points_scaling.png
+.. |angular_perf| image:: ../results/Perf_Serial/images/angular_points_scaling.png
+.. |gauss_omp| image:: ../results/Perf_OMP/images/gauss_chebishev.png
+.. |mmi_omp| image:: ../results/Perf_OMP/images/mmi.png
+.. |mmi_omp_small| image:: ../results/Perf_OMP/images/mmi_1202_100.png
+.. |gauss_cuda_single| image:: ../results/Perf_CUDA/images/gcheb_gpu_omp_single.png
+.. |gauss_cuda_double| image:: ../results/Perf_CUDA/images/gcheb_gpu_omp_double.png

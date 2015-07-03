@@ -9,8 +9,8 @@ BUILD = SERIAL CUDA OMP
 
 CC=gcc
 VPATH = ../
-LDLIBS=$(VPATH)libnapmo.so
-CFLAGS=-Wall -O2 -ffast-math -fPIC 
+LDLIBS=-L$(VPATH) -lnapmo
+CFLAGS=-Wall -O2 -ffast-math -fPIC -g -pg
 
 SRC = $(wildcard *.c)
 OBJ = $(patsubst %.c,%.o,$(wildcard *.c))

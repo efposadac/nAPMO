@@ -16,4 +16,8 @@ efposadac@sissa.it*/
 #include "../gauss_chebyshev.h"
 #include "../wallclock.h"
 
+#ifdef _OMP
+#include <omp.h>
+#endif
+
 #endif

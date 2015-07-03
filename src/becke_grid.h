@@ -78,6 +78,6 @@ double grid_density(System* sys, double* r, double* dens);
 /*
 Iterated cutoff profile. eq. 21, Becke 1988.
 */
-static inline double grid_soft_mu(const double mu) { return 0.5 * mu * (3.0 - mu * mu); }
+inline double grid_soft_mu(const double mu) { return 0.5 * mu * (3.0 - mu * mu); }
 
 #endif
