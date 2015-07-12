@@ -5,34 +5,34 @@
 # Version: 0.1
 # efposadac@sissa.it
 
-BUILD = SERIAL CUDA OMP
+TOPDIR=../..
+include $(TOPDIR)/config.make
 
-CC=gcc
 VPATH = ../
-LDLIBS=-L$(VPATH) -lnapmo
-CFLAGS=-Wall -O2 -ffast-math -fPIC -g -pg
+LDLIBS += -L$(VPATH) -lnapmo
 
-SRC = $(wildcard *.c)
-OBJ = $(patsubst %.c,%.o,$(wildcard *.c))
 TARG = $(patsubst %.c,%.x,$(wildcard *.c))
+NVTARG = $(patsubst %.cu,%.cuda.x,$(wildcard *.cu))
+
+CUDA: TARG += $(NVTARG)
+
+.SECONDEXPANSION:
 
 default: SERIAL
 
-OMP: CFLAGS += -fopenmp -D _OMP
-	
-CUDA: CFLAGS += -fopenmp -D _OMP -D _CUDA
+$(BUILD): $$(TARG)
 
-$(BUILD): $(TARG)
-
-%.x: %.o
+%.x: %.c
 	$(CC) $(CFLAGS) -o $@ $< $(LDLIBS)
 
-%.o: %.c 
-	$(CC) -c $(CFLAGS) $< -o $@
+%.cuda.x: %.cu 
+	$(NVCC) $(NVCFLAGS) -o $@ $< $(LDLIBS)
 
 %.c: %.h
 
+%.cu: %.h
+
 clean:
-	rm -f $(TARG)
+	rm -f *.x *.out
 
 .PHONY: default clean

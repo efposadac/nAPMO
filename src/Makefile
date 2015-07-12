@@ -5,24 +5,14 @@
 # Version: 0.1
 # efposadac@sissa.it
 
-BUILD = SERIAL CUDA OMP
+TOPDIR=..
+include $(TOPDIR)/config.make
+
 LIBRARY = libnapmo.so
 
-CC := gcc
-CFLAGS := -Wall -O2 -ffast-math -fPIC -g -pg
-LDLIBS := -lm
-
-NVCC := $(CC)
-NVCFLAGS := $(CFLAGS)
-
 OBJ = $(patsubst %.c,%.o,$(wildcard *.c))
-NVOBJ = $(patsubst %.cu,%.o,$(wildcard *.cu))
+NVOBJ = $(patsubst %.cu,%.cuda.o,$(wildcard *.cu))
 
-OMP: CFLAGS += -fopenmp -D _OMP
-
-CUDA: CFLAGS += -fopenmp -D _OMP -D _CUDA
-CUDA: NVCC := nvcc
-CUDA: NVCFLAGS := -Xcompiler '$(CFLAGS)' -arch=sm_50
 CUDA: OBJ += $(NVOBJ)
 
 .SECONDEXPANSION:
@@ -30,21 +20,24 @@ CUDA: OBJ += $(NVOBJ)
 default: SERIAL
 
 $(BUILD): $$(OBJ)
-	$(NVCC) -o $(LIBRARY) $(NVCFLAGS) $^ -shared $(LDLIBS)
+	$(NVCC) -o $(LIBRARY) $(NVLDFLAGS) $^ $(LDLIBS)
+	cp $(LIBRARY) $(TOPDIR)/napmo/utilities
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@
 
 %.c: %.h
 
-%.o: %.cu
+%.cuda.o: %.cu
 	$(NVCC) -c $(NVCFLAGS) $< -o $@
 
 %.cu: %.cuh
 
 clean:
 	rm -rf $(LIBRARY)
-	rm -rf $(OBJ) $(NVOBJ)
+	rm -rf *.o
+	rm -rf *.optrpt
+	rm -rf r00*
 	(cd test && $(MAKE) clean)
 
 .PHONY: default clean

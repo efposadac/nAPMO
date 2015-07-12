@@ -16,6 +16,14 @@ efposadac@sissa.it*/
 /*
 returns the lorder number of abscissas and weights of the Lebedev quadrature
 */
-void lebedev(int lorder, double* t, double* p, double* w);
+void lebedev(int lorder, double * t, double* p, double* w);
+
+#ifdef _CUDA
+/*
+Convert angular quadrature from spherical to cartesian coordinates (on device)
+*/
+void lebedev_to_cartesian_cuda(int unsigned lorder, double * coord);
+
+#endif
 
 #endif

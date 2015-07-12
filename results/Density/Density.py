@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # file: Density.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
@@ -44,8 +44,9 @@ def init_system(element, distance, basis_kind, basis_file):
     exact = molecule.n_particles('e-')
 
     # Get the density matrix (from a previous calculation)
-    P = np.array(np.loadtxt(element+'_dens.dat'), order='F', dtype=np.float64)
-    os.system('cp '+element+'_dens.dat data.dens')
+    file_dens = os.path.join(os.path.dirname(__file__), element+'_dens.dat')
+    P = np.array(np.loadtxt(file_dens), order='F', dtype=np.float64)
+    os.system('cp '+file_dens+' data.dens')
 
     # Functional definition (for Python)
     def rho(coord, particle_stack, P=P, basis=basis):
@@ -68,7 +69,7 @@ if __name__ == '__main__':
     elements = ['H', 'Li', 'Be', 'B', 'C', 'N', 'O']
     distances = [0.742, 2.623, 2.427, 1.586, 1.268, 1.098, 1.206]
     basis_name = "STO-3G"
-    basis_file = "STO-3G.json"
+    basis_file = os.path.join(os.path.dirname(__file__), "STO-3G.json")
     basis_kind = "GTO"
 
     # Header for results.

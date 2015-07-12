@@ -10,14 +10,19 @@ efposadac@sissa.it*/
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <stdbool.h>
 #include <time.h>
 
 #include "../gauss_chebyshev.h"
+#include "../becke_grid.h"
+#include "../lebedev.h"
 #include "../wallclock.h"
 
 #ifdef _OMP
 #include <omp.h>
+#endif
+
+#ifdef _CUDA
+#include <cuda_runtime.h>
 #endif
 
 #endif

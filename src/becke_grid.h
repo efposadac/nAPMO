@@ -20,14 +20,13 @@ efposadac@sissa.it*/
 
 struct _grid
 {
-    int n_radial;              // Number of radial points.
-    int n_angular;             // Number of angular points.
-    double* radial_abscissas;  // Radial abscissas (len = n_radial)
-    double* radial_weights;    // Radial weights (len = n_radial)
-    double* angular_theta;     // theta coordinate of angular quadrature (len =
-                               // n_angular)
-    double* angular_phi;       // phi coordinate of angular quadrature (len = n_angular)
-    double* angular_weights;   // Weights of angular quadrature (len = n_angular)
+  int n_radial;              // Number of radial points.
+  int n_angular;             // Number of angular points.
+  double* radial_abscissas;  // Radial abscissas (len = n_radial)
+  double* radial_weights;    // Radial weights (len = n_radial)
+  double* angular_theta;     // theta coordinate of angular quadrature (len = n_angular)
+  double* angular_phi;       // phi coordinate of angular quadrature (len = n_angular)
+  double* angular_weights;   // Weights of angular quadrature (len = n_angular)
 };
 typedef struct _grid Grid;
 
@@ -79,5 +78,91 @@ double grid_density(System* sys, double* r, double* dens);
 Iterated cutoff profile. eq. 21, Becke 1988.
 */
 inline double grid_soft_mu(const double mu) { return 0.5 * mu * (3.0 - mu * mu); }
+
+/*CUDA functions*/
+#ifdef _CUDA
+
+struct _grid_cuda
+{
+  double* x;        // coord x or r if sph coords.
+  double* y;        // coord y or theta if sph coords.
+  double* z;        // coord z or phi if sph coords.
+  double* weights;  // total weights;
+};
+typedef struct _grid_cuda GridCuda;
+
+/*
+Copy the host grid structure into the device.
+*/
+void grid_init_cuda(Grid* grid, Grid* grid_d);
+
+/*
+Free the memory used on the CUDA device.
+*/
+void grid_free_cuda(Grid* grid);
+
+/*
+Perform the initialization (allocation and copy) of all structures needed to
+perform the integration
+in CUDA device. also loads additional information such as the density matrix.
+*/
+double grid_integrate_cuda(System* sys, Grid* grid);
+
+/*
+Implementation of atomicAdd for double precision variables.
+*/
+__device__ double atomicAdd(double* address, double val);
+
+/*
+Iterated cutoff profile. eq. 21, Becke 1988. (CUDA Device version)
+
+Note:
+    Avoid the use of __host__ __device__ in order to allow the compilation with
+other compilers
+    in the case of non CUDA compilation.
+
+*/
+__device__ double grid_soft_mu_cuda(const double mu);
+
+/*
+Computes the Becke weights :math:`w(r)` at point ``r`` for particle
+``particleID`` as described in eq. 22 Becke, 1988. (CUDA Device Version)
+
+References:
+    Becke, A. D. A multicenter numerical integration scheme for polyatomic
+molecules. J. Chem. Phys. 88, 2547 (1988).
+
+Args:
+    (double[3]): Point of the grid in which the weight will be calculated.
+    particleID (int): The particle index who owns the ``r`` point.
+    sys (System): system structure.
+
+Returns:
+    output (double): The value of cell_function (eq. 13, Becke, 1988) at point
+``r``
+*/
+__device__ double grid_weights_cuda(int n_particles, double* particle_origin, double* particle_radii,
+                                    double r[3], int particleID);
+
+/*
+Functional :math:`\rho({\\bf r})`
+*/
+__device__ double grid_density_cuda(BasisSet basis, double* r, double* dens);
+
+/*
+Integration of the functional :math:`\rho({\\bf r})` (CUDA Version)
+
+Kernel to perform the integration based on multicenter molecular integration
+from Becke.
+Please note that the structures are not passed by reference but value. All
+structure members have to be
+allocated/copied properly before to use this kernel.
+
+TODO:
+    Pass function pointer to enable the use of different kind of functionals.
+*/
+__global__ void grid_integrate_kernel(System sys, Grid grid, double* dens, double* integral);
+
+#endif
 
 #endif

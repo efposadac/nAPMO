@@ -68,6 +68,34 @@ For a real case scenario, i.e. a 1202-100 grid (next plot), the speed up goes up
 
 |gauss_cuda_double|
 
+Notes on CUDA implementation.
+
+The proposed parallelization strategy consists on copy all structures to the device (``System`` and ```Grid`), calculate Gauss-Cheb points on device, copy Lebedev pointer from host to device, run in two dimensional grids of threads and maintaining the same structure of calculation by calling ``__device__`` kernels for tasks such as the calculation of Becke weights, and the calculation of the Functional. I
+
+We found that to optimize the occupancy of the device the optimum number of ``THREADS_PER_BLOCK`` is 8. it gives around 85% of occupancy (for a optimal number of registers), however the code is 2 times slower than the serial one. The reason? The number of registers used for the kernel.
+
+With this scheme the kernel needs 72 registers against an optimal of 36. The use of such amount of registers generates many threads to be in idle state, because the amount of registers in the SMD is limited, if there is not enough registers to calculate all wraps the total execution time for a given block will increase.
+
+The next section contains notes on the solution a this problem in order to get the maximum possible performance.
+
+0. Test context:
+
+As reference we calculate molecular integration over a 1202 x 1000 grid points. The time for the serial executable was 1.8 s. For OMP 4 cores 0.5 s. The time for the proposed strategy over CUDA, 72 registers 8 x 8 ``THREADS_PER_BLOCK``, is 4.3 s.
+
+1. Force the use of less registers via compiler switch  ``--maxrregcount 36`` in compilation time. Result: 5.1 s.
+
+Forcing the use of less registers than the required generates a excessive use of local memory (aka global device memory). The latency of this memory is orders of magnitude greater that the cache/register bandwidth. As a consequence the time increases.
+
+2. Analise the amount of registers needed in each step of the kernel, Analysis done by compiling the code with ``-O2`` optimization flag.
+
+- Function ``sincos`` 16 registers + 6 register for call, total times called, 2 total of registers 38 registers
+- Function ``atomicAdd`` 26 registers.
+- Function ``grid_density_cuda`` 6 registers.
+- Function ``grid_weights_cuda`` 2 registers.
+- Remaining operations 10 registers
+
+2.1 ``sincos`` Function is used to convert from spherical to cartesian coordinates. Proposed optimization split the kernel in two and pass the grid to the integrator in cartesian coordinates. Result: 
+
 Note:
 
 All ``*.dens`` files are density matrices to perform the integration.

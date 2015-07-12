@@ -13,7 +13,8 @@ efposadac@sissa.it*/
 #include <time.h>
 
 /* compute high precision walltime and walltime difference */
-static double wallclock(const double *ref) {
+inline double wallclock(const double *ref)
+{
   struct timespec t;
   double ret;
 

@@ -13,3 +13,6 @@ build
 dist
 files.txt
 napmo.egg-info
+gmon.out
+/Debug
+*.x

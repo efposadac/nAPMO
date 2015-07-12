@@ -5,10 +5,10 @@ All rights reserved.
 Version: 0.1
 efposadac@sissa.it*/
 
-#include "test_gauss_chebyshev.h"
+#include "test.h"
 
 void test_gauss_chebyshev() {
-  bool status = true;
+  int status = 1;
   int i, n;
   double eps = 1e-8;
   double *abscissas;
@@ -32,11 +32,11 @@ void test_gauss_chebyshev() {
   for (i = 0; i < n; ++i) {
     if (!(fabs(abscissas[i] - _r[i]) < eps)) {
       printf("Fail! expected: %12.10f got: %12.10f\n", _r[i], abscissas[i]);
-      status = false;
+      status = 0;
     }
     if (!(fabs(weights[i] - _w[i]) < eps)) {
       printf("Fail! expected: %12.10f got: %12.10f\n", _w[i], weights[i]);
-      status = false;
+      status = 0;
     }
   }
   printf("gauss_chebyshev... %s\n", status ? "Passed" : "Failed");
@@ -53,8 +53,8 @@ void test_gauss_chebyshev_perf() {
   double secs;
 
 #ifdef _CUDA
-  double_t *g_a;
-  double_t *g_w;
+  double *g_a;
+  double *g_w;
 #endif
 
   reps = 100;
@@ -64,8 +64,8 @@ void test_gauss_chebyshev_perf() {
 
 #ifdef _CUDA
 
-    g_a = (double_t *)malloc(n * sizeof(double_t));
-    g_w = (double_t *)malloc(n * sizeof(double_t));
+    g_a = (double *)malloc(n * sizeof(double));
+    g_w = (double *)malloc(n * sizeof(double));
 
     secs = wallclock(NULL);
 

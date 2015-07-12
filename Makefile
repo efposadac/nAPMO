@@ -5,14 +5,16 @@
 # Version: 0.1
 # efposadac@sissa.it
 
+TOPDIR=.
+include $(TOPDIR)/config.make
+
 SUBDIRS = napmo tests src
-BUILD = SERIAL CUDA OMP
 
 default: SERIAL
 
 $(BUILD):
-	./setup.py install --record files.txt --user build_type --kind=$@
 	cd src && $(MAKE) $@
+	./setup.py install --record files.txt --user
 
 clean:
 	for dir in $(SUBDIRS); \
