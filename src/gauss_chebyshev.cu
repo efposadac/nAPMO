@@ -17,7 +17,7 @@ __global__ void gaussChebyshev_cuda_kernel(const int n, double *abscissas, doubl
 {
   const unsigned int i = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
   
-  double aux_1 = M_PI / (n + 1.0);
+  const double aux_1 = M_PI / (n + 1.0);
   double aux_2;
 
   if (i < n)

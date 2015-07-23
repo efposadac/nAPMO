@@ -47,5 +47,5 @@ OMP: CFLAGS += -fopenmp -D_OMP
 
 CUDA: CFLAGS += -fopenmp -D_OMP -D_CUDA
 CUDA: NVCC := nvcc
-CUDA: NVCFLAGS := -Xcompiler '$(CFLAGS)' -arch=sm_50 -lineinfo -Xptxas="-v"
+CUDA: NVCFLAGS := -Xcompiler '$(CFLAGS)' -use_fast_math -arch=sm_50 -lineinfo -Xptxas="-v" 
 CUDA: NVLDFLAGS := -Xcompiler '$(LDFLAGS)' -arch=sm_50 -lineinfo 

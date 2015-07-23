@@ -79,27 +79,30 @@ Iterated cutoff profile. eq. 21, Becke 1988.
 */
 inline double grid_soft_mu(const double mu) { return 0.5 * mu * (3.0 - mu * mu); }
 
-/*CUDA functions*/
+/*
+CUDA functions
+*/
+
 #ifdef _CUDA
 
 struct _grid_cuda
 {
-  double* x;        // coord x or r if sph coords.
-  double* y;        // coord y or theta if sph coords.
-  double* z;        // coord z or phi if sph coords.
-  double* weights;  // total weights;
+  int2 gridDim;  // Dim of the grid (radial, angular)
+  double2* xy;   // coord x and y or r and theta if sph coords.
+  double2* zr;   // coord z and radial coordinate. of spherical phi instead of z.
+  double2* wf;   // Total weight (angular * radial) and factor for integration.
 };
 typedef struct _grid_cuda GridCuda;
 
 /*
 Copy the host grid structure into the device.
 */
-void grid_init_cuda(Grid* grid, Grid* grid_d);
+void grid_init_cuda(Grid* grid, GridCuda* grid_d);
 
 /*
 Free the memory used on the CUDA device.
 */
-void grid_free_cuda(Grid* grid);
+void grid_free_cuda(GridCuda* grid);
 
 /*
 Perform the initialization (allocation and copy) of all structures needed to
@@ -107,22 +110,6 @@ perform the integration
 in CUDA device. also loads additional information such as the density matrix.
 */
 double grid_integrate_cuda(System* sys, Grid* grid);
-
-/*
-Implementation of atomicAdd for double precision variables.
-*/
-__device__ double atomicAdd(double* address, double val);
-
-/*
-Iterated cutoff profile. eq. 21, Becke 1988. (CUDA Device version)
-
-Note:
-    Avoid the use of __host__ __device__ in order to allow the compilation with
-other compilers
-    in the case of non CUDA compilation.
-
-*/
-__device__ double grid_soft_mu_cuda(const double mu);
 
 /*
 Computes the Becke weights :math:`w(r)` at point ``r`` for particle
@@ -161,7 +148,30 @@ allocated/copied properly before to use this kernel.
 TODO:
     Pass function pointer to enable the use of different kind of functionals.
 */
-__global__ void grid_integrate_kernel(System sys, Grid grid, double* dens, double* integral);
+__global__ void grid_integrate_kernel(System sys, const int2 gridDim, double2* __restrict__ xy,
+                                      double2* __restrict__ zr, double2* __restrict__ wf,
+                                      double* __restrict__ dens, double* __restrict__ integral);
+
+/*
+Convert angular quadrature from spherical to cartesian coordinates. Expand the grid among the number of
+radial points, however, to keep the kernel simple, this kernel does not calculate the radial coordinate
+(assumes 1.0 for r which is in ``zr.y``)
+
+The remaining steps to complete the conversion are made by ``grid_rad_sph_to_cart_kernel``.
+*/
+__global__ void grid_ang_sph_to_cart_kernel(const int2 gridDim, double2* __restrict__ xy,
+                                            double2* __restrict__ zr, double2* __restrict__ wf,
+                                            double2* __restrict__ data_tp, double* __restrict__ data_w);
+
+/*
+Completes the conversion from spherical to cartesian coordinates. i.e. Calculates r coordinate,
+and multiply it by each x, y, z previously calculated in the ``grid_ang_sph_to_cart_kernel`` kernel.
+
+r is stored to calculate the volume element in future calculations (``zr.y``).
+*/
+__global__ void grid_rad_sph_to_cart_kernel(const int2 gridDim, double2* __restrict__ xy,
+                                            double2* __restrict__ zr, double2* __restrict__ wf,
+                                            double2* __restrict__ data_rw);
 
 #endif
 

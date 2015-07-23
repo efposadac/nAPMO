@@ -9,6 +9,7 @@ efposadac@sissa.it*/
 #define CUDA_HELPER_H
 
 #include <stdio.h>
+#include <cuda.h>
 #include <cuda_runtime.h>
 
 /*Helper function to check errors in each CUDA function excecution.*/
@@ -18,7 +19,8 @@ efposadac@sissa.it*/
     if ((err = cudaGetLastError()) != cudaSuccess)                                         \
     {                                                                                      \
       printf("CUDA error: %s, %s line %d\n", cudaGetErrorString(err), __FILE__, __LINE__); \
-      printf("Thread aborting...\n");                                                      \
+      printf("Aborting...\n");                                                      \
+      exit(-1);                                                                            \
     }                                                                                      \
   }
 
