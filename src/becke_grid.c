@@ -17,26 +17,8 @@ void grid_init(Grid *grid)
   grid->angular_phi = (double *)malloc(grid->n_angular * sizeof(double));
   grid->angular_weights = (double *)malloc(grid->n_angular * sizeof(double));
 
-/*
-Create two sections to build the grid concurrently.
-*/
-#ifdef _OMP
-#pragma omp parallel
-  {
-#pragma omp sections nowait
-    {
-#pragma omp section
-#endif
-      lebedev(grid->n_angular, grid->angular_theta, grid->angular_phi, grid->angular_weights);
-#ifdef _OMP
-#pragma omp section
-#endif
-      gaussChebyshev(grid->n_radial, grid->radial_abscissas, grid->radial_weights);
-#ifdef _OMP
-    }
-#pragma omp barrier
-  }
-#endif
+  lebedev(grid->n_angular, grid->angular_theta, grid->angular_phi, grid->angular_weights);
+  gaussChebyshev(grid->n_radial, grid->radial_abscissas, grid->radial_weights);
 }
 
 double grid_weights(System *sys, double r[3], int particleID)
@@ -109,13 +91,12 @@ double grid_integrate(System *sys, Grid *grid)
 {
 #ifdef _CUDA
   /*
-  TODO: Change this call for a "try" style. The idea is that there is not
-  device available the code can be executed on the host.
+  TODO: Change this call for a "try:" style. The idea is that if there is not
+  device available for CUDA the code will be executed on the host.
   */
   return grid_integrate_cuda(sys, grid);
 #endif
-  double integral, rm, rad, r[3], factor;
-  double aux1, aux2, aux3, aux4;
+  double integral, rm, rad, r[3];
   double q_r, w_r, t_a, p_a, w_a, p;
   double sin_t, cos_t, sin_p, cos_p;
 
@@ -145,18 +126,13 @@ double grid_integrate(System *sys, Grid *grid)
 /*
 Note: I've implemented the unroll option for inner loops without any impact on the performance.
 */
-#pragma omp parallel for default(shared) private(i, j, k, q_r, w_r, aux1, aux2, aux3, aux4, t_a, p_a,  \
-                                                 w_a, sin_t, cos_t, sin_p, cos_p, rm, rad, aux5, r, p, \
-                                                 factor) reduction(+ : integral)
+#pragma omp parallel for default(shared) private(i, j, k, q_r, w_r, t_a, p_a, w_a, sin_t, cos_t, sin_p, \
+                                                 cos_p, rm, rad, aux5, r, p) reduction(+ : integral)
 #endif
   for (i = 0; i < n_radial; ++i)
   {
     q_r = grid->radial_abscissas[i];
     w_r = grid->radial_weights[i];
-    aux1 = (q_r + 1.0) * 0.5;
-    aux2 = aux1 * aux1;
-    aux3 = log(1.0 - (aux2 * aux2));
-    aux4 = (aux2 * aux1) / (sqrt(1.0 - q_r * q_r) * (1.0 - (aux2 * aux2)));
 
     for (j = 0; j < n_angular; ++j)
     {
@@ -174,7 +150,7 @@ Note: I've implemented the unroll option for inner loops without any impact on t
           rm *= 0.5;
         }
 
-        rad = -rm * aux3;
+        rad = -rm * q_r;
         aux5 = k * 3;
 
         r[0] = (rad * sin_t * cos_p) + sys->particle_origin[aux5 + 0];
@@ -185,14 +161,13 @@ Note: I've implemented the unroll option for inner loops without any impact on t
         p = grid_weights(sys, r, k);
 
         // Calculate Integral
-        factor = rm * aux4;
-        integral += (rad * rad * p * w_r * w_a * factor * grid_density(sys, r, dens));
+        integral += (rad * rad * p * w_r * w_a * rm * grid_density(sys, r, dens));
       }
     }
   }
 
   free(dens);
-  return integral * 8.0 * M_PI;
+  return integral * 4.0 * M_PI;
 }
 
 /*

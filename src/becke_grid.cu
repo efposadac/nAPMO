@@ -10,15 +10,15 @@ extern "C" {
 #include "cuda_helper.cuh"
 }
 
-#define THREADS_PER_BLOCK 64
+#define THREADS_PER_BLOCK 8
+#define THREADS_PER_BLOCK_2 64
 
 /*
 Iterated cutoff profile. eq. 21, Becke 1988. (CUDA Device version)
 
 Note:
     Avoid the use of __host__ __device__ in order to allow the compilation with
-other compilers
-    in the case of non CUDA compilation.
+    other compilers in the case of non CUDA compilation.
 
 */
 __device__ __forceinline__ double grid_soft_mu_cuda(const double &mu)
@@ -58,79 +58,61 @@ Implementation of functions, for documentation see the header file.
 
 void grid_init_cuda(Grid *grid, GridCuda *grid_d)
 {
-  int bytes_grid, dimGrid;
-  ;
-  double *data;
-  double2 *data2, *buffer2;
-
   grid_d->gridDim = make_int2(grid->n_radial, grid->n_angular);
-  bytes_grid = grid_d->gridDim.x * grid_d->gridDim.y * sizeof(double2);
+
+  int bytes_radial = grid_d->gridDim.x * sizeof(double2);
+  int bytes_angular = grid_d->gridDim.y * sizeof(double2);
 
   /* Allocate space for grid on device*/
-  cudaMalloc((void **)&grid_d->xy, bytes_grid);
-  cudaMalloc((void **)&grid_d->zr, bytes_grid);
-  cudaMalloc((void **)&grid_d->wf, bytes_grid);
+  cudaMalloc((void **)&grid_d->rw, bytes_radial);
+  cudaMalloc((void **)&grid_d->xy, bytes_angular);
+  cudaMalloc((void **)&grid_d->zw, bytes_angular);
 
-  /* Convert grid coordinates to cartesian coordinates */
-
-  /* Angular spherical coordinates to cartesian with r = 1*/
-  cudaMalloc((void **)&data2, grid_d->gridDim.y * sizeof(double2));
-  cudaMalloc((void **)&data, grid_d->gridDim.y * sizeof(double));
-
-  buffer2 = (double2 *)malloc(grid_d->gridDim.y * sizeof(double2));
-
-  for (int i = 0; i < grid_d->gridDim.y; ++i)
+  /* Copying radial quadrature*/
   {
-    buffer2[i] = make_double2(grid->angular_theta[i], grid->angular_phi[i]);
+    double2 *buffer_rw = (double2 *)malloc(bytes_radial);
+
+    for (int i = 0; i < grid_d->gridDim.x; ++i)
+    {
+      buffer_rw[i] = make_double2(grid->radial_abscissas[i], grid->radial_weights[i]);
+    }
+
+    cudaMemcpy(grid_d->rw, buffer_rw, bytes_radial, cudaMemcpyHostToDevice);
+
+    free(buffer_rw);
   }
 
-  cudaMemcpy(data2, buffer2, grid_d->gridDim.y * sizeof(double2), cudaMemcpyHostToDevice);
-  cudaMemcpy(data, grid->angular_weights, grid_d->gridDim.y * sizeof(double), cudaMemcpyHostToDevice);
-
-  dimGrid = ((grid_d->gridDim.y + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK);
-  grid_ang_sph_to_cart_kernel << <dimGrid, THREADS_PER_BLOCK>>>
-      (grid_d->gridDim, grid_d->xy, grid_d->zr, grid_d->wf, data2, data);
-  CUERR
-
-  free(buffer2);
-  cudaFree(data2);
-  cudaFree(data);
-
-  /* Complete conversion calculating r */
-  cudaMalloc((void **)&data2, grid_d->gridDim.x * sizeof(double2));
-
-  buffer2 = (double2 *)malloc(grid_d->gridDim.x * sizeof(double2));
-
-  for (int i = 0; i < grid_d->gridDim.x; ++i)
+  /* Copying angular quadrature*/
   {
-    buffer2[i] = make_double2(grid->radial_abscissas[i], grid->radial_weights[i]);
+    double2 *buffer_xy = (double2 *)malloc(bytes_angular);
+    double2 *buffer_zw = (double2 *)malloc(bytes_angular);
+
+    for (int i = 0; i < grid_d->gridDim.y; ++i)
+    {
+      buffer_xy[i] = make_double2(grid->angular_theta[i], grid->angular_phi[i]);
+      buffer_zw[i] = make_double2(1.0, grid->angular_weights[i]);
+    }
+
+    cudaMemcpy(grid_d->xy, buffer_xy, bytes_angular, cudaMemcpyHostToDevice);
+    cudaMemcpy(grid_d->zw, buffer_zw, bytes_angular, cudaMemcpyHostToDevice);
+
+    free(buffer_xy);
+    free(buffer_zw);
   }
-
-  cudaMemcpy(data2, buffer2, grid_d->gridDim.x * sizeof(double2), cudaMemcpyHostToDevice);
-
-  dimGrid = ((grid_d->gridDim.y + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK);
-  grid_rad_sph_to_cart_kernel << <dimGrid, THREADS_PER_BLOCK>>>
-      (grid_d->gridDim, grid_d->xy, grid_d->zr, grid_d->wf, data2);
-  CUERR
-
-  free(buffer2);
-  cudaFree(data2);
 }
 
 void grid_free_cuda(GridCuda *grid)
 {
   cudaFree(grid->xy);
-  cudaFree(grid->zr);
-  cudaFree(grid->wf);
+  cudaFree(grid->zw);
+  cudaFree(grid->rw);
 }
 
 double grid_integrate_cuda(System *sys, Grid *grid)
 {
-  int dimGrid, sizeGrid, sizeBasis, i;
+  int sizeBasis, i;
   double *integral_d, integral;
   double *dens, *dens_d;
-
-  FILE *file;
 
   /*Initialize system data in the device*/
   System sys_d;
@@ -144,7 +126,8 @@ double grid_integrate_cuda(System *sys, Grid *grid)
   sizeBasis = sys->basis.n_cont * sys->basis.n_cont;
   dens = (double *)malloc(sizeBasis * sizeof(double));
 
-  file = fopen("data.dens", "r");
+  /* TODO: this file has to disappear*/
+  FILE *file = fopen("data.dens", "r");
 
   for (i = 0; i < sizeBasis; ++i)
   {
@@ -159,13 +142,23 @@ double grid_integrate_cuda(System *sys, Grid *grid)
   cudaMalloc((void **)&integral_d, sizeof(double));
   cudaMemset(integral_d, 0.0, sizeof(double));
 
-  /* Perform integration*/
-  sizeGrid = grid_d.gridDim.x * grid_d.gridDim.y;
-  dimGrid = ((sizeGrid + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK);
+  /* Convert angular quadrature from spherical to cart*/
+  {
+    dim3 dimGrid(((grid_d.gridDim.y + THREADS_PER_BLOCK_2 - 1) / THREADS_PER_BLOCK_2), 1, 1);
+    grid_ang_sph_to_cart_kernel <<<dimGrid, THREADS_PER_BLOCK_2>>>
+        (grid_d.gridDim, grid_d.xy, grid_d.zw);
+  }
 
-  grid_integrate_kernel <<<dimGrid, THREADS_PER_BLOCK>>>
-      (sys_d, grid_d.gridDim, grid_d.xy, grid_d.zr, grid_d.wf, dens_d, integral_d);
-  CUERR
+  /* Perform integration*/
+  {
+    dim3 dimBlock(THREADS_PER_BLOCK, THREADS_PER_BLOCK, 1);
+    dim3 dimGrid(((grid_d.gridDim.x + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK),
+                 ((grid_d.gridDim.y + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK), 1);
+
+    grid_integrate_kernel <<<dimGrid, dimBlock>>>
+        (sys_d, grid_d.gridDim, grid_d.xy, grid_d.zw, grid_d.rw, dens_d, integral_d);
+    CUERR
+  }
 
   /* Bring result to device */
   integral = 0.0;
@@ -178,88 +171,35 @@ double grid_integrate_cuda(System *sys, Grid *grid)
   system_free_cuda(&sys_d);
   grid_free_cuda(&grid_d);
 
-  return integral * 8.0 * M_PI;
+  return integral * 4.0 * M_PI;
 }
 
 /*
 CUDA kernels:
 */
 
-__global__ void grid_ang_sph_to_cart_kernel(const int2 gridDim, double2 *__restrict__ xy,
-                                            double2 *__restrict__ zr, double2 *__restrict__ wf,
-                                            double2 *__restrict__ data_tp, double *__restrict__ data_w)
+__global__ void grid_ang_sph_to_cart_kernel(const int2 gridDim, double2 *xy, double2 *zw)
 {
-  __shared__ double2 aux_wf[THREADS_PER_BLOCK];
-  __shared__ double2 aux_xy[THREADS_PER_BLOCK];
-  __shared__ double2 aux_zr[THREADS_PER_BLOCK];
+  __shared__ double2 aux_xy[THREADS_PER_BLOCK_2];
+  __shared__ double2 aux_zw[THREADS_PER_BLOCK_2];
 
-  unsigned int ij;
   double sin_t, sin_p, cos_t, cos_p;
 
   const unsigned int j = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
 
   if (j < gridDim.y)
   {
-    const double2 tp = data_tp[j];
+    aux_xy[threadIdx.x] = xy[j];
 
-    sincos(tp.x, &sin_t, &cos_t);
-    sincos(tp.y, &sin_p, &cos_p);
+    sincos(aux_xy[threadIdx.x].x, &sin_t, &cos_t);
+    sincos(aux_xy[threadIdx.x].y, &sin_p, &cos_p);
 
-    const double aux1 = sin_t * cos_p;
-    const double aux2 = sin_t * sin_p;
+    aux_xy[threadIdx.x] = make_double2(sin_t * cos_p, sin_t * sin_p);
+    xy[j] = aux_xy[threadIdx.x];
 
-    aux_xy[threadIdx.x] = make_double2(aux1, aux2);
-    aux_zr[threadIdx.x] = make_double2(cos_t, 1.0);
-    aux_wf[threadIdx.x] = make_double2(data_w[j], 1.0);
-
-#pragma unroll
-    for (int i = 0; i < gridDim.x; ++i)
-    {
-      ij = __umul24(i, gridDim.y) + j;
-      xy[ij] = aux_xy[threadIdx.x];
-      zr[ij] = aux_zr[threadIdx.x];
-      wf[ij] = aux_wf[threadIdx.x];
-    }
-  }
-}
-
-__global__ void grid_rad_sph_to_cart_kernel(const int2 gridDim, double2 *__restrict__ xy,
-                                            double2 *__restrict__ zr, double2 *__restrict__ wf,
-                                            double2 *__restrict__ data_rw)
-{
-  __shared__ double2 aux_log[THREADS_PER_BLOCK];
-  __shared__ double2 aux_wf[THREADS_PER_BLOCK];
-
-  unsigned int ij;
-  double aux1, aux2, aux3, aux4, auxLog;
-  double auxSqrt, auxSqrtx1m4, auxFactor;
-
-  const unsigned int j = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
-
-  if (j < gridDim.y)
-  {
-#pragma unroll
-    for (int i = 0; i < gridDim.x; ++i)
-    {
-      const double2 rw = data_rw[i];
-      aux1 = rw.x * 0.5 + 0.5;
-      aux2 = aux1 * aux1;
-      aux3 = aux1 * aux2;
-      aux4 = aux2 * aux2;
-      auxLog = log(1.0 - aux4);
-
-      auxSqrt = __dsqrt_rd(__fma_rd(-rw.x, rw.x, 1.0));
-      auxSqrtx1m4 = __fma_rd(-auxSqrt, aux4, auxSqrt);
-      auxFactor = __drcp_rd(auxSqrtx1m4);
-
-      aux_log[threadIdx.x] = make_double2(auxLog, auxLog);
-      aux_wf[threadIdx.x] = make_double2(rw.y * aux3, auxFactor);
-
-      ij = __umul24(i, gridDim.y) + j;
-      xy[ij] = mult_double2(xy[ij], aux_log[threadIdx.x]);
-      zr[ij] = mult_double2(zr[ij], aux_log[threadIdx.x]);
-      wf[ij] = mult_double2(wf[ij], aux_wf[threadIdx.x]);
-    }
+    aux_zw[threadIdx.x] = zw[j];
+    aux_zw[threadIdx.x] = make_double2(cos_t, aux_zw[threadIdx.x].y);
+    zw[j] = aux_zw[threadIdx.x];
   }
 }
 
@@ -381,21 +321,30 @@ __device__ double grid_density_cuda(BasisSet basis, double *__restrict__ r, doub
 }
 
 __global__ void grid_integrate_kernel(const System sys, const int2 gridDim, double2 *__restrict__ xy,
-                                      double2 *__restrict__ zr, double2 *__restrict__ wf,
+                                      double2 *__restrict__ zw, double2 *__restrict__ rw,
                                       double *__restrict__ dens, double *__restrict__ integral)
 {
   short k, aux_k;
-  double rm, rad, factor, sum, p, f, r[3];
-  double2 aux_xy, aux_zr, aux_wf;
+  double rm, rad, p, f, r[3];
+
+  __shared__ double temp[THREADS_PER_BLOCK_2];
+  __shared__ double sum_block;
 
   const unsigned int i = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
+  const unsigned int j = __umul24(blockIdx.y, blockDim.y) + threadIdx.y;
+  const unsigned int l = __umul24(threadIdx.x, THREADS_PER_BLOCK) + threadIdx.y;
 
-  sum = 0.0;
-  if (i < __umul24(gridDim.x, gridDim.y))
+  temp[l] = 0.0;
+  sum_block = 0.0;
+
+  if (i < gridDim.x && j < gridDim.y)
   {
-    aux_xy = xy[i];
-    aux_zr = zr[i];
-    aux_wf = wf[i];
+    /* Calculate r*/
+    const double2 aux_rw = rw[i];
+    const double2 aux_xy = xy[j];
+    const double2 aux_zw = zw[j];
+
+    const double auxFactor = aux_rw.y * aux_zw.y;
 
     for (k = 0; k < sys.n_particles; ++k)
     {
@@ -406,13 +355,12 @@ __global__ void grid_integrate_kernel(const System sys, const int2 gridDim, doub
         rm *= 0.5;
       }
 
-      rad = -rm * aux_zr.y;
-      factor = rad * rad * rm * aux_wf.y * aux_wf.x;
+      rad = -rm * aux_rw.x;
 
       aux_k = k * 3;
-      r[0] = -rm * aux_xy.x + sys.particle_origin[aux_k + 0];
-      r[1] = -rm * aux_xy.y + sys.particle_origin[aux_k + 1];
-      r[2] = -rm * aux_zr.x + sys.particle_origin[aux_k + 2];
+      r[0] = rad * aux_xy.x + sys.particle_origin[aux_k + 0];
+      r[1] = rad * aux_xy.y + sys.particle_origin[aux_k + 1];
+      r[2] = rad * aux_zw.x + sys.particle_origin[aux_k + 2];
 
       /*Calculate Becke weights */
       p = grid_weights_cuda(sys.n_particles, sys.particle_origin, sys.particle_radii, r, k);
@@ -421,9 +369,14 @@ __global__ void grid_integrate_kernel(const System sys, const int2 gridDim, doub
       f = grid_density_cuda(sys.basis, r, dens);
 
       /*Calculate Integral */
-      sum += (factor * p * f);
+      temp[l] += (rad * rad * rm * auxFactor * p * f);
     }
-    // *integral = 1.0;
-    atomicAdd(integral, sum);
+    __syncthreads();
+    atomicAdd(&sum_block, temp[l]);
+  }
+  __syncthreads();
+  if (l == 0)
+  {
+    atomicAdd(integral, sum_block);
   }
 }

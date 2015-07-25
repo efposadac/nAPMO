@@ -88,9 +88,9 @@ CUDA functions
 struct _grid_cuda
 {
   int2 gridDim;  // Dim of the grid (radial, angular)
+  double2* rw;   // radial quadrature (r coord and weights).
   double2* xy;   // coord x and y or r and theta if sph coords.
-  double2* zr;   // coord z and radial coordinate. of spherical phi instead of z.
-  double2* wf;   // Total weight (angular * radial) and factor for integration.
+  double2* zw;   // coord z and angular weights .
 };
 typedef struct _grid_cuda GridCuda;
 
@@ -148,9 +148,9 @@ allocated/copied properly before to use this kernel.
 TODO:
     Pass function pointer to enable the use of different kind of functionals.
 */
-__global__ void grid_integrate_kernel(System sys, const int2 gridDim, double2* __restrict__ xy,
-                                      double2* __restrict__ zr, double2* __restrict__ wf,
-                                      double* __restrict__ dens, double* __restrict__ integral);
+__global__ void grid_integrate_kernel(const System sys, const int2 gridDim, double2 *__restrict__ xy,
+                                      double2 *__restrict__ zw, double2 *__restrict__ rw,
+                                      double *__restrict__ dens, double *__restrict__ integral);
 
 /*
 Convert angular quadrature from spherical to cartesian coordinates. Expand the grid among the number of
@@ -159,9 +159,7 @@ radial points, however, to keep the kernel simple, this kernel does not calculat
 
 The remaining steps to complete the conversion are made by ``grid_rad_sph_to_cart_kernel``.
 */
-__global__ void grid_ang_sph_to_cart_kernel(const int2 gridDim, double2* __restrict__ xy,
-                                            double2* __restrict__ zr, double2* __restrict__ wf,
-                                            double2* __restrict__ data_tp, double* __restrict__ data_w);
+__global__ void grid_ang_sph_to_cart_kernel(const int2 gridDim, double2 * xy, double2 * zw);
 
 /*
 Completes the conversion from spherical to cartesian coordinates. i.e. Calculates r coordinate,

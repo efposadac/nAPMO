@@ -26,9 +26,9 @@ def gauss_chebishev_omp():
     for nproc in nprocs:
         start_time = time.time()
         os.system(
-                    'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../../src; ' +
-                    'export OMP_NUM_THREADS=' + str(nproc) +
-                    '; ../../src/test/test_gauss_chebyshev.x')
+            'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../../src; ' +
+            'export OMP_NUM_THREADS=' + str(nproc) +
+            '; ../../src/test/test_gauss_chebyshev.x')
         times.append(time.time() - start_time)
 
         print(nproc, times.peek())
@@ -51,8 +51,8 @@ def mmi_omp():
         # Calculate integral
         start_time = time.time()
         os.system(
-                    'export OMP_NUM_THREADS=' + str(nproc) +
-                    '; ./mmi_omp.py')
+            'export OMP_NUM_THREADS=' + str(nproc) +
+            '; ./mmi_omp.py')
         times.append(time.time() - start_time)
 
         print(nproc, times.peek())

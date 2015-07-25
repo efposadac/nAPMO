@@ -161,9 +161,7 @@ class BeckeGrid(Structure):
                     if particle.get("atomic_number") != 1:
                         rm *= 0.5
 
-                    aux = (x + 1.0) * 0.5
-                    aux2 = aux * aux
-                    rad = -rm * np.log(1.0 - (aux2 * aux2))
+                    rad = -rm * x
 
                     aux3 = np.sin(theta)
                     r[0] = rad * aux3 * np.cos(phi)
@@ -176,12 +174,9 @@ class BeckeGrid(Structure):
                     # Calculate Becke weigths
                     p = self.weight(r, i, particle_stack)
 
-                    # This factor comes from the variable change r ! --> x ,
-                    # and from using chebyshev-gauss radial quadrature of second order
-                    factor = 2.0 * rm * (aux2 * aux)/(np.sqrt(1.0 - x * x) * (1.0 - (aux2 * aux2)))
-                    integral += 4.0 * np.pi * rad * rad * p * r_w * a_w * F(r, particle_stack) * factor
+                    integral += rad * rad * p * r_w * a_w * rm * F(r, particle_stack)
 
-        return integral
+        return integral * 4.0 * np.pi
 
     def step_function(self, order, mu):
         """

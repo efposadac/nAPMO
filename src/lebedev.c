@@ -32861,12 +32861,14 @@ void lebedev(int lorder, double * t, double * p, double * w)
     exit(1);
   }
 
-  /*
-  TODO: This loop can be paralelized!
-  */
+  const double factor = M_PI / 180.0;
+  
+#ifdef _OMP
+#pragma omp parallel for default(shared) private(i)
+#endif
   for (i = 0; i < lorder; ++i)
   {
-    p[i] *= M_PI / 180.0;
-    t[i] *= M_PI / 180.0;
+    p[i] *= factor;
+    t[i] *= factor;
   }
 }
