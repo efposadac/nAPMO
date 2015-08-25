@@ -1,2 +1,2 @@
 [report] 
-omit = *numpy*, *ctypes*, *numbers*, *scipy*, *json*
+omit = *numpy*, *ctypes*, *numbers*, *scipy*, *json*, *PIL*

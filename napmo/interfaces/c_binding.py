@@ -123,8 +123,8 @@ class CBinding(Structure):
 #################################################
 
 try:
-    lp = os.path.join(os.path.dirname(__file__), '../../libnapmo'+sysconfig.get_config_var('SO'))
+    lp = os.path.join(os.path.dirname(__file__), 'libnapmo.so')
     napmo_library = CDLL(lp)
 except OSError:
-    lp = os.path.join(os.path.dirname(__file__), '../../src/libnapmo.so')
+    lp = os.path.join(os.path.dirname(__file__), '../utilities/libnapmo.so')
     napmo_library = CDLL(lp)

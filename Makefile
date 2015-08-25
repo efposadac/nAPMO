@@ -5,16 +5,23 @@
 # Version: 0.1
 # efposadac@sissa.it
 
+TOPDIR=.
+include $(TOPDIR)/config.make
+
 SUBDIRS = napmo tests src
 
-default::
-	python setup.py install --record files.txt --user
-	cd src && $(MAKE)
+default: SERIAL
 
-clean::
+$(BUILD):
+	cd src && $(MAKE) $@
+	./setup.py install --record files.txt --user
+
+clean:
 	for dir in $(SUBDIRS); \
 	  do \
 	    (cd $${dir} && $(MAKE) $(DODEPENDOPT) clean) || exit 1; \
 	  done
 	cat files.txt | xargs rm -rf
 	rm -rf __pycache__ build dist napmo.egg-info files.txt
+
+.PHONY: clean default

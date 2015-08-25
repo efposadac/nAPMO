@@ -57,11 +57,95 @@ The following graphs show the scaling of OpenMP implementation on the generation
 
 The Scaling seems to be linear up to 18 threads for a 5810-1000 grid, which is the biggest grid used so far (in a real case scenario unnecessary). The time for one thread was  42.38 s and for 20, 3.30 s, supposing a speedup of approx. 12x.
 
+For a real case scenario, i.e. a 1202-100 grid (next plot), the speed up goes up to 4x because for such grid the serial part of the code becomes to be more relevant than the  parallel part. Times: one thread: 1.11 s and for 20 threads 0.28 s
+
+|mmi_omp_small|
+
+
+5. **CUDA Implementation**
+
+|gauss_cuda_single|
+
+|gauss_cuda_double|
+
+Notes on CUDA implementation.
+
+The proposed parallelization strategy consists on copy all structures to the device (``System`` and ``Grid``), calculate Gauss-Chebyshev points on device, copy Lebedev pointer from host to device, run in two dimensional grids of threads and keep the same structure of calculation by calling ``__device__`` kernels for tasks such as the calculation of ``Becke weights``, and the calculation of the ``Functional``.
+
+We found that to optimize the occupancy of the device the optimum number of ``THREADS_PER_BLOCK`` is 8. it gives around 85% of occupancy (for a optimal number of registers), however the code can is, in some cases, slower than the serial version.  
+
+The number of registers used for the kernel is too high?
+
+With the proposed strategy the kernel needs 71 registers against an optimal of 36. The use of such amount of registers generates many threads to be in idle state, because the amount of registers in the SMD is limited, if there are not enough registers to calculate all wraps the total execution time for a given block will increase.
+
+The next section contains notes on the solution a this problem in order to get the maximum possible performance.
+
+Test context:
+
+As reference we calculate molecular integration over two systems, one with 14 functions (H2) and another with 56 (O2). The grid used is a 1202 x 1000 grid points. The following table shows the execution time for each implementation. OMP 4 threads and CUDA 71 registers kernel.
+
++--------+--------+-----+------+
+| System | Serial | OMP | CUDA |
++========+========+=====+======+
+| H2     | 1.8    | 0.5 | 2.3  |
++--------+--------+-----+------+
+| O2     | 5.8    | 1.6 | 1.2  |
++--------+--------+-----+------+
+
+Proposed solutions:
+
+1. Force the use of less registers via compiler switch  ``--maxrregcount 36`` in compilation time.
+
+Forcing the use of less registers increases the registers spilling which generates a excessive use of global device memory. As a consequence the time increases. See following table.
+
++--------+--------+-----+------+
+| System | Serial | 71R | 36R  |
++========+========+=====+======+
+| H2     | 1.8    | 2.3 | 3.1  |
++--------+--------+-----+------+
+| O2     | 5.8    | 1.2 | 1.6  |
++--------+--------+-----+------+
+
+
+2. Reduce the amount of operations in the kernel.
+
+After reducing some operations within the kernel such as conversion from spherical to cartesian and rescaling the interval of radial quadrature, the amount of registers was reduced to 69. The time after this change is:
+
++--------+--------+-----+------+------+
+| System | Serial | 71R | 36R  | 69R  |
++========+========+=====+======+======+
+| H2     | 1.8    | 2.3 | 3.1  | 2.2  |
++--------+--------+-----+------+------+
+| O2     | 5.8    | 1.2 | 1.6  | 1.2  |
++--------+--------+-----+------+------+
+
+As shown in the table there is no improvement in execution time. 
+
+And Memory throughput?
+
+3. So far the kernel have been programed over local memory only. Using shared memory could increase the performance. The integral value is the sum of several evaluations of the functional ``F`` at point ``r``. Such reduction over the integral value has to be done as atomic operation to avoid race condition. So far the atomic addition was done in local memory. The optimization is to implement the atomic addition in shared memory per block and in local memory among blocks. The result is the following:
+
+71R is the kernel with optimization 2. 75R is the kernel without optimization. 36R is the kernel with optimization 1 and 2. OMP is using 4 threads:
+
++--------+--------+-----+--------+--------+--------+
+| System | Serial | OMP | 75R    | 71R    | 36R    |
++========+========+=====+========+========+========+
+| H2     | 1.8    | 0.5 | 0.16   | 0.15   | 0.15   |
++--------+--------+-----+--------+--------+--------+
+| O2     | 5.8    | 1.6 | 0.33   | 0.32   | 0.55   |
++--------+--------+-----+--------+--------+--------+
+
+As shown in the table, restrict the number of registers can lead to a poor performance, while the 71-75 registers kernel even though it allows only a occupancy of 40-47% provides the best performance, which is around 12x - 18x.
+
+
 Note:
 
 All ``*.dens`` files are density matrices to perform the integration.
 
-.. |radial_perf| image:: ../results/Perf_Serial/radial_points_scaling.png
-.. |angular_perf| image:: ../results/Perf_Serial/angular_points_scaling.png
-.. |gauss_omp| image:: ../results/Perf_OMP/gauss_chebishev.png
-.. |mmi_omp| image:: ../results/Perf_OMP/mmi.png
+.. |radial_perf| image:: ../results/Perf_Serial/images/radial_points_scaling.png
+.. |angular_perf| image:: ../results/Perf_Serial/images/angular_points_scaling.png
+.. |gauss_omp| image:: ../results/Perf_OMP/images/gauss_chebishev.png
+.. |mmi_omp| image:: ../results/Perf_OMP/images/mmi.png
+.. |mmi_omp_small| image:: ../results/Perf_OMP/images/mmi_1202_100.png
+.. |gauss_cuda_single| image:: ../results/Perf_CUDA/images/gcheb_gpu_omp_single.png
+.. |gauss_cuda_double| image:: ../results/Perf_CUDA/images/gcheb_gpu_omp_double.png

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # file: setup.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
@@ -8,29 +8,29 @@
 """
 Script for installation of the python module.
 
-It also builds the c library
+Info:
+    The C extension is builded outside this script, be sure to make it before this one!
 """
+from setuptools import find_packages, Extension, setup, Command
 import os
-from setuptools import find_packages, Extension, setup
 
 
 def read(fname):
+    """Include README file in the package."""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-napmo_module = Extension(
-                      'libnapmo',
-                      sources=['src/becke_grid.c', 'src/lebedev.c', 'src/gauss_chebyshev.c'],
-                      extra_compile_args=['-O3', '-ffast-math', '-D _OMP', '-fopenmp'],
-                      extra_link_args=['-lgomp']
-                      )
+if __name__ == '__main__':
 
-setup(name="napmo",
-      version="0.1",
-      description="Numerical Any Particle Molecular Orbital",
-      author="Fernando Posada",
-      author_email="eposada@sissa.it",
-      url="http://efposadac.github.io/nAPMO/",
-      packages=find_packages(),
-      package_data={'': ['*.json', '*.dat']},
-      long_description=read('README.rst'),
-      ext_modules=[napmo_module])
+    setup(
+        name="napmo",
+        version="0.1",
+        description="Numerical Any Particle Molecular Orbital",
+        author="Fernando Posada",
+        author_email="eposada@sissa.it",
+        url="http://efposadac.github.io/nAPMO/",
+        packages=find_packages(),
+        package_data={'': ['*.json', '*.dat', '*.so']},
+        long_description=read('README.rst')
+        )
+
+    exit(0)

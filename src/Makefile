@@ -4,26 +4,40 @@
 # All rights reserved.
 # Version: 0.1
 # efposadac@sissa.it
-CC=gcc
-CFLAGS=-Wall -g -O3 -ffast-math -fPIC -fopenmp -D _OMP
-LDLIBS=-lm
 
-SRC=becke_grid.c gauss_chebyshev.c lebedev.c
-VPATH=src/
-OBJ=becke_grid.o gauss_chebyshev.o lebedev.o
+TOPDIR=..
+include $(TOPDIR)/config.make
 
-default: libnapmo.so
+LIBRARY = libnapmo.so
 
-clean:
-	rm -f *.o *.so test
+OBJ = $(patsubst %.c,%.o,$(wildcard *.c))
+NVOBJ = $(patsubst %.cu,%.cuda.o,$(wildcard *.cu))
 
-libnapmo.so: $(OBJ)
-	$(CC) -o $@ $(CFLAGS) $^ -shared $(LDLIBS)
+CUDA: OBJ += $(NVOBJ)
+
+.SECONDEXPANSION:
+
+default: SERIAL
+
+$(BUILD): $$(OBJ)
+	$(NVCC) -o $(LIBRARY) $(NVLDFLAGS) $^ $(LDLIBS)
+	cp $(LIBRARY) $(TOPDIR)/napmo/utilities
 
 %.o: %.c
-	$(CC) -c $(CFLAGS) $<
+	$(CC) -c $(CFLAGS) $< -o $@
 
 %.c: %.h
 
-test: test.c libnapmo.so
-	$(CC) -o $@ $(CFLAGS) $^
+%.cuda.o: %.cu
+	$(NVCC) -c $(NVCFLAGS) $< -o $@
+
+%.cu: %.cuh
+
+clean:
+	rm -rf $(LIBRARY)
+	rm -rf *.o
+	rm -rf *.optrpt
+	rm -rf r00*
+	(cd test && $(MAKE) clean)
+
+.PHONY: default clean

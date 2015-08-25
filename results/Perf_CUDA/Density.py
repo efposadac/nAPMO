@@ -60,28 +60,23 @@ def init_system(element, distance, basis_kind, basis_file):
 if __name__ == '__main__':
 
     # Grid definition
-    angularPoints = 194
-    radialPoints = 100
+    angularPoints = 1202
+    radialPoints = 1000
     grid = BeckeGrid(radialPoints, angularPoints)
     grid.show()
 
     # Test for diatomic molecules for the following elements:
-    elements = ['H', 'Li', 'Be', 'B', 'C', 'N', 'O']
-    distances = [0.742, 2.623, 2.427, 1.586, 1.268, 1.098, 1.206]
+    elements = ['H', 'O']
+    distances = [0.742, 1.206]
     basis_name = "STO-3G"
     basis_file = os.path.join(os.path.dirname(__file__), "STO-3G.json")
     basis_kind = "GTO"
 
     # Header for results.
-    print("System Int C         Int Py        Error          Time Py       Time C")
+    print("System Int C         Error          Time C")
 
     for (element, distance) in zip(elements, distances):
         atoms, system, exact, rho = init_system(element, distance, basis_kind, basis_file)
-
-        # Calculate integral (Python Code)
-        start_time = time.time()
-        integral_p = grid.integrate(atoms, rho)
-        elapsed_time_p = time.time() - start_time
 
         # Calculate integral (C Code)
         start_time = time.time()
@@ -89,8 +84,8 @@ if __name__ == '__main__':
         elapsed_time_c = time.time() - start_time
 
         # Print the results.
-        print("%4s %12.8f  %12.8f  %12.8f  %12.7f  %12.7f" % (
-            element+str(2), integral_c, integral_p, np.abs(exact - integral_p), elapsed_time_p, elapsed_time_c))
+        print("%4s %12.8f  %12.8f  %12.7f" % (
+            element+str(2), integral_c, np.abs(exact - integral_c), elapsed_time_c))
 
         # Delete temporary files.
         os.system('rm data.dens')
