@@ -19,10 +19,13 @@ returns the lorder number of abscissas and weights of the Lebedev quadrature
 void lebedev(int lorder, double * t, double* p, double* w);
 
 #ifdef _CUDA
+
+#include "cuda_helper.cuh"
+
 /*
 Convert angular quadrature from spherical to cartesian coordinates (on device)
 */
-void lebedev_to_cartesian_cuda(int unsigned lorder, double * coord);
+__global__ void lebedev_to_cartesian_cuda(const int2 gridDim, double2 * xy, double2 * zw);
 
 #endif
 

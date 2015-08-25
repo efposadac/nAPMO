@@ -14,20 +14,15 @@ void test_gauss_chebyshev() {
   double *abscissas;
   double *weights;
 
-  double _r[] = {8.66025404e-01, 5.00000000e-01, 6.12323400e-17,
-                 -5.00000000e-01, -8.66025404e-01};
-  double _w[] = {0.13089969, 0.39269908, 0.52359878, 0.39269908, 0.13089969};
+  double _r[] = {1.4179599213, 0.3803914706, 0.0645385211, 0.0039138993, 0.0000201360};
+  double _w[] = {1.7557935946, 0.5596866610, 0.1396263402, 0.0142258774, 0.0001573928};
 
   n = 5;
 
   abscissas = (double *)malloc(n * sizeof(double));
   weights = (double *)malloc(n * sizeof(double));
 
-#ifdef _CUDA
-  gaussChebyshev_cuda(n, abscissas, weights);
-#else
   gaussChebyshev(n, abscissas, weights);
-#endif
 
   for (i = 0; i < n; ++i) {
     if (!(fabs(abscissas[i] - _r[i]) < eps)) {
@@ -52,32 +47,10 @@ void test_gauss_chebyshev_perf() {
   double *weights;
   double secs;
 
-#ifdef _CUDA
-  double *g_a;
-  double *g_w;
-#endif
-
   reps = 100;
 
   for (n = 2; n < 1000000; n += 10000) {
     printf("%d ", n);
-
-#ifdef _CUDA
-
-    g_a = (double *)malloc(n * sizeof(double));
-    g_w = (double *)malloc(n * sizeof(double));
-
-    secs = wallclock(NULL);
-
-    for (i = 0; i < reps; ++i) {
-      gaussChebyshev_cuda(n, g_a, g_w);
-    }
-
-    free(g_a);
-    free(g_w);
-
-    printf("%g ", wallclock(&secs) / reps);
-#endif
 
     abscissas = (double *)malloc(n * sizeof(double));
     weights = (double *)malloc(n * sizeof(double));

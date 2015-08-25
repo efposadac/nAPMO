@@ -21,6 +21,15 @@ void grid_init(Grid *grid)
   gaussChebyshev(grid->n_radial, grid->radial_abscissas, grid->radial_weights);
 }
 
+void grid_free(Grid *grid)
+{
+  free(grid->radial_abscissas);
+  free(grid->radial_weights);
+  free(grid->angular_theta);
+  free(grid->angular_phi);
+  free(grid->angular_weights);
+}
+
 double grid_weights(System *sys, double r[3], int particleID)
 {
   double x_i[3], x_j, r_i, r_j, R_ij, mu_ij, rm_i, rm_j, chi, u_ij, a_ij, nu_ij;
@@ -150,7 +159,7 @@ Note: I've implemented the unroll option for inner loops without any impact on t
           rm *= 0.5;
         }
 
-        rad = -rm * q_r;
+        rad = rm * q_r;
         aux5 = k * 3;
 
         r[0] = (rad * sin_t * cos_p) + sys->particle_origin[aux5 + 0];
@@ -221,11 +230,3 @@ double grid_density(System *sys, double *r, double *dens)
   return output;
 }
 
-void grid_free(Grid *grid)
-{
-  free(grid->radial_abscissas);
-  free(grid->radial_weights);
-  free(grid->angular_theta);
-  free(grid->angular_phi);
-  free(grid->angular_weights);
-}

@@ -13,32 +13,27 @@ extern "C" {
 
 #define THREADS_PER_BLOCK 64
 
-__global__ void lebedev_to_cartesian_kernel(const unsigned int lorder, double* coord)
+__global__ void lebedev_to_cartesian_cuda(const int2 gridDim, double2 *xy, double2 *zw)
 {
-  double t_a, p_a;
-  double sin_t, cos_t, sin_p, cos_p;
+  __shared__ double2 aux_xy[THREADS_PER_BLOCK];
+  __shared__ double2 aux_zw[THREADS_PER_BLOCK];
 
-  const unsigned int i = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
+  double sin_t, sin_p, cos_t, cos_p;
 
-  if (i < lorder)
+  const unsigned int j = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
+
+  if (j < gridDim.y)
   {
-    t_a = coord[i + lorder];
-    p_a = coord[i + lorder * 2];
+    aux_xy[threadIdx.x] = xy[j];
 
-    sincos(t_a, &sin_t, &cos_t);
-    sincos(p_a, &sin_p, &cos_p);
+    sincos(aux_xy[threadIdx.x].x, &sin_t, &cos_t);
+    sincos(aux_xy[threadIdx.x].y, &sin_p, &cos_p);
 
-    coord[i] = sin_t * cos_p;
-    coord[i + lorder] = sin_t * sin_p;
-    coord[i + lorder * 2] = cos_t;
+    aux_xy[threadIdx.x] = make_double2(sin_t * cos_p, sin_t * sin_p);
+    xy[j] = aux_xy[threadIdx.x];
+
+    aux_zw[threadIdx.x] = zw[j];
+    aux_zw[threadIdx.x] = make_double2(cos_t, aux_zw[threadIdx.x].y);
+    zw[j] = aux_zw[threadIdx.x];
   }
-}
-
-void lebedev_to_cartesian_cuda(const unsigned int lorder, double* coord)
-{
-  int gridDim = ((lorder + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK);
-  lebedev_to_cartesian_kernel <<<gridDim, THREADS_PER_BLOCK>>> (lorder, coord);
-
-  /* check if the kernel launch was successful */
-  CUERR
 }

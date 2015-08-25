@@ -19,15 +19,4 @@ kind.
 */
 void gaussChebyshev(int n, double* abscissas, double* weights);
 
-#ifdef _CUDA
-#include "cuda_helper.cuh"
-
-/*
-Computes abscissas and weights for the Gauss-Chebyshev quadrature of second
-kind using CUDA.
-*/
-void gaussChebyshev_cuda(int n, double* abscissas, double* weights);
-
-#endif
-
 #endif

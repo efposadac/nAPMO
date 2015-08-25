@@ -7,50 +7,10 @@ efposadac@sissa.it*/
 
 extern "C" {
 #include "becke_grid.h"
-#include "cuda_helper.cuh"
 }
 
 #define THREADS_PER_BLOCK 8
 #define THREADS_PER_BLOCK_2 64
-
-/*
-Iterated cutoff profile. eq. 21, Becke 1988. (CUDA Device version)
-
-Note:
-    Avoid the use of __host__ __device__ in order to allow the compilation with
-    other compilers in the case of non CUDA compilation.
-
-*/
-__device__ __forceinline__ double grid_soft_mu_cuda(const double &mu)
-{
-  return 0.5 * mu * (3.0 - mu * mu);
-}
-
-/*
-Implementation of double2 multiply operation.
-*/
-__device__ __forceinline__ double2 mult_double2(const double2 &a, const double2 &b)
-{
-  double2 r;
-  r.x = a.x * b.x;
-  r.y = a.y * b.y;
-  return r;
-}
-
-/*
-Implementation of atomicAdd for double precision variables.
-*/
-__device__ __forceinline__ double atomicAdd(double *address, double val)
-{
-  unsigned long long int *address_as_ull = (unsigned long long int *)address;
-  unsigned long long int old = *address_as_ull, assumed;
-  do
-  {
-    assumed = old;
-    old = atomicCAS(address_as_ull, assumed, __double_as_longlong(val + __longlong_as_double(assumed)));
-  } while (assumed != old);
-  return __longlong_as_double(old);
-}
 
 /*
 Implementation of functions, for documentation see the header file.
@@ -145,7 +105,7 @@ double grid_integrate_cuda(System *sys, Grid *grid)
   /* Convert angular quadrature from spherical to cart*/
   {
     dim3 dimGrid(((grid_d.gridDim.y + THREADS_PER_BLOCK_2 - 1) / THREADS_PER_BLOCK_2), 1, 1);
-    grid_ang_sph_to_cart_kernel <<<dimGrid, THREADS_PER_BLOCK_2>>>
+    lebedev_to_cartesian_cuda <<<dimGrid, THREADS_PER_BLOCK_2>>>
         (grid_d.gridDim, grid_d.xy, grid_d.zw);
   }
 
@@ -177,31 +137,6 @@ double grid_integrate_cuda(System *sys, Grid *grid)
 /*
 CUDA kernels:
 */
-
-__global__ void grid_ang_sph_to_cart_kernel(const int2 gridDim, double2 *xy, double2 *zw)
-{
-  __shared__ double2 aux_xy[THREADS_PER_BLOCK_2];
-  __shared__ double2 aux_zw[THREADS_PER_BLOCK_2];
-
-  double sin_t, sin_p, cos_t, cos_p;
-
-  const unsigned int j = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
-
-  if (j < gridDim.y)
-  {
-    aux_xy[threadIdx.x] = xy[j];
-
-    sincos(aux_xy[threadIdx.x].x, &sin_t, &cos_t);
-    sincos(aux_xy[threadIdx.x].y, &sin_p, &cos_p);
-
-    aux_xy[threadIdx.x] = make_double2(sin_t * cos_p, sin_t * sin_p);
-    xy[j] = aux_xy[threadIdx.x];
-
-    aux_zw[threadIdx.x] = zw[j];
-    aux_zw[threadIdx.x] = make_double2(cos_t, aux_zw[threadIdx.x].y);
-    zw[j] = aux_zw[threadIdx.x];
-  }
-}
 
 __device__ double grid_weights_cuda(const int n_particles, double *__restrict__ particle_origin,
                                     double *__restrict__ particle_radii, double r[3], int particleID)
@@ -355,7 +290,7 @@ __global__ void grid_integrate_kernel(const System sys, const int2 gridDim, doub
         rm *= 0.5;
       }
 
-      rad = -rm * aux_rw.x;
+      rad = rm * aux_rw.x;
 
       aux_k = k * 3;
       r[0] = rad * aux_xy.x + sys.particle_origin[aux_k + 0];

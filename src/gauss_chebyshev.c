@@ -28,7 +28,7 @@ void gaussChebyshev(int n, double* abscissas, double* weights)
     aux1 = (aux_a + 1.0) * 0.5;
     aux2 = aux1 * aux1;
 
-    abscissas[i] = log(1.0 - (aux2 * aux2));
+    abscissas[i] = -log(1.0 - (aux2 * aux2));
     weights[i] = ( (aux2 * aux1) / (sqrt(1.0 - aux_a * aux_a) * (1.0 - (aux2 * aux2) ) ) ) * aux_w * 2.0;
   }
 }

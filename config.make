@@ -40,7 +40,7 @@ NVCC := $(CC)
 NVCFLAGS := $(CFLAGS)
 NVLDFLAGS := $(LDFLAGS)
 
-# Build specific variables --maxrregcount 36
+# Build specific variables
 #--------------------------
 
 OMP: CFLAGS += -fopenmp -D_OMP

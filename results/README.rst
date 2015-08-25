@@ -70,31 +70,73 @@ For a real case scenario, i.e. a 1202-100 grid (next plot), the speed up goes up
 
 Notes on CUDA implementation.
 
-The proposed parallelization strategy consists on copy all structures to the device (``System`` and ```Grid`), calculate Gauss-Cheb points on device, copy Lebedev pointer from host to device, run in two dimensional grids of threads and maintaining the same structure of calculation by calling ``__device__`` kernels for tasks such as the calculation of Becke weights, and the calculation of the Functional. I
+The proposed parallelization strategy consists on copy all structures to the device (``System`` and ``Grid``), calculate Gauss-Chebyshev points on device, copy Lebedev pointer from host to device, run in two dimensional grids of threads and keep the same structure of calculation by calling ``__device__`` kernels for tasks such as the calculation of ``Becke weights``, and the calculation of the ``Functional``.
 
-We found that to optimize the occupancy of the device the optimum number of ``THREADS_PER_BLOCK`` is 8. it gives around 85% of occupancy (for a optimal number of registers), however the code is 2 times slower than the serial one. The reason? The number of registers used for the kernel.
+We found that to optimize the occupancy of the device the optimum number of ``THREADS_PER_BLOCK`` is 8. it gives around 85% of occupancy (for a optimal number of registers), however the code can is, in some cases, slower than the serial version.  
 
-With this scheme the kernel needs 72 registers against an optimal of 36. The use of such amount of registers generates many threads to be in idle state, because the amount of registers in the SMD is limited, if there is not enough registers to calculate all wraps the total execution time for a given block will increase.
+The number of registers used for the kernel is too high?
+
+With the proposed strategy the kernel needs 71 registers against an optimal of 36. The use of such amount of registers generates many threads to be in idle state, because the amount of registers in the SMD is limited, if there are not enough registers to calculate all wraps the total execution time for a given block will increase.
 
 The next section contains notes on the solution a this problem in order to get the maximum possible performance.
 
-0. Test context:
+Test context:
 
-As reference we calculate molecular integration over a 1202 x 1000 grid points. The time for the serial executable was 1.8 s. For OMP 4 cores 0.5 s. The time for the proposed strategy over CUDA, 72 registers 8 x 8 ``THREADS_PER_BLOCK``, is 4.3 s.
+As reference we calculate molecular integration over two systems, one with 14 functions (H2) and another with 56 (O2). The grid used is a 1202 x 1000 grid points. The following table shows the execution time for each implementation. OMP 4 threads and CUDA 71 registers kernel.
 
-1. Force the use of less registers via compiler switch  ``--maxrregcount 36`` in compilation time. Result: 5.1 s.
++--------+--------+-----+------+
+| System | Serial | OMP | CUDA |
++========+========+=====+======+
+| H2     | 1.8    | 0.5 | 2.3  |
++--------+--------+-----+------+
+| O2     | 5.8    | 1.6 | 1.2  |
++--------+--------+-----+------+
 
-Forcing the use of less registers than the required generates a excessive use of local memory (aka global device memory). The latency of this memory is orders of magnitude greater that the cache/register bandwidth. As a consequence the time increases.
+Proposed solutions:
 
-2. Analise the amount of registers needed in each step of the kernel, Analysis done by compiling the code with ``-O2`` optimization flag.
+1. Force the use of less registers via compiler switch  ``--maxrregcount 36`` in compilation time.
 
-- Function ``sincos`` 16 registers + 6 register for call, total times called, 2 total of registers 38 registers
-- Function ``atomicAdd`` 26 registers.
-- Function ``grid_density_cuda`` 6 registers.
-- Function ``grid_weights_cuda`` 2 registers.
-- Remaining operations 10 registers
+Forcing the use of less registers increases the registers spilling which generates a excessive use of global device memory. As a consequence the time increases. See following table.
 
-2.1 ``sincos`` Function is used to convert from spherical to cartesian coordinates. Proposed optimization split the kernel in two and pass the grid to the integrator in cartesian coordinates. Result: 
++--------+--------+-----+------+
+| System | Serial | 71R | 36R  |
++========+========+=====+======+
+| H2     | 1.8    | 2.3 | 3.1  |
++--------+--------+-----+------+
+| O2     | 5.8    | 1.2 | 1.6  |
++--------+--------+-----+------+
+
+
+2. Reduce the amount of operations in the kernel.
+
+After reducing some operations within the kernel such as conversion from spherical to cartesian and rescaling the interval of radial quadrature, the amount of registers was reduced to 69. The time after this change is:
+
++--------+--------+-----+------+------+
+| System | Serial | 71R | 36R  | 69R  |
++========+========+=====+======+======+
+| H2     | 1.8    | 2.3 | 3.1  | 2.2  |
++--------+--------+-----+------+------+
+| O2     | 5.8    | 1.2 | 1.6  | 1.2  |
++--------+--------+-----+------+------+
+
+As shown in the table there is no improvement in execution time. 
+
+And Memory throughput?
+
+3. So far the kernel have been programed over local memory only. Using shared memory could increase the performance. The integral value is the sum of several evaluations of the functional ``F`` at point ``r``. Such reduction over the integral value has to be done as atomic operation to avoid race condition. So far the atomic addition was done in local memory. The optimization is to implement the atomic addition in shared memory per block and in local memory among blocks. The result is the following:
+
+71R is the kernel with optimization 2. 75R is the kernel without optimization. 36R is the kernel with optimization 1 and 2. OMP is using 4 threads:
+
++--------+--------+-----+--------+--------+--------+
+| System | Serial | OMP | 75R    | 71R    | 36R    |
++========+========+=====+========+========+========+
+| H2     | 1.8    | 0.5 | 0.16   | 0.15   | 0.15   |
++--------+--------+-----+--------+--------+--------+
+| O2     | 5.8    | 1.6 | 0.33   | 0.32   | 0.55   |
++--------+--------+-----+--------+--------+--------+
+
+As shown in the table, restrict the number of registers can lead to a poor performance, while the 71-75 registers kernel even though it allows only a occupancy of 40-47% provides the best performance, which is around 12x - 18x.
+
 
 Note:
 

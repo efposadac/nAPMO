@@ -14,8 +14,8 @@ efposadac@sissa.it*/
 #include <omp.h>
 #endif
 
-#include "lebedev.h"
 #include "gauss_chebyshev.h"
+#include "lebedev.h"
 #include "system.h"
 
 struct _grid
@@ -34,6 +34,7 @@ typedef struct _grid Grid;
 Initialization of grid. Memory allocation in C.
 Calculates the n_radial Gauss-Chebyshev quadrature and n_angular Lebedev
 quadrature points.
+
 References:
     Becke, A. D. A multicenter numerical integration scheme for polyatomic
 molecules. J. Chem. Phys. 88, 2547 (1988).
@@ -85,6 +86,8 @@ CUDA functions
 
 #ifdef _CUDA
 
+#include "cuda_helper.cuh"
+
 struct _grid_cuda
 {
   int2 gridDim;  // Dim of the grid (radial, angular)
@@ -106,8 +109,7 @@ void grid_free_cuda(GridCuda* grid);
 
 /*
 Perform the initialization (allocation and copy) of all structures needed to
-perform the integration
-in CUDA device. also loads additional information such as the density matrix.
+perform the integration in CUDA device. Also loads additional information such as the density matrix.
 */
 double grid_integrate_cuda(System* sys, Grid* grid);
 
@@ -142,34 +144,30 @@ Integration of the functional :math:`\rho({\\bf r})` (CUDA Version)
 Kernel to perform the integration based on multicenter molecular integration
 from Becke.
 Please note that the structures are not passed by reference but value. All
-structure members have to be
-allocated/copied properly before to use this kernel.
+structure members have to be allocated/copied properly before to use this kernel.
 
 TODO:
     Pass function pointer to enable the use of different kind of functionals.
 */
-__global__ void grid_integrate_kernel(const System sys, const int2 gridDim, double2 *__restrict__ xy,
-                                      double2 *__restrict__ zw, double2 *__restrict__ rw,
-                                      double *__restrict__ dens, double *__restrict__ integral);
+__global__ void grid_integrate_kernel(const System sys, const int2 gridDim, double2* __restrict__ xy,
+                                      double2* __restrict__ zw, double2* __restrict__ rw,
+                                      double* __restrict__ dens, double* __restrict__ integral);
 
+#ifdef __CUDACC__
 /*
-Convert angular quadrature from spherical to cartesian coordinates. Expand the grid among the number of
-radial points, however, to keep the kernel simple, this kernel does not calculate the radial coordinate
-(assumes 1.0 for r which is in ``zr.y``)
+Iterated cutoff profile. eq. 21, Becke 1988. (CUDA Device version)
 
-The remaining steps to complete the conversion are made by ``grid_rad_sph_to_cart_kernel``.
+Note:
+    Avoid the use of __host__ __device__ in order to allow the compilation with
+    other compilers in the case of non CUDA compilation.
+
 */
-__global__ void grid_ang_sph_to_cart_kernel(const int2 gridDim, double2 * xy, double2 * zw);
+__device__ __forceinline__ double grid_soft_mu_cuda(const double &mu)
+{
+  return 0.5 * mu * (3.0 - mu * mu);
+}
 
-/*
-Completes the conversion from spherical to cartesian coordinates. i.e. Calculates r coordinate,
-and multiply it by each x, y, z previously calculated in the ``grid_ang_sph_to_cart_kernel`` kernel.
-
-r is stored to calculate the volume element in future calculations (``zr.y``).
-*/
-__global__ void grid_rad_sph_to_cart_kernel(const int2 gridDim, double2* __restrict__ xy,
-                                            double2* __restrict__ zr, double2* __restrict__ wf,
-                                            double2* __restrict__ data_rw);
+#endif
 
 #endif
 
