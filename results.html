@@ -186,6 +186,157 @@ O2  16.00068683   16.00068683    0.00068683    10.2155397     0.1107540
 <p><img alt="gauss_omp" src="_images/gauss_chebishev.png" /></p>
 <p><img alt="mmi_omp" src="_images/mmi.png" /></p>
 <p>The Scaling seems to be linear up to 18 threads for a 5810-1000 grid, which is the biggest grid used so far (in a real case scenario unnecessary). The time for one thread was  42.38 s and for 20, 3.30 s, supposing a speedup of approx. 12x.</p>
+<p>For a real case scenario, i.e. a 1202-100 grid (next plot), the speed up goes up to 4x because for such grid the serial part of the code becomes to be more relevant than the  parallel part. Times: one thread: 1.11 s and for 20 threads 0.28 s</p>
+<p><img alt="mmi_omp_small" src="_images/mmi_1202_100.png" /></p>
+<ol class="arabic simple" start="5">
+<li><strong>CUDA Implementation</strong></li>
+</ol>
+<p><img alt="gauss_cuda_single" src="_images/gcheb_gpu_omp_single.png" /></p>
+<p><img alt="gauss_cuda_double" src="_images/gcheb_gpu_omp_double.png" /></p>
+<p>Notes on CUDA implementation.</p>
+<p>The proposed parallelization strategy consists on copy all structures to the device (<code class="docutils literal"><span class="pre">System</span></code> and <code class="docutils literal"><span class="pre">Grid</span></code>), calculate Gauss-Chebyshev points on device, copy Lebedev pointer from host to device, run in two dimensional grids of threads and keep the same structure of calculation by calling <code class="docutils literal"><span class="pre">__device__</span></code> kernels for tasks such as the calculation of <code class="docutils literal"><span class="pre">Becke</span> <span class="pre">weights</span></code>, and the calculation of the <code class="docutils literal"><span class="pre">Functional</span></code>.</p>
+<p>We found that to optimize the occupancy of the device the optimum number of <code class="docutils literal"><span class="pre">THREADS_PER_BLOCK</span></code> is 8. it gives around 85% of occupancy (for a optimal number of registers), however the code can is, in some cases, slower than the serial version.</p>
+<p>The number of registers used for the kernel is too high?</p>
+<p>With the proposed strategy the kernel needs 71 registers against an optimal of 36. The use of such amount of registers generates many threads to be in idle state, because the amount of registers in the SMD is limited, if there are not enough registers to calculate all wraps the total execution time for a given block will increase.</p>
+<p>The next section contains notes on the solution a this problem in order to get the maximum possible performance.</p>
+<p>Test context:</p>
+<p>As reference we calculate molecular integration over two systems, one with 14 functions (H2) and another with 56 (O2). The grid used is a 1202 x 1000 grid points. The following table shows the execution time for each implementation. OMP 4 threads and CUDA 71 registers kernel.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="30%" />
+<col width="19%" />
+<col width="22%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">System</th>
+<th class="head">Serial</th>
+<th class="head">OMP</th>
+<th class="head">CUDA</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>H2</td>
+<td>1.8</td>
+<td>0.5</td>
+<td>2.3</td>
+</tr>
+<tr class="row-odd"><td>O2</td>
+<td>5.8</td>
+<td>1.6</td>
+<td>1.2</td>
+</tr>
+</tbody>
+</table>
+<p>Proposed solutions:</p>
+<ol class="arabic simple">
+<li>Force the use of less registers via compiler switch  <code class="docutils literal"><span class="pre">--maxrregcount</span> <span class="pre">36</span></code> in compilation time.</li>
+</ol>
+<p>Forcing the use of less registers increases the registers spilling which generates a excessive use of global device memory. As a consequence the time increases. See following table.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="30%" />
+<col width="30%" />
+<col width="19%" />
+<col width="22%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">System</th>
+<th class="head">Serial</th>
+<th class="head">71R</th>
+<th class="head">36R</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>H2</td>
+<td>1.8</td>
+<td>2.3</td>
+<td>3.1</td>
+</tr>
+<tr class="row-odd"><td>O2</td>
+<td>5.8</td>
+<td>1.2</td>
+<td>1.6</td>
+</tr>
+</tbody>
+</table>
+<ol class="arabic simple" start="2">
+<li>Reduce the amount of operations in the kernel.</li>
+</ol>
+<p>After reducing some operations within the kernel such as conversion from spherical to cartesian and rescaling the interval of radial quadrature, the amount of registers was reduced to 69. The time after this change is:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="24%" />
+<col width="24%" />
+<col width="15%" />
+<col width="18%" />
+<col width="18%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">System</th>
+<th class="head">Serial</th>
+<th class="head">71R</th>
+<th class="head">36R</th>
+<th class="head">69R</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>H2</td>
+<td>1.8</td>
+<td>2.3</td>
+<td>3.1</td>
+<td>2.2</td>
+</tr>
+<tr class="row-odd"><td>O2</td>
+<td>5.8</td>
+<td>1.2</td>
+<td>1.6</td>
+<td>1.2</td>
+</tr>
+</tbody>
+</table>
+<p>As shown in the table there is no improvement in execution time.</p>
+<p>And Memory throughput?</p>
+<ol class="arabic simple" start="3">
+<li>So far the kernel have been programed over local memory only. Using shared memory could increase the performance. The integral value is the sum of several evaluations of the functional <code class="docutils literal"><span class="pre">F</span></code> at point <code class="docutils literal"><span class="pre">r</span></code>. Such reduction over the integral value has to be done as atomic operation to avoid race condition. So far the atomic addition was done in local memory. The optimization is to implement the atomic addition in shared memory per block and in local memory among blocks. The result is the following:</li>
+</ol>
+<p>71R is the kernel with optimization 2. 75R is the kernel without optimization. 36R is the kernel with optimization 1 and 2. OMP is using 4 threads:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="18%" />
+<col width="18%" />
+<col width="11%" />
+<col width="18%" />
+<col width="18%" />
+<col width="18%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">System</th>
+<th class="head">Serial</th>
+<th class="head">OMP</th>
+<th class="head">75R</th>
+<th class="head">71R</th>
+<th class="head">36R</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>H2</td>
+<td>1.8</td>
+<td>0.5</td>
+<td>0.16</td>
+<td>0.15</td>
+<td>0.15</td>
+</tr>
+<tr class="row-odd"><td>O2</td>
+<td>5.8</td>
+<td>1.6</td>
+<td>0.33</td>
+<td>0.32</td>
+<td>0.55</td>
+</tr>
+</tbody>
+</table>
+<p>As shown in the table, restrict the number of registers can lead to a poor performance, while the 71-75 registers kernel even though it allows only a occupancy of 40-47% provides the best performance, which is around 12x - 18x.</p>
 <p>Note:</p>
 <p>All <code class="docutils literal"><span class="pre">*.dens</span></code> files are density matrices to perform the integration.</p>
 </div>
