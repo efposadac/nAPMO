@@ -154,9 +154,18 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
         """
 
         # Spherical harmonic eq. 6
-        output = sph_harm(self['m'], self['l'], theta, phi).real
+        if self['m'] == 0:
+            output = sph_harm(self['m'], self['l'], theta, phi)
+        elif self['m'] < 0:
+            aux_a = sph_harm(self['m'], self['l'], theta, phi)
+            aux_b = sph_harm(-self['m'], self['l'], theta, phi)
+            output = complex(0.0, 1.0) * 0.70710678118654757 * (aux_b + aux_a)
+        else:
+            aux_a = sph_harm(self['m'], self['l'], theta, phi)
+            aux_b = sph_harm(-self['m'], self['l'], theta, phi)
+            output = 0.70710678118654757 * (aux_b - aux_a)
 
-        return output
+        return output.real
 
     def show(self):
         """
