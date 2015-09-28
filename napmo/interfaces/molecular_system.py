@@ -6,7 +6,10 @@
 # efposadac@sissa.it
 
 from __future__ import division
+from copy import deepcopy
+
 import numpy as np
+from math import ceil
 
 from napmo.interfaces.atomic_element import AtomicElement
 from napmo.interfaces.elementary_particle import ElementaryParticle
@@ -56,6 +59,9 @@ class MolecularSystem(dict):
         atom['size'] = 1
 
         # load basis-set
+        if basis_name == 'none':
+            basis_name = basis_file
+
         atom['basis'] = BasisSet(basis_name)
 
         if basis_file != 'none':
@@ -115,6 +121,15 @@ class MolecularSystem(dict):
             elif basis_kind == 'STO':
                 self[symbol].peek().get('basis').load_slater(symbol, basis_data, origin)
 
+    def n_occupation(self, symbol):
+        """
+        Returns the occupation number for particle ``symbol``.
+
+        Returns:
+            int: Occupation of quantum species ``symbol``.
+        """
+        return ceil(self.n_particles(symbol) * self[symbol].peek()['spin'])
+
     def n_elementary_particles(self):
         """
         Returns the number of elementary particles in the system.
@@ -154,6 +169,21 @@ class MolecularSystem(dict):
                 output += item.get('size')
 
         return output
+
+    def get_basis_set(self, symbol):
+        if symbol in self:
+            basis = deepcopy(self[symbol][0].get('basis'))
+            for i in range(1, len(self[symbol])):
+                basis += self[symbol][i].get('basis')
+        else:
+            for atom in self.get('atoms'):
+                if atom.get('symbol') == symbol:
+                    basis = atom.get('basis')
+
+        if isinstance(basis, BasisSet):
+            return basis
+        else:
+            raise KeyError
 
     def show(self):
         """

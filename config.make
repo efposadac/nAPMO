@@ -13,8 +13,7 @@ BUILD = SERIAL CUDA OMP
 # Libraries needed
 #------------------
 
-#LDLIBS := -lm -liomp5
-LDLIBS := -lm -lgomp
+LDLIBS := -lm #-lgomp
 
 # C flags and compilers
 #-----------------------

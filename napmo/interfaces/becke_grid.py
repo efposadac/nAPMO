@@ -22,7 +22,7 @@ class BeckeGrid(Structure):
         Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
 
     Args:
-        n_radial (int, optional): Number of radial points. Default is 15
+        n_radial (int, optional): Number of radial points. Default is 40
         n_angular (int, optional): Number of angular points. Default is 110
     """
     _fields_ = [
@@ -39,8 +39,14 @@ class BeckeGrid(Structure):
         super(BeckeGrid, self).__init__()
         self.n_radial = c_int(n_radial)
         self.n_angular = c_int(n_angular)
-
         napmo_library.grid_init(byref(self))
+        self.size = self.n_radial * self.n_angular
+        self.expanded = False
+        self.spherical = True
+        self.x = np.empty(self.size)
+        self.y = np.empty(self.size)
+        self.z = np.empty(self.size)
+        self.w = np.empty(self.size)
 
     def free(self):
         """
@@ -100,6 +106,19 @@ class BeckeGrid(Structure):
         assert isinstance(particleID, int)
         assert isinstance(particle_stack, Stack)
 
+        def step_function(order, mu):
+            """
+            Iterated cutoff profile. eq. 21, Becke 1988.
+            """
+            # eq. 19
+            def P(_mu):
+                return 1.5 * _mu - 0.5 * _mu * _mu * _mu
+
+            f = mu
+            for k in range(order):
+                f = P(f)
+            return 0.5 * (1. - f)
+
         P = np.ones([len(particle_stack)], dtype=np.float64)
 
         for i in range(len(particle_stack)):
@@ -117,8 +136,8 @@ class BeckeGrid(Structure):
                     mu_ij = (r_i - r_j) / R_ij
 
                     # Atomic size adjustment. see appendix, Becke, 1988.
-                    rm_i = particle_stack[i].get('atomic_radii') * ANGSTROM_TO_BOHR
-                    rm_j = particle_stack[j].get('atomic_radii') * ANGSTROM_TO_BOHR
+                    rm_i = particle_stack[i].get('atomic_radii')
+                    rm_j = particle_stack[j].get('atomic_radii')
 
                     # eq. A4
                     chi = rm_i / rm_j
@@ -132,64 +151,102 @@ class BeckeGrid(Structure):
                     # eq. A2
                     nu_ij = mu_ij + a_ij * (1.0 - mu_ij * mu_ij)
 
-                    P[i] = P[i] * self.step_function(3, nu_ij)
+                    P[i] = P[i] * step_function(3, nu_ij)
 
         # eq. 22
         return P[particleID] / np.sum(P)
 
-    def integrate(self, particle_stack, F):
+    def integrate(self, molecule, F):
         """
         Perform an integration of function :math:`F(r)` using BeckeGrid.
 
         Args:
-            particle_stack (Stack): Stack of AtomicElements or ElementaryParticles Objects.
+            molecule (MolecularSystem): Molecular system to be used in the calculation.
             F (function): Functional to be integrated.
         """
         r = np.zeros([3], dtype=np.float64)
         integral = 0.0
-        for n in range(self.n_radial):
-            x = self.radial_abscissas[n]
-            r_w = self.radial_weights[n]
-            for m in range(int(self.n_angular)):
-                phi = self.angular_phi[m]
-                theta = self.angular_theta[m]
-                a_w = self.angular_weights[m]
-                for i in range(len(particle_stack)):
-                    particle = particle_stack[i]
-                    rm = particle.get('atomic_radii') * ANGSTROM_TO_BOHR
+        for i in range(len(molecule.get('atoms'))):
+            particle = molecule.get('atoms')[i]
+            rm = particle.get('atomic_radii_2')
 
-                    if particle.get("atomic_number") != 1:
-                        rm *= 0.5
+            self.move(particle.get("origin"), rm)
 
-                    rad = -rm * x
+            for j in range(self.size):
+                r[0] = self.x[j]
+                r[1] = self.y[j]
+                r[2] = self.z[j]
 
-                    aux3 = np.sin(theta)
-                    r[0] = rad * aux3 * np.cos(phi)
-                    r[1] = rad * aux3 * np.sin(phi)
-                    r[2] = rad * np.cos(theta)
-
-                    # Move grid points
-                    r += particle.get("origin")
-
-                    # Calculate Becke weigths
-                    p = self.weight(r, i, particle_stack)
-
-                    integral += rad * rad * p * r_w * a_w * rm * F(r, particle_stack)
+                p = self.weight(r, i, molecule.get('atoms'))
+                aux = r - particle.get("origin")
+                integral += aux.dot(aux) * p * self.w[j] * rm * F(r, molecule)
 
         return integral * 4.0 * np.pi
 
-    def step_function(self, order, mu):
-        """
-        Iterated cutoff profile. eq. 21, Becke 1988.
-        """
-        # eq. 19
-        def P(_mu):
-            return 1.5 * _mu - 0.5 * _mu * _mu * _mu
+    def expand(self):
+        counter = 0
+        for r in range(self.n_radial):
+            for a in range(self.n_angular):
+                self.x[counter] = self.radial_abscissas[r]
+                self.y[counter] = self.angular_theta[a]
+                self.z[counter] = self.angular_phi[a]
+                self.w[counter] = self.radial_weights[r] * self.angular_weights[a]
+                counter += 1
+        self.expanded = True
 
-        f = mu
-        for k in range(order):
-            f = P(f)
-        return 0.5 * (1. - f)
+    def convert(self):
+        if self.spherical:
+            if not self.expanded:
+                self.expand()
+
+            for i in range(self.size):
+
+                aux3 = np.sin(self.y[i])
+                x = self.x[i] * aux3 * np.cos(self.z[i])
+                y = self.x[i] * aux3 * np.sin(self.z[i])
+                z = self.x[i] * np.cos(self.y[i])
+
+                self.x[i] = x
+                self.y[i] = y
+                self.z[i] = z
+
+            self.spherical = False
+
+        else:
+
+            for i in range(self.size):
+
+                xy = self.x[i]**2 + self.y[i]**2
+                r = np.sqrt(xy + self.z[i]**2)
+                theta = np.arctan2(np.sqrt(xy), self.z[i])
+
+                if self.x[i] == 0.0 and self.y[i] == 0.0:
+                    phi = np.arctan2(self.z[i], self.y[i])
+                else:
+                    phi = np.arctan2(self.y[i], self.x[i])
+
+                # phi = np.arctan2(self.y[i], self.x[i])
+
+                self.x[i] = r
+                self.y[i] = theta
+                self.z[i] = phi
+
+            self.spherical = True
+
+    def move(self, coord=[0.0, 0.0, 0.0], scaling_factor=1.0):
+
+        self.spherical = True
+        self.expanded = False
+        self.convert()
+
+        if scaling_factor != 1.0:
+            self.x *= scaling_factor
+            self.y *= scaling_factor
+            self.z *= scaling_factor
+
+        self.x += coord[0]
+        self.y += coord[1]
+        self.z += coord[2]
 
     def show(self):
         """

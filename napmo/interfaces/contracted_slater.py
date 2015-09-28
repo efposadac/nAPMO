@@ -71,10 +71,21 @@ class ContractedSlater(dict):
         RP = np.zeros(3)
         RP = coord - self.get('origin')
 
-        xy = RP[0]**2 + RP[1]**2
-        r = np.sqrt(xy + RP[2]**2)
-        theta = np.arctan2(np.sqrt(xy), RP[2])
-        phi = np.arctan2(RP[1], RP[0])
+        if coord.ndim > 1:
+            xy = RP[:, 0]**2 + RP[:, 1]**2
+            r = np.sqrt(xy + RP[:, 2]**2)
+            theta = np.arctan2(np.sqrt(xy), RP[:, 2])
+            phi = np.arctan2(RP[:, 1], RP[:, 0])
+
+        else:
+            xy = RP[0]**2 + RP[1]**2
+            r = np.sqrt(xy + RP[2]**2)
+            theta = np.arctan2(np.sqrt(xy), RP[2])
+            # if RP[0] == 0.0 and RP[1] == 0.0:
+            #     phi = np.arctan2(RP[2], RP[1])
+            # else:
+            #     phi = np.arctan2(RP[1], RP[0])
+            phi = np.arctan2(RP[1], RP[0])
 
         output = 0.0
         for primitive in self.get('primitive'):

@@ -1,4 +1,4 @@
-# file: analytical_integration.py
+# file: obara_saika.py
 # nAPMO package
 # Copyright (c) 2015, Edwin Fernando Posada
 # All rights reserved.
@@ -85,19 +85,3 @@ def obaraSaika_recursion(PA, PB, gamma, l_a, l_b):
             z[i+1, j] = z[i+1, j] + j*pp*z[i, j-1]
 
     return x, y, z
-
-
-def kronecker_delta(a, b):
-    """
-    Calculates the delta of Kronecker for `a` and `b`.
-
-    :math:`\delta_{ij} = 0`  if :math:`i \\neq j`, otherwise, :math:`\delta_{ij} = 1`
-
-    Args:
-        a (int) : i in  :math:`\delta_{ij}`
-        b (int) : j in  :math:`\delta_{ij}`
-    """
-    aa = np.abs(a)
-    bb = np.abs(b)
-    output = int((float((aa+bb+2)-np.abs(aa-bb))) / (float((aa+bb+2) + np.abs(aa-bb))))
-    return output

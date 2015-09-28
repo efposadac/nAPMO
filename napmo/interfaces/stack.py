@@ -40,4 +40,4 @@ class Stack(list):
             any: The last element in the stack
         """
         assert len(self) > 0
-        return self[len(self) - 1]
+        return self[-1]

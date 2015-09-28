@@ -9,8 +9,6 @@ from scipy.special import sph_harm
 import scipy.misc
 import numpy as np
 
-import napmo.utilities.analytical_integration as aint
-
 
 class PrimitiveSlater(dict):
     """Slater-Type orbitals. (dict):
@@ -101,8 +99,15 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
         Args:
             other (PrimitiveSlater) : function to perform :math:`<\phi_{self} | \phi_{other}>`
         """
-        l = aint.kronecker_delta(self['l'], other['l'])
-        m = aint.kronecker_delta(self['m'], other['m'])
+
+        ll = np.abs(self['l'])
+        mm = np.abs(self['m'])
+
+        other_ll = np.abs(other['l'])
+        other_mm = np.abs(other['m'])
+
+        l = int((float((ll+other_ll+2)-np.abs(ll-other_ll))) / (float((ll+other_ll+2) + np.abs(ll-other_ll))))
+        m = int((float((mm+other_mm+2)-np.abs(mm-other_mm))) / (float((mm+other_mm+2) + np.abs(mm-other_mm))))
 
         n = scipy.misc.factorial(self['n'] + other['n'])
 

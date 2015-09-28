@@ -8,7 +8,7 @@ from __future__ import division
 import numpy as np
 import scipy.misc
 
-import napmo.utilities.analytical_integration as aint
+import napmo.utilities.obara_saika as os
 
 
 class PrimitiveGaussian(dict):
@@ -97,7 +97,7 @@ class PrimitiveGaussian(dict):
             )
 
         # recursion
-        x, y, z = aint.obaraSaika_recursion(PA, PB, gamma, np.sum(self.get('l'))+2, np.sum(other.get('l'))+2)
+        x, y, z = os.obaraSaika_recursion(PA, PB, gamma, np.sum(self.get('l'))+2, np.sum(other.get('l'))+2)
 
         x0 = x[self.get('l')[0], other.get('l')[0]]
         y0 = y[self.get('l')[1], other.get('l')[1]]

@@ -28,7 +28,7 @@ def test_multicenter_integrator():
     basis_file = "STO-3G.json"
     basis_kind = "GTO"
 
-    results = np.array([2.00010688, 6.00025286, 8.00023682, 10.00049433, 12.00127662, 14.00085234, 16.00068683])
+    results = np.array([1.9999999595998637, 6.000002321070787, 7.999997958358362, 9.999998503574844, 11.999997997974441, 13.999997970177285, 16.00000891580461])
     count = 0
 
     for (element, distance) in zip(elements, distances):
@@ -46,24 +46,21 @@ def test_multicenter_integrator():
         # Build the C interface.
         system = CBinding(atoms)
 
-        # Combine basis-set objects in one.
-        basis = deepcopy(atoms[0].get('basis'))
-        for i in range(1, len(atoms)):
-            basis += atoms[i].get('basis')
-
         # Get the density matrix (from a previous calculation)
         P = np.array(np.loadtxt(element+'_dens.dat'), order='F', dtype=np.float64)
         os.system('cp '+element+'_dens.dat data.dens')
 
         # Functional definition (for Python)
-
-        def rho(coord, particle_stack, P=P, basis=basis):
+        def rho(coord, molecule, P=P):
+            basis = molecule.get_basis_set('e-')
+            occupation = molecule.n_occupation('e-')
             bvalue = basis.compute(coord)
             output = bvalue.dot(P.dot(bvalue))
+
             return output
 
         # Calculate integral (Python Code)
-        integral_p = grid.integrate(atoms, rho)
+        integral_p = grid.integrate(molecule, rho)
 
         # Calculate integral (C Code)
         integral_c = grid.integrate_c(system)

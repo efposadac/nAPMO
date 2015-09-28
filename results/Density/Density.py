@@ -35,11 +35,6 @@ def init_system(element, distance, basis_kind, basis_file):
     # Build the C interface.
     system = CBinding(atoms)
 
-    # Combine basis-set objects in one.
-    basis = deepcopy(atoms[0].get('basis'))
-    for i in range(1, len(atoms)):
-        basis += atoms[i].get('basis')
-
     # Calculating exact value (Total number of electrons in the system)
     exact = molecule.n_particles('e-')
 
@@ -49,12 +44,14 @@ def init_system(element, distance, basis_kind, basis_file):
     os.system('cp '+file_dens+' data.dens')
 
     # Functional definition (for Python)
-    def rho(coord, particle_stack, P=P, basis=basis):
+    def rho(coord, molecule, P=P):
+        basis = molecule.get_basis_set('e-')
+        occupation = molecule.n_occupation('e-')
         bvalue = basis.compute(coord)
         output = bvalue.dot(P.dot(bvalue))
         return output
 
-    return atoms, system, exact, rho
+    return molecule, system, exact, rho
 
 
 if __name__ == '__main__':
@@ -76,11 +73,11 @@ if __name__ == '__main__':
     print("System Int C         Int Py        Error          Time Py       Time C")
 
     for (element, distance) in zip(elements, distances):
-        atoms, system, exact, rho = init_system(element, distance, basis_kind, basis_file)
+        molecule, system, exact, rho = init_system(element, distance, basis_kind, basis_file)
 
         # Calculate integral (Python Code)
         start_time = time.time()
-        integral_p = grid.integrate(atoms, rho)
+        integral_p = grid.integrate(molecule, rho)
         elapsed_time_p = time.time() - start_time
 
         # Calculate integral (C Code)
