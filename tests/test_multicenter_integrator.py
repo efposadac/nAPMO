@@ -55,12 +55,13 @@ def test_multicenter_integrator():
             basis = molecule.get_basis_set('e-')
             occupation = molecule.n_occupation('e-')
             bvalue = basis.compute(coord)
+            bvalue = np.array(bvalue)
             output = bvalue.dot(P.dot(bvalue))
 
             return output
 
         # Calculate integral (Python Code)
-        integral_p = grid.integrate(molecule, rho)
+        integral_p = grid.integrate(molecule, rho, args=(molecule,))
 
         # Calculate integral (C Code)
         integral_c = grid.integrate_c(system)

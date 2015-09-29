@@ -114,9 +114,9 @@ class BasisSet(dict):
             coord (numpy.ndarray(3)): coordinates in which the basis set will be evaluated.
 
         """
-        output = np.zeros(self.get('length'))
+        output = []
         for i in range(self.get('length')):
-            output[i] = self.get('function')[i].compute(coord)
+            output.append(self.get('function')[i].compute(coord))
 
         return output
 

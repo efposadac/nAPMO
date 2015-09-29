@@ -78,7 +78,7 @@ if __name__ == '__main__':
     basis_file = "TEST.json"
 
     molecule = MolecularSystem()
-    molecule.add_atom("He", [0.0, 0.0, 0.0], basis_kind="GTO", basis_file=basis_file)
+    molecule.add_atom("He", [0.0, 0.0, 0.3704240745], basis_kind="GTO", basis_file=basis_file)
     molecule.show()
 
     particles = molecule.get('atoms')
@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
     # Grid definition
     angularPoints = 110
-    radialPoints = 30
+    radialPoints = 50
 
     grid = BeckeGrid(radialPoints, angularPoints)
     grid.move(scaling_factor=rm)
@@ -99,14 +99,14 @@ if __name__ == '__main__':
     # Problem
     lmax = int(lebedev_get_order(angularPoints)/2)
     rad_quad = np.array([grid.radial_abscissas[i] for i in range(grid.n_radial)]) * rm
-    coord = np.dstack((grid.x, grid.y, grid.z)).reshape(grid.size, 3)
-
-    #########################################################
-    p_rtp = g_a.compute(coord) * g_a.compute(coord)
 
     #########################################################
     def p_ab(r):
         return g_a.compute(r) * g_a.compute(r)
+
+    p_rtp = p_ab(grid.xyz)
+
+    #########################################################
 
     expansion = rho_lm(p_ab, rad_quad, angularPoints, lmax)
 

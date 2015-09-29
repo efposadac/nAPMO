@@ -43,9 +43,7 @@ class BeckeGrid(Structure):
         self.size = self.n_radial * self.n_angular
         self.expanded = False
         self.spherical = True
-        self.x = np.empty(self.size)
-        self.y = np.empty(self.size)
-        self.z = np.empty(self.size)
+        self.xyz = np.empty((self.size, 3))
         self.w = np.empty(self.size)
 
     def free(self):
@@ -156,13 +154,14 @@ class BeckeGrid(Structure):
         # eq. 22
         return P[particleID] / np.sum(P)
 
-    def integrate(self, molecule, F):
+    def integrate(self, molecule, F, args=()):
         """
         Perform an integration of function :math:`F(r)` using BeckeGrid.
 
         Args:
             molecule (MolecularSystem): Molecular system to be used in the calculation.
             F (function): Functional to be integrated.
+            args (sequence, optional): Extra arguments to pass to F.
         """
         r = np.zeros([3], dtype=np.float64)
         integral = 0.0
@@ -173,13 +172,11 @@ class BeckeGrid(Structure):
             self.move(particle.get("origin"), rm)
 
             for j in range(self.size):
-                r[0] = self.x[j]
-                r[1] = self.y[j]
-                r[2] = self.z[j]
+                r = self.xyz[j, :]
 
                 p = self.weight(r, i, molecule.get('atoms'))
                 aux = r - particle.get("origin")
-                integral += aux.dot(aux) * p * self.w[j] * rm * F(r, molecule)
+                integral += aux.dot(aux) * p * self.w[j] * rm * F(r, *args)
 
         return integral * 4.0 * np.pi
 
@@ -187,49 +184,40 @@ class BeckeGrid(Structure):
         counter = 0
         for r in range(self.n_radial):
             for a in range(self.n_angular):
-                self.x[counter] = self.radial_abscissas[r]
-                self.y[counter] = self.angular_theta[a]
-                self.z[counter] = self.angular_phi[a]
+                self.xyz[counter, 0] = self.radial_abscissas[r]
+                self.xyz[counter, 1] = self.angular_theta[a]
+                self.xyz[counter, 2] = self.angular_phi[a]
                 self.w[counter] = self.radial_weights[r] * self.angular_weights[a]
                 counter += 1
         self.expanded = True
 
     def convert(self):
         if self.spherical:
+
             if not self.expanded:
                 self.expand()
 
-            for i in range(self.size):
+            aux3 = np.sin(self.xyz[:, 1])
+            x = self.xyz[:, 0] * aux3 * np.cos(self.xyz[:, 2])
+            y = self.xyz[:, 0] * aux3 * np.sin(self.xyz[:, 2])
+            z = self.xyz[:, 0] * np.cos(self.xyz[:, 1])
 
-                aux3 = np.sin(self.y[i])
-                x = self.x[i] * aux3 * np.cos(self.z[i])
-                y = self.x[i] * aux3 * np.sin(self.z[i])
-                z = self.x[i] * np.cos(self.y[i])
-
-                self.x[i] = x
-                self.y[i] = y
-                self.z[i] = z
+            self.xyz[:, 0] = x
+            self.xyz[:, 1] = y
+            self.xyz[:, 2] = z
 
             self.spherical = False
 
         else:
 
-            for i in range(self.size):
+            xy = self.xyz[:, 0]**2 + self.xyz[:, 1]**2
+            r = np.sqrt(xy + self.xyz[:, 2]**2)
+            theta = np.arctan2(np.sqrt(xy), self.xyz[:, 2])
+            phi = np.arctan2(self.xyz[:, 1], self.xyz[:, 0])
 
-                xy = self.x[i]**2 + self.y[i]**2
-                r = np.sqrt(xy + self.z[i]**2)
-                theta = np.arctan2(np.sqrt(xy), self.z[i])
-
-                if self.x[i] == 0.0 and self.y[i] == 0.0:
-                    phi = np.arctan2(self.z[i], self.y[i])
-                else:
-                    phi = np.arctan2(self.y[i], self.x[i])
-
-                # phi = np.arctan2(self.y[i], self.x[i])
-
-                self.x[i] = r
-                self.y[i] = theta
-                self.z[i] = phi
+            self.xyz[:, 0] = r
+            self.xyz[:, 1] = theta
+            self.xyz[:, 2] = phi
 
             self.spherical = True
 
@@ -240,13 +228,9 @@ class BeckeGrid(Structure):
         self.convert()
 
         if scaling_factor != 1.0:
-            self.x *= scaling_factor
-            self.y *= scaling_factor
-            self.z *= scaling_factor
+            self.xyz[:, :] *= scaling_factor
 
-        self.x += coord[0]
-        self.y += coord[1]
-        self.z += coord[2]
+        self.xyz += coord
 
     def show(self):
         """

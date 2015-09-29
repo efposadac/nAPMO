@@ -74,6 +74,7 @@ def lebedev_get_order(n):
 
     return lebpoints[n]
 
+
 def lebedev_integrate(func, n, args=()):
     """
     Integrate the ``func`` over unit sphere :math:`4\pi` using Lebedev quadrature of ``n`` points.

@@ -24,6 +24,7 @@ def print_matrix(A, n):
         for j in range(n):
             print("%12.5f" % (A[i, j]), end="")
         print("")
+    print("")
 
 
 def real_spherical_harmonics(m, l, theta, phi):
@@ -90,28 +91,6 @@ def recover_rho(grid, p_lm, lmax):
     return rho
 
 
-def rho_n(n, a, b, grid, molecule):
-    P_n = np.empty(grid.size)
-    r = np.zeros([3], dtype=np.float64)
-
-    particle = molecule.get('atoms')[n]
-    rm = particle.get('atomic_radii_2')
-
-    if grid.spherical:
-        grid.convert()
-
-    for i in range(grid.size):
-        r[0] = grid.x[i]
-        r[1] = grid.y[i]
-        r[2] = grid.z[i]
-
-        p = grid.weight(r, n, molecule.get('atoms'))
-        aux = r - particle.get("origin")
-        P_n[i] = aux.dot(aux) * p * grid.w[i] * rm * a.compute(r) * b.compute(r)
-
-    return P_n
-
-
 def rho_r(coord, molecule):
         basis = molecule.get_basis_set('e-')
         occupation = molecule.n_occupation('e-')
@@ -132,105 +111,123 @@ def first_der_z(r, rm):
     return -(np.sqrt(((rm * r)/(rm + r)**2))/(np.pi * r))
 
 
-def pot_lm(grids):
-    pass
+def finite_diff_3_matrix(grid, r, rm, l, h):
 
-
-def coulomb_potential(a, b, grids, Y_lm, molecule, lmax):
-    # calculate p_lm for first atom
-    P_n = rho_n(0, a, b, grids[0], molecule)  # P_n[grid.size]
-    P_lm = rho_lm(0, a, b, grids[0], Y_lm[0], lmax, P_n, molecule)  # P_lm[grid.n_radial, lm.size]
-
-    # Calculate boundaries
-    q_n = P_n.sum() * 4.0 * np.pi  # integral single center source
-    u_00 = np.sqrt(4.0 * np.pi * q_n)
-
-    # print("q_n", q_n, u_00)
-
-    # Solve U_lm
-    U_lm = np.zeros([grids[0].n_radial, (lmax + 1)**2])
-
-    rm = molecule.get('atoms')[0].get('atomic_radii_2')
-
-    # Obtain z points.
-    z = chebgauss_z(grids[0].n_radial + 2)
-    rr = np.cos(np.pi * z)
-    rr = rm * (1.0 + rr) / (1.0 - rr)
-    h = z[0]
-
-    A = np.zeros([grids[0].n_radial + 2, grids[0].n_radial + 2])
+    A = np.zeros((grid.n_radial+2, grid.n_radial+2))
     A[0, 0] = 1.0
     A[-1, -1] = 1.0
 
-    rho = np.zeros(grids[0].n_radial + 2)
-    rho[0] = u_00
+    for i in range(grid.n_radial):
+        dzdr = first_der_z(r[i], rm)
+        dzdr *= dzdr
+        d2zdr2 = second_der_z(r[i], rm)
+        aux0 = l * (l + 1.0) / (r[i] * r[i])
+        aux1 = dzdr / (h * h)
+        aux2 = d2zdr2 / (2.0 * h)
 
-    cons = 4.0 * np.pi
+        A[i+1, i] = aux1 - aux2
+        A[i+1, i+1] = -(aux0 + (2.0 * aux1))
+        A[i+1, i+2] = aux1 + aux2
 
-    lm_index = 0
+    return A
+
+
+def finite_diff_3_rho(grid, r, p_lm, u_00, lindex):
+    # Boundary conditions
+    p = np.zeros(grid.n_radial+2)
+    p[0] = u_00
+    for i in range(grid.n_radial):
+        p[i+1] = -r[i] * p_lm[i, lindex] * np.pi * 4.0
+
+    return p
+
+
+def build_potential(grid, U_lm, r, lmax):
+    # build the potential
+    idx = 0
+    V_ab = np.zeros(grid.size)
+    for i in range(grid.n_radial):
+        aux = 1.0/r[i]
+        for j in range(grid.n_angular):
+            lindex = 0
+            for l in range(lmax+1):
+                for m in range(-l, l+1):
+                    V_ab[idx] += U_lm[i, lindex] * Y(l, m, grid.angular_theta[j], grid.angular_phi[j]) * aux
+                    lindex += 1
+            idx += 1
+
+    return V_ab
+
+
+def coulomb_potential(a, b, grid, molecule, lmax):
+
+    # calculate p_lm
+    def p_ab(coord):
+        return a.compute(coord) * b.compute(coord)
+
+    rm = molecule.get('atoms')[-1].get('atomic_radii_2')
+    r = np.array([grid.radial_abscissas[i] for i in range(grid.n_radial)]) * rm
+    p_lm = rho_lm(p_ab, r, angularPoints, lmax)
+
+    # Calculate boundaries
+    pi_4 = 4.0 * np.pi
+    q_n = grid.integrate(molecule, p_ab)  # integral single center source density
+    u_00 = np.sqrt(pi_4 * q_n)
+    # print("q_n", q_n, u_00)
+
+    # Solve U_lm
+    lsize = (lmax + 1)**2
+    U_lm = np.zeros((grid.n_radial, lsize))
+
+    # Obtain z points.
+    nradial_2 = grid.n_radial + 2
+    z = chebgauss_z(nradial_2)
+    h = z[0]
+
+    lindex = 0
     for l in range(lmax+1):
+        # Build A matrix
+        A = finite_diff_3_matrix(grid, r, rm, l, h)
+        # print_matrix(A, nradial_2)
         for m in range(-l, l+1):
-            for i in range(grids[0].n_radial):
-                r = grids[0].radial_abscissas[i] * rm
-                s = first_der_z(r, rm)
-                s *= s
-                t = second_der_z(r, rm)
-                aux = l * (l + 1.0) / (r * r)
-                aux1 = s / (h * h)
-                aux2 = t / (2.0 * h)
-                A[i+1, i] = aux1 - aux2
-                A[i+1, i+1] = -(aux + (2.0 * aux1))
-                A[i+1, i+2] = aux1 + aux2
+            # Build rho
+            p = finite_diff_3_rho(grid, r, p_lm, u_00, lindex)
+            # Solve the linear problem (get x) (Ax = p)
+            x = np.linalg.solve(A, p)
+            # Store results
+            U_lm[:, lindex] = x[1:-1]
 
-                rho[i + 1] = r * P_lm[i][lm_index] * cons
+            lindex += 1
 
-            # print_matrix(A, grids[0].n_radial+2)
+    # make interpolation (pending)
 
-            x = np.linalg.solve(A, rho)
+    # build the potential
+    V_ab = build_potential(grid, U_lm, r, lmax)
 
-            plt.plot(z[1:-1], rho[1:-1], label=str(lm_index))
+    # Some plotting
+    # recovered = recover_rho(grid, p_lm, lmax)
+    # plt.plot(r, p_ab(grid.xyz)[::angularPoints], 'r-', label='Patron')
+    # plt.plot(r, recovered[::angularPoints], 'gx-', label='Recovered')
+    # plt.plot(r, V_ab[::grid.n_angular], 'b-', label='potential')
+    # plt.legend()
+    # plt.xlim([0, 10])
+    # plt.show()
 
-            U_lm[:, lm_index] = x[1:-1]
-
-            lm_index += 1
-
-    # # make interpolation
-    plt.legend()
-    plt.show()
-
-    # # build the potential
-    V_total = np.zeros([grids[0].size])
-
-    grid_idx = 0
-    for i in range(grids[0].n_radial):
-        r = 1.0 / grids[0].radial_abscissas[i] * rm
-        for j in range(grids[0].n_angular):
-            for lm_index in range((lmax + 1)**2):
-                V_total[grid_idx] += Y_lm[0][grid_idx][lm_index] * U_lm[i][lm_index] * r
-            grid_idx += 1
-
-    return V_total
+    return V_ab
 
 
-def coulomb_integral(n, V_ab, c, d, grid, molecule):
-
-    r = np.zeros([3], dtype=np.float64)
-
-    particle = molecule.get('atoms')[n]
+def coulomb_integral(c, d, V_ab, grid, molecule):
+    particle = molecule.get('atoms')[-1]
     rm = particle.get('atomic_radii_2')
 
-    if grid.spherical:
-        grid.convert()
-
+    r = np.zeros([3], dtype=np.float64)
     integral = 0.0
-    for i in range(grid.size):
-        r[0] = grid.x[i]
-        r[1] = grid.y[i]
-        r[2] = grid.z[i]
-
-        p = grid.weight(r, n, molecule.get('atoms'))
+    for j in range(grid.size):
+        r = grid.xyz[j, :]
+        p = grid.weight(r, 0, molecule.get('atoms'))
         aux = r - particle.get("origin")
-        integral += aux.dot(aux) * p * grid.w[i] * rm * c.compute(r) * d.compute(r) * V_ab[i]
+        F = c.compute(r) * d.compute(r) * V_ab[j]
+        integral += aux.dot(aux) * p * grid.w[j] * rm * F
 
     return integral * 4.0 * np.pi
 
@@ -242,44 +239,50 @@ def coulomb_integrals(molecule, radialPoints, angularPoints):
     # Initializing data
 
     grid = BeckeGrid(radialPoints, angularPoints)
-    print(grid.integrate(molecule, rho_r))
+    # print(grid.integrate(molecule, rho_r, args=(molecule,)))
 
-    #     # Scale and move grids (output in cartesian)
-    #     particle = molecule.get('atoms')[i]
-    #     grids[-1].move(particle.get("origin"), particle.get('atomic_radii_2'))
+    # Scale and move grids (output in cartesian)
+    grid.move(scaling_factor=molecule.get('atoms')[-1].get('atomic_radii_2'))
 
-    #     # Calculate spherical harmonics
-    #     grids[-1].convert()
-    #     Y_lm.append(Y_lmax(lmax, grids[-1]))  # Y_lmax[grid.size, lm.size]
-    #     grids[-1].convert()  # to cartesian again
+    # Start integrals calculation
+    basis = molecule.get_basis_set('e-')
+    length = basis.get('length')
+    values = []
+    for a in range(length):
+        n = a
+        for b in range(a, length):
+            u = b
+            # Calculate V_{ab}
+            V_ab = coulomb_potential(basis.get('function')[a], basis.get('function')[b], grid, molecule, lmax)
+            for c in range(n, length):
+                for d in range(u, length):
+                    # Calculate int V_{ab} \phi_c \phi_d dr^3
+                    val = coulomb_integral(basis.get('function')[c], basis.get('function')[d], V_ab, grid, molecule)
+                    values.append(val)
+                    print(a, b, c, d, val)
+                u = c + 1
 
-    # # Start integrals calculation
-    # basis = molecule.get_basis_set('e-')
-    # length = basis.get('length')
+    return val
 
-    # for a in range(length):
-    #     n = a
-    #     for b in range(a, length):
-    #         u = b
-    #         # Calculate V_{ab}
-    #         V_ab = coulomb_potential(basis.get('function')[a], basis.get('function')[b], grids, Y_lm, molecule, lmax)
-    #         for c in range(n, length):
-    #             for d in range(u, length):
-    #                 print(a, b, c, d, coulomb_integral(0, V_ab, basis.get('function')[c], basis.get('function')[d], grids[0], molecule))
-    #                 # Calculate int V_{ab} \phi_c \phi_d dr^3
-    #             u = c + 1
+    grid.free()
 
 
 if __name__ == '__main__':
-    # Grid definition
-    angularPoints = 110
-    radialPoints = 30
 
     # Molecule definition
     basis_file = os.path.join(os.path.dirname(__file__), "TEST.json")
     molecule = MolecularSystem()
-    molecule.add_atom("He", [0.0, 0.0, 0.3704240745], basis_kind="GTO", basis_file=basis_file)
+    molecule.add_atom("He", [0.0, 0.0, 0.0], basis_kind="GTO", basis_file=basis_file)
     molecule.show()
 
-    # print(molecule.n_occupation('e-'))
-    coulomb_integrals(molecule, radialPoints, angularPoints)
+    # Grid definition
+    angularPoints = 14
+    radialList = [1000]  # [i for i in range(10, 5000, 100)]
+
+    integrals = []
+    for radialPoints in radialList:
+        integrals.append(coulomb_integrals(molecule, radialPoints, angularPoints))
+
+    # plt.plot(radialList, [0.79788456080286518]*len(radialList))
+    # plt.plot(radialList, integrals)
+    # plt.show()
