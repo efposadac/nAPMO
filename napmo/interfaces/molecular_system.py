@@ -6,6 +6,8 @@
 # efposadac@sissa.it
 
 from __future__ import division
+from __future__ import print_function
+
 from copy import deepcopy
 
 import numpy as np
@@ -14,7 +16,6 @@ from math import ceil
 from napmo.interfaces.atomic_element import AtomicElement
 from napmo.interfaces.elementary_particle import ElementaryParticle
 from napmo.utilities.constants import ANGSTROM_TO_BOHR
-from napmo.interfaces.stack import Stack
 from napmo.interfaces.basis_set import BasisSet
 
 
@@ -48,7 +49,7 @@ class MolecularSystem(dict):
         assert isinstance(units, str)
 
         if 'atoms' not in self:
-            self['atoms'] = Stack()
+            self['atoms'] = []
 
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
@@ -74,9 +75,9 @@ class MolecularSystem(dict):
             elif basis_kind == 'STO':
                 atom.get('basis').load_slater(symbol, basis_data, origin)
 
-        self.get('atoms').push(atom)
+        self.get('atoms').append(atom)
         self.add_elementary_particle('e-', origin, size=atom.get('atomic_number'), units='Bohr')
-        self.get('e-').peek()['basis'] = self.get('atoms').peek().get('basis')
+        self.get('e-')[-1]['basis'] = self.get('atoms')[-1].get('basis')
 
     def add_elementary_particle(self, symbol, origin, size=1, units='Angstroms',
                                 basis_kind='GTO', basis_name='none', basis_file='none'):
@@ -101,15 +102,15 @@ class MolecularSystem(dict):
             origin *= ANGSTROM_TO_BOHR
 
         if symbol not in self:
-            self[symbol] = Stack()
+            self[symbol] = []
 
         particle = ElementaryParticle(symbol, origin=origin)
 
-        self[symbol].push(particle)
-        self[symbol].peek()['size'] = size
+        self[symbol].append(particle)
+        self[symbol][-1]['size'] = size
 
         # load basis-set
-        self[symbol].peek()['basis'] = BasisSet(basis_name)
+        self[symbol][-1]['basis'] = BasisSet(basis_name)
 
         if basis_file != 'none':
             file = open(basis_file)
@@ -117,9 +118,9 @@ class MolecularSystem(dict):
             file.close()
 
             if basis_kind == 'GTO':
-                self[symbol].peek().get('basis').load_gaussian(symbol, basis_data, origin)
+                self[symbol][-1].get('basis').load_gaussian(symbol, basis_data, origin)
             elif basis_kind == 'STO':
-                self[symbol].peek().get('basis').load_slater(symbol, basis_data, origin)
+                self[symbol][-1].get('basis').load_slater(symbol, basis_data, origin)
 
     def n_occupation(self, symbol):
         """
@@ -128,7 +129,7 @@ class MolecularSystem(dict):
         Returns:
             int: Occupation of quantum species ``symbol``.
         """
-        return ceil(self.n_particles(symbol) * self[symbol].peek()['spin'])
+        return ceil(self.n_particles(symbol) * self[symbol][-1]['spin'])
 
     def n_elementary_particles(self):
         """
@@ -194,7 +195,7 @@ class MolecularSystem(dict):
         print('------------------------------------------------------------------')
         for symbol in self.keys():
             particles = self.get(symbol)
-            print(type(particles.peek()).__name__, ': ', symbol, end=" ")
+            print(type(particles[-1]).__name__, ': ', symbol, end=" ")
             print('  n. particles: ', self.n_particles(symbol))
             print(
                     '{0:7}'.format("Symbol"),

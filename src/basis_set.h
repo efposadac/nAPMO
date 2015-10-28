@@ -33,11 +33,3 @@ void basis_set_free_cuda(BasisSet* basis_d);
 #endif
 
 #endif
-/*
-  int* n_prim_cont;       // Number of primitives for each contraction.
-  double* exponent;       // exponent of each primitive.
-  double* coefficient;    // contraction coefficient of each primitive.
-  int* basis_l;           // Angular moment index sizeof (3*n_cont).
-  double* origin;         // origin for each contraction.
-  double* normalization;  // Normalization constant for each primitive.
-  int n_cont;             // Number of contractions.*/

@@ -6,10 +6,11 @@
 # efposadac@sissa.it
 
 from __future__ import division
+from __future__ import print_function
+
 import numpy as np
 import json
 
-from napmo.interfaces.stack import Stack
 from napmo.interfaces.contracted_slater import ContractedSlater
 from napmo.interfaces.contracted_gaussian import ContractedGaussian
 
@@ -24,7 +25,7 @@ class BasisSet(dict):
         super(BasisSet, self).__init__()
         self['name'] = name
         self['particle'] = None
-        self['function'] = Stack()
+        self['function'] = []
         self['kind'] = None
         self['json'] = None
         self['length'] = 0
@@ -62,7 +63,7 @@ class BasisSet(dict):
                 for j in range(i+1):
                     y = i - j
                     z = j
-                    self['function'].push(ContractedGaussian(
+                    self['function'].append(ContractedGaussian(
                         np.array(self['json'][k]['prim']),
                         np.array(self['json'][k]['cont']),
                         np.array(origin),

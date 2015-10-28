@@ -5,9 +5,10 @@
 # Version: 0.1
 # efposadac@sissa.it
 from __future__ import division
+from __future__ import print_function
+
 import numpy as np
 
-from napmo.interfaces.stack import Stack
 from napmo.interfaces.primitive_slater import PrimitiveSlater
 
 
@@ -28,13 +29,13 @@ class ContractedSlater(dict):
 
         self["length"] = len(exponents)
         self["origin"] = origin
-        self["primitive"] = Stack()
+        self["primitive"] = []
         self['n'] = n
         self['l'] = l
         self['m'] = m
 
         for (exponent, coefficient, ni) in zip(exponents, coefficients, n):
-            self.get("primitive").push(PrimitiveSlater(
+            self.get("primitive").append(PrimitiveSlater(
                 exponent, coefficient, ni, l, m, origin
                 ))
 

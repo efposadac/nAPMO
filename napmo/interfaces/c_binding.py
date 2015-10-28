@@ -6,6 +6,8 @@
 # efposadac@sissa.it
 
 from __future__ import division
+from __future__ import print_function
+
 from ctypes import *
 from copy import deepcopy
 import os

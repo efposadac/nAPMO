@@ -6,10 +6,11 @@
 # efposadac@sissa.it
 
 from __future__ import division
+from __future__ import print_function
+
 import numpy as np
 from ctypes import *
 
-from napmo.interfaces.stack import Stack
 from napmo.interfaces.c_binding import *
 from napmo.utilities.constants import *
 
@@ -96,13 +97,13 @@ class BeckeGrid(Structure):
         Args:
             r (numpy.ndarray(3)): Point of the grid in which the weight will be calculated.
             particleID (int): The particle index who owns the ``r`` point.
-            particle_stack (Stack): stack of particles. (AtomicElement or ElementaryParticle)
+            particle_stack (list): List of particles. (AtomicElement or ElementaryParticle)
 
         Returns:
             p (float64): The value of cell_function (eq. 13, Becke, 1988) at point ``r``
         """
         assert isinstance(particleID, int)
-        assert isinstance(particle_stack, Stack)
+        assert isinstance(particle_stack, list)
 
         def step_function(order, mu):
             """

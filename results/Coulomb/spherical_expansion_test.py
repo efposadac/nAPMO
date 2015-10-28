@@ -2,6 +2,7 @@ import numpy as np
 import scipy as sci
 import scipy.special as sp
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 from napmo.utilities.angular_quadratures import *
 from napmo.utilities.radial_quadratures import *
@@ -72,6 +73,10 @@ def recover_rho(grid, p_lm, lmax):
 
     return rho
 
+
+def r_to_z(r, rm):
+    return np.arccos((r - rm)/(r + rm))/np.pi
+
 if __name__ == '__main__':
 
     # Molecule definition
@@ -86,7 +91,7 @@ if __name__ == '__main__':
 
     # Grid definition
     angularPoints = 110
-    radialPoints = 50
+    radialPoints = 20
 
     grid = BeckeGrid(radialPoints, angularPoints)
     grid.move(scaling_factor=rm)
@@ -94,28 +99,36 @@ if __name__ == '__main__':
 
     # Functions
     basis = molecule.get_basis_set('e-')
-    g_a = basis.get('function')[-1]
+    # g_a = basis.get('function')[0]
 
     # Problem
     lmax = int(lebedev_get_order(angularPoints)/2)
     rad_quad = np.array([grid.radial_abscissas[i] for i in range(grid.n_radial)]) * rm
+    zzz = r_to_z(rad_quad, rm)
 
     #########################################################
-    def p_ab(r):
-        return g_a.compute(r) * g_a.compute(r)
+    for i in range(3):
+        g_a = basis.get('function')[0]
 
-    p_rtp = p_ab(grid.xyz)
+        def p_ab(r):
+            return g_a.compute(r) * g_a.compute(r)
 
-    #########################################################
+        p_rtp = p_ab(grid.xyz)
+        print(p_rtp)
 
-    expansion = rho_lm(p_ab, rad_quad, angularPoints, lmax)
+        #########################################################
 
-    #########################################################
-    recovered = recover_rho(grid, expansion, lmax)
+        expansion = rho_lm(p_ab, rad_quad, angularPoints, lmax)
 
-    plt.plot(rad_quad, p_rtp[::angularPoints], 'r-', label='Patron')
-    plt.plot(rad_quad, recovered[::angularPoints], 'go', label='Recovered')
-    plt.legend()
-    plt.xlim([0, 3])
+        #########################################################
+        recovered = recover_rho(grid, expansion, lmax)
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        for i in range(angularPoints):
+            ax.plot([i]*radialPoints, zzz, p_rtp[i::angularPoints], 'r-', label='Patron')
+            ax.plot([i]*radialPoints, zzz, recovered[i::angularPoints], 'g-', label='Recovered')
+        # plt.legend()
     plt.show()
+
     grid.free()

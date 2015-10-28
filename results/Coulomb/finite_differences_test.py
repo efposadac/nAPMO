@@ -2,6 +2,7 @@
 
 import numpy as np
 from napmo.utilities.radial_quadratures import *
+import matplotlib.pyplot as plt
 
 # 3x^2+2
 
@@ -86,59 +87,40 @@ def first_7p(n):
 
     # Boundary conditions
     b[0] = f(x_i[0])
-    # b[1] = f(x_i[1])
-    # b[2] = f(x_i[2])
-
     b[-1] = f(x_i[-1])
-    # b[-2] = f(x_i[-2])
-    # b[-3] = f(x_i[-3])
 
     h = x_i[0]
 
     A = np.zeros([np6, np6])
 
-    A[0, 0] = 1.0
-    A[-1, -1] = 1.0
+    for i in range(1):
+        A[i, i] = 1.0
+        A[-i-1, -i-1] = 1.0
+
+    aux = 1.0 / (2.0 * h)
+
+    A[1, 0] = -aux
+    A[1, 2] = aux
+
+    A[-2, -3] = -aux
+    A[-2, -1] = aux
 
     aux = 1.0 / (12.0*h)
-
-    A[1, 0] = -25 * aux
-    A[1, 1] = 48 * aux
-    A[1, 2] = -36 * aux
-    A[1, 3] = 16 * aux
-    A[1, 4] = -3 * aux
-
-    A[-2, -1] = 25 * aux
-    A[-2, -2] = -48 * aux
-    A[-2, -3] = 36 * aux
-    A[-2, -4] = -16 * aux
-    A[-2, -5] = 3 * aux
+    p5 = np.array([1.0, -8.0])
+    for j in range(2):
+        A[2, 2-2+j] = p5[j] * aux
+        A[2, 2+2-j] = -p5[j] * aux
+        A[-3, -3-2+j] = p5[j] * aux
+        A[-3, -3+2-j] = -p5[j] * aux
 
     aux = 1.0 / (60.0*h)
-
-    A[2, 0] = -137 * aux
-    A[2, 1] = 300 * aux
-    A[2, 2] = -300 * aux
-    A[2, 3] = 200 * aux
-    A[2, 4] = -75 * aux
-    A[2, 5] = 12 * aux
-
-    A[-3, -1] = 137 * aux
-    A[-3, -2] = -300 * aux
-    A[-3, -3] = 300 * aux
-    A[-3, -4] = -200 * aux
-    A[-3, -5] = 75 * aux
-    A[-3, -6] = -12 * aux
-
+    p7 = np.array([-1.0, 9.0, -45.0])
     for i in range(3, n+3):
-        A[i, i-3] = -aux
-        A[i, i-2] = 9.0 * aux
-        A[i, i-1] = -45.0 * aux
-        A[i, i+1] = 45.0 * aux
-        A[i, i+2] = -9.0 * aux
-        A[i, i+3] = aux
+        for j in range(3):
+            A[i, i-3+j] = p7[j] * aux
+            A[i, i+3-j] = -p7[j] * aux
 
-    print_matrix(A, np6)
+    # print_matrix(A, np6)
 
     x = np.linalg.solve(A, b)
 
@@ -146,7 +128,7 @@ def first_7p(n):
 
 
 if __name__ == '__main__':
-    n = 3
+    n = 8
 
     f_n, A, b = first_7p(n)
 
@@ -154,14 +136,14 @@ if __name__ == '__main__':
     x_i = chebgauss_z(n+6)
     Df_a = Df(x_i)
 
-    # print(x_i)
-
     f_a = f(x_i)
 
-    print(np.abs(f_n - f_a))
     print(np.allclose(f_n, f_a))
-    print(np.allclose(np.dot(A, f_n)[3:-3], Df_a[3:-3]))
-    print("f_a", f_a)
-    print("f_n", f_n)
-    print("b", b)
-    print("Dot", np.dot(A, f_n), Df_a)
+    print(np.allclose(np.dot(A, f_n)[-1:1], Df_a[-1:1]))
+
+    plt.plot(x_i, f_a, label="f Analytic")
+    plt.plot(x_i, f_n, 'o', label="f Numeric")
+    plt.plot(x_i, Df_a, label="D Analytic")
+    plt.plot(x_i, A.dot(f_n), 'o', label="D Numeric")
+    plt.legend(loc=2)
+    plt.show()

@@ -5,6 +5,8 @@
 # Version: 0.1
 # efposadac@sissa.it
 from __future__ import division
+from __future__ import print_function
+
 from scipy.special import sph_harm
 import scipy.misc
 import numpy as np

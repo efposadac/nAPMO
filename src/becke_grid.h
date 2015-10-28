@@ -9,6 +9,7 @@ efposadac@sissa.it*/
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <math.h>
 
 #ifdef _OMP
 #include <omp.h>
@@ -95,6 +96,7 @@ struct _grid_cuda
   double2* xy;   // coord x and y or r and theta if sph coords.
   double2* zw;   // coord z and angular weights .
 };
+
 typedef struct _grid_cuda GridCuda;
 
 /*

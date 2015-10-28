@@ -38,8 +38,3 @@ void system_free_cuda(System* sys_d);
 
 #endif
 
-/*double* particle_origin;  // Origin of each atom / particle.
-  double* particle_radii;   // Atomic radii, Particle radii?
-  int n_particles;          // Number of particles in the system.
-  int* particle_number;     // For atoms atomic number, else an identifier.
-  BasisSet basis;*/

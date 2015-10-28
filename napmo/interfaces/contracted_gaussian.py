@@ -5,10 +5,11 @@
 # Version: 0.1
 # efposadac@sissa.it
 from __future__ import division
+from __future__ import print_function
+
 import numpy as np
 import scipy.misc
 
-from napmo.interfaces.stack import Stack
 from napmo.interfaces.primitive_gaussian import PrimitiveGaussian
 
 
@@ -46,10 +47,10 @@ class ContractedGaussian(dict):
         self["length"] = len(exponents)
         self["l"] = l
         self["origin"] = origin
-        self["primitive"] = Stack()
+        self["primitive"] = []
 
         for (exponent, coefficient) in zip(exponents, coefficients):
-            self.get("primitive").push(PrimitiveGaussian(
+            self.get("primitive").append(PrimitiveGaussian(
                 exponent, coefficient, l, origin
                 ))
         self["normalization"] = 1.0
@@ -83,12 +84,12 @@ class ContractedGaussian(dict):
         Computes the value of the contracted Gaussian at ``coord``.
         """
         RP = coord - self.get('origin')
-        
+
         factor = 1.0
         if coord.ndim > 1:
             RP2 = np.diag(RP.dot(RP.T))
             for i in range(3):
-                factor *= RP[:,i]**self.get('l')[i]
+                factor *= RP[:, i]**self.get('l')[i]
         else:
             RP2 = RP.dot(RP)
             for i in range(3):
