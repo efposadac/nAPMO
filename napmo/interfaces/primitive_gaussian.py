@@ -8,12 +8,13 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-import scipy.misc
+import numpy.ctypeslib as npct
+from ctypes import *
 
-import napmo.utilities.obara_saika as os
+from napmo.interfaces.c_binding import napmo_library
 
 
-class PrimitiveGaussian(dict):
+class PrimitiveGaussian(Structure):
     """
     Defines a Cartesian primitive Gaussian type orbital (GTO). (dict)
 
@@ -32,42 +33,46 @@ class PrimitiveGaussian(dict):
         origin (numpy.ndarray(3)) : coordinates (cartesian)
         l (numpy.ndarray(3)) : :math:`\\bf n`. Angular moment (x, y, and z components)
     """
-    def __init__(self, exponent=0.0, coefficient=1.0, l=np.array([0, 0, 0]), origin=np.array([0.0, 0.0, 0.0])):
+    _fields_ = [
+        ("_l", c_int * 3),
+        ("_origin", c_double * 3),
+        ("exponent", c_double),
+        ("coefficient", c_double),
+        ("normalization", c_double)
+    ]
+
+    def __init__(self, exponent=0.0, coefficient=1.0, l=np.zeros(3, dtype=np.int32), origin=np.zeros(3, dtype=np.float64)):
         super(PrimitiveGaussian, self).__init__()
-        self["exponent"] = exponent
-        self["coefficient"] = coefficient
-        self["l"] = l
-        self["origin"] = np.array(origin)
-        self["normalization"] = self.normalize()
+        self.exponent = c_double(exponent)
+        self.coefficient = c_double(coefficient)
+        self._origin[:3] = origin[:]
+        self._l[:3] = l[:]
+        self.normalization = self.normalize()
+
+    @property
+    def origin(self):
+        return np.array(self._origin[:3])
+
+    @property
+    def l(self):
+        return np.array(self._l[:3])
 
     def normalize(self):
         """
         Calculates the normalization constant of this primitive.
         """
-        output = ((2.0 * self.get('exponent')/np.pi)**0.75) / np.sqrt(
-                    scipy.misc.factorial2(np.abs(2 * self.get('l')[0] - 1)) *
-                    scipy.misc.factorial2(np.abs(2 * self.get('l')[1] - 1)) *
-                    scipy.misc.factorial2(np.abs(2 * self.get('l')[2] - 1)) /
-                    ((4.0 * self.get('exponent'))**np.sum(self.get('l'))))
-
-        return output
+        return napmo_library.gto_normalize_primitive(byref(self))
 
     def compute(self, coord):
         """
         Computes the value of the object at ``coord``.
         """
-        RP = coord - self.get('origin')
-        RP2 = RP.dot(RP)
+        if coord.ndim > 1:
+            coord = coord.flatten()
 
-        factor = 1.0
-        for i in range(3):
-            factor *= RP[i]**self.get('l')[i]
-        output = (
-                    self.get('coefficient') *
-                    self.get('normalization') *
-                    factor *
-                    np.exp(-self.get('exponent') * RP2)
-                )
+        n_coord = int(coord.size/3)
+        output = np.empty(n_coord)
+        napmo_library.gto_compute_primitive(byref(self), coord, output, n_coord)
 
         return output
 
@@ -78,42 +83,35 @@ class PrimitiveGaussian(dict):
         Args:
             other (PrimitiveGaussian) : function to perform :math:`<\phi_{self} | \phi_{other}>`
         """
-        gamma = self.get('exponent') + other.get('exponent')
-        gammaInv = 1.0/gamma
-
-        AB = self.get('origin') - other.get('origin')
-        AB2 = AB.dot(AB)
-
-        P0 = np.zeros(3)
-        PA = np.zeros(3)
-        PB = np.zeros(3)
-
-        P0 = (self.get('exponent') * self.get('origin') + other.get('exponent') * other.get('origin')) * gammaInv
-        PA = P0 - self.get('origin')
-        PB = P0 - other.get('origin')
-
-        preFactor = np.exp(- self.get('exponent')*other.get('exponent')*AB2*gammaInv) * (
-            np.sqrt(np.pi*gammaInv) * np.pi * gammaInv *
-            self.get('coefficient') * other.get('coefficient') *
-            self.get('normalization') * other.get('normalization')
-            )
-
-        # recursion
-        x, y, z = os.obaraSaika_recursion(PA, PB, gamma, np.sum(self.get('l'))+2, np.sum(other.get('l'))+2)
-
-        x0 = x[self.get('l')[0], other.get('l')[0]]
-        y0 = y[self.get('l')[1], other.get('l')[1]]
-        z0 = z[self.get('l')[2], other.get('l')[2]]
-
-        # Calculating integrals for primitives
-        return preFactor*x0*y0*z0
+        return napmo_library.gto_overlap_primitive(byref(self), byref(other))
 
     def show(self):
         """
         Prints information about the object.
         """
-        print("    origin: ", self.get('origin'))
-        print("    exponent: ", self.get('exponent'))
-        print("    coefficient: ", self.get('coefficient'))
-        print("    angular moment: ", self.get('l'))
-        print("    normalization: ", self.get('normalization'))
+        print("    origin: ", self.origin)
+        print("    exponent: ", self.exponent)
+        print("    coefficient: ", self.coefficient)
+        print("    angular moment: ", self.l)
+        print("    normalization: ", self.normalization)
+
+
+array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
+
+napmo_library.gto_normalize_primitive.restype = c_double
+napmo_library.gto_normalize_primitive.argtypes = [
+    POINTER(PrimitiveGaussian)
+]
+
+napmo_library.gto_compute_primitive.restype = None
+napmo_library.gto_compute_primitive.argtypes = [
+    POINTER(PrimitiveGaussian),
+    array_1d_double, array_1d_double,
+    c_int
+]
+
+napmo_library.gto_overlap_primitive.restype = c_double
+napmo_library.gto_overlap_primitive.argtypes = [
+    POINTER(PrimitiveGaussian),
+    POINTER(PrimitiveGaussian)
+]

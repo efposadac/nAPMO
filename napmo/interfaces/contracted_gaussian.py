@@ -83,27 +83,10 @@ class ContractedGaussian(dict):
         """
         Computes the value of the contracted Gaussian at ``coord``.
         """
-        RP = coord - self.get('origin')
-
-        factor = 1.0
-        if coord.ndim > 1:
-            RP2 = np.diag(RP.dot(RP.T))
-            for i in range(3):
-                factor *= RP[:, i]**self.get('l')[i]
-        else:
-            RP2 = RP.dot(RP)
-            for i in range(3):
-                factor *= RP[i]**self.get('l')[i]
-
         output = 0.0
         for primitive in self.get('primitive'):
-            output += (
-                primitive.get('coefficient') *
-                primitive.get('normalization') *
-                self.get('normalization') *
-                factor *
-                np.exp(-primitive.get('exponent') * RP2)
-            )
+            output += primitive.compute(coord) * self.get('normalization')
+
         return output
 
     def show(self):

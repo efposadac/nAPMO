@@ -55,7 +55,7 @@ def test_multicenter_integrator():
             basis = molecule.get_basis_set('e-')
             occupation = molecule.n_occupation('e-')
             bvalue = basis.compute(coord)
-            bvalue = np.array(bvalue)
+            bvalue = np.array(bvalue).flatten()
             output = bvalue.dot(P.dot(bvalue))
 
             return output
@@ -68,6 +68,8 @@ def test_multicenter_integrator():
 
         np.testing.assert_allclose(integral_p, results[count])
         np.testing.assert_allclose(integral_c, results[count])
+
+        print(integral_p, integral_c)
 
         # Delete temporary files.
         os.system('rm data.dens')

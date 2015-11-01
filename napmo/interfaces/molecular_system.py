@@ -29,8 +29,8 @@ class MolecularSystem(dict):
     def __init__(self):
         super(MolecularSystem, self).__init__()
 
-    def add_atom(self, symbol, origin, BOA=True, mass_number=0, units='Angstroms',
-                 basis_kind='GTO', basis_name='none', basis_file='none'):
+    def add_atom(self, symbol, origin, BOA=True, mass_number=0, units='ANGSTROMS',
+                 basis_kind='GTO', basis_name=None, basis_file=None):
         """
         Adds an atom to the molecular system.
 
@@ -40,7 +40,7 @@ class MolecularSystem(dict):
             BOA (bool, optional): Whether the atom nuclei will be treated in the BOA approach or not. Default is True
             mass_number (int, optional): Mass number of element 'symbol' :math:`:= A = p^+ + n^o`.
                 If 0 the system will choose the most abundant one. Default is 0.
-            units (str, optional): Units of the origin, valid values are 'Angstroms' or 'Bohr'
+            units (str, optional): Units of the origin, valid values are 'ANGSTROMS' or 'BOHR'
         """
         assert isinstance(symbol, str)
         assert len(origin) == 3
@@ -53,19 +53,19 @@ class MolecularSystem(dict):
 
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
-        if units == 'Angstroms':
+        if units == 'ANGSTROMS':
             origin *= ANGSTROM_TO_BOHR
 
         atom = AtomicElement(symbol, origin=origin, BOA=BOA, mass_number=mass_number, units='Bohr')
         atom['size'] = 1
 
         # load basis-set
-        if basis_name == 'none':
+        if basis_name is None:
             basis_name = basis_file
 
         atom['basis'] = BasisSet(basis_name)
 
-        if basis_file != 'none':
+        if basis_file is not None:
             file = open(basis_file)
             basis_data = file.read().replace('\n', '')
             file.close()
@@ -79,8 +79,8 @@ class MolecularSystem(dict):
         self.add_elementary_particle('e-', origin, size=atom.get('atomic_number'), units='Bohr')
         self.get('e-')[-1]['basis'] = self.get('atoms')[-1].get('basis')
 
-    def add_elementary_particle(self, symbol, origin, size=1, units='Angstroms',
-                                basis_kind='GTO', basis_name='none', basis_file='none'):
+    def add_elementary_particle(self, symbol, origin, size=1, units='ANGSTROMS',
+                                basis_kind='GTO', basis_name=None, basis_file=None):
         """
         Adds an elementary particle into the molecular system.
 
@@ -88,7 +88,7 @@ class MolecularSystem(dict):
             symbol (str): Symbol of the elementary particle.
             origin (array[3]): Origin of the elementary particle (Cartesian coordinates)
             size (int): Number of elementary particle to be added.
-            units (str, optional): Units of the origin, valid values are 'Angstroms' or 'Bohr'
+            units (str, optional): Units of the origin, valid values are 'ANGSTROMS' or 'Bohr'
         """
         assert isinstance(symbol, str)
         assert len(origin) == 3
@@ -98,7 +98,7 @@ class MolecularSystem(dict):
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
 
-        if units == 'Angstroms':
+        if units == 'ANGSTROMS':
             origin *= ANGSTROM_TO_BOHR
 
         if symbol not in self:
@@ -112,7 +112,7 @@ class MolecularSystem(dict):
         # load basis-set
         self[symbol][-1]['basis'] = BasisSet(basis_name)
 
-        if basis_file != 'none':
+        if basis_file != None:
             file = open(basis_file)
             basis_data = file.read().replace('\n', '')
             file.close()
@@ -208,6 +208,6 @@ class MolecularSystem(dict):
                         '{0:7}'.format(particle.get('symbol')),
                         '{0:5}'.format(str(particle.get('size'))),
                         '{0:40}'.format(str(particle.get('origin'))),
-                        '{0:10}'.format(particle.get('basis')['name'])
+                        '{0:10}'.format(str(particle.get('basis')['name']))
                     )
             print('------------------------------------------------------------------')

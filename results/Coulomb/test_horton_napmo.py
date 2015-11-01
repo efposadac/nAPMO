@@ -25,11 +25,12 @@ if __name__ == '__main__':
     molecule.add_atom("He", [0.0, 0.0, 0.0], basis_kind="GTO", basis_file=basis_file)
     molecule.show()
 
+    rm = molecule.get('atoms')[-1].get('atomic_radii_2')
+
     # Grid definition
     angularPoints = 14
-    # radialList = [10]
-    # radialList = [i for i in range(6, 1000, 10)]
-    radialList = [6, 14, 110, 170, 194, 230, 266, 302, 350, 434]
+    radialList = [100]
+    # radialList = [6, 14, 110, 170, 194, 230, 266, 302, 350, 434]
 
     h_ints = []
     n_ints = []
@@ -39,18 +40,26 @@ if __name__ == '__main__':
         lsize = (lmax + 1) * (lmax + 1)
 
         # Initializing data
+
         grid = BeckeGrid(radialPoints, angularPoints)
-        rad = np.array([grid.radial_abscissas[i] for i in range(radialPoints)]).copy() * molecule.get('atoms')[-1].get('atomic_radii_2')
-        h_grid_spec = AtomicGridSpec('power:'+str(rad.min())+':'+str(rad.max())+':'+str(radialPoints)+':'+str(angularPoints))
+        grid.move()
+        r = grid.radial_abscissas.copy()
+        # r *= rm
+        print(rm)
+
+        print(np.allclose(grid.radial_abscissas, r))
+
+        h_grid_spec = AtomicGridSpec('power:'+str(r.min())+':'+str(r.max())+':'+str(radialPoints)+':'+str(angularPoints))
         molgrid = BeckeMolGrid(np.array([[0.0, 0.0, 0.0]]), np.array([2]), np.array([2.0]), agspec=h_grid_spec, random_rotate=False, mode='keep')
         atgrid = molgrid.subgrids[-1]
         rad = atgrid.rgrid.radii
 
-        grid.move(scaling_factor=molecule.get('atoms')[-1].get('atomic_radii_2'))
-
-        basis = molecule.get_basis_set('e-')
+        basis = molecule.get('atoms')[-1].get('basis')
         a = basis.get('function')[0]
         b = basis.get('function')[0]
+
+        a.show()
+        b.show()
 
         def p_ab(coord):
             return a.compute(coord) * b.compute(coord)
@@ -103,7 +112,6 @@ if __name__ == '__main__':
         #     U_lm_n[:, i] = U_lm_h[i].y[:]
 
         # napmo
-        r = np.array([grid.radial_abscissas[i] for i in range(radialPoints)]) * molecule.get('atoms')[-1].get('atomic_radii_2')
         p_lm = rho_lm(p_ab, r, angularPoints, lmax)
         U_lm_n = solve_poisson(p_lm, lmax, molecule, grid, p_ab, fd=7)
 
@@ -118,9 +126,6 @@ if __name__ == '__main__':
 
         # napmo
         V_ab_n = build_potential(grid, U_lm_n, r, lmax)
-        # for i in range(1, grid.size):
-        #     if V_ab_n[i] < V_ab_n[i-1]:
-        #         V_ab_n[i] = V_ab_n[i-1]
         val_n = coulomb_integral(a, b, V_ab_n, grid, molecule)
         n_ints.append(val_n)
 
@@ -130,8 +135,6 @@ if __name__ == '__main__':
         val_h = atgrid.integrate(rho, V_ab_h)
         h_ints.append(val_h)
 
-        print('Potential:', np.allclose(V_ab_h, V_ab_n))
-        print(val_h, val_n)
         # print(V_ab_n)
         # plt.plot(r, V_ab_n[::angularPoints], '-x', label='napmo')
         # plt.plot(rad, V_ab_h[::angularPoints], '-x', label='horton')
@@ -140,17 +143,17 @@ if __name__ == '__main__':
 
         U_lm_n = solve_poisson(p_lm, lmax, molecule, grid, p_ab, fd=3)
         V_ab_n = build_potential(grid, U_lm_n, r, lmax)
-        # for i in range(1, grid.size):
-        #     if V_ab_n[i] < V_ab_n[i-1]:
-        #         V_ab_n[i] = V_ab_n[i-1]
-        val_n = coulomb_integral(a, b, V_ab_n, grid, molecule)
-        n2_ints.append(val_n)
+        val_n2 = coulomb_integral(a, b, V_ab_n, grid, molecule)
+        n2_ints.append(val_n2)
+
+        print('Potential:', np.allclose(V_ab_h, V_ab_n))
+        print(rm, val_n2, val_n)
 
     plt.yscale('log')
     plt.xlabel('Radial Points')
     plt.ylabel('Error (log)')
-    plt.plot(radialList, np.abs(np.array(h_ints)-0.79788456080286518), label='horton')
-    plt.plot(radialList, np.abs(np.array(n_ints)-0.79788456080286518), label='napmo-765')
+    # plt.plot(radialList, np.abs(np.array(h_ints)-0.79788456080286518), label='horton')
+    plt.plot(radialList, np.abs(np.array(n_ints)-0.79788456080286518), label='napmo-7')
     plt.plot(radialList, np.abs(np.array(n2_ints)-0.79788456080286518), label='napmo-3')
     plt.legend()
-    plt.show()
+    plt.savefig('error.png')

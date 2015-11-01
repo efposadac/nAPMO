@@ -1,10 +1,9 @@
 {
     "Al": {
         "atomic_number": 13,
-        "atomic_radii": 2.36215748625,
-        "atomic_radii_2": 1.181078743125,
+        "atomic_radii": 2.286568622044715,
+        "atomic_radii_2": 1.1432843110223574,
         "boiling_point": 2740,
-        "covalent_radius": 1.25,
         "density": 2.7,
         "electron_affinity": -43.0,
         "electronegativity": 1.61,
@@ -12,15 +11,13 @@
         "mass": 26.981538,
         "melting_point": 933.5,
         "name": "Aluminum",
-        "symbol": "Al",
-        "vanderwaals_radius": 0
+        "symbol": "Al"
     },
     "Ar": {
         "atomic_number": 18,
-        "atomic_radii": 1.34170545219,
-        "atomic_radii_2": 0.670852726095,
+        "atomic_radii": 2.0031097019565274,
+        "atomic_radii_2": 1.0015548509782637,
         "boiling_point": 87.45,
-        "covalent_radius": 1.91,
         "density": 1.66,
         "electron_affinity": 29.0,
         "electronegativity": 0,
@@ -28,15 +25,13 @@
         "mass": 39.948,
         "melting_point": 83.95,
         "name": "Argon",
-        "symbol": "Ar",
-        "vanderwaals_radius": 1.88
+        "symbol": "Ar"
     },
     "B": {
         "atomic_number": 5,
-        "atomic_radii": 1.60626709065,
-        "atomic_radii_2": 0.803133545325,
+        "atomic_radii": 1.5873699524938516,
+        "atomic_radii_2": 0.7936849762469258,
         "boiling_point": 4275,
-        "covalent_radius": 0.88,
         "density": 2.46,
         "electron_affinity": -27,
         "electronegativity": 2.04,
@@ -44,15 +39,13 @@
         "melting_point": 2365,
         "name": "Boron",
         "standarAtomic_weight": 10.811,
-        "symbol": "B",
-        "vanderwaals_radius": 0
+        "symbol": "B"
     },
     "Be": {
         "atomic_number": 4,
-        "atomic_radii": 1.98421228845,
-        "atomic_radii_2": 0.992106144225,
+        "atomic_radii": 1.814137088564402,
+        "atomic_radii_2": 0.907068544282201,
         "boiling_point": 1615,
-        "covalent_radius": 0.89,
         "density": 0.53,
         "electron_affinity": -60,
         "electronegativity": 0.98,
@@ -60,15 +53,13 @@
         "melting_point": 453.7,
         "name": "Beryllium",
         "standarAtomic_weight": 9.012182,
-        "symbol": "Be",
-        "vanderwaals_radius": 1.82
+        "symbol": "Be"
     },
     "Br": {
         "atomic_number": 35,
-        "atomic_radii": 2.1731848873499997,
-        "atomic_radii_2": 1.0865924436749999,
+        "atomic_radii": 2.2676713607055023,
+        "atomic_radii_2": 1.1338356803527512,
         "boiling_point": 331.85,
-        "covalent_radius": 1.145,
         "density": 3.14,
         "electron_affinity": -325,
         "electronegativity": 2.96,
@@ -76,15 +67,13 @@
         "mass": 79.904,
         "melting_point": 265.95,
         "name": "Bromine",
-        "symbol": "Br",
-        "vanderwaals_radius": 1.85
+        "symbol": "Br"
     },
     "C": {
         "atomic_number": 6,
-        "atomic_radii": 1.3228081923,
-        "atomic_radii_2": 0.66140409615,
+        "atomic_radii": 1.4069648596390618,
+        "atomic_radii_2": 0.7034824298195309,
         "boiling_point": 5100,
-        "covalent_radius": 0.77,
         "density": 3.51,
         "electron_affinity": -122,
         "electronegativity": 2.55,
@@ -92,15 +81,13 @@
         "mass": 12.0107,
         "melting_point": 3825,
         "name": "Carbon",
-        "symbol": "C",
-        "vanderwaals_radius": 1.7
+        "symbol": "C"
     },
     "Ca": {
         "atomic_number": 20,
-        "atomic_radii": 3.4015067802,
-        "atomic_radii_2": 1.7007533901,
+        "atomic_radii": 3.3259179957014036,
+        "atomic_radii_2": 1.6629589978507018,
         "boiling_point": 1757,
-        "covalent_radius": 1.74,
         "density": 1.74,
         "electron_affinity": 10.0,
         "electronegativity": 1.0,
@@ -108,15 +95,13 @@
         "mass": 40.078,
         "melting_point": 1112,
         "name": "Calcium",
-        "symbol": "Ca",
-        "vanderwaals_radius": 0
+        "symbol": "Ca"
     },
     "Cl": {
         "atomic_number": 17,
-        "atomic_radii": 1.889725989,
-        "atomic_radii_2": 0.9448629945,
+        "atomic_radii": 1.9275206565996772,
+        "atomic_radii_2": 0.9637603282998386,
         "boiling_point": 239.18,
-        "covalent_radius": 0.994,
         "density": 2.95,
         "electron_affinity": -349,
         "electronegativity": 3.16,
@@ -124,15 +109,13 @@
         "mass": 35.453,
         "melting_point": 172.17,
         "name": "Chlorine",
-        "symbol": "Cl",
-        "vanderwaals_radius": 1.75
+        "symbol": "Cl"
     },
     "F": {
         "atomic_number": 9,
-        "atomic_radii": 0.9448629945,
-        "atomic_radii_2": 0.47243149725,
+        "atomic_radii": 1.0771438963351136,
+        "atomic_radii_2": 0.5385719481675568,
         "boiling_point": 85,
-        "covalent_radius": 0.58,
         "density": 1.58,
         "electron_affinity": -328,
         "electronegativity": 3.98,
@@ -140,15 +123,13 @@
         "mass": 18.9984032,
         "melting_point": 53.55,
         "name": "Fluorine",
-        "symbol": "F",
-        "vanderwaals_radius": 1.47
+        "symbol": "F"
     },
     "H": {
         "atomic_number": 1,
-        "atomic_radii": 0.66140409615,
-        "atomic_radii_2": 0.66140409615,
+        "atomic_radii": 0.5858151015155881,
+        "atomic_radii_2": 0.5858151015155881,
         "boiling_point": 20.28,
-        "covalent_radius": 0.3,
         "density": 0.084,
         "electron_affinity": -73,
         "electronegativity": 2.1,
@@ -156,15 +137,13 @@
         "mass": 1.00794,
         "melting_point": 13.81,
         "name": "Hydrogen",
-        "symbol": "H",
-        "vanderwaals_radius": 1.2
+        "symbol": "H"
     },
     "He": {
         "atomic_number": 2,
-        "atomic_radii": 2.47554104559,
-        "atomic_radii_2": 1.237770522795,
+        "atomic_radii": 0.5291233174979506,
+        "atomic_radii_2": 0.2645616587489753,
         "boiling_point": 4.216,
-        "covalent_radius": 1.22,
         "density": 0.1785,
         "electron_affinity": 21,
         "electronegativity": 0,
@@ -172,15 +151,13 @@
         "mass": 4.002602,
         "melting_point": 0.95,
         "name": "Helium",
-        "symbol": "He",
-        "vanderwaals_radius": 1.4
+        "symbol": "He"
     },
     "K": {
         "atomic_number": 19,
-        "atomic_radii": 4.1573971758,
-        "atomic_radii_2": 2.0786985879,
+        "atomic_radii": 3.8361440518601415,
+        "atomic_radii_2": 1.9180720259300708,
         "boiling_point": 1033,
-        "covalent_radius": 2.03,
         "density": 0.86,
         "electron_affinity": 0,
         "electronegativity": 0.82,
@@ -188,15 +165,13 @@
         "mass": 39.0983,
         "melting_point": 336.8,
         "name": "Potassium",
-        "symbol": "K",
-        "vanderwaals_radius": 2.75
+        "symbol": "K"
     },
     "Li": {
         "atomic_number": 3,
-        "atomic_radii": 2.74010268405,
-        "atomic_radii_2": 1.370051342025,
+        "atomic_radii": 2.4188494514192027,
+        "atomic_radii_2": 1.2094247257096014,
         "boiling_point": 1615,
-        "covalent_radius": 1.23,
         "density": 0.53,
         "electron_affinity": -60,
         "electronegativity": 0.98,
@@ -204,15 +179,13 @@
         "mass": 6.941,
         "melting_point": 453.7,
         "name": "Lithium",
-        "symbol": "Li",
-        "vanderwaals_radius": 1.82
+        "symbol": "Li"
     },
     "Mg": {
         "atomic_number": 12,
-        "atomic_radii": 2.8345889834999998,
-        "atomic_radii_2": 1.4172944917499999,
+        "atomic_radii": 2.6645138488289652,
+        "atomic_radii_2": 1.3322569244144826,
         "boiling_point": 1380,
-        "covalent_radius": 1.36,
         "density": 1.74,
         "electron_affinity": 19,
         "electronegativity": 1.31,
@@ -220,15 +193,13 @@
         "mass": 24.305,
         "melting_point": 922,
         "name": "Magnesium",
-        "symbol": "Mg",
-        "vanderwaals_radius": 1.73
+        "symbol": "Mg"
     },
     "N": {
         "atomic_number": 7,
-        "atomic_radii": 1.22832189285,
-        "atomic_radii_2": 0.614160946425,
+        "atomic_radii": 1.3417055550840888,
+        "atomic_radii_2": 0.6708527775420444,
         "boiling_point": 77.344,
-        "covalent_radius": 0.7,
         "density": 1.17,
         "electron_affinity": 7,
         "electronegativity": 3.04,
@@ -236,15 +207,13 @@
         "mass": 14.0067,
         "melting_point": 63.15,
         "name": "Nitrogen",
-        "symbol": "N",
-        "vanderwaals_radius": 1.55
+        "symbol": "N"
     },
     "Na": {
         "atomic_number": 11,
-        "atomic_radii": 3.4015067802,
-        "atomic_radii_2": 1.7007533901,
+        "atomic_radii": 3.1369453823092783,
+        "atomic_radii_2": 1.5684726911546392,
         "boiling_point": 1156.0,
-        "covalent_radius": 1.66,
         "density": 0.97,
         "electron_affinity": -53.0,
         "electronegativity": 0.93,
@@ -252,15 +221,13 @@
         "mass": 22.98977,
         "melting_point": 371.0,
         "name": "Sodium",
-        "symbol": "Na",
-        "vanderwaals_radius": 2.27
+        "symbol": "Na"
     },
     "Ne": {
         "atomic_number": 10,
-        "atomic_radii": 0.71809587582,
-        "atomic_radii_2": 0.35904793791,
+        "atomic_radii": 1.096041157674326,
+        "atomic_radii_2": 0.548020578837163,
         "boiling_point": 27.1,
-        "covalent_radius": 1.6,
         "density": 0.8999,
         "electron_affinity": 29,
         "electronegativity": 0,
@@ -268,15 +235,13 @@
         "mass": 20.1797,
         "melting_point": 24.55,
         "name": "Neon",
-        "symbol": "Ne",
-        "vanderwaals_radius": 1.54
+        "symbol": "Ne"
     },
     "O": {
         "atomic_number": 8,
-        "atomic_radii": 1.1338355934,
-        "atomic_radii_2": 0.5669177967,
+        "atomic_radii": 1.2472192483880264,
+        "atomic_radii_2": 0.6236096241940132,
         "boiling_point": 90.188,
-        "covalent_radius": 0.66,
         "density": 1.33,
         "electron_affinity": -141,
         "electronegativity": 3.44,
@@ -284,15 +249,13 @@
         "mass": 15.9994,
         "melting_point": 54.8,
         "name": "Oxygen",
-        "symbol": "O",
-        "vanderwaals_radius": 1.52
+        "symbol": "O"
     },
     "P": {
         "atomic_number": 15,
-        "atomic_radii": 1.889725989,
-        "atomic_radii_2": 0.9448629945,
+        "atomic_radii": 2.02200696329574,
+        "atomic_radii_2": 1.01100348164787,
         "boiling_point": 553.0,
-        "covalent_radius": 1.1,
         "density": 1.82,
         "electron_affinity": -72.0,
         "electronegativity": 2.19,
@@ -300,15 +263,13 @@
         "mass": 30.973761,
         "melting_point": 317.3,
         "name": "Phosphorus",
-        "symbol": "P",
-        "vanderwaals_radius": 1.8
+        "symbol": "P"
     },
     "S": {
         "atomic_number": 16,
-        "atomic_radii": 1.889725989,
-        "atomic_radii_2": 0.9448629945,
+        "atomic_radii": 1.9842124406173147,
+        "atomic_radii_2": 0.9921062203086574,
         "boiling_point": 717.82,
-        "covalent_radius": 1.04,
         "density": 2.06,
         "electron_affinity": -200,
         "electronegativity": 2.58,
@@ -316,15 +277,13 @@
         "mass": 32.065,
         "melting_point": 392.2,
         "name": "Sulfur",
-        "symbol": "S",
-        "vanderwaals_radius": 1.8
+        "symbol": "S"
     },
     "Sc": {
         "atomic_number": 21,
-        "atomic_radii": 3.0235615824,
-        "atomic_radii_2": 1.5117807912,
+        "atomic_radii": 3.2125344276661285,
+        "atomic_radii_2": 1.6062672138330643,
         "boiling_point": 3109,
-        "covalent_radius": 1.44,
         "density": 2.99,
         "electron_affinity": -18,
         "electronegativity": 1.36,
@@ -332,15 +291,13 @@
         "mass": 44.95591,
         "melting_point": 1814,
         "name": "Scandium",
-        "symbol": "Sc",
-        "vanderwaals_radius": 0
+        "symbol": "Sc"
     },
     "Si": {
         "atomic_number": 14,
-        "atomic_radii": 2.0786985879,
-        "atomic_radii_2": 1.03934929395,
+        "atomic_radii": 2.09759600865259,
+        "atomic_radii_2": 1.048798004326295,
         "boiling_point": 2630,
-        "covalent_radius": 1.17,
         "density": 2.33,
         "electron_affinity": -134.0,
         "electronegativity": 1.91,
@@ -348,8 +305,7 @@
         "mass": 28.0855,
         "melting_point": 1683,
         "name": "Silicon",
-        "symbol": "Si",
-        "vanderwaals_radius": 2.1
+        "symbol": "Si"
     },
     "isotopes_Al": {
         "27": {

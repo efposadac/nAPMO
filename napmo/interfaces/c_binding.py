@@ -68,8 +68,8 @@ class C_BasisSet(Structure):
             self.n_prim_cont[i] = F.get('length')
             for j in range(self.n_prim_cont[i]):
                 P = F.get('primitive')[j]
-                self.exponent[counter] = P.get('exponent')
-                self.coefficient[counter] = P.get('coefficient') * P.get('normalization')
+                self.exponent[counter] = P.exponent
+                self.coefficient[counter] = P.coefficient * P.normalization
                 counter += 1
 
 

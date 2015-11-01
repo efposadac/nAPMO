@@ -15,6 +15,7 @@ default: SERIAL
 $(BUILD):
 	cd src && $(MAKE) $@
 	python2 setup.py install --record files.txt --user
+	python3 setup.py install --record files.txt --user
 
 clean:
 	for dir in $(SUBDIRS); \

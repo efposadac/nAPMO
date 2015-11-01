@@ -41,7 +41,7 @@ def test_molecular_system_interface():
     except:
         assert True
 
-    assert a.get('u-').peek().get('name') == 'muon'
+    assert a.get('u-')[-1].get('name') == 'muon'
 
     assert a.get('atoms')[0].isQuantum() is False
 
@@ -105,7 +105,7 @@ def test_molecular_system_interface():
     assert molecule.n_atoms() == 2
 
     try:
-        a.show()
+        molecule.show()
     except:
         raise
 

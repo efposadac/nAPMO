@@ -67,7 +67,7 @@ class BasisSet(dict):
                         np.array(self['json'][k]['prim']),
                         np.array(self['json'][k]['cont']),
                         np.array(origin),
-                        np.array([x, y, z])
+                        np.array([x, y, z], dtype=np.int32)
                         ))
 
         self['length'] = len(self.get('function'))

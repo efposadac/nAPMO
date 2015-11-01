@@ -20,8 +20,6 @@ from napmo.utilities.radial_quadratures import *
 from napmo.interfaces.molecular_system import *
 from napmo.interfaces.becke_grid import *
 
-from horton import *
-
 
 def print_matrix(A, n):
     for i in range(n):
@@ -337,7 +335,7 @@ def build_potential(grid, U_lm, r, lmax):
 
 def solve_poisson(p_lm, lmax, molecule, grid, dens, fd=3):
     rm = molecule.get('atoms')[-1].get('atomic_radii_2')
-    r = np.array([grid.radial_abscissas[i] for i in range(grid.n_radial)]) * rm
+    r = grid.radial_abscissas  # * rm
 
     # Calculate boundaries
     q_n = grid.integrate(molecule, dens)  # integral single center source density
@@ -395,8 +393,8 @@ def coulomb_potential(a, b, grid, molecule, lmax, fd):
         return a.compute(coord) * b.compute(coord)
 
     # calculate p_lm
-    rm = molecule.get('atoms')[-1].get('atomic_radii_2')
-    rad = np.array([grid.radial_abscissas[i] for i in range(grid.n_radial)]) * rm
+    # rm = molecule.get('atoms')[-1].get('atomic_radii_2')
+    rad = grid.radial_abscissas  # * rm
     p_lm = rho_lm(p_ab, rad, angularPoints, lmax)
 
     # Solve poisson for p_lm
@@ -435,7 +433,7 @@ def coulomb_integrals(molecule, radialPoints, angularPoints, fd):
     grid = BeckeGrid(radialPoints, angularPoints)
 
     # Scale and move grids (output in cartesian)
-    grid.move(scaling_factor=molecule.get('atoms')[-1].get('atomic_radii_2'))
+    grid.move()
 
     # Start integrals calculation
     basis = molecule.get_basis_set('e-')

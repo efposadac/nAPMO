@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 # file: Slater_density.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
@@ -35,7 +35,7 @@ def init_system(element, distance, basis_kind, basis_file):
         bvalue = basis.compute(coord)
         output = 0.0
 
-        for k in range(occupation):
+        for k in range(int(occupation)):
             output += bvalue[k] * bvalue[k]
 
         return output * 2
@@ -49,23 +49,22 @@ def init_system(element, distance, basis_kind, basis_file):
 if __name__ == '__main__':
 
     # Grid definition
-    angularPoints = 110
-    radialPoints = 50
+    angularPoints = 14
+    radialPoints = 100
     grid = BeckeGrid(radialPoints, angularPoints)
     grid.show()
 
     # Test for diatomic molecules for the following elements:
-    elements = ['He', 'Li', 'O']
+    elements = ['He']  # , 'Li', 'O']
     distances = [2.75, 2.623, 1.206]
     basis_file = os.path.join(os.path.dirname(__file__), "STO.json")
     basis_kind = "STO"
 
     for (element, distance) in zip(elements, distances):
         molecule, exact, rho = init_system(element, distance, basis_kind, basis_file)
-
         # Calculate integral (Python Code)
         start_time = time.time()
-        integral_p = grid.integrate(molecule, rho)
+        integral_p = grid.integrate(molecule, rho, args=(molecule,))
         elapsed_time_p = time.time() - start_time
 
         print("%4s %12.8f  %12.8f %12.7f" % (

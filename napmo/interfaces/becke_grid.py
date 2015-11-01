@@ -29,11 +29,11 @@ class BeckeGrid(Structure):
     _fields_ = [
         ("n_radial", c_int),
         ("n_angular", c_int),
-        ("radial_abscissas", POINTER(c_double)),
-        ("radial_weights", POINTER(c_double)),
-        ("angular_theta", POINTER(c_double)),
-        ("angular_phi", POINTER(c_double)),
-        ("angular_weights", POINTER(c_double))
+        ("_radial_abscissas", POINTER(c_double)),
+        ("_radial_weights", POINTER(c_double)),
+        ("_angular_theta", POINTER(c_double)),
+        ("_angular_phi", POINTER(c_double)),
+        ("_angular_weights", POINTER(c_double))
     ]
 
     def __init__(self, n_radial=40, n_angular=110):
@@ -46,6 +46,26 @@ class BeckeGrid(Structure):
         self.spherical = True
         self.xyz = np.empty((self.size, 3))
         self.w = np.empty(self.size)
+
+    @property
+    def radial_abscissas(self):
+        return np.array(self._radial_abscissas[:self.n_radial])
+
+    @property
+    def radial_weights(self):
+        return np.array(self._radial_weights[:self.n_radial])
+
+    @property
+    def angular_theta(self):
+        return np.array(self._angular_theta[:self.n_angular])
+
+    @property
+    def angular_phi(self):
+        return np.array(self._angular_phi[:self.n_angular])
+
+    @property
+    def angular_weights(self):
+        return np.array(self._angular_weights[:self.n_angular])
 
     def free(self):
         """
@@ -185,10 +205,10 @@ class BeckeGrid(Structure):
         counter = 0
         for r in range(self.n_radial):
             for a in range(self.n_angular):
-                self.xyz[counter, 0] = self.radial_abscissas[r]
-                self.xyz[counter, 1] = self.angular_theta[a]
-                self.xyz[counter, 2] = self.angular_phi[a]
-                self.w[counter] = self.radial_weights[r] * self.angular_weights[a]
+                self.xyz[counter, 0] = self._radial_abscissas[r]
+                self.xyz[counter, 1] = self._angular_theta[a]
+                self.xyz[counter, 2] = self._angular_phi[a]
+                self.w[counter] = self._radial_weights[r] * self._angular_weights[a]
                 counter += 1
         self.expanded = True
 

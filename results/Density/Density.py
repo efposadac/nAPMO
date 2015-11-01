@@ -47,7 +47,7 @@ def init_system(element, distance, basis_kind, basis_file):
     def rho(coord, molecule, P=P):
         basis = molecule.get_basis_set('e-')
         occupation = molecule.n_occupation('e-')
-        bvalue = basis.compute(coord)
+        bvalue = np.array(basis.compute(coord)).flatten()
         output = bvalue.dot(P.dot(bvalue))
         return output
 
@@ -77,7 +77,7 @@ if __name__ == '__main__':
 
         # Calculate integral (Python Code)
         start_time = time.time()
-        integral_p = grid.integrate(molecule, rho)
+        integral_p = grid.integrate(molecule, rho, args=(molecule,))
         elapsed_time_p = time.time() - start_time
 
         # Calculate integral (C Code)
