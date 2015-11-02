@@ -15,8 +15,27 @@ efposadac@sissa.it*/
 
 /*
 Computes abscissas and weights for the Gauss-Chebyshev quadrature of second
-kind.
+kind. Includes the interval transformation from [-1,1] to [0,inf] according to
+Becke's paper.
 */
-void gaussChebyshev(int n, double* abscissas, double* weights);
+void gaussChebyshev(int n, double rm, double *abscissas, double *weights);
+
+/*
+Returns the radial points mapped uniformly in the interval [0,1], see
+Becke's paper.
+*/
+void gaussChebyshev_get_z(int n, double rm, double *abscissas, double *z);
+
+/*
+Returns the first derivative of the uniform z grid.
+*/
+void gaussChebyshev_deriv_z(int n, double rm, double *abscissas,
+                            double *deriv_z);
+
+/*
+Returns the second derivative of the uniform z grid.
+*/
+void gaussChebyshev_deriv2_z(int n, double rm, double *abscissas,
+                             double *deriv2_z);
 
 #endif

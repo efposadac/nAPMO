@@ -18,7 +18,7 @@ void grid_init(Grid *grid)
   grid->angular_weights = (double *)malloc(grid->n_angular * sizeof(double));
 
   lebedev(grid->n_angular, grid->angular_theta, grid->angular_phi, grid->angular_weights);
-  gaussChebyshev(grid->n_radial, grid->radial_abscissas, grid->radial_weights);
+  gaussChebyshev(grid->n_radial, 1.0, grid->radial_abscissas, grid->radial_weights);
 }
 
 void grid_free(Grid *grid)
