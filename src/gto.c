@@ -26,14 +26,15 @@ double gto_normalize_primitive(PrimitiveGaussian *f) {
 
 void gto_compute_primitive(PrimitiveGaussian *f, double *coord, double *output,
                            const int n_coord) {
-  int i, j;
+  int i, j, idx;
   double RP2, factor, aux;
 
   for (i = 0; i < n_coord; ++i) {
     RP2 = 0.0;
     factor = 1.0;
+    idx = i * 3;
     for (j = 0; j < 3; ++j) {
-      aux = coord[i * 3 + j] - f->origin[j];
+      aux = coord[idx + j] - f->origin[j];
       factor *= pow(aux, f->l[j]);
       RP2 += aux * aux;
     }
@@ -96,8 +97,8 @@ double gto_overlap_primitive(PrimitiveGaussian *f_a, PrimitiveGaussian *f_b) {
 }
 
 void gto_obaraSaika_recursion(double *x, double *y, double *z, double PA[3],
-                              double PB[3], const double gamma, const int l_a, const int l_b,
-                              const int max_l) {
+                              double PB[3], const double gamma, const int l_a,
+                              const int l_b, const int max_l) {
 
   int i, j, idx, idxp1, idxm1;
 
@@ -165,4 +166,3 @@ void gto_obaraSaika_recursion(double *x, double *y, double *z, double PA[3],
     }
   }
 }
-

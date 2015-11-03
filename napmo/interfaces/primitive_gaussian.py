@@ -67,12 +67,10 @@ class PrimitiveGaussian(Structure):
         """
         Computes the value of the object at ``coord``.
         """
-        if coord.ndim > 1:
-            coord = coord.flatten()
-
-        n_coord = int(coord.size/3)
+        n_coord = coord.shape[0]
         output = np.empty(n_coord)
-        napmo_library.gto_compute_primitive(byref(self), coord, output, n_coord)
+        napmo_library.gto_compute_primitive(
+            byref(self), coord, output, n_coord)
 
         return output
 
@@ -97,6 +95,7 @@ class PrimitiveGaussian(Structure):
 
 
 array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
+array_2d_double = npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
 
 napmo_library.gto_normalize_primitive.restype = c_double
 napmo_library.gto_normalize_primitive.argtypes = [
@@ -106,7 +105,7 @@ napmo_library.gto_normalize_primitive.argtypes = [
 napmo_library.gto_compute_primitive.restype = None
 napmo_library.gto_compute_primitive.argtypes = [
     POINTER(PrimitiveGaussian),
-    array_1d_double, array_1d_double,
+    array_2d_double, array_1d_double,
     c_int
 ]
 

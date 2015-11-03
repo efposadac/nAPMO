@@ -21,6 +21,7 @@ class BasisSet(dict):
 
     This class allows the management of STO and GTO basis-sets.
     """
+
     def __init__(self, name='user'):
         super(BasisSet, self).__init__()
         self['name'] = name
@@ -32,9 +33,9 @@ class BasisSet(dict):
         self['t_length'] = 0
 
     def __add__(self, other):
-        self['name'] += ', '+other.get('name')
-        self['kind'] += ', '+other.get('kind')
-        self['particle'] += ', '+other.get('particle')
+        self['name'] += ', ' + other.get('name')
+        self['kind'] += ', ' + other.get('kind')
+        self['particle'] += ', ' + other.get('particle')
         self['function'] += other.get('function')
         self['json'] += other.get('json')
         self['length'] += other.get('length')
@@ -58,9 +59,9 @@ class BasisSet(dict):
 
         for k in range(len(self['json'])):
             l = lvalue[self['json'][k]['angular']]
-            for i in range(l+1):
+            for i in range(l + 1):
                 x = l - i
-                for j in range(i+1):
+                for j in range(i + 1):
                     y = i - j
                     z = j
                     self['function'].append(ContractedGaussian(
@@ -68,7 +69,7 @@ class BasisSet(dict):
                         np.array(self['json'][k]['cont']),
                         np.array(origin),
                         np.array([x, y, z], dtype=np.int32)
-                        ))
+                    ))
 
         self['length'] = len(self.get('function'))
 
@@ -92,7 +93,7 @@ class BasisSet(dict):
 
         for k in range(len(self["json"])):
             l = lvalue[self["json"][k]["angular"]]
-            for m in range(-l, l+1):
+            for m in range(-l, l + 1):
                 self["function"].append(ContractedSlater(
                     np.array(self["json"][k]["prim"]),
                     np.array(self["json"][k]["cont"]),
@@ -107,7 +108,7 @@ class BasisSet(dict):
         for function in self.get('function'):
             self['t_length'] += function.get('length')
 
-    def compute(self, coord=np.array([0.0, 0.0, 0.0])):
+    def compute(self, coord=np.array([[0.0, 0.0, 0.0]])):
         """
         Compute all the basis-set functions at given ``coord``.
 

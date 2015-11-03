@@ -132,6 +132,9 @@ Returns:
     output (double): The value of cell_function (eq. 13, Becke, 1988) at point
 ``r``
 */
+
+#ifdef __CUDACC__
+
 __device__ double grid_weights_cuda(int n_particles, double* particle_origin, double* particle_radii,
                                     double r[3], int particleID);
 
@@ -155,7 +158,6 @@ __global__ void grid_integrate_kernel(const System sys, const int2 gridDim, doub
                                       double2* __restrict__ zw, double2* __restrict__ rw,
                                       double* __restrict__ dens, double* __restrict__ integral);
 
-#ifdef __CUDACC__
 /*
 Iterated cutoff profile. eq. 21, Becke 1988. (CUDA Device version)
 

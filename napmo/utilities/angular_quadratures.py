@@ -9,11 +9,13 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
+import numpy.ctypeslib as npct
+
 from ctypes import *
-from napmo.interfaces.c_binding import *
+from napmo.interfaces.c_binding import napmo_library
 
 
-def lebedev(n):
+def lebedev(n, spherical=True):
     """Computes the Lebedev points and weights for spherical integration.
 
     References:
@@ -41,27 +43,17 @@ def lebedev(n):
         print(lebpoints)
         raise ValueError('Invalid number of angular points', n)
 
-    size = (c_double * n)()
-    _t = cast(size, POINTER(c_double))
-
-    size = (c_double * n)()
-    _p = cast(size, POINTER(c_double))
-
-    size = (c_double * n)()
-    _w = cast(size, POINTER(c_double))
-
-    napmo_library.lebedev(n, _t, _p, _w)
-
-    t = np.zeros([n], dtype=np.float64)
-    p = np.zeros([n], dtype=np.float64)
-    w = np.zeros([n], dtype=np.float64)
-
-    for i in range(n):
-        t[i] = _t[i]
-        p[i] = _p[i]
-        w[i] = _w[i]
-
-    return t, p, w
+    if spherical:
+        t = np.empty(n)
+        p = np.empty(n)
+        w = np.empty(n)
+        napmo_library.lebedev_spherical(n, t, p, w)
+        return t, p, w
+    else:
+        w = np.empty(n)
+        p = np.empty([n, 3])
+        napmo_library.lebedev_cartesian(n, p, w)
+        return p, w
 
 
 def lebedev_get_order(n):
@@ -89,3 +81,22 @@ def lebedev_integrate(func, n, args=()):
     theta, phi, w = lebedev(n)
     integral = (func(theta, phi, *args) * w).sum()
     return integral * 4.0 * np.pi
+
+
+array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
+array_2d_double = npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
+
+napmo_library.lebedev_spherical.restype = None
+napmo_library.lebedev_spherical.argtypes = [
+    c_int,
+    array_1d_double,
+    array_1d_double,
+    array_1d_double
+]
+
+napmo_library.lebedev_cartesian.restype = None
+napmo_library.lebedev_cartesian.argtypes = [
+    c_int,
+    array_2d_double,
+    array_1d_double
+]

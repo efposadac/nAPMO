@@ -28,7 +28,8 @@ def test_multicenter_integrator():
     basis_file = "STO-3G.json"
     basis_kind = "GTO"
 
-    results = np.array([1.9999999595998637, 6.000002321070787, 7.999997958358362, 9.999998503574844, 11.999997997974441, 13.999997970177285, 16.00000891580461])
+    results = np.array([1.9999999595998637, 6.000002321070787, 7.999997958358362,
+                        9.999998503574844, 11.999997997974441, 13.999997970177285, 16.00000891580461])
     count = 0
 
     for (element, distance) in zip(elements, distances):
@@ -37,8 +38,10 @@ def test_multicenter_integrator():
 
         # Molecule definition
         molecule = MolecularSystem()
-        molecule.add_atom(element, [0.0, 0.0, distance/2.0], basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file)
-        molecule.add_atom(element, [0.0, 0.0, -distance/2.0], basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file)
+        molecule.add_atom(element, [0.0, 0.0, distance / 2.0],
+                          basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file)
+        molecule.add_atom(element, [0.0, 0.0, -distance / 2.0],
+                          basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file)
 
         # Get the stack of atoms.
         atoms = molecule.get('atoms')
@@ -47,17 +50,18 @@ def test_multicenter_integrator():
         system = CBinding(atoms)
 
         # Get the density matrix (from a previous calculation)
-        P = np.array(np.loadtxt(element+'_dens.dat'), order='F', dtype=np.float64)
-        os.system('cp '+element+'_dens.dat data.dens')
+        P = np.array(np.loadtxt(element + '_dens.dat'),
+                     order='F', dtype=np.float64)
+        os.system('cp ' + element + '_dens.dat data.dens')
 
         # Functional definition (for Python)
         def rho(coord, molecule, P=P):
             basis = molecule.get_basis_set('e-')
             occupation = molecule.n_occupation('e-')
-            bvalue = basis.compute(coord)
-            bvalue = np.array(bvalue).flatten()
-            output = bvalue.dot(P.dot(bvalue))
-
+            bvalue = np.array(basis.compute(coord))
+            output = np.empty(coord.shape[0])
+            for i in range(coord.shape[0]):
+                output[i] = bvalue[:, i].dot(P.dot(bvalue[:, i]))
             return output
 
         # Calculate integral (Python Code)

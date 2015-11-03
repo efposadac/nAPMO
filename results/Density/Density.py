@@ -47,8 +47,10 @@ def init_system(element, distance, basis_kind, basis_file):
     def rho(coord, molecule, P=P):
         basis = molecule.get_basis_set('e-')
         occupation = molecule.n_occupation('e-')
-        bvalue = np.array(basis.compute(coord)).flatten()
-        output = bvalue.dot(P.dot(bvalue))
+        bvalue = np.array(basis.compute(coord))
+        output = np.empty(coord.shape[0])
+        for i in range(coord.shape[0]):
+            output[i] = bvalue[:, i].dot(P.dot(bvalue[:, i]))
         return output
 
     return molecule, system, exact, rho

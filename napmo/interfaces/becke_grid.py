@@ -88,7 +88,7 @@ class BeckeGrid(Structure):
         Returns:
             P (float64): The value of cell_function (eq. 13, Becke, 1988) at point ``r``
         """
-        aux = (c_double*3)()
+        aux = (c_double * 3)()
 
         for i in range(3):
             aux[i] = c_double(r[i])
@@ -192,12 +192,13 @@ class BeckeGrid(Structure):
 
             self.move(particle.get("origin"), rm)
 
+            f = F(self.xyz, *args)
+
             for j in range(self.size):
                 r = self.xyz[j, :]
-
                 p = self.weight(r, i, molecule.get('atoms'))
                 aux = r - particle.get("origin")
-                integral += aux.dot(aux) * p * self.w[j] * rm * F(r, *args)
+                integral += aux.dot(aux) * p * self.w[j] * rm * f[j]
 
         return integral * 4.0 * np.pi
 
@@ -208,7 +209,8 @@ class BeckeGrid(Structure):
                 self.xyz[counter, 0] = self._radial_abscissas[r]
                 self.xyz[counter, 1] = self._angular_theta[a]
                 self.xyz[counter, 2] = self._angular_phi[a]
-                self.w[counter] = self._radial_weights[r] * self._angular_weights[a]
+                self.w[counter] = self._radial_weights[
+                    r] * self._angular_weights[a]
                 counter += 1
         self.expanded = True
 
@@ -268,12 +270,12 @@ class BeckeGrid(Structure):
 napmo_library.grid_weights.restype = c_double
 napmo_library.grid_weights.argtypes = [
     POINTER(CBinding),
-    POINTER(c_double*3),
+    POINTER(c_double * 3),
     c_int
 ]
 napmo_library.grid_integrate.restype = c_double
 napmo_library.grid_integrate.argtypes = [
     POINTER(CBinding),
     POINTER(BeckeGrid)
-    ]
+]
 #################################################

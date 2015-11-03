@@ -45,7 +45,7 @@ def tests_basis_set_interface():
     assert test.get('kind') == 'STO'
     assert test.get('length') == 5
 
-    value = np.array([9.91422306, -11.93017788, 0.0, 0.0, 0.0])
+    value = np.array([[9.91422306], [-11.93017788], [0.0], [0.0], [0.0]])
     np.testing.assert_allclose(test.compute(), value)
 
     test2 = BasisSet()

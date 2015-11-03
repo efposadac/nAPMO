@@ -28,6 +28,7 @@ class RadialGrid(object):
         size (int): Number of radial points.
         atomic_symbol (str): Atomic symbol for which the grid will be calculated.
     """
+
     def __init__(self, size, atomic_symbol):
         super(RadialGrid, self).__init__()
         self._rm = AtomicElementsDatabase()[atomic_symbol]['atomic_radii_2']
@@ -38,7 +39,8 @@ class RadialGrid(object):
         self._points = np.empty(size)
         self._weights = np.empty(size)
 
-        napmo_library.gaussChebyshev(size, self._rm, self._points, self._weights)
+        napmo_library.gaussChebyshev(
+            size, self._rm, self._points, self._weights)
 
         self._get_z()
         self._deriv_z()
@@ -49,7 +51,8 @@ class RadialGrid(object):
         Returns the radial points mapped uniformly in the interval [0,1], see Becke's paper.
         """
         self._z = np.empty(self.size)
-        napmo_library.gaussChebyshev_get_z(self.size, self._rm, self._points, self._z)
+        napmo_library.gaussChebyshev_get_z(
+            self.size, self._rm, self._points, self._z)
         self._step = self._z[0]
 
     def _deriv_z(self):
@@ -57,14 +60,16 @@ class RadialGrid(object):
         Returns the first derivative of the uniform z grid.
         """
         self._dz = np.empty(self.size)
-        napmo_library.gaussChebyshev_deriv_z(self.size, self._rm, self._points, self._dz)
+        napmo_library.gaussChebyshev_deriv_z(
+            self.size, self._rm, self._points, self._dz)
 
     def _deriv2_z(self):
         """
         Returns the second derivative of the uniform z grid.
         """
         self._d2z = np.empty(self.size)
-        napmo_library.gaussChebyshev_deriv2_z(self.size, self._rm, self._points, self._d2z)
+        napmo_library.gaussChebyshev_deriv2_z(
+            self.size, self._rm, self._points, self._d2z)
 
     @property
     def points(self):
