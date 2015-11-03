@@ -37,6 +37,9 @@ class AtomicGrid(object):
                 offset:offset + n_angular] = self.radial_grid.weights[i] * self.angular_grid.weights
             offset += n_angular
 
+        self._points += origin
+        self._becke_weights = np.ones(self.size)
+
     def spherical_expansion(self, lmax, f):
         lsize = (lmax + 1) * (lmax + 1)
         output = np.empty([self.radial_grid.size, lsize])
@@ -44,11 +47,18 @@ class AtomicGrid(object):
             self.angular_grid.lorder, lmax, self.radial_grid.size, f, output)
         return output
 
-    def evaluate_expansion(self):
-        pass
+    def evaluate_expansion(self, lmax, expansion):
+        output = np.empty(self.size)
+        napmo_library.grid_evaluate_atomic_expansion(
+            lmax, self.angular_grid.lorder, self.radial_grid.size,
+            expansion, self.points, output)
+        return output
 
-    def integrate(self):
-        pass
+    def integrate(self, *args):
+        args += (self.becke_weights,
+                 np.dstack([self.radial_grid._points**2] * self.angular_grid.lorder).flatten())
+        f = np.concatenate(args)
+        return napmo_library.grid_atomic_integrate(self.size, len(args), self.radial_grid.rm, f, self.weights)
 
     @property
     def points(self):
@@ -62,8 +72,15 @@ class AtomicGrid(object):
     def size(self):
         return self._size
 
-array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
-array_2d_double = npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
+    @property
+    def becke_weights(self):
+        return self._becke_weights
+
+
+array_1d_double = npct.ndpointer(
+    dtype=np.double, ndim=1, flags='CONTIGUOUS')
+array_2d_double = npct.ndpointer(
+    dtype=np.double, ndim=2, flags='CONTIGUOUS')
 
 napmo_library.lebedev_spherical_expansion.restype = None
 napmo_library.lebedev_spherical_expansion.argtypes = [
@@ -72,4 +89,23 @@ napmo_library.lebedev_spherical_expansion.argtypes = [
     c_int,
     array_1d_double,
     array_2d_double
+]
+
+napmo_library.grid_evaluate_atomic_expansion.restype = None
+napmo_library.grid_evaluate_atomic_expansion.argtypes = [
+    c_int,
+    c_int,
+    c_int,
+    array_2d_double,
+    array_2d_double,
+    array_1d_double
+]
+
+napmo_library.grid_atomic_integrate.restype = c_double
+napmo_library.grid_atomic_integrate.argtypes = [
+    c_int,
+    c_int,
+    c_double,
+    array_1d_double,
+    array_1d_double
 ]

@@ -8,6 +8,8 @@ efposadac@sissa.it*/
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <string.h>
+
 #define max(a, b)                                                              \
   ({                                                                           \
     __typeof__(a) _a = (a);                                                    \
@@ -25,6 +27,21 @@ inline int utils_factorial2(const int n) {
       output *= i;
     }
     return output;
+  }
+}
+
+inline void multiply_segmented_array(int size, int segments, double* array, double * output){
+  int i, j;
+  memcpy(output, array, size * sizeof(double));
+
+  for (i = 1; i < segments; ++i) {
+#ifdef _OMP
+#pragma omp parallel for default(shared) firstprivate(i) private(j)
+#endif
+    for (j = 0; j < size; ++j) {
+
+      output[j] *= array[i * size + j];
+    }
   }
 }
 

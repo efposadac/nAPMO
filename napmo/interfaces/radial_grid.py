@@ -88,6 +88,10 @@ class RadialGrid(object):
         return self._symbol
 
     @property
+    def rm(self):
+        return self._rm
+
+    @property
     def z(self):
         return self._z
 

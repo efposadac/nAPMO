@@ -90,22 +90,12 @@ void lebedev_spherical_expansion(const int lorder, const int lmax,
 
 double lebedev_integrate(const int lorder, const int nfunc, double *f,
                          double *w) {
-  int i, j;
+  int i;
   double *work;
   double output;
 
   work = (double *)malloc(lorder * sizeof(double));
-  memcpy(work, f, lorder * sizeof(double));
-
-  for (i = 1; i < nfunc; ++i) {
-#ifdef _OMP
-#pragma omp parallel for default(shared) firstprivate(i) private(j)
-#endif
-    for (j = 0; j < lorder; ++j) {
-
-      work[j] *= f[i * lorder + j];
-    }
-  }
+  multiply_segmented_array(lorder, nfunc, f, work);
 
   output = 0.0;
 #ifdef _OMP

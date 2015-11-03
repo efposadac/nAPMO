@@ -96,15 +96,16 @@ if __name__ == '__main__':
 
         # Build rho again:
 
-        # # napmo
-        # rho_napmo = build_potential(grid, p_lm, np.ones(grid.size), lmax)
-        # print('rebuild napmo:', np.allclose(rho_napmo, rho))
+        # napmo
+        rho_napmo = build_potential(grid, p_lm, np.ones(grid.size), lmax)
+        new_rho = new_grid.evaluate_expansion(lmax, new_decomposition)
+        print('rebuild napmo:', np.allclose(new_rho, rho))
 
-        # # horton
-        # rho_horton = molgrid.zeros()
-        # molgrid.eval_decomposition(
-        #     density_decomposition, molgrid.centers[-1], rho_horton)
-        # print('rebuild horton:', np.allclose(rho_horton, rho))
+        # horton
+        rho_horton = molgrid.zeros()
+        molgrid.eval_decomposition(
+            density_decomposition, molgrid.centers[-1], rho_horton)
+        print('rebuild horton:', np.allclose(rho_horton, rho))
 
         # #############################
         # ### Integration test

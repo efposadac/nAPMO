@@ -8,7 +8,6 @@ from napmo.utilities.angular_quadratures import *
 from napmo.utilities.radial_quadratures import *
 from napmo.interfaces.molecular_system import *
 from napmo.interfaces.becke_grid import *
-from napmo.interfaces.atomic_grid import *
 
 
 def real_spherical_harmonics(m, l, theta, phi):
@@ -94,8 +93,8 @@ if __name__ == '__main__':
     rm = particles[-1].get('atomic_radii_2')
 
     # Grid definition
-    angularPoints = 14
-    radialPoints = 1
+    angularPoints = 110
+    radialPoints = 20
 
     grid = BeckeGrid(radialPoints, angularPoints)
     grid.move(scaling_factor=rm)
@@ -112,7 +111,7 @@ if __name__ == '__main__':
     zzz = r_to_z(rad_quad, rm)
 
     #########################################################
-    for ii in range(3):
+    for i in range(3):
         g_a = basis.get('function')[0]
 
         def p_ab(r):
@@ -124,12 +123,7 @@ if __name__ == '__main__':
         #########################################################
 
         expansion = rho_lm(p_ab, rad_quad, angularPoints, lmax)
-        test = AtomicGrid(radialPoints, angularPoints,
-                          molecule.get('atoms')[-1].get('origin'),
-                          molecule.get('atoms')[-1].get('symbol'))
-        f = p_ab(test.points)
-        exp_test = test.spherical_expansion(lmax, f)
-        print("expansion: ", exp_test, expansion)
+
         #########################################################
         recovered = recover_rho(grid, expansion, lmax)
 
