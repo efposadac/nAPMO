@@ -9,10 +9,11 @@ efposadac@sissa.it*/
 #include <stdio.h>
 
 double gto_normalize_primitive(PrimitiveGaussian *f) {
+  int i;
   double output;
   int aux = 0;
 
-  for (int i = 0; i < 3; ++i) {
+  for (i = 0; i < 3; ++i) {
     aux += f->l[i];
   }
   output = (pow((2.0 * f->exponent / M_PI), 0.75)) /

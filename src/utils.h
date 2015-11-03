@@ -17,20 +17,21 @@ efposadac@sissa.it*/
     _a > _b ? _a : _b;                                                         \
   })
 
-inline int utils_factorial2(const int n) {
+static inline int utils_factorial2(const int n) {
+  int i;
   int output = 1;
 
   if (n < 1) {
     return 0;
   } else {
-    for (int i = n; i > 0; i -= 2) {
+    for (i = n; i > 0; i -= 2) {
       output *= i;
     }
     return output;
   }
 }
 
-inline void multiply_segmented_array(int size, int segments, double* array, double * output){
+static inline void multiply_segmented_array(int size, int segments, double* array, double * output){
   int i, j;
   memcpy(output, array, size * sizeof(double));
 

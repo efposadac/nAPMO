@@ -28,7 +28,7 @@ LDLIBS := -lgsl -lgslcblas -lm -lgomp
 
 # gcc compiler support
 CC := gcc
-CFLAGS := -Wall -O2 -ffast-math -fPIC -g -pg
+CFLAGS := -Wall -O2 -ffast-math -fPIC -g -pg 
 LDFLAGS := -shared -fPIC
 
 # Nvidia support 
