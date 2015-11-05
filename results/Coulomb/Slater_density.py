@@ -14,8 +14,8 @@ import time
 
 from copy import deepcopy
 
-from napmo.interfaces.molecular_system import *
-from napmo.interfaces.becke_grid import *
+from napmo.system.molecular_system import MolecularSystem
+from napmo.grids.becke_grid import BeckeGrid
 
 """
 Calcualtion of :math:`\int \\rho(\\bf r)` for several diatomic molecules.
@@ -25,8 +25,10 @@ Calcualtion of :math:`\int \\rho(\\bf r)` for several diatomic molecules.
 def init_system(element, distance, basis_kind, basis_file):
     # Molecule definition
     molecule = MolecularSystem()
-    molecule.add_atom(element, [0.000000, 0.000000, distance/2.0], basis_kind=basis_kind, basis_file=basis_file)
-    molecule.add_atom(element, [0.000000, 0.000000, -distance/2.0], basis_kind=basis_kind, basis_file=basis_file)
+    molecule.add_atom(element, [0.000000, 0.000000, distance / 2.0],
+                      basis_kind=basis_kind, basis_file=basis_file)
+    molecule.add_atom(element, [0.000000, 0.000000, -distance / 2.0],
+                      basis_kind=basis_kind, basis_file=basis_file)
 
     # Functional definition (for Python)
     def rho(coord, molecule):
@@ -61,13 +63,14 @@ if __name__ == '__main__':
     basis_kind = "STO"
 
     for (element, distance) in zip(elements, distances):
-        molecule, exact, rho = init_system(element, distance, basis_kind, basis_file)
+        molecule, exact, rho = init_system(
+            element, distance, basis_kind, basis_file)
         # Calculate integral (Python Code)
         start_time = time.time()
         integral_p = grid.integrate(molecule, rho, args=(molecule,))
         elapsed_time_p = time.time() - start_time
 
         print("%4s %12.8f  %12.8f %12.7f" % (
-            element+str(2), integral_p, np.abs(exact - integral_p), elapsed_time_p))
+            element + str(2), integral_p, np.abs(exact - integral_p), elapsed_time_p))
 
     grid.free()

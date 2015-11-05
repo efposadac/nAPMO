@@ -12,7 +12,7 @@ import numpy as np
 import numpy.ctypeslib as npct
 
 from ctypes import *
-from napmo.interfaces.c_binding import napmo_library
+from napmo.system.c_binding import napmo_library
 
 
 def lebedev(n, spherical=True):

@@ -10,7 +10,7 @@ from __future__ import print_function
 
 import numpy as np
 
-from napmo.utilities.databases import ElementaryParticlesDatabase
+from napmo.data.databases import ElementaryParticlesDatabase
 
 
 class ElementaryParticle(dict):

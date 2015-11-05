@@ -38,6 +38,5 @@ clean:
 	rm -rf *.o
 	rm -rf *.optrpt
 	rm -rf r00*
-	(cd test && $(MAKE) clean)
 
 .PHONY: default clean

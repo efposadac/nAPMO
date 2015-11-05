@@ -10,9 +10,8 @@ from __future__ import print_function
 
 import numpy as np
 
-import napmo.interfaces.elementary_particle
-from napmo.utilities.databases import AtomicElementsDatabase
-from napmo.utilities.constants import ANGSTROM_TO_BOHR
+from napmo.data.databases import AtomicElementsDatabase
+from napmo.data.constants import ANGSTROM_TO_BOHR
 
 
 class AtomicElement(dict):

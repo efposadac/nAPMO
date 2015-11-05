@@ -7,7 +7,7 @@
 
 import numpy as np
 
-from napmo.interfaces.primitive_slater import PrimitiveSlater
+from napmo.system.primitive_slater import PrimitiveSlater
 
 
 def test_primitive_slater_interface():

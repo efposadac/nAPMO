@@ -9,8 +9,8 @@ import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.utilities.angular_quadratures import *
-from napmo.interfaces.c_binding import napmo_library
+from napmo.utilities.angular_quadratures import lebedev
+from napmo.system.c_binding import napmo_library
 
 
 class AngularGrid(object):

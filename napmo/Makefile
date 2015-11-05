@@ -5,7 +5,7 @@
 # Version: 0.1
 # efposadac@sissa.it
 
-SUBDIRS = interfaces utilities
+SUBDIRS = data grids system utilities tests
 
 default::
 

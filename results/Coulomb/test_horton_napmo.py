@@ -11,12 +11,11 @@ import time
 
 from napmo.utilities.angular_quadratures import *
 from napmo.utilities.radial_quadratures import *
-from napmo.interfaces.molecular_system import *
-from napmo.interfaces.becke_grid import *
-from napmo.interfaces.atomic_grid import AtomicGrid as napmogrid
+from napmo.system.molecular_system import MolecularSystem
+from napmo.grids.becke_grid import BeckeGrid
+from napmo.grids.atomic_grid import AtomicGrid as napmogrid
 
 from horton import *
-
 from Coulomb import *
 
 if __name__ == '__main__':

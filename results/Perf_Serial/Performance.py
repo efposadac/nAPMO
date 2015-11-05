@@ -15,15 +15,17 @@ from copy import deepcopy
 import os
 import time
 
-from napmo.interfaces.molecular_system import *
-from napmo.interfaces.becke_grid import *
+from napmo.system.molecular_system import MolecularSystem
+from napmo.grids.becke_grid import BeckeGrid
 
 
 # Molecule definition
 def init_system():
     molecule = MolecularSystem()
-    molecule.add_atom('H', [0.0, 0.0,  0.371], basis_kind='GTO', basis_file='basis.json')
-    molecule.add_atom('H', [0.0, 0.0, -0.371], basis_kind='GTO', basis_file='basis.json')
+    molecule.add_atom('H', [0.0, 0.0,  0.371],
+                      basis_kind='GTO', basis_file='basis.json')
+    molecule.add_atom('H', [0.0, 0.0, -0.371],
+                      basis_kind='GTO', basis_file='basis.json')
     molecule.show()
 
     # Get the stack of atoms.
@@ -70,11 +72,11 @@ def radial_scaling():
         # Calculate integral (C Code)
         start_time = time.time()
         integral_c = grid.integrate_c(system)
-        elapsed_time_c.push((time.time() - start_time)*100)
+        elapsed_time_c.push((time.time() - start_time) * 100)
 
         # Print the results.
         print("%5d %12.8f  %12.8f  %12.7f  %12.7f" % (
-                radialPoint, integral_c, integral_p, elapsed_time_p.peek(), elapsed_time_c.peek()))
+            radialPoint, integral_c, integral_p, elapsed_time_p.peek(), elapsed_time_c.peek()))
 
         grid.free()
 
@@ -92,7 +94,8 @@ def radial_scaling():
 def angular_scaling():
     atoms, system, rho = init_system()
     # Grid definition
-    angularPoints = [110, 170, 194, 230, 266, 302, 350, 434, 590, 770, 974, 1202]
+    angularPoints = [110, 170, 194, 230, 266,
+                     302, 350, 434, 590, 770, 974, 1202]
     radialPoints = 100
 
     elapsed_time_p = Stack()
@@ -109,11 +112,11 @@ def angular_scaling():
         # Calculate integral (C Code)
         start_time = time.time()
         integral_c = grid.integrate_c(system)
-        elapsed_time_c.push((time.time() - start_time)*100)
+        elapsed_time_c.push((time.time() - start_time) * 100)
 
         # Print the results.
         print("%5d %12.8f  %12.8f  %12.7f  %12.7f" % (
-                angularPoint, integral_c, integral_p, elapsed_time_p.peek(), elapsed_time_c.peek()))
+            angularPoint, integral_c, integral_p, elapsed_time_p.peek(), elapsed_time_c.peek()))
 
         grid.free()
 

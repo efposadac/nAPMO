@@ -4,8 +4,9 @@
 # All rights reserved.
 # Version: 0.1
 # efposadac@sissa.it
+import os
 
-from napmo.interfaces.molecular_system import *
+from napmo.system.molecular_system import MolecularSystem
 
 
 def test_molecular_system_interface():
@@ -52,25 +53,26 @@ def test_molecular_system_interface():
     # More real test
     particle = "N"
     basis_name = "STO-3G"
-    basis_file = "basis.json"
+    basis_file = os.path.join(
+        os.path.dirname(__file__), "basis.json")
     basis_kind = "GTO"
 
     molecule = MolecularSystem()
 
     molecule.add_atom(
-                    particle, [0.000000, 0.000000, 0.70997005],
-                    basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
-                    )
+        particle, [0.000000, 0.000000, 0.70997005],
+        basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
+    )
 
     molecule.add_atom(
-                    particle, [0.000000, 0.000000, -0.70997005],
-                    basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
-                    )
+        particle, [0.000000, 0.000000, -0.70997005],
+        basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
+    )
 
     molecule.add_elementary_particle(
-                                    'u+', [0.000000, 0.000000, -0.70997005],
-                                    basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
-                                    )
+        'u+', [0.000000, 0.000000, -0.70997005],
+        basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
+    )
 
     assert molecule.n_particles('e-') == 14
     assert molecule.n_elementary_particles() == 2
@@ -79,25 +81,26 @@ def test_molecular_system_interface():
 
     particle = "N"
     basis_name = "STO-3G"
-    basis_file = "basis.json"
+    basis_file = basis_file = os.path.join(
+        os.path.dirname(__file__), "basis.json")
     basis_kind = "STO"
 
     molecule = MolecularSystem()
 
     molecule.add_atom(
-                    particle, [0.000000, 0.000000, 0.70997005],
-                    basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
-                    )
+        particle, [0.000000, 0.000000, 0.70997005],
+        basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
+    )
 
     molecule.add_atom(
-                    particle, [0.000000, 0.000000, -0.70997005],
-                    basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
-                    )
+        particle, [0.000000, 0.000000, -0.70997005],
+        basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
+    )
 
     molecule.add_elementary_particle(
-                                    'u-', [0.000000, 0.000000, -0.70997005],
-                                    basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
-                                    )
+        'u-', [0.000000, 0.000000, -0.70997005],
+        basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file
+    )
 
     assert molecule.n_particles('e-') == 14
     assert molecule.n_particles('u-') == 1

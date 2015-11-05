@@ -7,8 +7,8 @@
 # efposadac@sissa.it
 
 import numpy as np
-
-from napmo.interfaces.basis_set import BasisSet
+import os
+from napmo.system.basis_set import BasisSet
 
 
 def tests_basis_set_interface():
@@ -18,7 +18,8 @@ def tests_basis_set_interface():
     assert test.get('particle') == None
     assert test.get('kind') == None
 
-    file = open('basis.json')
+    basis_file = os.path.join(os.path.dirname(__file__), 'basis.json')
+    file = open(basis_file)
     basis_data = file.read().replace('\n', '')
     file.close()
 

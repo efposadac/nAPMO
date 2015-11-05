@@ -11,10 +11,8 @@ from __future__ import print_function
 import numpy as np
 from ctypes import *
 
-from napmo.interfaces.c_binding import *
-from napmo.utilities.constants import *
-from napmo.interfaces.atomic_grid import *
-from napmo.interfaces.becke import *
+from napmo.system.c_binding import napmo_library, CBinding
+from napmo.grids.becke import GridBecke
 
 
 class BeckeGrid(Structure):

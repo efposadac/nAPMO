@@ -19,8 +19,7 @@ from napmo.interfaces.stack import Stack
 
 def gauss_chebishev_omp():
     nprocs = np.array([i for i in range(1, 9)])
-    times = Stack()
-
+    times = []
     os.system('cd ../../src/test/; make')
 
     for nproc in nprocs:
@@ -31,11 +30,12 @@ def gauss_chebishev_omp():
             '; ../../src/test/test_gauss_chebyshev.x')
         times.append(time.time() - start_time)
 
-        print(nproc, times.peek())
+        print(nproc, times[-1])
 
     times = np.array(times)
     plt.title('Scaling in gauss_chebishev function')
-    plt.plot(nprocs, times[0]/times, '-s', label='1e8 gauss_chebishev quad. 10 rep.')
+    plt.plot(nprocs, times[0] / times, '-s',
+             label='1e8 gauss_chebishev quad. 10 rep.')
     plt.xlabel('nprocs')
     plt.ylabel('speedup')
     plt.legend(loc=4)
@@ -59,7 +59,7 @@ def mmi_omp():
 
     times = np.array(times)
     plt.title('Scaling in MMI')
-    plt.plot(nprocs, times[0]/times, '-s', label='C2 \int \\rho(r)')
+    plt.plot(nprocs, times[0] / times, '-s', label='C2 \int \\rho(r)')
     plt.xlabel('nprocs')
     plt.ylabel('speedup')
     plt.legend(loc=4)

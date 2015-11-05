@@ -6,15 +6,17 @@
 # Version: 0.1
 # efposadac@sissa.it
 
-from napmo.interfaces.molecular_system import *
-from napmo.interfaces.becke_grid import *
+from napmo.system.molecular_system import MolecularSystem
+from napmo.grids.becke_grid import BeckeGrid
 
 
 def init_system(element, distance, basis_kind, basis_file):
     # Molecule definition
     molecule = MolecularSystem()
-    molecule.add_atom(element, [0.000000, 0.000000, distance/2.0], basis_kind=basis_kind, basis_file=basis_file)
-    molecule.add_atom(element, [0.000000, 0.000000, -distance/2.0], basis_kind=basis_kind, basis_file=basis_file)
+    molecule.add_atom(element, [0.000000, 0.000000, distance / 2.0],
+                      basis_kind=basis_kind, basis_file=basis_file)
+    molecule.add_atom(element, [0.000000, 0.000000, -distance / 2.0],
+                      basis_kind=basis_kind, basis_file=basis_file)
     # molecule.show()
 
     # Get the stack of atoms.

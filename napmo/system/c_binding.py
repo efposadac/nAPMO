@@ -13,7 +13,7 @@ from copy import deepcopy
 import os
 import sysconfig
 
-from napmo.utilities.constants import *
+from napmo.data.constants import ANGSTROM_TO_BOHR
 
 
 class C_BasisSet(Structure):
@@ -62,8 +62,8 @@ class C_BasisSet(Structure):
             self.normalization[i] = F.get('normalization')
 
             for j in range(3):
-                self.l_index[i*3+j] = F.get('l')[j]
-                self.origin[i*3+j] = F.get('origin')[j]
+                self.l_index[i * 3 + j] = F.get('l')[j]
+                self.origin[i * 3 + j] = F.get('origin')[j]
 
             self.n_prim_cont[i] = F.get('length')
             for j in range(self.n_prim_cont[i]):
@@ -112,7 +112,7 @@ class CBinding(Structure):
             self.particle_number[i] = atom('atomic_number')
 
             for j in range(3):
-                self.particle_origin[i*3+j] = atom('origin')[j]
+                self.particle_origin[i * 3 + j] = atom('origin')[j]
 
             if i > 0:
                 basis += atom('basis')

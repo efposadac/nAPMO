@@ -1,6 +1,7 @@
-from napmo.interfaces.becke import *
-from napmo.interfaces.molecular_system import *
-from napmo.interfaces.becke_grid import *
+
+from napmo.interfaces.molecular_system import MolecularSystem
+from napmo.grids.becke import GridBecke
+from napmo.grids.becke_grid import BeckeGrid
 
 import numpy as np
 import os

@@ -14,8 +14,9 @@ from copy import deepcopy
 import os
 import time
 
-from napmo.interfaces.molecular_system import *
-from napmo.interfaces.becke_grid import *
+from napmo.system.molecular_system import MolecularSystem
+from napmo.grids.becke_grid import BeckeGrid
+from napmo.grids.becke import GridBecke
 
 """
 Calcualtion of :math:`\int \\rho(\\bf r)` for several diatomic molecules.
@@ -63,8 +64,9 @@ if __name__ == '__main__':
     # Grid definition
     angularPoints = 194
     radialPoints = 100
-    grid = BeckeGrid(radialPoints, angularPoints)
-    grid.show()
+
+    grid_old = BeckeGrid(radialPoints, angularPoints)
+    grid_old.show()
 
     # Test for diatomic molecules for the following elements:
     elements = ['H', 'Li', 'Be', 'B', 'C', 'N', 'O']
@@ -80,21 +82,26 @@ if __name__ == '__main__':
         molecule, system, exact, rho = init_system(
             element, distance, basis_kind, basis_file)
 
+        grid = GridBecke(molecule, radialPoints, angularPoints)
+        # grid.show()
+
         # Calculate integral (Python Code)
         start_time = time.time()
-        integral_p = grid.integrate(molecule, rho, args=(molecule,))
+        f = rho(grid.points, molecule)
+        integral_p = grid.integrate(f)
         elapsed_time_p = time.time() - start_time
 
         # Calculate integral (C Code)
         start_time = time.time()
-        integral_c = grid.integrate_c(system)
+        integral_c = grid_old.integrate_c(system)
         elapsed_time_c = time.time() - start_time
 
         # Print the results.
         print("%4s %12.8f  %12.8f  %12.8f  %12.7f  %12.7f" % (
-            element + str(2), integral_c, integral_p, np.abs(exact - integral_p), elapsed_time_p, elapsed_time_c))
+            element + str(2),
+            integral_c, integral_p, np.abs(exact - integral_p),
+            elapsed_time_p, elapsed_time_c))
 
-        # Delete temporary files.
         os.system('rm data.dens')
 
-    grid.free()
+    # grid.free()

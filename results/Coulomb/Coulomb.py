@@ -17,8 +17,8 @@ import time
 
 from napmo.utilities.angular_quadratures import *
 from napmo.utilities.radial_quadratures import *
-from napmo.interfaces.molecular_system import *
-from napmo.interfaces.becke_grid import *
+from napmo.system.molecular_system import MolecularSystem
+from napmo.grids.becke_grid import BeckeGrid
 
 
 def print_matrix(A, n):

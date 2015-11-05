@@ -5,8 +5,8 @@
 # Version: 0.1
 # efposadac@sissa.it
 
-from napmo.interfaces.elementary_particle import ElementaryParticle
-from napmo.interfaces.basis_set import BasisSet
+from napmo.system.elementary_particle import ElementaryParticle
+from napmo.system.basis_set import BasisSet
 
 
 def test_elementary_particle_interface():

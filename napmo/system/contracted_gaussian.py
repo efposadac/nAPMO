@@ -10,7 +10,7 @@ from __future__ import print_function
 import numpy as np
 import scipy.misc
 
-from napmo.interfaces.primitive_gaussian import PrimitiveGaussian
+from napmo.system.primitive_gaussian import PrimitiveGaussian
 
 
 class ContractedGaussian(dict):

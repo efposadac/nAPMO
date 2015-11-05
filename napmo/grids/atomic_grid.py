@@ -5,11 +5,13 @@
 # Version: 0.1
 # efposadac@sissa.it
 
+import numpy as np
 import numpy.ctypeslib as npct
+from ctypes import *
 
-from napmo.interfaces.radial_grid import *
-from napmo.interfaces.angular_grid import *
-from napmo.interfaces.c_binding import napmo_library
+from napmo.grids.radial_grid import RadialGrid
+from napmo.grids.angular_grid import AngularGrid
+from napmo.system.c_binding import napmo_library
 
 
 class AtomicGrid(object):

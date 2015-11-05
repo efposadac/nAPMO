@@ -9,8 +9,9 @@ import numpy as np
 from copy import deepcopy
 import os
 
-from napmo.interfaces.molecular_system import *
-from napmo.interfaces.becke_grid import *
+from napmo.system.c_binding import CBinding
+from napmo.system.molecular_system import MolecularSystem
+from napmo.grids.becke_grid import BeckeGrid
 
 
 def test_multicenter_integrator():
@@ -25,7 +26,8 @@ def test_multicenter_integrator():
     elements = ['H', 'Li', 'Be', 'B', 'C', 'N', 'O']
     distances = [0.742, 2.623, 2.427, 1.586, 1.268, 1.098, 1.206]
     basis_name = "STO-3G"
-    basis_file = "STO-3G.json"
+    basis_file = os.path.join(
+        os.path.dirname(__file__), "STO-3G.json")
     basis_kind = "GTO"
 
     results = np.array([1.9999999595998637, 6.000002321070787, 7.999997958358362,
@@ -50,9 +52,10 @@ def test_multicenter_integrator():
         system = CBinding(atoms)
 
         # Get the density matrix (from a previous calculation)
-        P = np.array(np.loadtxt(element + '_dens.dat'),
-                     order='F', dtype=np.float64)
-        os.system('cp ' + element + '_dens.dat data.dens')
+        file_dens = os.path.join(os.path.dirname(
+            __file__), element + '_dens.dat')
+        P = np.array(np.loadtxt(file_dens), order='F', dtype=np.float64)
+        os.system('cp ' + file_dens + ' data.dens')
 
         # Functional definition (for Python)
         def rho(coord, molecule, P=P):

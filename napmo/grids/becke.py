@@ -1,4 +1,4 @@
-# file: becke_grid.py
+# file: becke.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
@@ -12,9 +12,8 @@ import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.interfaces.c_binding import *
-from napmo.utilities.constants import *
-from napmo.interfaces.atomic_grid import *
+from napmo.system.c_binding import napmo_library
+from napmo.grids.atomic_grid import AtomicGrid
 
 
 class GridBecke(Structure):

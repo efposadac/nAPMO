@@ -11,8 +11,8 @@ from __future__ import print_function
 import numpy as np
 import json
 
-from napmo.interfaces.contracted_slater import ContractedSlater
-from napmo.interfaces.contracted_gaussian import ContractedGaussian
+from napmo.system.contracted_slater import ContractedSlater
+from napmo.system.contracted_gaussian import ContractedGaussian
 
 
 class BasisSet(dict):

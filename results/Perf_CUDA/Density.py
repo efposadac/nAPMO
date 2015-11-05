@@ -14,8 +14,8 @@ from copy import deepcopy
 import os
 import time
 
-from napmo.interfaces.molecular_system import *
-from napmo.interfaces.becke_grid import *
+from napmo.system.molecular_system import MolecularSystem
+from napmo.grids.becke_grid import BeckeGrid
 
 """
 Calcualtion of :math:`\int \\rho(\\bf r)` for several diatomic molecules.
@@ -25,8 +25,10 @@ Calcualtion of :math:`\int \\rho(\\bf r)` for several diatomic molecules.
 def init_system(element, distance, basis_kind, basis_file):
     # Molecule definition
     molecule = MolecularSystem()
-    molecule.add_atom(element, [0.000000, 0.000000, distance/2.0], basis_kind=basis_kind, basis_file=basis_file)
-    molecule.add_atom(element, [0.000000, 0.000000, -distance/2.0], basis_kind=basis_kind, basis_file=basis_file)
+    molecule.add_atom(element, [0.000000, 0.000000, distance / 2.0],
+                      basis_kind=basis_kind, basis_file=basis_file)
+    molecule.add_atom(element, [0.000000, 0.000000, -distance / 2.0],
+                      basis_kind=basis_kind, basis_file=basis_file)
     # molecule.show()
 
     # Get the stack of atoms.
@@ -44,9 +46,9 @@ def init_system(element, distance, basis_kind, basis_file):
     exact = molecule.n_particles('e-')
 
     # Get the density matrix (from a previous calculation)
-    file_dens = os.path.join(os.path.dirname(__file__), element+'_dens.dat')
+    file_dens = os.path.join(os.path.dirname(__file__), element + '_dens.dat')
     P = np.array(np.loadtxt(file_dens), order='F', dtype=np.float64)
-    os.system('cp '+file_dens+' data.dens')
+    os.system('cp ' + file_dens + ' data.dens')
 
     # Functional definition (for Python)
     def rho(coord, particle_stack, P=P, basis=basis):
@@ -76,7 +78,8 @@ if __name__ == '__main__':
     print("System Int C         Error          Time C")
 
     for (element, distance) in zip(elements, distances):
-        atoms, system, exact, rho = init_system(element, distance, basis_kind, basis_file)
+        atoms, system, exact, rho = init_system(
+            element, distance, basis_kind, basis_file)
 
         # Calculate integral (C Code)
         start_time = time.time()
@@ -85,7 +88,7 @@ if __name__ == '__main__':
 
         # Print the results.
         print("%4s %12.8f  %12.8f  %12.7f" % (
-            element+str(2), integral_c, np.abs(exact - integral_c), elapsed_time_c))
+            element + str(2), integral_c, np.abs(exact - integral_c), elapsed_time_c))
 
         # Delete temporary files.
         os.system('rm data.dens')
