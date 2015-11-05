@@ -27,7 +27,7 @@ class ElementaryParticle(dict):
         origin (numpy.ndarray(3)): Origin for the particle (atomic units.)
     """
 
-    def __init__(self, symbol='null', origin=[0.0, 0.0, 0.0]):
+    def __init__(self, symbol='null', origin=np.zeros(3, dtype=np.float64)):
         super(ElementaryParticle, self).__init__()
 
         assert isinstance(symbol, str)
@@ -36,7 +36,8 @@ class ElementaryParticle(dict):
         try:
             self.update(ElementaryParticlesDatabase()[symbol])
         except KeyError:
-            print('Elementary particle: ', symbol, ' not present!, creating one.')
+            print('Elementary particle: ', symbol,
+                  ' not present!, creating one.')
             self.update(ElementaryParticlesDatabase()['user'])
             self['symbol'] = symbol
 

@@ -26,6 +26,7 @@ class MolecularSystem(dict):
     Args:
         name (str): Name of the object.
     """
+
     def __init__(self):
         super(MolecularSystem, self).__init__()
 
@@ -56,7 +57,8 @@ class MolecularSystem(dict):
         if units == 'ANGSTROMS':
             origin *= ANGSTROM_TO_BOHR
 
-        atom = AtomicElement(symbol, origin=origin, BOA=BOA, mass_number=mass_number, units='Bohr')
+        atom = AtomicElement(symbol, origin=origin, BOA=BOA,
+                             mass_number=mass_number, units='Bohr')
         atom['size'] = 1
 
         # load basis-set
@@ -76,7 +78,8 @@ class MolecularSystem(dict):
                 atom.get('basis').load_slater(symbol, basis_data, origin)
 
         self.get('atoms').append(atom)
-        self.add_elementary_particle('e-', origin, size=atom.get('atomic_number'), units='Bohr')
+        self.add_elementary_particle(
+            'e-', origin, size=atom.get('atomic_number'), units='Bohr')
         self.get('e-')[-1]['basis'] = self.get('atoms')[-1].get('basis')
 
     def add_elementary_particle(self, symbol, origin, size=1, units='ANGSTROMS',
@@ -112,15 +115,17 @@ class MolecularSystem(dict):
         # load basis-set
         self[symbol][-1]['basis'] = BasisSet(basis_name)
 
-        if basis_file != None:
+        if basis_file is not None:
             file = open(basis_file)
             basis_data = file.read().replace('\n', '')
             file.close()
 
             if basis_kind == 'GTO':
-                self[symbol][-1].get('basis').load_gaussian(symbol, basis_data, origin)
+                self[
+                    symbol][-1].get('basis').load_gaussian(symbol, basis_data, origin)
             elif basis_kind == 'STO':
-                self[symbol][-1].get('basis').load_slater(symbol, basis_data, origin)
+                self[symbol][-1].get('basis').load_slater(symbol,
+                                                          basis_data, origin)
 
     def n_occupation(self, symbol):
         """
@@ -198,16 +203,16 @@ class MolecularSystem(dict):
             print(type(particles[-1]).__name__, ': ', symbol, end=" ")
             print('  n. particles: ', self.n_particles(symbol))
             print(
-                    '{0:7}'.format("Symbol"),
-                    '{0:5}'.format("n."),
-                    '{0:40}'.format("origin (Bohr)"),
-                    '{0:10}'.format("Basis-set")
-                )
+                '{0:7}'.format("Symbol"),
+                '{0:5}'.format("n."),
+                '{0:40}'.format("origin (Bohr)"),
+                '{0:10}'.format("Basis-set")
+            )
             for particle in particles:
                 print(
-                        '{0:7}'.format(particle.get('symbol')),
-                        '{0:5}'.format(str(particle.get('size'))),
-                        '{0:40}'.format(str(particle.get('origin'))),
-                        '{0:10}'.format(str(particle.get('basis')['name']))
-                    )
+                    '{0:7}'.format(particle.get('symbol')),
+                    '{0:5}'.format(str(particle.get('size'))),
+                    '{0:40}'.format(str(particle.get('origin'))),
+                    '{0:10}'.format(str(particle.get('basis')['name']))
+                )
             print('------------------------------------------------------------------')

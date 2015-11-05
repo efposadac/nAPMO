@@ -9,6 +9,7 @@ efposadac@sissa.it*/
 #define UTILS_H
 
 #include <string.h>
+#include <math.h>
 
 #define max(a, b)                                                              \
   ({                                                                           \
@@ -31,7 +32,10 @@ static inline int utils_factorial2(const int n) {
   }
 }
 
-static inline void multiply_segmented_array(int size, int segments, double* array, double * output){
+static inline void utils_multiply_segmented_array(const int size,
+                                                  const int segments,
+                                                  double *array,
+                                                  double *output) {
   int i, j;
   memcpy(output, array, size * sizeof(double));
 
@@ -44,6 +48,22 @@ static inline void multiply_segmented_array(int size, int segments, double* arra
       output[j] *= array[i * size + j];
     }
   }
+}
+
+/*
+Compute the Euclidian distance between two points.
+*/
+static inline double utils_distance(double a[3], double b[3]) {
+  int i;
+  double output, aux;
+
+  output = 0.0;
+  for (i = 0; i < 3; ++i) {
+    aux = a[i] - b[i];
+    output += aux * aux;
+  }
+
+  return sqrt(output);
 }
 
 #endif

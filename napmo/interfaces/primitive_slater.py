@@ -40,7 +40,8 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
         origin (numpy.ndarray(3)) : coordinates (spherical)
 
     """
-    def __init__(self, exponent, coefficient=1.0, n=1, l=0, m=0, origin=np.array([0.0, 0.0, 0.0])):
+
+    def __init__(self, exponent, coefficient=1.0, n=1, l=0, m=0, origin=np.zeros(3, dtype=np.float64)):
         super(PrimitiveSlater, self).__init__()
 
         self['n'] = n
@@ -49,7 +50,7 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
         self["exponent"] = exponent
         self["coefficient"] = coefficient
         self['normalization'] = self.normalize()
-        self["origin"] = np.array(origin)
+        self["origin"] = np.array(origin, dtype=np.float64)
 
     def normalize(self):
         """
@@ -59,9 +60,10 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
 
         """
         output = (
-                    (2.0 * self['exponent'])**self['n'] *
-                    np.sqrt((2.0 * self['exponent'])/(scipy.misc.factorial(2.0 * self['n'])))
-                )
+            (2.0 * self['exponent'])**self['n'] *
+            np.sqrt((2.0 * self['exponent']) /
+                    (scipy.misc.factorial(2.0 * self['n'])))
+        )
 
         return output
 
@@ -86,11 +88,11 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
         phi = np.arctan2(RP[1], RP[0])
 
         output = (
-                self['coefficient'] *
-                self['normalization'] *
-                self.spherical(theta, phi) *
-                self.radial(r)
-            )
+            self['coefficient'] *
+            self['normalization'] *
+            self.spherical(theta, phi) *
+            self.radial(r)
+        )
 
         return output
 
@@ -108,8 +110,10 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
         other_ll = np.abs(other['l'])
         other_mm = np.abs(other['m'])
 
-        l = int((float((ll+other_ll+2)-np.abs(ll-other_ll))) / (float((ll+other_ll+2) + np.abs(ll-other_ll))))
-        m = int((float((mm+other_mm+2)-np.abs(mm-other_mm))) / (float((mm+other_mm+2) + np.abs(mm-other_mm))))
+        l = int((float((ll + other_ll + 2) - np.abs(ll - other_ll))) /
+                (float((ll + other_ll + 2) + np.abs(ll - other_ll))))
+        m = int((float((mm + other_mm + 2) - np.abs(mm - other_mm))) /
+                (float((mm + other_mm + 2) + np.abs(mm - other_mm))))
 
         n = scipy.misc.factorial(self['n'] + other['n'])
 
@@ -117,10 +121,10 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
         aux = self['n'] + other['n'] + 1
 
         output = (
-                l * m * (n / (zeta**aux)) *
-                self['coefficient'] * other['coefficient'] *
-                self['normalization'] * other['normalization']
-                )
+            l * m * (n / (zeta**aux)) *
+            self['coefficient'] * other['coefficient'] *
+            self['normalization'] * other['normalization']
+        )
 
         return output
 

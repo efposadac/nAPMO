@@ -31,16 +31,16 @@ class RadialGrid(object):
 
     def __init__(self, size, atomic_symbol):
         super(RadialGrid, self).__init__()
-        self._rm = AtomicElementsDatabase()[atomic_symbol]['atomic_radii_2']
+        self._radii = AtomicElementsDatabase()[atomic_symbol]['atomic_radii_2']
 
         self._size = size
         self._symbol = atomic_symbol
 
-        self._points = np.empty(size)
-        self._weights = np.empty(size)
+        self._points = np.empty(size, dtype=np.float64)
+        self._weights = np.empty(size, dtype=np.float64)
 
         napmo_library.gaussChebyshev(
-            size, self._rm, self._points, self._weights)
+            size, self._radii, self._points, self._weights)
 
         self._get_z()
         self._deriv_z()
@@ -50,26 +50,26 @@ class RadialGrid(object):
         """
         Returns the radial points mapped uniformly in the interval [0,1], see Becke's paper.
         """
-        self._z = np.empty(self.size)
+        self._z = np.empty(self.size, dtype=np.float64)
         napmo_library.gaussChebyshev_get_z(
-            self.size, self._rm, self._points, self._z)
+            self.size, self._radii, self._points, self._z)
         self._step = self._z[0]
 
     def _deriv_z(self):
         """
         Returns the first derivative of the uniform z grid.
         """
-        self._dz = np.empty(self.size)
+        self._dz = np.empty(self.size, dtype=np.float64)
         napmo_library.gaussChebyshev_deriv_z(
-            self.size, self._rm, self._points, self._dz)
+            self.size, self._radii, self._points, self._dz)
 
     def _deriv2_z(self):
         """
         Returns the second derivative of the uniform z grid.
         """
-        self._d2z = np.empty(self.size)
+        self._d2z = np.empty(self.size, dtype=np.float64)
         napmo_library.gaussChebyshev_deriv2_z(
-            self.size, self._rm, self._points, self._d2z)
+            self.size, self._radii, self._points, self._d2z)
 
     @property
     def points(self):
@@ -88,8 +88,8 @@ class RadialGrid(object):
         return self._symbol
 
     @property
-    def rm(self):
-        return self._rm
+    def radii(self):
+        return self._radii
 
     @property
     def z(self):

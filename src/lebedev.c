@@ -95,7 +95,7 @@ double lebedev_integrate(const int lorder, const int nfunc, double *f,
   double output;
 
   work = (double *)malloc(lorder * sizeof(double));
-  multiply_segmented_array(lorder, nfunc, f, work);
+  utils_multiply_segmented_array(lorder, nfunc, f, work);
 
   output = 0.0;
 #ifdef _OMP

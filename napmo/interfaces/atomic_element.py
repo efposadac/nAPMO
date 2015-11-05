@@ -29,7 +29,8 @@ class AtomicElement(dict):
             If 0 the system will choose the most abundant isotope. Default is 0.
         units (str, optional): Units of the origin, valid values are 'Angstroms' or 'Bohr'
     '''
-    def __init__(self, symbol, mass_number=0, BOA=True, origin=[0.0, 0.0, 0.0], units='Angstroms'):
+
+    def __init__(self, symbol, mass_number=0, BOA=True, origin=np.zeros(3, dtype=np.float64), units='Angstroms'):
         super(AtomicElement, self).__init__()
 
         assert isinstance(symbol, str)
@@ -46,7 +47,8 @@ class AtomicElement(dict):
 
         # choose the most abundant mass number (if mass number is not provided)
         aux = AtomicElementsDatabase()['isotopes_' + symbol]['most_abundant']
-        self['mass'] = AtomicElementsDatabase()['isotopes_' + symbol][str(aux)]['atomic_weight']
+        self['mass'] = AtomicElementsDatabase(
+        )['isotopes_' + symbol][str(aux)]['atomic_weight']
 
         if mass_number != 0:
             BOA = False
@@ -54,15 +56,18 @@ class AtomicElement(dict):
         if not BOA:
             if mass_number != 0:
                 try:
-                    self.update(AtomicElementsDatabase()['isotopes_' + symbol][str(mass_number)])
+                    self.update(AtomicElementsDatabase()[
+                                'isotopes_' + symbol][str(mass_number)])
                     self['mass'] = self.get('atomic_weight')
                     self['symbol'] = symbol + '_' + str(mass_number)
 
                 except KeyError:
-                    print('Mass number: ', str(mass_number), symbol, ' not present!')
+                    print('Mass number: ', str(mass_number),
+                          symbol, ' not present!')
                     raise
             else:
-                self.update(AtomicElementsDatabase()['isotopes_' + symbol][str(aux)])
+                self.update(AtomicElementsDatabase()[
+                            'isotopes_' + symbol][str(aux)])
                 self['symbol'] = symbol + '_' + str(aux)
 
         # converting to Bohr

@@ -33,6 +33,10 @@ void gaussChebyshev(int n, double rm, double *abscissas, double *weights) {
 void gaussChebyshev_get_z(int n, double rm, double *abscissas, double *z) {
 
   int i;
+
+#ifdef _OMP
+#pragma omp parallel for default(shared) private(i)
+#endif
   for (i = 0; i < n; ++i) {
     z[i] = acos((abscissas[i] - rm) / (abscissas[i] + rm)) * M_1_PI;
   }
@@ -41,6 +45,9 @@ void gaussChebyshev_get_z(int n, double rm, double *abscissas, double *z) {
 void gaussChebyshev_deriv_z(int n, double rm, double *abscissas,
                             double *deriv_z) {
   int i;
+#ifdef _OMP
+#pragma omp parallel for default(shared) private(i)
+#endif
   for (i = 0; i < n; ++i) {
     deriv_z[i] = -sqrt(rm * abscissas[i] / pow(rm + abscissas[i], 2)) /
                  (M_PI * abscissas[i]);
@@ -50,6 +57,9 @@ void gaussChebyshev_deriv_z(int n, double rm, double *abscissas,
 void gaussChebyshev_deriv2_z(int n, double rm, double *abscissas,
                              double *deriv2_z) {
   int i;
+#ifdef _OMP
+#pragma omp parallel for default(shared) private(i)
+#endif
   for (i = 0; i < n; ++i) {
     deriv2_z[i] =
         rm * rm * (rm + (3.0 * abscissas[i])) /

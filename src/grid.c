@@ -57,7 +57,7 @@ double grid_atomic_integrate(const int size, const int segments, double rm, doub
   double output;
 
   work = (double *)malloc(size * sizeof(double));
-  multiply_segmented_array(size, segments, f, work);
+  utils_multiply_segmented_array(size, segments, f, work);
 
   output = 0.0;
 #ifdef _OMP

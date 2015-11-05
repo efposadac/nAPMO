@@ -28,8 +28,11 @@ double gto_normalize_primitive(PrimitiveGaussian *f) {
 void gto_compute_primitive(PrimitiveGaussian *f, double *coord, double *output,
                            const int n_coord) {
   int i, j, idx;
-  double RP2, factor, aux;
+  double RP2 = 0.0, factor = 1.0, aux;
 
+#ifdef _OMP
+#pragma omp parallel for default(shared) private(i, j, idx, aux, factor, RP2)
+#endif
   for (i = 0; i < n_coord; ++i) {
     RP2 = 0.0;
     factor = 1.0;

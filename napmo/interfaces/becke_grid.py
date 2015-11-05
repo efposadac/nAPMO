@@ -14,6 +14,7 @@ from ctypes import *
 from napmo.interfaces.c_binding import *
 from napmo.utilities.constants import *
 from napmo.interfaces.atomic_grid import *
+from napmo.interfaces.becke import *
 
 
 class BeckeGrid(Structure):
@@ -45,8 +46,8 @@ class BeckeGrid(Structure):
         self.size = self.n_radial * self.n_angular
         self.expanded = False
         self.spherical = True
-        self.xyz = np.empty((self.size, 3))
-        self.w = np.empty(self.size)
+        self.xyz = np.empty((self.size, 3), dtype=np.float64)
+        self.w = np.empty(self.size, dtype=np.float64)
 
     @property
     def radial_abscissas(self):
@@ -117,23 +118,9 @@ class BeckeGrid(Structure):
             F (function): Functional to be integrated.
             args (sequence, optional): Extra arguments to pass to F.
         """
-        r = np.zeros([3], dtype=np.float64)
-        integral = 0.0
-        integral_new = 0.0
-        system = CBinding(molecule.get('atoms'))
-
-        for i in range(len(molecule.get('atoms'))):
-            particle = molecule.get('atoms')[i]
-            atgrid = AtomicGrid(
-                self.n_radial, self.n_angular, particle.get("origin"), particle.get("symbol"))
-
-            for j in range(atgrid.size):
-                r = atgrid.points[j, :]
-                atgrid.becke_weights[j] = self.weight_c(
-                    r, i, system)
-
-            f = F(atgrid.points, *args)
-            integral += atgrid.integrate(f)
+        grid = GridBecke(molecule, self.n_radial, self.n_angular)
+        f = F(grid.points, *args)
+        integral = grid.integrate(f)
 
         return integral
 

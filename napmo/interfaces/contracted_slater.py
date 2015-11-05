@@ -24,7 +24,15 @@ class ContractedSlater(dict):
         l (int): Quantum number l = S=0, P=1, D=2, etc.
         m (int): Quantum number m = order of the harmonic, m <= l
     """
-    def __init__(self, exponents=np.array([0.5]), coefficients=np.array([1.0]), origin=np.array([0.0, 0.0, 0.0]), n=np.array([0]), l=0, m=0):
+
+    def __init__(self,
+                 exponents=np.array([0.5], dtype=np.float64),
+                 coefficients=np.array([1.0], dtype=np.float64),
+                 origin=np.zeros(3, dtype=np.float64),
+                 n=np.zeros(1, dtype=np.int32),
+                 l=0,
+                 m=0):
+
         super(ContractedSlater, self).__init__()
 
         self["length"] = len(exponents)
@@ -37,7 +45,7 @@ class ContractedSlater(dict):
         for (exponent, coefficient, ni) in zip(exponents, coefficients, n):
             self.get("primitive").append(PrimitiveSlater(
                 exponent, coefficient, ni, l, m, origin
-                ))
+            ))
 
         self["normalization"] = 1.0
         aux = self.normalize()
@@ -69,7 +77,7 @@ class ContractedSlater(dict):
         """
         Computes the value of the contracted STO at ``coord``.
         """
-        RP = np.zeros(3)
+        RP = np.zeros(3, dtype=np.float64)
         RP = coord - self.get('origin')
 
         if coord.ndim > 1:

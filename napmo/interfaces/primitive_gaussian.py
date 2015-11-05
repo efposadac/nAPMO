@@ -41,7 +41,12 @@ class PrimitiveGaussian(Structure):
         ("normalization", c_double)
     ]
 
-    def __init__(self, exponent=0.0, coefficient=1.0, l=np.zeros(3, dtype=np.int32), origin=np.zeros(3, dtype=np.float64)):
+    def __init__(self,
+                 exponent=0.0,
+                 coefficient=1.0,
+                 l=np.zeros(3, dtype=np.int32),
+                 origin=np.zeros(3, dtype=np.float64)):
+
         super(PrimitiveGaussian, self).__init__()
         self.exponent = c_double(exponent)
         self.coefficient = c_double(coefficient)

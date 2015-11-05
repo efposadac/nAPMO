@@ -26,8 +26,8 @@ class AtomicGrid(object):
         self.radial_grid = RadialGrid(n_radial, atomic_symbol)
         self.angular_grid = AngularGrid(n_angular)
 
-        self._points = np.empty([self.size, 3])
-        self._weights = np.empty(self.size)
+        self._points = np.empty([self.size, 3], dtype=np.float64)
+        self._weights = np.empty(self.size, dtype=np.float64)
 
         offset = 0
         for i in range(n_radial):
@@ -38,27 +38,26 @@ class AtomicGrid(object):
             offset += n_angular
 
         self._points += origin
-        self._becke_weights = np.ones(self.size)
 
     def spherical_expansion(self, lmax, f):
         lsize = (lmax + 1) * (lmax + 1)
-        output = np.empty([self.radial_grid.size, lsize])
+        output = np.empty([self.radial_grid.size, lsize], dtype=np.float64)
         napmo_library.lebedev_spherical_expansion(
             self.angular_grid.lorder, lmax, self.radial_grid.size, f, output)
         return output
 
     def evaluate_expansion(self, lmax, expansion):
-        output = np.empty(self.size)
+        output = np.empty(self.size, dtype=np.float64)
         napmo_library.grid_evaluate_atomic_expansion(
             lmax, self.angular_grid.lorder, self.radial_grid.size,
             expansion, self.points, output)
         return output
 
     def integrate(self, *args):
-        args += (self.becke_weights,
-                 np.dstack([self.radial_grid._points**2] * self.angular_grid.lorder).flatten())
+        args += (np.dstack([self.radial_grid._points**2] *
+                           self.angular_grid.lorder).flatten(), )
         f = np.concatenate(args)
-        return napmo_library.grid_atomic_integrate(self.size, len(args), self.radial_grid.rm, f, self.weights)
+        return napmo_library.grid_atomic_integrate(self.size, len(args), self.radial_grid.radii, f, self.weights)
 
     @property
     def points(self):
@@ -73,8 +72,8 @@ class AtomicGrid(object):
         return self._size
 
     @property
-    def becke_weights(self):
-        return self._becke_weights
+    def origin(self):
+        return self._origin
 
 
 array_1d_double = npct.ndpointer(

@@ -43,7 +43,7 @@ class BasisSet(dict):
 
         return self
 
-    def load_gaussian(self, particle, data, origin=[0.0, 0.0, 0.0]):
+    def load_gaussian(self, particle, data, origin=np.zeros(3, dtype=np.float64)):
         """
         Load a Gaussian Type Orbital (GTO) basis-set.
 
@@ -65,9 +65,9 @@ class BasisSet(dict):
                     y = i - j
                     z = j
                     self['function'].append(ContractedGaussian(
-                        np.array(self['json'][k]['prim']),
-                        np.array(self['json'][k]['cont']),
-                        np.array(origin),
+                        np.array(self['json'][k]['prim'], dtype=np.float64),
+                        np.array(self['json'][k]['cont'], dtype=np.float64),
+                        np.array(origin, dtype=np.float64),
                         np.array([x, y, z], dtype=np.int32)
                     ))
 
@@ -77,7 +77,7 @@ class BasisSet(dict):
         for function in self.get('function'):
             self['t_length'] += function.get('length')
 
-    def load_slater(self, particle, data, origin=[0.0, 0.0, 0.0]):
+    def load_slater(self, particle, data, origin=np.zeros(3, dtype=np.float64)):
         """
         Load a Slater Type Orbital (STO) basis-set.
 
@@ -95,10 +95,10 @@ class BasisSet(dict):
             l = lvalue[self["json"][k]["angular"]]
             for m in range(-l, l + 1):
                 self["function"].append(ContractedSlater(
-                    np.array(self["json"][k]["prim"]),
-                    np.array(self["json"][k]["cont"]),
-                    np.array(origin),
-                    np.array(self["json"][k]["n"]),
+                    np.array(self["json"][k]["prim"], dtype=np.float64),
+                    np.array(self["json"][k]["cont"], dtype=np.float64),
+                    np.array(origin, dtype=np.float64),
+                    np.array(self["json"][k]["n"], dtype=np.int32),
                     l,
                     m
                 ))
@@ -108,7 +108,7 @@ class BasisSet(dict):
         for function in self.get('function'):
             self['t_length'] += function.get('length')
 
-    def compute(self, coord=np.array([[0.0, 0.0, 0.0]])):
+    def compute(self, coord=np.zeros([1, 3], dtype=np.float64)):
         """
         Compute all the basis-set functions at given ``coord``.
 

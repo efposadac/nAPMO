@@ -41,7 +41,13 @@ class ContractedGaussian(dict):
         origin (numpy.ndarray(3)) : coordinates (cartesian)
         l (numpy.ndarray(3)) : :math:`\\bf n`. Angular moment (x, y, and z components)
     """
-    def __init__(self, exponents=np.array([0.5]), coefficients=np.array([1.0]), origin=np.array([0.0, 0.0, 0.0]), l=np.array([0, 0, 0])):
+
+    def __init__(self,
+                 exponents=np.array([0.5], dtype=np.float64),
+                 coefficients=np.array([1.0], dtype=np.float64),
+                 origin=np.zeros(3, dtype=np.float64),
+                 l=np.zeros(3, dtype=np.int32)):
+
         super(ContractedGaussian, self).__init__()
 
         self["length"] = len(exponents)
@@ -52,7 +58,7 @@ class ContractedGaussian(dict):
         for (exponent, coefficient) in zip(exponents, coefficients):
             self.get("primitive").append(PrimitiveGaussian(
                 exponent, coefficient, l, origin
-                ))
+            ))
         self["normalization"] = 1.0
         aux = self.normalize()
         self["normalization"] = aux
