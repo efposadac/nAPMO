@@ -56,7 +56,7 @@ class AtomicGrid(object):
         return output
 
     def integrate(self, *args):
-        args += (np.dstack([self.radial_grid._points**2] *
+        args += (np.dstack([self.radial_grid.points**2] *
                            self.angular_grid.lorder).flatten(), )
         f = np.concatenate(args)
         return napmo_library.grid_atomic_integrate(self.size, len(args), self.radial_grid.radii, f, self.weights)

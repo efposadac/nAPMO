@@ -15,6 +15,7 @@ import os
 import time
 
 from napmo.system.molecular_system import MolecularSystem
+from napmo.system.c_binding import CBinding
 from napmo.grids.becke_grid import BeckeGrid
 from napmo.grids.becke import GridBecke
 

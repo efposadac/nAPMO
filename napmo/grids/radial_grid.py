@@ -13,7 +13,7 @@ from napmo.data.databases import AtomicElementsDatabase
 from napmo.system.c_binding import napmo_library
 
 
-class RadialGrid(object):
+class RadialGrid(Structure):
     """
     Defines a radial grid for multi-center molecular integration.
 
@@ -28,19 +28,29 @@ class RadialGrid(object):
         size (int): Number of radial points.
         atomic_symbol (str): Atomic symbol for which the grid will be calculated.
     """
+    _fields_ = [
+        ("_size", c_int),
+        ("_radii", c_double),
+        ("_points", POINTER(c_double)),
+        ("_weights", POINTER(c_double)),
+        ("_z", POINTER(c_double)),
+        ("_dz", POINTER(c_double)),
+        ("_d2z", POINTER(c_double))
+    ]
 
     def __init__(self, size, atomic_symbol):
         super(RadialGrid, self).__init__()
         self._radii = AtomicElementsDatabase()[atomic_symbol]['atomic_radii_2']
-
         self._size = size
         self._symbol = atomic_symbol
 
-        self._points = np.empty(size, dtype=np.float64)
-        self._weights = np.empty(size, dtype=np.float64)
+        self.points = np.empty(self.size, dtype=np.float64)
+        self._points = np.ctypeslib.as_ctypes(self.points)
 
-        napmo_library.gaussChebyshev(
-            size, self._radii, self._points, self._weights)
+        self.weights = np.empty(self.size, dtype=np.float64)
+        self._weights = np.ctypeslib.as_ctypes(self.weights)
+
+        napmo_library.radial_init(byref(self))
 
         self._get_z()
         self._deriv_z()
@@ -50,34 +60,28 @@ class RadialGrid(object):
         """
         Returns the radial points mapped uniformly in the interval [0,1], see Becke's paper.
         """
-        self._z = np.empty(self.size, dtype=np.float64)
-        napmo_library.gaussChebyshev_get_z(
-            self.size, self._radii, self._points, self._z)
-        self._step = self._z[0]
+        self.z = np.empty(self.size, dtype=np.float64)
+        self._z = np.ctypeslib.as_ctypes(self.z)
+
+        napmo_library.radial_get_z(byref(self))
 
     def _deriv_z(self):
         """
         Returns the first derivative of the uniform z grid.
         """
-        self._dz = np.empty(self.size, dtype=np.float64)
-        napmo_library.gaussChebyshev_deriv_z(
-            self.size, self._radii, self._points, self._dz)
+        self.dz = np.empty(self.size, dtype=np.float64)
+        self._dz = np.ctypeslib.as_ctypes(self.dz)
+
+        napmo_library.radial_deriv_z(byref(self))
 
     def _deriv2_z(self):
         """
         Returns the second derivative of the uniform z grid.
         """
-        self._d2z = np.empty(self.size, dtype=np.float64)
-        napmo_library.gaussChebyshev_deriv2_z(
-            self.size, self._radii, self._points, self._d2z)
+        self.d2z = np.empty(self.size, dtype=np.float64)
+        self._d2z = np.ctypeslib.as_ctypes(self.d2z)
 
-    @property
-    def points(self):
-        return self._points
-
-    @property
-    def weights(self):
-        return self._weights
+        napmo_library.radial_deriv2_z(byref(self))
 
     @property
     def size(self):
@@ -91,48 +95,14 @@ class RadialGrid(object):
     def radii(self):
         return self._radii
 
-    @property
-    def z(self):
-        return self._z
+napmo_library.radial_init.restype = None
+napmo_library.radial_init.argtypes = [POINTER(RadialGrid)]
 
-    @property
-    def dz(self):
-        return self._dz
+napmo_library.radial_get_z.restype = None
+napmo_library.radial_get_z.argtypes = [POINTER(RadialGrid)]
 
-    @property
-    def d2z(self):
-        return self._d2z
+napmo_library.radial_deriv_z.restype = None
+napmo_library.radial_deriv_z.argtypes = [POINTER(RadialGrid)]
 
-array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
-
-napmo_library.gaussChebyshev.restype = None
-napmo_library.gaussChebyshev.argtypes = [
-    c_int,
-    c_double,
-    array_1d_double,
-    array_1d_double
-]
-
-napmo_library.gaussChebyshev_get_z.restype = None
-napmo_library.gaussChebyshev_get_z.argtypes = [
-    c_int,
-    c_double,
-    array_1d_double,
-    array_1d_double
-]
-
-napmo_library.gaussChebyshev_deriv_z.restype = None
-napmo_library.gaussChebyshev_deriv_z.argtypes = [
-    c_int,
-    c_double,
-    array_1d_double,
-    array_1d_double
-]
-
-napmo_library.gaussChebyshev_deriv2_z.restype = None
-napmo_library.gaussChebyshev_deriv2_z.argtypes = [
-    c_int,
-    c_double,
-    array_1d_double,
-    array_1d_double
-]
+napmo_library.radial_deriv2_z.restype = None
+napmo_library.radial_deriv2_z.argtypes = [POINTER(RadialGrid)]

@@ -14,11 +14,14 @@ import scipy as sci
 import scipy.special as sp
 import matplotlib.pyplot as plt
 import time
+import os
 
 from napmo.utilities.angular_quadratures import *
 from napmo.utilities.radial_quadratures import *
 from napmo.system.molecular_system import MolecularSystem
 from napmo.grids.becke_grid import BeckeGrid
+from napmo.grids.becke import GridBecke
+from napmo.grids.poisson_solver import poisson_solver
 
 
 def print_matrix(A, n):
@@ -359,10 +362,6 @@ def solve_poisson(p_lm, lmax, molecule, grid, dens, fd=3):
     if np.abs(q_n) > 1.0e-16:
         u_00 = np.sqrt(4.0 * np.pi * q_n)
 
-    # Solve U_lm
-    lsize = (lmax + 1)**2
-    U_lm = np.zeros((grid.n_radial, lsize))
-
     # Obtain z points.
     z = r_to_z(r, rm)
     h = z[0]
@@ -370,10 +369,6 @@ def solve_poisson(p_lm, lmax, molecule, grid, dens, fd=3):
     # Solve U_lm
     lsize = (lmax + 1)**2
     U_lm = np.zeros((grid.n_radial, lsize))
-
-    # Obtain z points.
-    z = r_to_z(r, rm)
-    h = z[0]
 
     lindex = 0
     for l in range(lmax + 1):
@@ -475,6 +470,9 @@ def coulomb_integrals(molecule, radialPoints, angularPoints, fd):
     grid.free()
 
 
+def rho_ab(a, b, coord):
+    return a.compute(coord) * b.compute(coord)
+
 if __name__ == '__main__':
 
     # Molecule definition
@@ -484,29 +482,29 @@ if __name__ == '__main__':
                       basis_kind="GTO", basis_file=basis_file)
     molecule.show()
 
-    # Grid definition
-    angularPoints = 14
-    # radialList = [10]
-    # radialList = [i for i in range(6, 1000, 10)]
-    radialList = [6, 14, 110, 170, 194, 230, 266, 302, 350, 434]
+    # basis set
+    basis = molecule.get('atoms')[-1].get('basis')
+    a = basis.get('function')[0]
+    b = basis.get('function')[0]
 
-    # fd_alg = [765]
-    fd_alg = [3, 7]
-    for i in fd_alg:
-        integrals = []
-        times = []
-        for radialPoints in radialList:
-            print(i, radialPoints)
-            start_time = time.time()
-            integrals.append(coulomb_integrals(
-                molecule, radialPoints, angularPoints, i))
-            times.append(time.time() - start_time)
+    # Build grid
+    angularPoints = 6
+    radialPoints = 4
 
-        plt.yscale('log')
-        plt.xlabel('Radial Points')
-        plt.ylabel('Error (log)')
-        plt.plot(radialList, np.abs(np.array(integrals) -
-                                    0.79788456080286518), label=str(i))
+    grid = GridBecke(molecule, radialPoints, angularPoints)
 
-    plt.legend(loc=2)
-    plt.show()
+    # Calculate potential
+    lmax = int(lebedev_get_order(angularPoints) / 2)
+    rho = rho_ab(a, b, grid.points)
+
+    U = poisson_solver(grid, rho, lmax)
+
+    # TODO: build molecular potential
+    for i in range(grid.atgrids[-1].radial_grid.size):
+        U[i, :] /= grid.atgrids[-1].radial_grid.points[i]
+
+    v = grid.atgrids[-1].evaluate_expansion(lmax, U)
+
+    integral = grid.integrate(rho * v)
+
+    print(integral)

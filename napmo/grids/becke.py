@@ -74,7 +74,9 @@ class GridBecke(Structure):
 
             offset += self.atgrids[-1].size
 
-    def becke_weights(self):
+        self.becke_weights = self._becke_weights()
+
+    def _becke_weights(self):
         """Computes the Becke weights :math:`w(r)` for the entire grid as described in eq. 22 Becke, 1988.
 
         References:
@@ -95,7 +97,7 @@ class GridBecke(Structure):
         Args:
             f (ndarray): array of F computed in all grid points.
         """
-        P = self.becke_weights()
+        P = self.becke_weights
 
         offset = 0
         integral = 0.0
