@@ -26,16 +26,16 @@ typedef struct _radial RadialGrid;
 Returns the radial points mapped uniformly in the interval [0,1], see
 Becke's paper.
 */
-void radial_get_z(RadialGrid * grid);
+void radial_get_z(RadialGrid *grid);
 
 /*
 Returns the first derivative of the uniform z grid.
 */
-void radial_deriv_z(RadialGrid * grid);
+void radial_deriv_z(RadialGrid *grid);
 
 /*
 Returns the second derivative of the uniform z grid.
 */
-void radial_deriv2_z(RadialGrid * grid);
+void radial_deriv2_z(RadialGrid *grid);
 
 #endif

@@ -5,7 +5,7 @@ All rights reserved.
 Version: 0.1
 efposadac@sissa.it*/
 
-#include "gto.h"
+#include "include/gto.h"
 
 double gto_normalize_primitive(PrimitiveGaussian *f) {
   int i;

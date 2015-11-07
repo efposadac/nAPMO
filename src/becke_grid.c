@@ -6,7 +6,7 @@ Version: 0.1
 efposadac@sissa.it*/
 
 //#define _GNU_SOURCE
-#include "becke_grid.h"
+#include "include/becke_grid.h"
 
 void grid_init(Grid *grid) {
   grid->radial_abscissas = (double *)malloc(grid->n_radial * sizeof(double));
@@ -30,26 +30,26 @@ void grid_free(Grid *grid) {
   free(grid->angular_weights);
 }
 
-double grid_weights(System *sys, double r[3], int particleID) {
+double grid_weights(BeckeGrid *grid, double r[3], int particleID) {
   double x_i[3], x_j, r_i, r_j, R_ij, mu_ij, rm_i, rm_j, chi, u_ij, a_ij, nu_ij;
   double sum = 0, output, aux1, aux2, aux3 = 0;
-  int n_particles = sys->n_particles;
+  int ncenter = grid->ncenter;
   int i, j, k;
 
-  for (i = 0; i < n_particles; ++i) {
+  for (i = 0; i < ncenter; ++i) {
     aux1 = 1.0;
-    x_i[0] = sys->particle_origin[i * 3 + 0];
-    x_i[1] = sys->particle_origin[i * 3 + 1];
-    x_i[2] = sys->particle_origin[i * 3 + 2];
-    rm_i = sys->particle_radii[i];
+    x_i[0] = grid->origin[i * 3 + 0];
+    x_i[1] = grid->origin[i * 3 + 1];
+    x_i[2] = grid->origin[i * 3 + 2];
+    rm_i = grid->radii[i];
 
-    for (j = 0; j < n_particles; ++j) {
+    for (j = 0; j < ncenter; ++j) {
       if (i != j) {
         // Internuclear distance (R_ij eq. 11)
         r_i = r_j = R_ij = 0.0;
 
         for (k = 0; k < 3; ++k) {
-          x_j = sys->particle_origin[j * 3 + k];
+          x_j = grid->origin[j * 3 + k];
           r_i += (r[k] - x_i[k]) * (r[k] - x_i[k]);
           r_j += (r[k] - x_j) * (r[k] - x_j);
           R_ij += (x_i[k] - x_j) * (x_i[k] - x_j);
@@ -63,7 +63,7 @@ double grid_weights(System *sys, double r[3], int particleID) {
         mu_ij = (r_i - r_j) / R_ij;
 
         // Atomic size adjustment. see appendix, Becke, 1988.
-        rm_j = sys->particle_radii[j];
+        rm_j = grid->radii[j];
 
         // eq. A4
         chi = rm_i / rm_j;
@@ -91,25 +91,21 @@ double grid_weights(System *sys, double r[3], int particleID) {
   return output;
 }
 
-double grid_integrate(System *sys, Grid *grid) {
+double grid_integrate(BeckeGrid *grid, System *sys, double *rad, int nrad) {
 #ifdef _CUDA
-  /*
-  TODO: Change this call for a "try:" style. The idea is that if there is not
-  device available for CUDA the code will be executed on the host.
-  */
-  return grid_integrate_cuda(sys, grid);
+/*
+TODO: Change this call for a "try:" style. The idea is that if there is not
+device available for CUDA the code will be executed on the host.
+*/
+// return grid_integrate_cuda(grid);
 #endif
-  double integral, rm, rad, r[3];
-  double q_r, w_r, t_a, p_a, w_a, p;
-  double sin_t, cos_t, sin_p, cos_p;
+  double integral, p;
+  int i, j, idx, idxr, size, size2;
 
-  int n_radial = grid->n_radial;
-  int n_angular = grid->n_angular;
-  int n_particles = sys->n_particles;
-  int i, j, k, aux5;
+  int ncenter = grid->ncenter;
 
   // Fetch density file.
-  int size = sys->basis.n_cont * sys->basis.n_cont;
+  size = sys->basis.n_cont * sys->basis.n_cont;
   double *dens = (double *)malloc(size * sizeof(double));
 
   FILE *file;
@@ -122,48 +118,25 @@ double grid_integrate(System *sys, Grid *grid) {
   }
 
   integral = 0.0;
-
+  idxr = 0;
+  size = grid->size / ncenter;
+  size2 = size / nrad;
 #ifdef _OMP
-/*
-Note: I've implemented the unroll option for inner loops without any impact on
-the performance.
-*/
-#pragma omp parallel for default(shared) private(i, j, k, q_r, w_r, t_a, p_a,  \
-                                                 w_a, sin_t, cos_t, sin_p,     \
-                                                 cos_p, rm, rad, aux5, r,      \
+#pragma omp parallel for default(shared) private(i, j, idx, idxr,              \
                                                  p) reduction(+ : integral)
 #endif
-  for (i = 0; i < n_radial; ++i) {
-    q_r = grid->radial_abscissas[i];
-    w_r = grid->radial_weights[i];
+  for (i = 0; i < ncenter; ++i) {
+    for (j = 0; j < size; ++j) {
 
-    for (j = 0; j < n_angular; ++j) {
-      t_a = grid->angular_theta[j];
-      p_a = grid->angular_phi[j];
-      w_a = grid->angular_weights[j];
-      sincos(t_a, &sin_t, &cos_t);
-      sincos(p_a, &sin_p, &cos_p);
+      // Calculate Becke weights
+      idx = (i * size + j) * 3;
+      p = grid_weights(grid, &grid->points[idx], i);
 
-      for (k = 0; k < n_particles; ++k) {
-        rm = sys->particle_radii[k];
-        if (sys->particle_number[k] != 1) {
-          rm *= 0.5;
-        }
-
-        rad = rm * q_r;
-        aux5 = k * 3;
-
-        r[0] = (rad * sin_t * cos_p) + sys->particle_origin[aux5 + 0];
-        r[1] = (rad * sin_t * sin_p) + sys->particle_origin[aux5 + 1];
-        r[2] = (rad * cos_t) + sys->particle_origin[aux5 + 2];
-
-        // Calculate Becke weights
-        p = grid_weights(sys, r, k);
-
-        // Calculate Integral
-        integral +=
-            (rad * rad * p * w_r * w_a * rm * grid_density(sys, r, dens));
-      }
+      // Calculate Integral
+      idxr = i * nrad + floor(j / size2);
+      integral +=
+          (rad[idxr] * rad[idxr] * p * grid->weights[j] * grid->radii[i] *
+           grid_density(sys, &grid->points[idx], dens));
     }
   }
 
@@ -175,8 +148,8 @@ the performance.
 Temporal functional (test)
 */
 double grid_density(System *sys, double *r, double *dens) {
-  int i, j, aux, counter = 0;
   BasisSet basis = sys->basis;
+  int i, j, aux, counter = 0;
   int n_cont = basis.n_cont;
   double temp;
   double function_value, output = 0.0;

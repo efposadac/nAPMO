@@ -5,7 +5,7 @@ All rights reserved.
 Version: 0.1
 efposadac@sissa.it*/
 
-#include "gauss_chebyshev.h"
+#include "include/gauss_chebyshev.h"
 
 void gaussChebyshev(int n, double rm, double *abscissas, double *weights) {
   int i;

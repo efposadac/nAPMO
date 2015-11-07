@@ -11,16 +11,10 @@ import os
 
 from napmo.system.c_binding import CBinding
 from napmo.system.molecular_system import MolecularSystem
-from napmo.grids.becke_grid import BeckeGrid
+from napmo.grids.becke import BeckeGrid
 
 
 def test_multicenter_integrator():
-
-    # Grid definition
-    angularPoints = 194
-    radialPoints = 100
-    grid = BeckeGrid(radialPoints, angularPoints)
-    grid.show()
 
     # Test for diatomic molecules of:
     elements = ['H', 'Li', 'Be', 'B', 'C', 'N', 'O']
@@ -45,12 +39,6 @@ def test_multicenter_integrator():
         molecule.add_atom(element, [0.0, 0.0, -distance / 2.0],
                           basis_kind=basis_kind, basis_name=basis_name, basis_file=basis_file)
 
-        # Get the stack of atoms.
-        atoms = molecule.get('atoms')
-
-        # Build the C interface.
-        system = CBinding(atoms)
-
         # Get the density matrix (from a previous calculation)
         file_dens = os.path.join(os.path.dirname(
             __file__), element + '_dens.dat')
@@ -67,10 +55,18 @@ def test_multicenter_integrator():
                 output[i] = bvalue[:, i].dot(P.dot(bvalue[:, i]))
             return output
 
+        # Grid definition
+        angularPoints = 194
+        radialPoints = 100
+        grid = BeckeGrid(molecule, radialPoints, angularPoints)
+        grid.show()
+
         # Calculate integral (Python Code)
-        integral_p = grid.integrate(molecule, rho, args=(molecule,))
+        f = rho(grid.points, molecule)
+        integral_p = grid.integrate(f)
 
         # Calculate integral (C Code)
+        system = CBinding(molecule.get('atoms'))
         integral_c = grid.integrate_c(system)
 
         np.testing.assert_allclose(integral_p, results[count])
@@ -82,7 +78,5 @@ def test_multicenter_integrator():
         os.system('rm data.dens')
 
         count += 1
-
-    grid.free()
 
 # test_multicenter_integrator()

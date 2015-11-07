@@ -6,7 +6,7 @@ Version: 0.1
 efposadac@sissa.it*/
 
 extern "C" {
-#include "becke_grid.h"
+#include "include/becke_grid.h"
 }
 
 #define THREADS_PER_BLOCK 8
@@ -16,8 +16,7 @@ extern "C" {
 Implementation of functions, for documentation see the header file.
 */
 
-void grid_init_cuda(Grid *grid, GridCuda *grid_d)
-{
+void grid_init_cuda(Grid *grid, GridCuda *grid_d) {
   grid_d->gridDim = make_int2(grid->n_radial, grid->n_angular);
 
   int bytes_radial = grid_d->gridDim.x * sizeof(double2);
@@ -32,9 +31,9 @@ void grid_init_cuda(Grid *grid, GridCuda *grid_d)
   {
     double2 *buffer_rw = (double2 *)malloc(bytes_radial);
 
-    for (int i = 0; i < grid_d->gridDim.x; ++i)
-    {
-      buffer_rw[i] = make_double2(grid->radial_abscissas[i], grid->radial_weights[i]);
+    for (int i = 0; i < grid_d->gridDim.x; ++i) {
+      buffer_rw[i] =
+          make_double2(grid->radial_abscissas[i], grid->radial_weights[i]);
     }
 
     cudaMemcpy(grid_d->rw, buffer_rw, bytes_radial, cudaMemcpyHostToDevice);
@@ -47,8 +46,7 @@ void grid_init_cuda(Grid *grid, GridCuda *grid_d)
     double2 *buffer_xy = (double2 *)malloc(bytes_angular);
     double2 *buffer_zw = (double2 *)malloc(bytes_angular);
 
-    for (int i = 0; i < grid_d->gridDim.y; ++i)
-    {
+    for (int i = 0; i < grid_d->gridDim.y; ++i) {
       buffer_xy[i] = make_double2(grid->angular_theta[i], grid->angular_phi[i]);
       buffer_zw[i] = make_double2(1.0, grid->angular_weights[i]);
     }
@@ -61,15 +59,13 @@ void grid_init_cuda(Grid *grid, GridCuda *grid_d)
   }
 }
 
-void grid_free_cuda(GridCuda *grid)
-{
+void grid_free_cuda(GridCuda *grid) {
   cudaFree(grid->xy);
   cudaFree(grid->zw);
   cudaFree(grid->rw);
 }
 
-double grid_integrate_cuda(System *sys, Grid *grid)
-{
+double grid_integrate_cuda(System *sys, Grid *grid) {
   int sizeBasis, i;
   double *integral_d, integral;
   double *dens, *dens_d;
@@ -89,8 +85,7 @@ double grid_integrate_cuda(System *sys, Grid *grid)
   /* TODO: this file has to disappear*/
   FILE *file = fopen("data.dens", "r");
 
-  for (i = 0; i < sizeBasis; ++i)
-  {
+  for (i = 0; i < sizeBasis; ++i) {
     fscanf(file, "%lf", &dens[i]);
   }
 
@@ -104,19 +99,23 @@ double grid_integrate_cuda(System *sys, Grid *grid)
 
   /* Convert angular quadrature from spherical to cart*/
   {
-    dim3 dimGrid(((grid_d.gridDim.y + THREADS_PER_BLOCK_2 - 1) / THREADS_PER_BLOCK_2), 1, 1);
-    lebedev_to_cartesian_cuda <<<dimGrid, THREADS_PER_BLOCK_2>>>
-        (grid_d.gridDim, grid_d.xy, grid_d.zw);
+    dim3 dimGrid(
+        ((grid_d.gridDim.y + THREADS_PER_BLOCK_2 - 1) / THREADS_PER_BLOCK_2), 1,
+        1);
+    lebedev_to_cartesian_cuda<<<dimGrid, THREADS_PER_BLOCK_2>>>(
+        grid_d.gridDim, grid_d.xy, grid_d.zw);
   }
 
   /* Perform integration*/
   {
     dim3 dimBlock(THREADS_PER_BLOCK, THREADS_PER_BLOCK, 1);
-    dim3 dimGrid(((grid_d.gridDim.x + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK),
-                 ((grid_d.gridDim.y + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK), 1);
+    dim3 dimGrid(
+        ((grid_d.gridDim.x + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK),
+        ((grid_d.gridDim.y + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK), 1);
 
-    grid_integrate_kernel <<<dimGrid, dimBlock>>>
-        (sys_d, grid_d.gridDim, grid_d.xy, grid_d.zw, grid_d.rw, dens_d, integral_d);
+    grid_integrate_kernel<<<dimGrid, dimBlock>>>(sys_d, grid_d.gridDim,
+                                                 grid_d.xy, grid_d.zw,
+                                                 grid_d.rw, dens_d, integral_d);
     CUERR
   }
 
@@ -138,15 +137,15 @@ double grid_integrate_cuda(System *sys, Grid *grid)
 CUDA kernels:
 */
 
-__device__ double grid_weights_cuda(const int n_particles, double *__restrict__ particle_origin,
-                                    double *__restrict__ particle_radii, double r[3], int particleID)
-{
+__device__ double grid_weights_cuda(const int n_particles,
+                                    double *__restrict__ particle_origin,
+                                    double *__restrict__ particle_radii,
+                                    double r[3], int particleID) {
   double x_i[3], x_j, r_i, r_j, R_ij, mu_ij, rm_i, rm_j, chi, u_ij, a_ij, nu_ij;
   double sum = 0, output, aux1, aux2, aux3 = 0;
   int i, j, k, aux_i, aux_j;
 
-  for (i = 0; i < n_particles; ++i)
-  {
+  for (i = 0; i < n_particles; ++i) {
     aux1 = 1.0;
     aux_i = i * 3;
     x_i[0] = particle_origin[aux_i + 0];
@@ -154,15 +153,12 @@ __device__ double grid_weights_cuda(const int n_particles, double *__restrict__ 
     x_i[2] = particle_origin[aux_i + 2];
     rm_i = particle_radii[i];
 
-    for (j = 0; j < n_particles; ++j)
-    {
-      if (i != j)
-      {
+    for (j = 0; j < n_particles; ++j) {
+      if (i != j) {
         // Internuclear distance (R_ij eq. 11)
         r_i = r_j = R_ij = 0.0;
         aux_j = j * 3;
-        for (k = 0; k < 3; ++k)
-        {
+        for (k = 0; k < 3; ++k) {
           x_j = particle_origin[aux_j + k];
           r_i += (r[k] - x_i[k]) * (r[k] - x_i[k]);
           r_j += (r[k] - x_j) * (r[k] - x_j);
@@ -186,8 +182,7 @@ __device__ double grid_weights_cuda(const int n_particles, double *__restrict__ 
         // eq. A5
         a_ij = u_ij / ((u_ij * u_ij) - 1.0);
         // eq. A3
-        if (fabs(a_ij) > 0.50)
-        {
+        if (fabs(a_ij) > 0.50) {
           a_ij *= 0.50 / fabs(a_ij);
         }
         // eq. A2
@@ -198,15 +193,16 @@ __device__ double grid_weights_cuda(const int n_particles, double *__restrict__ 
       }
     }
     sum += aux1;
-    if (i == particleID) aux3 = aux1;
+    if (i == particleID)
+      aux3 = aux1;
   }
   // eq. 22
   output = aux3 / sum;
   return output;
 }
 
-__device__ double grid_density_cuda(BasisSet basis, double *__restrict__ r, double *__restrict__ dens)
-{
+__device__ double grid_density_cuda(BasisSet basis, double *__restrict__ r,
+                                    double *__restrict__ dens) {
   int i, j, aux, counter = 0;
   int n_cont = basis.n_cont;
   double temp;
@@ -214,16 +210,13 @@ __device__ double grid_density_cuda(BasisSet basis, double *__restrict__ r, doub
   double RP2, factor;
   double basis_val[64];
 
-  for (i = n_cont; i < n_cont * 2; ++i)
-  {
+  for (i = n_cont; i < n_cont * 2; ++i) {
     basis_val[i] = 0.0;
   }
 
-  for (i = 0; i < n_cont; ++i)
-  {
+  for (i = 0; i < n_cont; ++i) {
     factor = 1.0, RP2 = 0.0;
-    for (j = 0; j < 3; ++j)
-    {
+    for (j = 0; j < 3; ++j) {
       aux = i * 3;
       temp = r[j] - basis.origin[aux + j];
       RP2 += (temp * temp);
@@ -231,34 +224,34 @@ __device__ double grid_density_cuda(BasisSet basis, double *__restrict__ r, doub
     }
 
     function_value = 0.0;
-    for (j = 0; j < basis.n_prim_cont[i]; ++j)
-    {
-      function_value += basis.coefficient[counter] * exp(-basis.exponent[counter] * RP2);
+    for (j = 0; j < basis.n_prim_cont[i]; ++j) {
+      function_value +=
+          basis.coefficient[counter] * exp(-basis.exponent[counter] * RP2);
       counter += 1;
     }
 
     function_value *= factor * basis.normalization[i];
 
-    for (j = 0; j < n_cont; ++j)
-    {
+    for (j = 0; j < n_cont; ++j) {
       basis_val[n_cont + j] += function_value * dens[i * n_cont + j];
     }
 
     basis_val[i] = function_value;
   }
 
-  for (i = 0; i < n_cont; ++i)
-  {
+  for (i = 0; i < n_cont; ++i) {
     output += basis_val[i] * basis_val[n_cont + i];
   }
 
   return output;
 }
 
-__global__ void grid_integrate_kernel(const System sys, const int2 gridDim, double2 *__restrict__ xy,
-                                      double2 *__restrict__ zw, double2 *__restrict__ rw,
-                                      double *__restrict__ dens, double *__restrict__ integral)
-{
+__global__ void grid_integrate_kernel(const System sys, const int2 gridDim,
+                                      double2 *__restrict__ xy,
+                                      double2 *__restrict__ zw,
+                                      double2 *__restrict__ rw,
+                                      double *__restrict__ dens,
+                                      double *__restrict__ integral) {
   short k, aux_k;
   double rm, rad, p, f, r[3];
 
@@ -272,8 +265,7 @@ __global__ void grid_integrate_kernel(const System sys, const int2 gridDim, doub
   temp[l] = 0.0;
   sum_block = 0.0;
 
-  if (i < gridDim.x && j < gridDim.y)
-  {
+  if (i < gridDim.x && j < gridDim.y) {
     /* Calculate r*/
     const double2 aux_rw = rw[i];
     const double2 aux_xy = xy[j];
@@ -281,12 +273,10 @@ __global__ void grid_integrate_kernel(const System sys, const int2 gridDim, doub
 
     const double auxFactor = aux_rw.y * aux_zw.y;
 
-    for (k = 0; k < sys.n_particles; ++k)
-    {
+    for (k = 0; k < sys.n_particles; ++k) {
       rm = sys.particle_radii[k];
 
-      if (sys.particle_number[k] != 1)
-      {
+      if (sys.particle_number[k] != 1) {
         rm *= 0.5;
       }
 
@@ -298,7 +288,8 @@ __global__ void grid_integrate_kernel(const System sys, const int2 gridDim, doub
       r[2] = rad * aux_zw.x + sys.particle_origin[aux_k + 2];
 
       /*Calculate Becke weights */
-      p = grid_weights_cuda(sys.n_particles, sys.particle_origin, sys.particle_radii, r, k);
+      p = grid_weights_cuda(sys.n_particles, sys.particle_origin,
+                            sys.particle_radii, r, k);
 
       /*Calculate the functional*/
       f = grid_density_cuda(sys.basis, r, dens);
@@ -310,8 +301,7 @@ __global__ void grid_integrate_kernel(const System sys, const int2 gridDim, doub
     atomicAdd(&sum_block, temp[l]);
   }
   __syncthreads();
-  if (l == 0)
-  {
+  if (l == 0) {
     atomicAdd(integral, sum_block);
   }
 }

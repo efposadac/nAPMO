@@ -19,17 +19,9 @@ def chebgauss(n):
     w = np.zeros([n], dtype=np.float64)
 
     for i in range(n):
-        r[i] = np.cos(np.pi * (i+1)/(n+1.0))
-        w[i] = (np.pi/(n+1.0) * (1.0 - r[i]**2))
+        r[i] = np.cos(np.pi * (i + 1) / (n + 1.0))
+        w[i] = (np.pi / (n + 1.0) * (1.0 - r[i]**2))
     return r, w
-
-
-def chebgauss_z(n):
-    r = np.zeros([n], dtype=np.float64)
-
-    for i in range(n):
-        r[i] = (i+1)/(n+1.0)
-    return r
 
 
 def chebgauss_transformed(n):
@@ -58,7 +50,8 @@ automatic numerical integration. Comput. Phys. Commun. 70, 271-284 (1992).
         c = np.cos((count * np.pi) / d)
         s2 = s * s
         s4 = s2 * s2
-        rq[i, 0] = 1. + (2. / np.pi) * (1. + (2. / 3.) * s2) * c * s - (2. * count) / d
+        rq[i, 0] = 1. + (2. / np.pi) * (
+            1. + (2. / 3.) * s2) * c * s - (2. * count) / d
         rq[n - i - 1, 0] = -rq[i, 0]
         rq[i, 1] = 16. / (3. * d) * s4
         rq[n - i - 1, 1] = rq[i, 1]

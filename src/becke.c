@@ -5,10 +5,10 @@ All rights reserved.
 Version: 0.1
 efposadac@sissa.it*/
 
-#include "becke.h"
+#include "include/becke.h"
 
 void becke_weights(BeckeGrid *grid, double *weights) {
-  int atom, iatom, jatom, point, offset, size, order, k, idx;
+  int atom, iatom, jatom, point, npoint, offset, size, order, k, idx;
   double r_i, r_j, mu_ij;
   double sum = 0.0, aux, p = 1.0, s;
   double *R_ij;
@@ -49,16 +49,17 @@ void becke_weights(BeckeGrid *grid, double *weights) {
     }
   }
 
-  // Computations of Becke weights
+  // Computation of Becke weights
+  npoint = grid->size / grid->ncenter;
+
   idx = 0;
-  size = grid->size / grid->ncenter;
   for (atom = 0; atom < grid->ncenter; ++atom) {
 #ifdef _OMP
-#pragma omp parallel for default(shared) firstprivate(                         \
-    atom, size, idx) private(point, iatom, jatom, offset, r_i, r_j, mu_ij, s,  \
-                             k, aux) reduction(+ : sum) reduction(* : p)
+#pragma omp parallel for default(shared)                                       \
+    firstprivate(atom, npoint, idx) private(point, iatom, jatom, offset, r_i,  \
+                                            r_j, mu_ij, s, k, aux, sum, p)
 #endif
-    for (point = 0; point < size; ++point) {
+    for (point = 0; point < npoint; ++point) {
       sum = 0.0;
       aux = 0.0;
       for (iatom = 0; iatom < grid->ncenter; ++iatom) {
@@ -75,7 +76,7 @@ void becke_weights(BeckeGrid *grid, double *weights) {
           }
 
           // Internuclear distance (R_ij eq. 11)
-          idx = (point * 3) + (atom * size * 3);
+          idx = (atom * npoint + point) * 3;
           r_i = utils_distance(&grid->points[idx], &grid->origin[iatom * 3]);
           r_j = utils_distance(&grid->points[idx], &grid->origin[jatom * 3]);
 
@@ -99,7 +100,7 @@ void becke_weights(BeckeGrid *grid, double *weights) {
           aux = p;
       }
       // eq. 22
-      weights[point * grid->ncenter + atom] = aux / sum;
+      weights[atom * npoint + point] = aux / sum;
     }
   }
 

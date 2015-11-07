@@ -20,16 +20,16 @@ efposadac@sissa.it*/
 struct _becke {
   int ncenter;     // Number of atoms.
   int size;        // Number of points.
+  double *radii;   // covalent radius for each center
   double *origin;  // origin for each center
   double *points;  // points of the grid
   double *weights; // weights of the grid
-  double *radii;   // covalent radius for each center
 };
 typedef struct _becke BeckeGrid;
 
 /*
 Calculates the becke weights for a given ``BeckeGrid`` grid.
 */
-void becke_weights(BeckeGrid * grid, double* weights);
+void becke_weights(BeckeGrid *grid, double *weights);
 
 #endif

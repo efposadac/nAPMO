@@ -10,116 +10,14 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-import scipy as sci
-import scipy.special as sp
 import matplotlib.pyplot as plt
 import time
 import os
 
 from napmo.utilities.angular_quadratures import *
-from napmo.utilities.radial_quadratures import *
 from napmo.system.molecular_system import MolecularSystem
-from napmo.grids.becke_grid import BeckeGrid
-from napmo.grids.becke import GridBecke
+from napmo.grids.becke import BeckeGrid
 from napmo.grids.poisson_solver import poisson_solver
-
-
-def print_matrix(A, n):
-    for i in range(n):
-        for j in range(n):
-            print("%12.5f" % (A[i, j]), end="")
-        print("")
-    print("")
-
-
-def real_spherical_harmonics(m, l, theta, phi):
-    if m == 0:
-        aux = sp.sph_harm(m, l, theta, phi)
-    elif m < 0:
-        aux_a = sp.sph_harm(-m, l, theta, phi)
-        aux_b = sp.sph_harm(m, l, theta, phi)
-        aux = 1.0j * 0.70710678118654757 * (aux_b + aux_a)
-    else:
-        aux_a = sp.sph_harm(m, l, theta, phi)
-        aux_b = sp.sph_harm(-m, l, theta, phi)
-        aux = 0.70710678118654757 * (aux_b - aux_a)
-    return aux.real
-
-
-def Y(l, m, theta, phi):
-    return real_spherical_harmonics(m, l, phi, theta)
-
-
-# Define integrand P(r, theta, phi)
-def int_l(theta, phi, func, r, l, m):
-
-    # Convert to cartesian
-    x = r * np.sin(theta) * np.cos(phi)
-    y = r * np.sin(theta) * np.sin(phi)
-    z = r * np.cos(theta)
-
-    coord = np.dstack((x, y, z)).reshape(len(x), 3)
-
-    return func(coord) * Y(l, m, theta, phi)
-
-
-def rho_lm(func, rad, n, lmax):
-    # Size of expansion
-    lsize = (lmax + 1) * (lmax + 1)
-
-    # Start calculation
-    p_lm = np.zeros((len(rad), lsize))
-
-    for r in range(len(rad)):
-        lindex = 0
-        for l in range(lmax + 1):
-            for m in range(-l, l + 1):
-                # integrate
-                p_lm[r, lindex] = lebedev_integrate(
-                    int_l, n, args=(func, rad[r], l, m))
-                lindex += 1
-
-    return p_lm
-
-
-def recover_rho(grid, p_lm, lmax):
-    idx = 0
-    rho = np.zeros(grid.size)
-    for r in range(grid.n_radial):
-        for a in range(grid.n_angular):
-            lindex = 0
-            for l in range(lmax + 1):
-                for m in range(-l, l + 1):
-                    rho[idx] += p_lm[r, lindex] * \
-                        Y(l, m, grid.angular_theta[a], grid.angular_phi[a])
-                    lindex += 1
-            idx += 1
-
-    return rho
-
-
-def rho_r(coord, molecule):
-    basis = molecule.get_basis_set('e-')
-    occupation = molecule.n_occupation('e-')
-    bvalue = basis.compute(coord)
-    output = 0.0
-
-    for k in range(occupation):
-        output += bvalue[k] * bvalue[k]
-
-    return output * 2
-
-
-def r_to_z(r, rm):
-    return np.arccos((r - rm) / (r + rm)) / np.pi
-
-
-def second_der_z(r, rm):
-    return (rm**2 * (rm + (3.0 * r))) / (2.0 * np.pi * (((rm * r) / (rm + r)**2)**(1.5)) * (rm + r)**5)
-
-
-def first_der_z(r, rm):
-    return -(np.sqrt(((rm * r) / (rm + r)**2)) / (np.pi * r))
 
 
 def finite_diff_7m(grid, r, rm, l, h):
@@ -284,157 +182,6 @@ def finite_diff_7r(grid, r, p_lm, u_00, l, lindex):
     return p
 
 
-def finite_diff_3m(grid, r, rm, l, h):
-    aux_h2 = 1.0 / (h * h)
-    aux_h = 1.0 / h
-
-    A = np.zeros((grid.n_radial + 2, grid.n_radial + 2))
-    A[0, 0] = 1.0
-    A[-1, -1] = 1.0
-
-    f_der_coeff = np.array(
-        [-0.5, 0.0, 0.5],
-        dtype=np.float64)
-
-    s_der_coeff = np.array(
-        [1.0, -2.0, 1.0],
-        dtype=np.float64)
-
-    for i in range(grid.n_radial):
-        dzdr = first_der_z(r[i], rm)
-        dzdr *= dzdr
-        d2zdr2 = second_der_z(r[i], rm)
-
-        aux0 = l * (l + 1.0) / (r[i] * r[i])
-        aux1 = dzdr * aux_h2
-        aux2 = d2zdr2 * aux_h
-
-        s_der_coeff_aux = s_der_coeff * aux1
-        f_der_coeff_aux = f_der_coeff * aux2
-
-        for j in range(len(f_der_coeff_aux)):
-            A[i + 1, i + j] = s_der_coeff_aux[j] + f_der_coeff_aux[j]
-
-        A[i + 1, i + 1] += -aux0
-
-    return A
-
-
-def finite_diff_3r(grid, r, p_lm, u_00, l, lindex):
-    # Boundary conditions
-    p = np.zeros(grid.n_radial + 2)
-    for i in range(grid.n_radial):
-        p[i + 1] = -r[i] * p_lm[i, lindex] * np.pi * 4.0
-
-    p[0] = u_00
-
-    return p
-
-
-def build_potential(grid, U_lm, r, lmax):
-    # build the potential
-    idx = 0
-    V_ab = np.zeros(grid.size)
-    for i in range(grid.n_radial):
-        aux = 1 / r[i]
-        for j in range(grid.n_angular):
-            lindex = 0
-            for l in range(lmax + 1):
-                for m in range(-l, l + 1):
-                    V_ab[idx] += U_lm[i, lindex] * \
-                        Y(l, m, grid.angular_theta[
-                          j], grid.angular_phi[j]) * aux
-                    lindex += 1
-            idx += 1
-
-    return V_ab
-
-
-def solve_poisson(p_lm, lmax, molecule, grid, dens, fd=3):
-    rm = molecule.get('atoms')[-1].get('atomic_radii_2')
-    r = grid.radial_abscissas  # * rm
-
-    # Calculate boundaries
-    # integral single center source density
-    q_n = grid.integrate(molecule, dens)
-
-    u_00 = 0.0
-    if np.abs(q_n) > 1.0e-16:
-        u_00 = np.sqrt(4.0 * np.pi * q_n)
-
-    # Obtain z points.
-    z = r_to_z(r, rm)
-    h = z[0]
-
-    # Solve U_lm
-    lsize = (lmax + 1)**2
-    U_lm = np.zeros((grid.n_radial, lsize))
-
-    lindex = 0
-    for l in range(lmax + 1):
-        # Build A matrix
-        if fd == 3:
-            A = finite_diff_3m(grid, r, rm, l, h)
-        elif fd == 7:
-            A = finite_diff_7m(grid, r, rm, l, h)
-
-        # print_matrix(A, grid.n_radial+2)
-        for m in range(-l, l + 1):
-            # Build rho
-            if fd == 3:
-                p = finite_diff_3r(grid, r, p_lm, u_00, l, lindex)
-            elif fd == 7:
-                p = finite_diff_7r(grid, r, p_lm, u_00, l, lindex)
-
-            # Solve the linear problem (get x) (Ax = p)
-            x = np.linalg.solve(A, p)
-
-            # Store results
-            U_lm[:, lindex] = x[1:-1]
-
-            lindex += 1
-
-    return U_lm
-
-
-def coulomb_potential(a, b, grid, molecule, lmax, fd):
-
-    def p_ab(coord):
-        return a.compute(coord) * b.compute(coord)
-
-    # calculate p_lm
-    # rm = molecule.get('atoms')[-1].get('atomic_radii_2')
-    rad = grid.radial_abscissas  # * rm
-    p_lm = rho_lm(p_ab, rad, angularPoints, lmax)
-
-    # Solve poisson for p_lm
-    U_lm = solve_poisson(p_lm, lmax, molecule, grid, p_ab, fd=fd)
-
-    # Build potential
-    V_ab = build_potential(grid, U_lm, rad, lmax)
-
-    return V_ab
-
-
-def coulomb_integral(c, d, V_ab, grid, molecule):
-    particle = molecule.get('atoms')[-1]
-    rm = particle.get('atomic_radii_2')
-
-    if grid.spherical:
-        return None
-
-    r = np.zeros([3], dtype=np.float64)
-    integral = 0.0
-    for j in range(grid.size):
-        r = grid.xyz[j, :]
-        p = grid.weight(r, 0, molecule.get('atoms'))
-        aux = r - particle.get("origin")
-        F = c.compute(r) * d.compute(r) * V_ab[j]
-        integral += aux.dot(aux) * p * grid.w[j] * rm * F
-
-    return integral * 4.0 * np.pi
-
-
 def coulomb_integrals(molecule, radialPoints, angularPoints, fd):
     # For one atom
     lmax = int(lebedev_get_order(angularPoints) / 2)
@@ -488,10 +235,10 @@ if __name__ == '__main__':
     b = basis.get('function')[0]
 
     # Build grid
-    angularPoints = 6
-    radialPoints = 4
+    angularPoints = 110
+    radialPoints = 55
 
-    grid = GridBecke(molecule, radialPoints, angularPoints)
+    grid = BeckeGrid(molecule, radialPoints, angularPoints)
 
     # Calculate potential
     lmax = int(lebedev_get_order(angularPoints) / 2)

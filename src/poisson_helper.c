@@ -5,7 +5,7 @@ All rights reserved.
 Version: 0.1
 efposadac@sissa.it*/
 
-#include "poisson_helper.h"
+#include "include/poisson_helper.h"
 
 void finite_difference_matrix(RadialGrid *rgrid, double *A, int l) {
 
@@ -25,7 +25,9 @@ void finite_difference_matrix(RadialGrid *rgrid, double *A, int l) {
   A[((npoints + 2) * (npoints + 2)) - 1] = 1.0;
 
   aux = l * (l + 1.0);
-
+#ifdef _OMP
+#pragma omp parallel for default(shared) firstprivate(aux) private(i, j, point, dz, d2z)
+#endif
   for (i = 0; i < npoints; ++i) {
     point = rgrid->points[i];
 

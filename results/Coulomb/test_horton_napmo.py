@@ -9,7 +9,7 @@ import time
 
 from napmo.utilities.angular_quadratures import lebedev_get_order
 from napmo.system.molecular_system import MolecularSystem
-from napmo.grids.becke import GridBecke
+from napmo.grids.becke import BeckeGrid
 from napmo.grids.poisson_solver import poisson_solver
 
 from horton import *
@@ -23,7 +23,7 @@ if __name__ == '__main__':
     molecule.show()
 
     # Grid definition
-    angularPoints = 194
+    angularPoints = 110
     # radialList = [100]
     radialList = [6, 14, 110, 170, 194, 230, 266, 302, 350, 434]
 
@@ -31,12 +31,12 @@ if __name__ == '__main__':
     n_ints = []
     n2_ints = []
     for radialPoints in radialList:
-
+        print(radialPoints)
         lmax = int(lebedev_get_order(angularPoints) / 2)
         lsize = (lmax + 1) ** 2
 
         # Grids
-        grid = GridBecke(molecule, radialPoints, angularPoints)
+        grid = BeckeGrid(molecule, radialPoints, angularPoints)
 
         h_grid_spec = AtomicGridSpec('power:' + str(grid.atgrids[-1].radial_grid.points.min()) + ':' + str(
             grid.atgrids[-1].radial_grid.points.max()) + ':' + str(radialPoints) + ':' + str(angularPoints))

@@ -9,7 +9,7 @@ import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.grids.radial_grid import RadialGrid
+from napmo.grids.radial import RadialGrid
 from napmo.system.c_binding import napmo_library
 
 
@@ -19,7 +19,7 @@ def poisson_solver(grid, rho, lmax):
         atgrid = grid.atgrids[i]
 
         p = rho[offset:offset + atgrid.size]
-        bw = grid.becke_weights[:, i]
+        bw = grid.becke_weights[offset:offset + atgrid.size]
 
         # Spherical expansion
         sph_expansion = atgrid.spherical_expansion(lmax, p)

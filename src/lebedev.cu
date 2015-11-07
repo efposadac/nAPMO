@@ -6,15 +6,15 @@ Version: 0.1
 efposadac@sissa.it*/
 
 extern "C" {
-#include "lebedev.h"
+#include "include/lebedev.h"
 }
 
 #include "cuda_helper.cuh"
 
 #define THREADS_PER_BLOCK 64
 
-__global__ void lebedev_to_cartesian_cuda(const int2 gridDim, double2 *xy, double2 *zw)
-{
+__global__ void lebedev_to_cartesian_cuda(const int2 gridDim, double2 *xy,
+                                          double2 *zw) {
   __shared__ double2 aux_xy[THREADS_PER_BLOCK];
   __shared__ double2 aux_zw[THREADS_PER_BLOCK];
 
@@ -22,8 +22,7 @@ __global__ void lebedev_to_cartesian_cuda(const int2 gridDim, double2 *xy, doubl
 
   const unsigned int j = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
 
-  if (j < gridDim.y)
-  {
+  if (j < gridDim.y) {
     aux_xy[threadIdx.x] = xy[j];
 
     sincos(aux_xy[threadIdx.x].x, &sin_t, &cos_t);
