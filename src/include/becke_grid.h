@@ -20,33 +20,6 @@ efposadac@sissa.it*/
 #include "angular.h"
 #include "system.h"
 
-struct _grid {
-  int n_radial;             // Number of radial points.
-  int n_angular;            // Number of angular points.
-  double *radial_abscissas; // Radial abscissas (len = n_radial)
-  double *radial_weights;   // Radial weights (len = n_radial)
-  double *
-      angular_theta; // theta coordinate of angular quadrature (len = n_angular)
-  double *angular_phi; // phi coordinate of angular quadrature (len = n_angular)
-  double *angular_weights; // Weights of angular quadrature (len = n_angular)
-};
-typedef struct _grid Grid;
-
-/*
-Initialization of grid. Memory allocation in C.
-Calculates the n_radial Gauss-Chebyshev quadrature and n_angular Lebedev
-quadrature points.
-
-References:
-    Becke, A. D. A multicenter numerical integration scheme for polyatomic
-molecules. J. Chem. Phys. 88, 2547 (1988).
-*/
-void grid_init(Grid *grid);
-
-/*
-Free memory used in grid construction.
-*/
-void grid_free(Grid *grid);
 
 /*
 Computes the Becke weights :math:`w(r)` at point ``r`` for particle
@@ -94,9 +67,10 @@ CUDA functions
 
 struct _grid_cuda {
   int2 gridDim; // Dim of the grid (radial, angular)
-  double2 *rw;  // radial quadrature (r coord and weights).
-  double2 *xy;  // coord x and y or r and theta if sph coords.
-  double2 *zw;  // coord z and angular weights .
+  double *radii;   // covalent radius for each center
+  double *origin;  // origin for each center
+  double2 *xy;  // coord x and y.
+  double2 *zw;  // coord z and weights .
 };
 
 typedef struct _grid_cuda GridCuda;
@@ -104,7 +78,7 @@ typedef struct _grid_cuda GridCuda;
 /*
 Copy the host grid structure into the device.
 */
-void grid_init_cuda(Grid *grid, GridCuda *grid_d);
+void grid_init_cuda(BeckeGrid *grid, GridCuda *grid_d);
 
 /*
 Free the memory used on the CUDA device.
@@ -116,7 +90,8 @@ Perform the initialization (allocation and copy) of all structures needed to
 perform the integration in CUDA device. Also loads additional information such
 as the density matrix.
 */
-double grid_integrate_cuda(System *sys, Grid *grid);
+double grid_integrate_cuda(System *sys, BeckeGrid *grid, double *rad,
+                           int nrad);
 
 /*
 Computes the Becke weights :math:`w(r)` at point ``r`` for particle
@@ -159,12 +134,12 @@ kernel.
 TODO:
     Pass function pointer to enable the use of different kind of functionals.
 */
-__global__ void grid_integrate_kernel(const System sys, const int2 gridDim,
-                                      double2 *__restrict__ xy,
-                                      double2 *__restrict__ zw,
-                                      double2 *__restrict__ rw,
-                                      double *__restrict__ dens,
-                                      double *__restrict__ integral);
+__global__ void
+grid_integrate_kernel(const System sys, const int2 gridDim,
+                      double *__restrict__ radii, double *__restrict__ origin,
+                      double2 *__restrict__ xy, double2 *__restrict__ zw,
+                      double *__restrict__ dens, double *__restrict__ rad,
+                      int nrad, double *__restrict__ integral);
 
 /*
 Iterated cutoff profile. eq. 21, Becke 1988. (CUDA Device version)

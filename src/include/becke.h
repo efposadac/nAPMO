@@ -28,7 +28,13 @@ struct _becke {
 typedef struct _becke BeckeGrid;
 
 /*
-Calculates the becke weights for a given ``BeckeGrid`` grid.
+Calculates the becke weights for a given ``BeckeGrid`` grid 
+as described in eq. 22 Becke, 1988.
+
+References:
+    Becke, A. D. A multicenter numerical integration scheme for polyatomic
+molecules. J. Chem. Phys. 88, 2547 (1988).
+
 */
 void becke_weights(BeckeGrid *grid, double *weights);
 

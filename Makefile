@@ -14,7 +14,7 @@ default: SERIAL
 
 $(BUILD):
 	cd src && $(MAKE) $@
-	# python2 setup.py install --record files.txt --user
+	#python2 setup.py install --record files.txt --user
 	python setup.py install --record files.txt --user
 
 clean:

@@ -21,11 +21,8 @@ void gaussChebyshev(int n, double rm, double *abscissas, double *weights) {
 
     /* Scale from interval (-1, 1) to (0, inf) */
     abscissas[i] = rm * (1.0 + aux_a) / (1.0 - aux_a); // (25)
-    weights[i] =
-        aux_w /
-        sqrt(1.0 -
-             aux_a *
-                 aux_a); // divide sqrt(1-x^2) because Chebyshev second kind.
+    // divide sqrt(1-x^2) because Chebyshev second kind.
+    weights[i] = aux_w / sqrt(1.0 - aux_a * aux_a);
     weights[i] *= 2.0 / ((aux_a - 1.0) * (aux_a - 1.0)); // (25)'
   }
 }

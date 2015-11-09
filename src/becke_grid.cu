@@ -9,50 +9,44 @@ extern "C" {
 #include "include/becke_grid.h"
 }
 
-#define THREADS_PER_BLOCK 8
-#define THREADS_PER_BLOCK_2 64
+#define THREADS_PER_BLOCK 64
 
 /*
 Implementation of functions, for documentation see the header file.
 */
 
-void grid_init_cuda(Grid *grid, GridCuda *grid_d) {
-  grid_d->gridDim = make_int2(grid->n_radial, grid->n_angular);
-
-  int bytes_radial = grid_d->gridDim.x * sizeof(double2);
-  int bytes_angular = grid_d->gridDim.y * sizeof(double2);
+void grid_init_cuda(BeckeGrid *grid, GridCuda *grid_d) {
+  grid_d->gridDim = make_int2(grid->size, grid->ncenter);
 
   /* Allocate space for grid on device*/
-  cudaMalloc((void **)&grid_d->rw, bytes_radial);
-  cudaMalloc((void **)&grid_d->xy, bytes_angular);
-  cudaMalloc((void **)&grid_d->zw, bytes_angular);
+  int ncenter = grid_d->gridDim.y * sizeof(double2);
+  cudaMalloc((void **)&grid_d->radii, ncenter);
+  cudaMalloc((void **)&grid_d->origin, ncenter * 3);
 
-  /* Copying radial quadrature*/
+  int size = grid_d->gridDim.x * sizeof(double2);
+  cudaMalloc((void **)&grid_d->xy, size);
+  cudaMalloc((void **)&grid_d->zw, size);
+
+  /* Copying atomic information*/
   {
-    double2 *buffer_rw = (double2 *)malloc(bytes_radial);
-
-    for (int i = 0; i < grid_d->gridDim.x; ++i) {
-      buffer_rw[i] =
-          make_double2(grid->radial_abscissas[i], grid->radial_weights[i]);
-    }
-
-    cudaMemcpy(grid_d->rw, buffer_rw, bytes_radial, cudaMemcpyHostToDevice);
-
-    free(buffer_rw);
+    cudaMemcpy(grid_d->radii, grid->radii, ncenter, cudaMemcpyHostToDevice);
+    cudaMemcpy(grid_d->origin, grid->origin, ncenter * 3,
+               cudaMemcpyHostToDevice);
   }
 
-  /* Copying angular quadrature*/
+  /* Copying grid points*/
   {
-    double2 *buffer_xy = (double2 *)malloc(bytes_angular);
-    double2 *buffer_zw = (double2 *)malloc(bytes_angular);
+    double2 *buffer_xy = (double2 *)malloc(size);
+    double2 *buffer_zw = (double2 *)malloc(size);
 
-    for (int i = 0; i < grid_d->gridDim.y; ++i) {
-      buffer_xy[i] = make_double2(grid->angular_theta[i], grid->angular_phi[i]);
-      buffer_zw[i] = make_double2(1.0, grid->angular_weights[i]);
+    for (int i = 0; i < grid_d->gridDim.x; ++i) {
+      int idx = i * 3;
+      buffer_xy[i] = make_double2(grid->points[idx], grid->points[idx + 1]);
+      buffer_zw[i] = make_double2(grid->points[idx + 2], grid->weights[i]);
     }
 
-    cudaMemcpy(grid_d->xy, buffer_xy, bytes_angular, cudaMemcpyHostToDevice);
-    cudaMemcpy(grid_d->zw, buffer_zw, bytes_angular, cudaMemcpyHostToDevice);
+    cudaMemcpy(grid_d->xy, buffer_xy, size, cudaMemcpyHostToDevice);
+    cudaMemcpy(grid_d->zw, buffer_zw, size, cudaMemcpyHostToDevice);
 
     free(buffer_xy);
     free(buffer_zw);
@@ -60,15 +54,17 @@ void grid_init_cuda(Grid *grid, GridCuda *grid_d) {
 }
 
 void grid_free_cuda(GridCuda *grid) {
+  cudaFree(grid->radii);
+  cudaFree(grid->origin);
   cudaFree(grid->xy);
   cudaFree(grid->zw);
-  cudaFree(grid->rw);
 }
 
-double grid_integrate_cuda(System *sys, Grid *grid) {
+double grid_integrate_cuda(System *sys, BeckeGrid *grid, double *rad,
+                           int nrad) {
   int sizeBasis, i;
   double *integral_d, integral;
-  double *dens, *dens_d;
+  double *dens, *dens_d, *rad_d;
 
   /*Initialize system data in the device*/
   System sys_d;
@@ -93,29 +89,22 @@ double grid_integrate_cuda(System *sys, Grid *grid) {
   cudaMemcpy(dens_d, dens, sizeBasis * sizeof(double), cudaMemcpyHostToDevice);
   free(dens);
 
+  cudaMalloc((void **)&rad_d, nrad * grid_d.gridDim.y * sizeof(double));
+  cudaMemcpy(rad_d, rad, nrad * grid_d.gridDim.y * sizeof(double), cudaMemcpyHostToDevice);
+
   /*Initialize integral Value to 0.0*/
   cudaMalloc((void **)&integral_d, sizeof(double));
   cudaMemset(integral_d, 0.0, sizeof(double));
 
-  /* Convert angular quadrature from spherical to cart*/
-  {
-    dim3 dimGrid(
-        ((grid_d.gridDim.y + THREADS_PER_BLOCK_2 - 1) / THREADS_PER_BLOCK_2), 1,
-        1);
-    lebedev_to_cartesian_cuda<<<dimGrid, THREADS_PER_BLOCK_2>>>(
-        grid_d.gridDim, grid_d.xy, grid_d.zw);
-  }
-
   /* Perform integration*/
   {
-    dim3 dimBlock(THREADS_PER_BLOCK, THREADS_PER_BLOCK, 1);
     dim3 dimGrid(
-        ((grid_d.gridDim.x + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK),
-        ((grid_d.gridDim.y + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK), 1);
+        (((grid_d.gridDim.x/grid_d.gridDim.y) + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK), 1,
+        1);
 
-    grid_integrate_kernel<<<dimGrid, dimBlock>>>(sys_d, grid_d.gridDim,
-                                                 grid_d.xy, grid_d.zw,
-                                                 grid_d.rw, dens_d, integral_d);
+    grid_integrate_kernel<<<dimGrid, THREADS_PER_BLOCK>>>(
+        sys_d, grid_d.gridDim, grid_d.radii, grid_d.origin, grid_d.xy,
+        grid_d.zw, dens_d, rad_d, nrad, integral_d);
     CUERR
   }
 
@@ -136,6 +125,54 @@ double grid_integrate_cuda(System *sys, Grid *grid) {
 /*
 CUDA kernels:
 */
+
+__global__ void
+grid_integrate_kernel(const System sys, const int2 gridDim,
+                      double *__restrict__ radii, double *__restrict__ origin,
+                      double2 *__restrict__ xy, double2 *__restrict__ zw,
+                      double *__restrict__ dens, double *__restrict__ rad,
+                      int nrad, double *__restrict__ integral) {
+  short k;
+  double p, f, r[3];
+
+  __shared__ double temp[THREADS_PER_BLOCK];
+  __shared__ double sum_block;
+
+  const unsigned int i = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
+
+  temp[threadIdx.x] = 0.0;
+  sum_block = 0.0;
+  int size = gridDim.x / gridDim.y;
+  int size2 = size / nrad;
+
+  if (i < size) {
+    for (k = 0; k < gridDim.y; ++k) {
+    /* Calculate r*/
+    const double2 aux_xy = xy[k * size + i];
+    const double2 aux_zw = zw[k * size + i];
+
+      /*Calculate Becke weights */
+      r[0] = aux_xy.x;
+      r[1] = aux_xy.y;
+      r[2] = aux_zw.x;
+
+      p = grid_weights_cuda(gridDim.y, origin, radii, r, k);
+
+      /*Calculate the functional*/
+      f = grid_density_cuda(sys.basis, r, dens);
+
+      /*Calculate Integral */
+      int idxr = k * nrad + __float2int_rz(i / size2);
+      temp[threadIdx.x] += (rad[idxr] * rad[idxr] * radii[k] * aux_zw.y * p * f);
+    }
+    __syncthreads();
+    atomicAdd(&sum_block, temp[threadIdx.x]);
+  }
+  __syncthreads();
+  if (threadIdx.x == 0) {
+    atomicAdd(integral, sum_block);
+  }
+}
 
 __device__ double grid_weights_cuda(const int n_particles,
                                     double *__restrict__ particle_origin,
@@ -244,64 +281,4 @@ __device__ double grid_density_cuda(BasisSet basis, double *__restrict__ r,
   }
 
   return output;
-}
-
-__global__ void grid_integrate_kernel(const System sys, const int2 gridDim,
-                                      double2 *__restrict__ xy,
-                                      double2 *__restrict__ zw,
-                                      double2 *__restrict__ rw,
-                                      double *__restrict__ dens,
-                                      double *__restrict__ integral) {
-  short k, aux_k;
-  double rm, rad, p, f, r[3];
-
-  __shared__ double temp[THREADS_PER_BLOCK_2];
-  __shared__ double sum_block;
-
-  const unsigned int i = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
-  const unsigned int j = __umul24(blockIdx.y, blockDim.y) + threadIdx.y;
-  const unsigned int l = __umul24(threadIdx.x, THREADS_PER_BLOCK) + threadIdx.y;
-
-  temp[l] = 0.0;
-  sum_block = 0.0;
-
-  if (i < gridDim.x && j < gridDim.y) {
-    /* Calculate r*/
-    const double2 aux_rw = rw[i];
-    const double2 aux_xy = xy[j];
-    const double2 aux_zw = zw[j];
-
-    const double auxFactor = aux_rw.y * aux_zw.y;
-
-    for (k = 0; k < sys.n_particles; ++k) {
-      rm = sys.particle_radii[k];
-
-      if (sys.particle_number[k] != 1) {
-        rm *= 0.5;
-      }
-
-      rad = rm * aux_rw.x;
-
-      aux_k = k * 3;
-      r[0] = rad * aux_xy.x + sys.particle_origin[aux_k + 0];
-      r[1] = rad * aux_xy.y + sys.particle_origin[aux_k + 1];
-      r[2] = rad * aux_zw.x + sys.particle_origin[aux_k + 2];
-
-      /*Calculate Becke weights */
-      p = grid_weights_cuda(sys.n_particles, sys.particle_origin,
-                            sys.particle_radii, r, k);
-
-      /*Calculate the functional*/
-      f = grid_density_cuda(sys.basis, r, dens);
-
-      /*Calculate Integral */
-      temp[l] += (rad * rad * rm * auxFactor * p * f);
-    }
-    __syncthreads();
-    atomicAdd(&sum_block, temp[l]);
-  }
-  __syncthreads();
-  if (l == 0) {
-    atomicAdd(integral, sum_block);
-  }
 }

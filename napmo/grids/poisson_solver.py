@@ -4,13 +4,24 @@
 # All rights reserved.
 # Version: 0.1
 # efposadac@sissa.it
+from __future__ import print_function
 
 import numpy as np
+from scipy.sparse.linalg import spsolve
+from scipy.sparse import csc_matrix
 import numpy.ctypeslib as npct
 from ctypes import *
 
 from napmo.grids.radial import RadialGrid
 from napmo.system.c_binding import napmo_library
+
+
+def print_matrix(A, n):
+    for i in range(n):
+        for j in range(n):
+            print("%12.5f" % (A[i, j]), end="")
+        print("")
+    print("")
 
 
 def poisson_solver(grid, rho, lmax):
@@ -53,7 +64,7 @@ def poisson_solver(grid, rho, lmax):
                     b[0] = u_00
 
                 # Solve
-                x = np.linalg.solve(A, b)
+                x = spsolve(csc_matrix(A), b)
                 U[:, idx] = x[1:-1]
 
                 idx += 1

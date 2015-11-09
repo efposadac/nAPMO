@@ -8,28 +8,6 @@ efposadac@sissa.it*/
 //#define _GNU_SOURCE
 #include "include/becke_grid.h"
 
-void grid_init(Grid *grid) {
-  grid->radial_abscissas = (double *)malloc(grid->n_radial * sizeof(double));
-  grid->radial_weights = (double *)malloc(grid->n_radial * sizeof(double));
-
-  grid->angular_theta = (double *)malloc(grid->n_angular * sizeof(double));
-  grid->angular_phi = (double *)malloc(grid->n_angular * sizeof(double));
-  grid->angular_weights = (double *)malloc(grid->n_angular * sizeof(double));
-
-  lebedev_spherical(grid->n_angular, grid->angular_theta, grid->angular_phi,
-                    grid->angular_weights);
-  gaussChebyshev(grid->n_radial, 1.0, grid->radial_abscissas,
-                 grid->radial_weights);
-}
-
-void grid_free(Grid *grid) {
-  free(grid->radial_abscissas);
-  free(grid->radial_weights);
-  free(grid->angular_theta);
-  free(grid->angular_phi);
-  free(grid->angular_weights);
-}
-
 double grid_weights(BeckeGrid *grid, double r[3], int particleID) {
   double x_i[3], x_j, r_i, r_j, R_ij, mu_ij, rm_i, rm_j, chi, u_ij, a_ij, nu_ij;
   double sum = 0, output, aux1, aux2, aux3 = 0;
@@ -92,12 +70,14 @@ double grid_weights(BeckeGrid *grid, double r[3], int particleID) {
 }
 
 double grid_integrate(BeckeGrid *grid, System *sys, double *rad, int nrad) {
+
 #ifdef _CUDA
 /*
 TODO: Change this call for a "try:" style. The idea is that if there is not
 device available for CUDA the code will be executed on the host.
 */
-// return grid_integrate_cuda(grid);
+return grid_integrate_cuda(sys, grid, rad, nrad);
+
 #endif
   double integral, p;
   int i, j, idx, idxr, size, size2;
