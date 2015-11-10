@@ -48,10 +48,13 @@ class AtomicGrid(Structure):
 
         offset = 0
         for i in range(nrad):
-            self.points[
-                offset:offset + nang] = self.radial_grid.points[i] * self.angular_grid.points
-            self.weights[
-                offset:offset + nang] = self.radial_grid.weights[i] * self.angular_grid.weights
+            self.points[offset:offset + nang] = (
+                self.radial_grid.points[i] * self.angular_grid.points
+            )
+            self.weights[offset:offset + nang] = (
+                self.radial_grid.weights[i] * self.angular_grid.weights *
+                self.radial_grid.points[i] * self.radial_grid.points[i]
+            )
             offset += nang
 
         self.points += origin
@@ -70,8 +73,6 @@ class AtomicGrid(Structure):
         return output
 
     def integrate(self, *args):
-        args += (np.dstack([self.radial_grid.points**2] *
-                           self.angular_grid.lorder).flatten(), )
         f = np.concatenate(args)
         integral = napmo_library.atomic_grid_integrate(
             byref(self), len(args), f)

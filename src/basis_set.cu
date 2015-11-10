@@ -11,7 +11,7 @@ extern "C" {
 
 #include "include/cuda_helper.cuh"
 
-void basis_set_init_cuda(BasisSet *basis, BasisSet *basis_d) {
+void basis_set_init(BasisSet *basis, BasisSet *basis_d) {
   int i, basisSize;
 
   /*Calculating total size of the basis set*/
@@ -48,7 +48,7 @@ void basis_set_init_cuda(BasisSet *basis, BasisSet *basis_d) {
              cudaMemcpyHostToDevice);
 }
 
-void basis_set_free_cuda(BasisSet *basis_d) {
+void basis_set_free(BasisSet *basis_d) {
   cudaFree(basis_d->n_prim_cont);
   cudaFree(basis_d->basis_l);
   cudaFree(basis_d->normalization);

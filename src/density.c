@@ -7,6 +7,8 @@ efposadac@sissa.it*/
 
 #include "include/density.h"
 
+#ifndef _CUDA
+
 void density_gto(BasisSet *basis, double *r, double *dens, double *output,
                  int size) {
   int i, j, idx, aux, counter, point;
@@ -35,9 +37,9 @@ void density_gto(BasisSet *basis, double *r, double *dens, double *output,
       }
 
       for (i = 0; i < n_cont; ++i) {
-
         aux = i * 3;
-        factor = 1.0, RP2 = 0.0;
+        factor = 1.0; 
+        RP2 = 0.0;
         for (j = 0; j < 3; ++j) {
           temp = r[idx + j] - basis->origin[aux + j];
           RP2 += (temp * temp);
@@ -69,3 +71,5 @@ void density_gto(BasisSet *basis, double *r, double *dens, double *output,
     free(basis_val);
   }
 }
+
+#endif

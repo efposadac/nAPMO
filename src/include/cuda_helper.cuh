@@ -50,6 +50,19 @@ __device__ __forceinline__ double2 mult_double2(const double2 &a,
   return r;
 }
 
+__device__ __forceinline__ double distance(double a[3], double b[3]) {
+  int i;
+  double output, aux;
+
+  output = 0.0;
+  for (i = 0; i < 3; ++i) {
+    aux = a[i] - b[i];
+    output += aux * aux;
+  }
+
+  return sqrt(output);
+}
+
 #endif
 
 #endif

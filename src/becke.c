@@ -7,6 +7,8 @@ efposadac@sissa.it*/
 
 #include "include/becke.h"
 
+#ifndef _CUDA
+
 void becke_weights(BeckeGrid *grid, double *weights) {
   int atom, iatom, jatom, point, npoint, offset, size, order, k, idx;
   double r_i, r_j, mu_ij;
@@ -107,3 +109,5 @@ void becke_weights(BeckeGrid *grid, double *weights) {
   free(R_ij);
   free(a_ij);
 }
+
+#endif

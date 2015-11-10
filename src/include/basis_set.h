@@ -23,12 +23,12 @@ typedef struct _basis_set BasisSet;
 /*
 Copy the host BasisSet structure into the device.
 */
-void basis_set_init_cuda(BasisSet *basis, BasisSet *basis_d);
+void basis_set_init(BasisSet *basis, BasisSet *basis_d);
 
 /*
 Free the memory used on the CUDA device.
 */
-void basis_set_free_cuda(BasisSet *basis_d);
+void basis_set_free(BasisSet *basis_d);
 
 #endif
 

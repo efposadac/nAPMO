@@ -40,3 +40,5 @@ if __name__ == '__main__':
     file_dens = os.path.join(os.path.dirname(__file__), 'data.dens')
     f = density_full_from_matrix_gto(file_dens, basis, grid.points)
     integral = grid.integrate(f)
+
+    print(integral)

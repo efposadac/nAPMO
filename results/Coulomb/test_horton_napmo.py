@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-from napmo.utilities.angular_quadratures import lebedev_get_order
+from napmo.utilities.lebedev import lebedev_get_order
 from napmo.system.molecular_system import MolecularSystem
 from napmo.grids.becke import BeckeGrid
 from napmo.grids.poisson_solver import poisson_solver

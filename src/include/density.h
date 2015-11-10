@@ -21,4 +21,11 @@ efposadac@sissa.it*/
 void density_gto(BasisSet *basis, double *r, double *dens, double *output,
                  int size);
 
+#ifdef _CUDA
+#include "cuda_helper.cuh"
+
+__global__ void density_gto_kernel(BasisSet basis, double *r, double *dens,
+                                   double *output, int size);
+#endif
+
 #endif

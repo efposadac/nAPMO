@@ -10,6 +10,10 @@ efposadac@sissa.it*/
 
 #include "angular.h"
 
+#ifdef _OMP
+#include <omp.h>
+#endif
+
 struct _atomic_grid {
   int size;        // Number of points.
   double radii;    // covalent radius for each center
@@ -20,4 +24,19 @@ struct _atomic_grid {
 typedef struct _atomic_grid AtomicGrid;
 
 double atomic_grid_integrate(AtomicGrid *grid, const int segments, double *f);
+
+#ifdef _CUDA
+
+#include "cuda_helper.cuh"
+
+#ifdef __CUDACC__
+__global__ void atomic_grid_integrate_kernel(const int size, const int segments,
+                                             double *work, double *weights,
+                                             double *integral);
+
+__global__ void multiply_segmented_array(const int size, const int segments,
+                                         double *f, double *output);
+#endif
+#endif
+
 #endif

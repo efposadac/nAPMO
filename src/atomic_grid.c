@@ -7,6 +7,8 @@ efposadac@sissa.it*/
 
 #include "include/atomic_grid.h"
 
+#ifndef _CUDA
+
 double atomic_grid_integrate(AtomicGrid *grid, const int segments, double *f) {
   int i;
   double *work;
@@ -33,3 +35,5 @@ double atomic_grid_integrate(AtomicGrid *grid, const int segments, double *f) {
 
   return output * 4.0 * M_PI * grid->radii;
 }
+
+#endif

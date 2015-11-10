@@ -42,7 +42,7 @@ def gauss_chebishev_omp():
 
 
 def mmi_omp():
-    nprocs = np.array([i for i in range(1, 9)])
+    nprocs = np.array([1, 2, 4, 8])
     times = []
 
     for nproc in nprocs:
