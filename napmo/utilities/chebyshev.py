@@ -1,4 +1,4 @@
-# file: radial_quadratures.py
+# file: chebyshev.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.

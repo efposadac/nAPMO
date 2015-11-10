@@ -11,7 +11,7 @@ import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.system.c_binding import napmo_library
+from napmo.system.cext import napmo_library
 
 
 class PrimitiveGaussian(Structure):

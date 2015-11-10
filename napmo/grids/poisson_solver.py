@@ -13,7 +13,7 @@ import numpy.ctypeslib as npct
 from ctypes import *
 
 from napmo.grids.radial import RadialGrid
-from napmo.system.c_binding import napmo_library
+from napmo.system.cext import napmo_library
 
 
 def print_matrix(A, n):

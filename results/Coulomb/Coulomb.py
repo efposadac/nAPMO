@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 import time
 import os
 
-from napmo.utilities.angular_quadratures import *
+from napmo.utilities.lebedev import *
 from napmo.system.molecular_system import MolecularSystem
 from napmo.grids.becke import BeckeGrid
 from napmo.grids.poisson_solver import poisson_solver

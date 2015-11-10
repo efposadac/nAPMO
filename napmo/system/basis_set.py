@@ -10,6 +10,7 @@ from __future__ import print_function
 
 import numpy as np
 import json
+from ctypes import *
 
 from napmo.system.contracted_slater import ContractedSlater
 from napmo.system.contracted_gaussian import ContractedGaussian
@@ -25,23 +26,10 @@ class BasisSet(dict):
     def __init__(self, name='user'):
         super(BasisSet, self).__init__()
         self['name'] = name
-        self['particle'] = None
         self['function'] = []
         self['kind'] = None
-        self['json'] = None
         self['length'] = 0
         self['t_length'] = 0
-
-    def __add__(self, other):
-        self['name'] += ', ' + other.get('name')
-        self['kind'] += ', ' + other.get('kind')
-        self['particle'] += ', ' + other.get('particle')
-        self['function'] += other.get('function')
-        self['json'] += other.get('json')
-        self['length'] += other.get('length')
-        self['t_length'] += other.get('t_length')
-
-        return self
 
     def load_gaussian(self, particle, data, origin=np.zeros(3, dtype=np.float64)):
         """
@@ -51,29 +39,28 @@ class BasisSet(dict):
             particle (str): Symbol of the particle.
             data (json): json formatted data to be loaded.
         """
-        self['particle'] = particle
         self['kind'] = 'GTO'
-        self['json'] = json.loads(data)[particle]
+        data = json.loads(data)[particle]
 
         lvalue = {'s': 0, 'p': 1, 'd': 2, 'f': 3, 'g': 4}
 
-        for k in range(len(self['json'])):
-            l = lvalue[self['json'][k]['angular']]
+        for k in range(len(data)):
+            l = lvalue[data[k]['angular']]
             for i in range(l + 1):
                 x = l - i
                 for j in range(i + 1):
                     y = i - j
                     z = j
                     self['function'].append(ContractedGaussian(
-                        np.array(self['json'][k]['prim'], dtype=np.float64),
-                        np.array(self['json'][k]['cont'], dtype=np.float64),
+                        np.array(data[k]['prim'], dtype=np.float64),
+                        np.array(data[k]['cont'], dtype=np.float64),
                         np.array(origin, dtype=np.float64),
                         np.array([x, y, z], dtype=np.int32)
                     ))
 
         self['length'] = len(self.get('function'))
-
         self['t_length'] = 0
+
         for function in self.get('function'):
             self['t_length'] += function.get('length')
 
@@ -85,26 +72,25 @@ class BasisSet(dict):
             particle (str): Symbol of the particle.
             data (json): json formatted data to be loaded.
         """
-        self['particle'] = particle
         self["kind"] = 'STO'
-        self["json"] = json.loads(data)[particle]
+        data = json.loads(data)[particle]
 
         lvalue = {"s": 0, "p": 1, "d": 2, "f": 3, "g": 4}
 
-        for k in range(len(self["json"])):
-            l = lvalue[self["json"][k]["angular"]]
+        for k in range(len(data)):
+            l = lvalue[data[k]["angular"]]
             for m in range(-l, l + 1):
                 self["function"].append(ContractedSlater(
-                    np.array(self["json"][k]["prim"], dtype=np.float64),
-                    np.array(self["json"][k]["cont"], dtype=np.float64),
+                    np.array(data[k]["prim"], dtype=np.float64),
+                    np.array(data[k]["cont"], dtype=np.float64),
                     np.array(origin, dtype=np.float64),
-                    np.array(self["json"][k]["n"], dtype=np.int32),
+                    np.array(data[k]["n"], dtype=np.int32),
                     l,
                     m
                 ))
         self['length'] = len(self.get('function'))
-
         self['t_length'] = 0
+
         for function in self.get('function'):
             self['t_length'] += function.get('length')
 
@@ -122,12 +108,6 @@ class BasisSet(dict):
 
         return output
 
-    def show_json(self):
-        """
-        Prints the basis-set in json format.
-        """
-        print(json.dumps(self["json"], sort_keys=True, indent=4))
-
     def show(self):
         """
         Prints extended information of the basis-set object.
@@ -136,7 +116,6 @@ class BasisSet(dict):
         print("Basis set info")
         print("================")
         print("Name: ", self.get('name'))
-        print("Particle: ", self.get('particle'))
         print("Kind: ", self.get('kind'))
         print("Length: ", self.get('length'))
         print("****************")
@@ -149,3 +128,60 @@ class BasisSet(dict):
             print("")
             function.show()
             i += 1
+
+
+class BasisSet_C(Structure):
+    """
+    C interface to the BasisSet class.
+
+    Args:
+        basis (BasisSet) : Basis-set of the system.
+    """
+    _fields_ = [
+        ("n_cont", c_int),
+        ("n_prim_cont", POINTER(c_int)),
+        ("l_index", POINTER(c_int)),
+        ("exponent", POINTER(c_double)),
+        ("coefficient", POINTER(c_double)),  # normalized
+        ("normalization", POINTER(c_double)),
+        ("origin", POINTER(c_double))
+    ]
+
+    def __init__(self, basis):
+        super(BasisSet_C, self).__init__()
+
+        self.n_cont = basis.get('length')
+
+        size = (c_double * self.n_cont)()
+        self.normalization = cast(size, POINTER(c_double))
+
+        size = (c_double * self.n_cont * 3)()
+        self.origin = cast(size, POINTER(c_double))
+
+        size = (c_int * self.n_cont)()
+        self.n_prim_cont = cast(size, POINTER(c_int))
+
+        size = (c_int * self.n_cont * 3)()
+        self.l_index = cast(size, POINTER(c_int))
+
+        size = (c_double * basis.get('t_length'))()
+        self.exponent = cast(size, POINTER(c_double))
+
+        size = (c_double * basis.get('t_length'))()
+        self.coefficient = cast(size, POINTER(c_double))
+
+        counter = 0
+        for i in range(self.n_cont):
+            F = basis.get('function')[i]
+            self.normalization[i] = F.get('normalization')
+
+            for j in range(3):
+                self.l_index[i * 3 + j] = F.get('l')[j]
+                self.origin[i * 3 + j] = F.get('origin')[j]
+
+            self.n_prim_cont[i] = F.get('length')
+            for j in range(self.n_prim_cont[i]):
+                P = F.get('primitive')[j]
+                self.exponent[counter] = P.exponent
+                self.coefficient[counter] = P.coefficient * P.normalization
+                counter += 1

@@ -1,23 +1,24 @@
-# file: test_radial_quadratures.py
+# file: test_chebyshev.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
 # efposadac@sissa.it
 
-import napmo.utilities.radial_quadratures as nint
+import napmo.utilities.chebyshev as nint
 import numpy as np
 
 
-def test_radial_quadrature_chebgauss():
-    _r = np.array([8.66025404e-01, 5.00000000e-01, 6.12323400e-17, -5.00000000e-01, -8.66025404e-01])
+def test_chebyshev_chebgauss():
+    _r = np.array([8.66025404e-01, 5.00000000e-01,
+                   6.12323400e-17, -5.00000000e-01, -8.66025404e-01])
     _w = np.array([0.13089969, 0.39269908, 0.52359878, 0.39269908, 0.13089969])
     r, w = nint.chebgauss(5)
     np.testing.assert_allclose(_r, r)
     np.testing.assert_allclose(_w, w)
 
 
-def test_radial_quadrature_chebgauss_transformed():
+def test_chebyshev_chebgauss_transformed():
 
     try:
         nint.chebgauss_transformed(-1)
@@ -31,7 +32,8 @@ def test_radial_quadrature_chebgauss_transformed():
     _rq[:, 0] = np.array([
         0.99990271322752600, 0.99705379102173697, 0.97959347194838908, 0.92441318157838759,
         0.80461983162814810, 0.60315708641633381, 0.32492907290728490, 0.00000000000000000,
-        -0.32492907290728490, -0.60315708641633381, -0.80461983162814810, -0.92441318157838759,
+        -0.32492907290728490, -0.60315708641633381, -
+        0.80461983162814810, -0.92441318157838759,
         -0.97959347194838908, -0.99705379102173697, -0.99990271322752600], dtype=np.float64)
 
     _rq[:, 1] = np.array([
@@ -45,7 +47,7 @@ def test_radial_quadrature_chebgauss_transformed():
     np.testing.assert_allclose(rq, _rq)
 
 
-def test_radial_quadrature_chebgauss_transformed_integrate():
+def test_chebyshev_chebgauss_transformed_integrate():
     eps = 1.0e-12
 
     f = lambda x: np.exp(-6.793 * x * x) / (1.000001 - (x * x))
@@ -71,6 +73,6 @@ def test_radial_quadrature_chebgauss_transformed_integrate():
         assert True
 
 
-# test_radial_quadrature_chebgauss_transformed()
-# test_radial_quadrature_chebgauss_transformed_integrate()
-# test_radial_quadrature_chebgauss()
+# test_chebyshev_chebgauss_transformed()
+# test_chebyshev_chebgauss_transformed_integrate()
+# test_chebyshev_chebgauss()

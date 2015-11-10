@@ -15,7 +15,7 @@ from math import ceil
 
 from napmo.system.atomic_element import AtomicElement
 from napmo.system.elementary_particle import ElementaryParticle
-from napmo.system.basis_set import BasisSet
+from napmo.system.basis_set import BasisSet, BasisSet_C
 from napmo.data.constants import ANGSTROM_TO_BOHR
 
 
@@ -59,12 +59,14 @@ class MolecularSystem(dict):
 
         atom = AtomicElement(symbol, origin=origin, BOA=BOA,
                              mass_number=mass_number, units='Bohr')
-        atom['size'] = 1
 
-        # load basis-set
         if basis_name is None:
             basis_name = basis_file
 
+        self.add_elementary_particle(
+            'e-', size=atom.get('atomic_number'), units='BOHR', basis_name=basis_name)
+
+        # load basis-set
         atom['basis'] = BasisSet(basis_name)
 
         if basis_file is not None:
@@ -73,16 +75,21 @@ class MolecularSystem(dict):
             file.close()
 
             if basis_kind == 'GTO':
-                atom.get('basis').load_gaussian(symbol, basis_data, origin)
+                atom.get('basis').load_gaussian(
+                    symbol, basis_data, origin)
+                self.get('e-')['basis'].load_gaussian(symbol,
+                                                      basis_data, origin)
+
             elif basis_kind == 'STO':
-                atom.get('basis').load_slater(symbol, basis_data, origin)
+                atom.get('basis').load_slater(
+                    symbol, basis_data, origin)
+                self.get('e-')['basis'].load_slater(
+                    symbol, basis_data, origin)
 
         self.get('atoms').append(atom)
-        self.add_elementary_particle(
-            'e-', origin, size=atom.get('atomic_number'), units='Bohr')
-        self.get('e-')[-1]['basis'] = self.get('atoms')[-1].get('basis')
 
-    def add_elementary_particle(self, symbol, origin, size=1, units='ANGSTROMS',
+    def add_elementary_particle(self, symbol,
+                                origin=None, size=1, units='ANGSTROMS',
                                 basis_kind='GTO', basis_name=None, basis_file=None):
         """
         Adds an elementary particle into the molecular system.
@@ -94,38 +101,39 @@ class MolecularSystem(dict):
             units (str, optional): Units of the origin, valid values are 'ANGSTROMS' or 'Bohr'
         """
         assert isinstance(symbol, str)
-        assert len(origin) == 3
         assert isinstance(size, int)
         assert isinstance(units, str)
 
-        # Converting to Bohr
-        origin = np.array(origin, dtype=np.float64)
-
-        if units == 'ANGSTROMS':
-            origin *= ANGSTROM_TO_BOHR
-
         if symbol not in self:
-            self[symbol] = []
+            self[symbol] = ElementaryParticle(symbol)
+            self[symbol]['size'] = 0
+            self[symbol]['basis'] = BasisSet(basis_name)
+            self[symbol]['origin'] = []
 
-        particle = ElementaryParticle(symbol, origin=origin)
+        # Converting to Bohr
+        if origin is not None:
+            assert len(origin) == 3
+            origin = np.array(origin, dtype=np.float64)
 
-        self[symbol].append(particle)
-        self[symbol][-1]['size'] = size
+            if units == 'ANGSTROMS':
+                origin *= ANGSTROM_TO_BOHR
+
+            self[symbol]['origin'].append(origin)
+
+        self[symbol]['size'] += size
 
         # load basis-set
-        self[symbol][-1]['basis'] = BasisSet(basis_name)
-
         if basis_file is not None:
             file = open(basis_file)
             basis_data = file.read().replace('\n', '')
             file.close()
 
             if basis_kind == 'GTO':
-                self[
-                    symbol][-1].get('basis').load_gaussian(symbol, basis_data, origin)
+                self[symbol].get('basis').load_gaussian(
+                    symbol, basis_data, origin)
             elif basis_kind == 'STO':
-                self[symbol][-1].get('basis').load_slater(symbol,
-                                                          basis_data, origin)
+                self[symbol].get('basis').load_slater(
+                    symbol, basis_data, origin)
 
     def n_occupation(self, symbol):
         """
@@ -134,7 +142,7 @@ class MolecularSystem(dict):
         Returns:
             int: Occupation of quantum species ``symbol``.
         """
-        return ceil(self.n_particles(symbol) * self[symbol][-1]['spin'])
+        return ceil(self.n_particles(symbol) * self[symbol]['spin'])
 
     def n_elementary_particles(self):
         """
@@ -171,16 +179,14 @@ class MolecularSystem(dict):
         """
         output = 0
         if symbol in self:
-            for item in self[symbol]:
-                output += item.get('size')
+            if symbol != 'atoms':
+                output = self[symbol].get('size')
 
         return output
 
-    def get_basis_set(self, symbol):
+    def get_basis(self, symbol):
         if symbol in self:
-            basis = deepcopy(self[symbol][0].get('basis'))
-            for i in range(1, len(self[symbol])):
-                basis += self[symbol][i].get('basis')
+            basis = self[symbol].get('basis')
         else:
             for atom in self.get('atoms'):
                 if atom.get('symbol') == symbol:
@@ -191,6 +197,10 @@ class MolecularSystem(dict):
         else:
             raise KeyError
 
+    def get_basis_as_cstruct(self, symbol):
+        basis = self.get_basis(symbol)
+        return BasisSet_C(basis)
+
     def show(self):
         """
         Shows information about particles
@@ -200,19 +210,37 @@ class MolecularSystem(dict):
         print('------------------------------------------------------------------')
         for symbol in self.keys():
             particles = self.get(symbol)
-            print(type(particles[-1]).__name__, ': ', symbol, end=" ")
-            print('  n. particles: ', self.n_particles(symbol))
-            print(
-                '{0:7}'.format("Symbol"),
-                '{0:5}'.format("n."),
-                '{0:40}'.format("origin (Bohr)"),
-                '{0:10}'.format("Basis-set")
-            )
-            for particle in particles:
+            if symbol is 'atoms':
+                print(type(particles[-1]).__name__, ': ', symbol, end=" ")
+                print(' number of e-: ', self.n_particles('e-'))
                 print(
-                    '{0:7}'.format(particle.get('symbol')),
-                    '{0:5}'.format(str(particle.get('size'))),
-                    '{0:40}'.format(str(particle.get('origin'))),
-                    '{0:10}'.format(str(particle.get('basis')['name']))
+                    '{0:7}'.format("Symbol"),
+                    '{0:5}'.format("Z"),
+                    '{0:40}'.format("origin (Bohr)"),
+                    '{0:10}'.format("Basis-set")
                 )
-            print('------------------------------------------------------------------')
+                for particle in particles:
+                    print(
+                        '{0:7}'.format(str(particle.get('symbol'))),
+                        '{0:5}'.format(str(particle.get('atomic_number'))),
+                        '{0:40}'.format(str(particle.get('origin'))),
+                        '{0:10}'.format(str(particle.get('basis')['name']))
+                    )
+            else:
+                if len(particles.get('origin')) > 1:
+                    print(type(particles).__name__, ': ', symbol, end=" ")
+                    print(' number of particles: ', self.n_particles(symbol))
+                    print(
+                        '{0:7}'.format("Symbol"),
+                        '{0:5}'.format("N"),
+                        '{0:40}'.format("origin (Bohr)"),
+                        '{0:10}'.format("Basis-set")
+                    )
+                for i in range(len(particles.get('origin'))):
+                    print(
+                        '{0:7}'.format(str(particles.get('symbol'))),
+                        '{0:5}'.format(str(particles.get('size'))),
+                        '{0:40}'.format(str(particles.get('origin')[i])),
+                        '{0:10}'.format(str(particles.get('basis')['name']))
+                    )
+        print('------------------------------------------------------------------')

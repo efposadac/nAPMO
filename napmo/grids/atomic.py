@@ -11,7 +11,7 @@ from ctypes import *
 
 from napmo.grids.radial import RadialGrid
 from napmo.grids.angular import AngularGrid
-from napmo.system.c_binding import napmo_library, CBinding
+from napmo.system.cext import napmo_library
 
 
 class AtomicGrid(Structure):

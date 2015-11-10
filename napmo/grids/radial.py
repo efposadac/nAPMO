@@ -10,7 +10,7 @@ import numpy.ctypeslib as npct
 from ctypes import *
 
 from napmo.data.databases import AtomicElementsDatabase
-from napmo.system.c_binding import napmo_library
+from napmo.system.cext import napmo_library
 
 
 class RadialGrid(Structure):

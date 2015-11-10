@@ -19,43 +19,7 @@ efposadac@sissa.it*/
 #include "gauss_chebyshev.h"
 #include "angular.h"
 #include "system.h"
-
-
-/*
-Computes the Becke weights :math:`w(r)` at point ``r`` for particle
-``particleID`` as described in eq. 22 Becke, 1988.
-
-References:
-    Becke, A. D. A multicenter numerical integration scheme for polyatomic
-molecules. J. Chem. Phys. 88, 2547 (1988).
-
-Args:
-    (double[3]): Point of the grid in which the weight will be calculated.
-    particleID (int): The particle index who owns the ``r`` point.
-    sys (System): system structure.
-
-Returns:
-    output (double): The value of cell_function (eq. 13, Becke, 1988) at point
-``r``
-*/
-double grid_weights(BeckeGrid *grid, double r[3], int particleID);
-
-/*
-Functional :math:`\rho({\\bf r})`
-*/
-double grid_integrate(BeckeGrid *grid, System *sys, double *rad, int nrad);
-
-/*
-Functional :math:`\rho({\\bf r})`
-*/
-double grid_density(System *sys, double *r, double *dens);
-
-/*
-Iterated cutoff profile. eq. 21, Becke 1988.
-*/
-inline double grid_soft_mu(const double mu) {
-  return 0.5 * mu * (3.0 - mu * mu);
-}
+  
 
 /*
 CUDA functions

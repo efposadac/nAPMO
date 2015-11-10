@@ -12,7 +12,8 @@ import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.system.c_binding import napmo_library, CBinding
+from napmo.system.cext import napmo_library
+from napmo.system.basis_set import BasisSet_C
 from napmo.grids.atomic import AtomicGrid
 
 
@@ -104,23 +105,6 @@ class BeckeGrid(Structure):
             offset += self.atgrids[i].size
         return integral
 
-    def integrate_c(self, csys):
-        """
-        Perform an integration of function :math:`F(r)` using BeckeGrid. (Function coded on C)
-
-        Args:
-            csys (CBinding) : Information of the system in C structure. See CBinding.
-
-        Info:
-            So far only implements density integration as a test, more functionals soon.
-        """
-        rad = np.concatenate(
-            [self.atgrids[i].radial_grid.points for i in range(self.ncenter)])
-        integral = napmo_library.grid_integrate(
-            byref(self), byref(csys), rad, self.atgrids[-1].radial_grid.size)
-
-        return integral
-
     def show(self):
         """
         Prints information of the object.
@@ -146,10 +130,4 @@ napmo_library.becke_weights.restype = None
 napmo_library.becke_weights.argtypes = [
     POINTER(BeckeGrid),
     array_1d_double
-]
-
-napmo_library.grid_integrate.restype = c_double
-napmo_library.grid_integrate.argtypes = [
-    POINTER(BeckeGrid), POINTER(CBinding),
-    array_1d_double, c_int
 ]

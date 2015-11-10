@@ -1,15 +1,15 @@
-# file: test_angular_quadratures.py
+# file: test_lebedev.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
 # efposadac@sissa.it
 
-import napmo.utilities.angular_quadratures as nint
+import napmo.utilities.lebedev as nint
 import numpy as np
 
 
-def test_angular_quadratures_lebedev_get_order():
+def test_lebedev_get_order():
     assert nint.lebedev_get_order(110) == 17
 
     try:
@@ -18,4 +18,4 @@ def test_angular_quadratures_lebedev_get_order():
     except:
         assert True
 
-# test_angular_quadratures_lebedev_get_order()
+# test_lebedev_get_order()

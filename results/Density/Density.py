@@ -15,48 +15,29 @@ import os
 import time
 
 from napmo.system.molecular_system import MolecularSystem
-from napmo.system.c_binding import CBinding
 from napmo.grids.becke import BeckeGrid
-
-"""
-Calcualtion of :math:`\int \\rho(\\bf r)` for several diatomic molecules.
-"""
+from napmo.utilities.density import *
 
 
 def init_system(element, distance, basis_kind, basis_file):
+    """
+    Calcualtion of :math:`\int \\rho(\\bf r)` for several diatomic molecules.
+    """
     # Molecule definition
     molecule = MolecularSystem()
-    molecule.add_atom(element, [0.000000, 0.000000, distance / 2.0],
+    molecule.add_atom(element, [0.0, 0.0, distance / 2.0],
                       basis_kind=basis_kind, basis_file=basis_file)
-    molecule.add_atom(element, [0.000000, 0.000000, -distance / 2.0],
+    molecule.add_atom(element, [0.0, 0.0, -distance / 2.0],
                       basis_kind=basis_kind, basis_file=basis_file)
     # molecule.show()
-
-    # Get the stack of atoms.
-    atoms = molecule.get('atoms')
-
-    # Build the C interface.
-    system = CBinding(atoms)
 
     # Calculating exact value (Total number of electrons in the system)
     exact = molecule.n_particles('e-')
 
     # Get the density matrix (from a previous calculation)
     file_dens = os.path.join(os.path.dirname(__file__), element + '_dens.dat')
-    P = np.array(np.loadtxt(file_dens), order='F', dtype=np.float64)
-    os.system('cp ' + file_dens + ' data.dens')
 
-    # Functional definition (for Python)
-    def rho(coord, molecule, P=P):
-        basis = molecule.get_basis_set('e-')
-        occupation = molecule.n_occupation('e-')
-        bvalue = np.array(basis.compute(coord))
-        output = np.empty(coord.shape[0])
-        for i in range(coord.shape[0]):
-            output[i] = bvalue[:, i].dot(P.dot(bvalue[:, i]))
-        return output
-
-    return molecule, system, exact, rho
+    return molecule, exact, file_dens
 
 
 if __name__ == '__main__':
@@ -73,30 +54,23 @@ if __name__ == '__main__':
     basis_kind = "GTO"
 
     # Header for results.
-    print("System Int C         Int Py        Error          Time Py       Time C")
+    print("System    Int        Error          Time")
 
     for (element, distance) in zip(elements, distances):
-        molecule, system, exact, rho = init_system(
+        molecule, exact, file_dens = init_system(
             element, distance, basis_kind, basis_file)
 
         grid = BeckeGrid(molecule, radialPoints, angularPoints)
         # grid.show()
 
-        # Calculate integral (Python Code)
-        start_time = time.time()
-        f = rho(grid.points, molecule)
-        integral_p = grid.integrate(f)
-        elapsed_time_p = time.time() - start_time
+        basis = molecule.get_basis_as_cstruct('e-')
 
-        # Calculate integral (C Code)
+        # Calculate integral
         start_time = time.time()
-        integral_c = grid.integrate_c(system)
-        elapsed_time_c = time.time() - start_time
+        f = density_full_from_matrix_gto(file_dens, basis, grid.points)
+        integral = grid.integrate(f)
+        elapsed_time = time.time() - start_time
 
         # Print the results.
-        print("%4s %12.8f  %12.8f  %12.8f  %12.7f  %12.7f" % (
-            element + str(2),
-            integral_c, integral_p, np.abs(exact - integral_p), elapsed_time_p,
-            elapsed_time_c))
-
-        os.system('rm data.dens')
+        print("%4s %12.8f  %12.8f  %12.7f" % (
+            element + str(2), integral, np.abs(exact - integral), elapsed_time))

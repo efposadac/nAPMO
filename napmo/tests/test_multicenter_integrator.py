@@ -9,9 +9,10 @@ import numpy as np
 from copy import deepcopy
 import os
 
-from napmo.system.c_binding import CBinding
 from napmo.system.molecular_system import MolecularSystem
+from napmo.system.cext import *
 from napmo.grids.becke import BeckeGrid
+from napmo.utilities.density import *
 
 
 def test_multicenter_integrator():
@@ -42,18 +43,6 @@ def test_multicenter_integrator():
         # Get the density matrix (from a previous calculation)
         file_dens = os.path.join(os.path.dirname(
             __file__), element + '_dens.dat')
-        P = np.array(np.loadtxt(file_dens), order='F', dtype=np.float64)
-        os.system('cp ' + file_dens + ' data.dens')
-
-        # Functional definition (for Python)
-        def rho(coord, molecule, P=P):
-            basis = molecule.get_basis_set('e-')
-            occupation = molecule.n_occupation('e-')
-            bvalue = np.array(basis.compute(coord))
-            output = np.empty(coord.shape[0])
-            for i in range(coord.shape[0]):
-                output[i] = bvalue[:, i].dot(P.dot(bvalue[:, i]))
-            return output
 
         # Grid definition
         angularPoints = 194
@@ -61,21 +50,15 @@ def test_multicenter_integrator():
         grid = BeckeGrid(molecule, radialPoints, angularPoints)
         grid.show()
 
-        # Calculate integral (Python Code)
-        f = rho(grid.points, molecule)
-        integral_p = grid.integrate(f)
+        basis = molecule.get_basis_as_cstruct('e-')
 
-        # Calculate integral (C Code)
-        system = CBinding(molecule.get('atoms'))
-        integral_c = grid.integrate_c(system)
+        # Calculate integral
+        f = density_full_from_matrix_gto(file_dens, basis, grid.points)
+        integral = grid.integrate(f)
 
-        np.testing.assert_allclose(integral_p, results[count])
-        np.testing.assert_allclose(integral_c, results[count])
+        np.testing.assert_allclose(integral, results[count])
 
-        print(integral_p, integral_c)
-
-        # Delete temporary files.
-        os.system('rm data.dens')
+        print(integral)
 
         count += 1
 

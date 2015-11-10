@@ -1,4 +1,4 @@
-# file: angular_quadratures.py
+# file: lebedev.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.

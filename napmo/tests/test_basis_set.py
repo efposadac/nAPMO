@@ -52,17 +52,11 @@ def tests_basis_set_interface():
     test2 = BasisSet()
     test2.load_slater('N', basis_data, origin=[1.0, 1.0, 1.0])
 
-    test += test2
-    assert test.get('length') == 10
-    assert test.get('t_length') == 48
+    assert test.get('length') == 5
+    assert test.get('t_length') == 24
 
     try:
         test2.show()
-    except:
-        raise
-
-    try:
-        test2.show_json()
     except:
         raise
 

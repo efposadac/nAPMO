@@ -14,8 +14,6 @@ import sys
 import subprocess
 import cProfile
 
-from napmo.interfaces.stack import Stack
-
 
 def gauss_chebishev_omp():
     nprocs = np.array([i for i in range(1, 9)])
@@ -44,8 +42,8 @@ def gauss_chebishev_omp():
 
 
 def mmi_omp():
-    nprocs = np.array([i for i in range(1, 5)])
-    times = Stack()
+    nprocs = np.array([i for i in range(1, 9)])
+    times = []
 
     for nproc in nprocs:
         # Calculate integral
@@ -55,7 +53,7 @@ def mmi_omp():
             '; ./mmi_omp.py')
         times.append(time.time() - start_time)
 
-        print(nproc, times.peek())
+        print(nproc, times[-1])
 
     times = np.array(times)
     plt.title('Scaling in MMI')
@@ -67,5 +65,5 @@ def mmi_omp():
     plt.close()
 
 if __name__ == '__main__':
-    gauss_chebishev_omp()
+    # gauss_chebishev_omp()
     mmi_omp()
