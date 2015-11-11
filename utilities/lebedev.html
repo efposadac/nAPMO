@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>lebedev.lebedev &mdash; nAPMO a1 documentation</title>
+  <title>lebedev &mdash; nAPMO a1 documentation</title>
   
 
   
@@ -31,11 +31,12 @@
 
   
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
-        <link rel="up" title="Utilitites" href="utilitites.html"/>
-        <link rel="prev" title="numerical_integration" href="numerical_integration.html"/> 
+        <link rel="up" title="Utilitites" href="utilities.html"/>
+        <link rel="next" title="density" href="density.html"/>
+        <link rel="prev" title="chebyshev" href="chebyshev.html"/> 
 
   
-  <script src="_static/js/modernizr.min.js"></script>
+  <script src="../_static/js/modernizr.min.js"></script>
 
 </head>
 
@@ -45,17 +46,27 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
 
-        
-          <a href="../index.html" class="icon icon-home"> nAPMO
-        
+          
+            <a href="../index.html" class="icon icon-home"> nAPMO
+          
 
-        
-        </a>
+          
+          </a>
 
-        
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -64,49 +75,35 @@
   </form>
 </div>
 
-        
-      </div>
+          
+        </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-          
-              <ul class="current">
+            
+            
+                <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="../interfaces/interfaces.html">Interfaces</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/atomic_element.html">atomic_element</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/becke_grid.html">becke_grid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/composite_particle.html">composite_particle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/contracted_gaussian.html">contracted_gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/contracted_slater.html">contracted_slater</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/csystem.html">csystem</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/elementary_particle.html">elementary_particle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/primitive_gaussian.html">primitive_gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/primitive_slater.html">primitive_slater</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../interfaces/stack.html">stack</a></li>
-</ul>
-</li>
-<li class="toctree-l2 current"><a class="reference internal" href="utilitites.html">Utilitites</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="databases.html">databases</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="databases.html#atomicelementsdatabase">AtomicElementsDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="databases.html#elementaryparticlesdatabase">ElementaryParticlesDatabase</a></li>
-<li class="toctree-l4"><a class="reference internal" href="databases.html#unitsdatabase">UnitsDatabase</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="numerical_integration.html">numerical_integration</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">lebedev.lebedev</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../system/system.html">System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grids/grids.html">Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="utilities.html">Utilitites</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="chebyshev.html">chebyshev</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="">lebedev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="density.html">density</a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
 </ul>
 <ul class="simple">
 </ul>
 
+            
           
-        
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -121,15 +118,21 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../index.html">Docs</a> &raquo;</li>
       
           <li><a href="../API.html">API</a> &raquo;</li>
       
-          <li><a href="utilitites.html">Utilitites</a> &raquo;</li>
+          <li><a href="utilities.html">Utilitites</a> &raquo;</li>
       
-    <li>lebedev.lebedev</li>
+    <li>lebedev</li>
       <li class="wy-breadcrumbs-aside">
         
           
@@ -140,20 +143,42 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
-  <div class="section" id="lebedev-lebedev">
-<h1>lebedev.lebedev<a class="headerlink" href="#lebedev-lebedev" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-lebedev">
+<span id="lebedev"></span><h1>lebedev<a class="headerlink" href="#module-lebedev" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="lebedev.lebedev_get_order">
+<code class="descclassname">lebedev.</code><code class="descname">lebedev_get_order</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#lebedev.lebedev_get_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the order of the Lebedev quadrature from the number of points <code class="docutils literal"><span class="pre">n</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) &#8211; number of points.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">order of lebedev quadrature.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 
+           </div>
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="density.html" class="btn btn-neutral float-right" title="density" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="numerical_integration.html" class="btn btn-neutral" title="numerical_integration" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="chebyshev.html" class="btn btn-neutral" title="chebyshev" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -163,9 +188,10 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015, Fernando Posada.
+
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 

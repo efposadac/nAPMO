@@ -44,17 +44,27 @@
 
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-nav-search">
-        
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
 
-        
-          <a href="#" class="icon icon-home"> nAPMO
-        
+          
+            <a href="#" class="icon icon-home"> nAPMO
+          
 
-        
-        </a>
+          
+          </a>
 
-        
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" />
@@ -63,46 +73,24 @@
   </form>
 </div>
 
-        
-      </div>
+          
+        </div>
 
-      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
-          
-              <ul>
-<li class="toctree-l1"><a class="reference internal" href="API.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="interfaces/interfaces.html">Interfaces</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="interfaces/atomic_element.html">atomic_element</a></li>
-<li class="toctree-l3"><a class="reference internal" href="interfaces/basis_set.html">basis_set</a></li>
-<li class="toctree-l3"><a class="reference internal" href="interfaces/becke_grid.html">becke_grid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="interfaces/c_binding.html">c_binding</a></li>
-<li class="toctree-l3"><a class="reference internal" href="interfaces/contracted_gaussian.html">contracted_gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="interfaces/contracted_slater.html">contracted_slater</a></li>
-<li class="toctree-l3"><a class="reference internal" href="interfaces/elementary_particle.html">elementary_particle</a></li>
-<li class="toctree-l3"><a class="reference internal" href="interfaces/molecular_system.html">molecular_system</a></li>
-<li class="toctree-l3"><a class="reference internal" href="interfaces/primitive_gaussian.html">primitive_gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="interfaces/primitive_slater.html">primitive_slater</a></li>
-<li class="toctree-l3"><a class="reference internal" href="interfaces/stack.html">stack</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="utilities/utilitites.html">Utilitites</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="utilities/databases.html">databases</a></li>
-<li class="toctree-l3"><a class="reference internal" href="utilities/numerical_integration.html">numerical_integration</a></li>
-<li class="toctree-l3"><a class="reference internal" href="utilities/analytical_integration.html">analytical_integration</a></li>
-</ul>
-</li>
-</ul>
-</li>
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="API.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="results.html">Results</a></li>
 </ul>
 <ul class="simple">
 </ul>
 
+            
           
-        
+        </div>
       </div>
-      &nbsp;
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
@@ -117,7 +105,13 @@
       
       <div class="wy-nav-content">
         <div class="rst-content">
-          <div role="navigation" aria-label="breadcrumbs navigation">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="#">Docs</a> &raquo;</li>
       
@@ -132,7 +126,8 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document">
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="napmo-s-documentation">
 <h1>nAPMO&#8217;s documentation.<a class="headerlink" href="#napmo-s-documentation" title="Permalink to this headline">¶</a></h1>
@@ -146,7 +141,7 @@
 </tbody>
 </table>
 <p>nAPMO is a numerical implementation of APMO - NEO - OMNE method.</p>
-<p>The basic idea is to implement some of the numerical analysis tools required to perform a  numerical Hartree-Fock electronic calculation as first step to implement the numerical OMNE approach.</p>
+<p>The basic idea is to implement the numerical tools required to perform a basis-set free Hartree-Fock calculation as a first step to implement the basis-set free OMNE approach.</p>
 <ul class="simple">
 <li>Edwin Fernando Posada</li>
 <li><a class="reference external" href="mailto:eposada&#37;&#52;&#48;sissa&#46;it">eposada<span>&#64;</span>sissa<span>&#46;</span>it</a></li>
@@ -156,17 +151,28 @@
 <div class="section" id="compilation">
 <h1>Compilation<a class="headerlink" href="#compilation" title="Permalink to this headline">¶</a></h1>
 <p>To compile and install the code use (it will install the package in $USER/.local):</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">make</span>
+<div class="highlight-python"><div class="highlight"><pre>make $(FLAVOR)
 </pre></div>
 </div>
-<p>To check the code go to the <code class="docutils literal"><span class="pre">tests</span></code> folder and run:</p>
+<p><code class="docutils literal"><span class="pre">$(FLAVOR)</span></code> available are: SERIAL, OMP and CUDA.</p>
+<p>To check the code run:</p>
 <div class="highlight-python"><div class="highlight"><pre>nosetests --with-coverage --with-doctest
 </pre></div>
 </div>
 </div>
 <div class="section" id="notes">
 <h1>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h1>
-<p>This version contains a complete and functional molecular multicenter integrator. At this moment can be calculated overlap integrals over GTOs and STOs. As well the calculation of <span class="math">\(\int \rho(\bf r)\)</span>. Some examples are provided in the folder <a class="reference external" href="examples">examples</a>.</p>
+<p>This version contains:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Multicenter molecular integrator based on Becke&#8217;s paper</li>
+<li>Poisson solver based on Becke&#8217;s strategy</li>
+<li>Coulomb numerical integrals.</li>
+<li>Tools to manage a molecular system, basis-sets and others.</li>
+<li>All numerical methods use ctypes to accelerate the calculation.</li>
+<li>The C interface has been parallelized  with OMP and CUDA. That code can be enabled in compilation time.</li>
+</ul>
+</div></blockquote>
 <p>Any suggestion and help is more than welcome and appreciated.</p>
 <p>Code documentation can be found at <a class="reference external" href="http://efposadac.github.io/nAPMO/">http://efposadac.github.io/nAPMO/</a></p>
 <p><a class="reference external" href="mailto:eposada&#37;&#52;&#48;sissa&#46;it">eposada<span>&#64;</span>sissa<span>&#46;</span>it</a></p>
@@ -176,8 +182,10 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="API.html">API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="interfaces/interfaces.html">Interfaces</a></li>
-<li class="toctree-l2"><a class="reference internal" href="utilities/utilitites.html">Utilitites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="system/system.html">System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="grids/grids.html">Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data/data.html">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="results.html">Results</a></li>
@@ -196,6 +204,7 @@
 </div>
 
 
+           </div>
           </div>
           <footer>
   
@@ -212,9 +221,10 @@
   <div role="contentinfo">
     <p>
         &copy; Copyright 2015, Fernando Posada.
+
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 

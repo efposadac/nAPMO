@@ -1,6 +1,5 @@
-lebedev.lebedev
-===============
+lebedev
+=======
 
-.. f:autofunction:: Lebedev_compute
-
-
+.. automodule:: lebedev
+    :members:
