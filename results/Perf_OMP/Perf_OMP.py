@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # file: Perf_OMP.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
@@ -14,13 +14,10 @@ import sys
 import subprocess
 import cProfile
 
-from napmo.interfaces.stack import Stack
-
 
 def gauss_chebishev_omp():
     nprocs = np.array([i for i in range(1, 9)])
-    times = Stack()
-
+    times = []
     os.system('cd ../../src/test/; make')
 
     for nproc in nprocs:
@@ -31,11 +28,12 @@ def gauss_chebishev_omp():
             '; ../../src/test/test_gauss_chebyshev.x')
         times.append(time.time() - start_time)
 
-        print(nproc, times.peek())
+        print(nproc, times[-1])
 
     times = np.array(times)
     plt.title('Scaling in gauss_chebishev function')
-    plt.plot(nprocs, times[0]/times, '-s', label='1e8 gauss_chebishev quad. 10 rep.')
+    plt.plot(nprocs, times[0] / times, '-s',
+             label='1e8 gauss_chebishev quad. 10 rep.')
     plt.xlabel('nprocs')
     plt.ylabel('speedup')
     plt.legend(loc=4)
@@ -44,8 +42,8 @@ def gauss_chebishev_omp():
 
 
 def mmi_omp():
-    nprocs = np.array([i for i in range(1, 5)])
-    times = Stack()
+    nprocs = np.array([1, 2, 4, 8])
+    times = []
 
     for nproc in nprocs:
         # Calculate integral
@@ -55,11 +53,11 @@ def mmi_omp():
             '; ./mmi_omp.py')
         times.append(time.time() - start_time)
 
-        print(nproc, times.peek())
+        print(nproc, times[-1])
 
     times = np.array(times)
     plt.title('Scaling in MMI')
-    plt.plot(nprocs, times[0]/times, '-s', label='C2 \int \\rho(r)')
+    plt.plot(nprocs, times[0] / times, '-s', label='C2 \int \\rho(r)')
     plt.xlabel('nprocs')
     plt.ylabel('speedup')
     plt.legend(loc=4)
@@ -67,5 +65,5 @@ def mmi_omp():
     plt.close()
 
 if __name__ == '__main__':
-    gauss_chebishev_omp()
+    # gauss_chebishev_omp()
     mmi_omp()

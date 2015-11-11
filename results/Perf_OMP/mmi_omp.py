@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # file: mmi_omp.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
@@ -6,27 +6,23 @@
 # Version: 0.1
 # efposadac@sissa.it
 
-from napmo.interfaces.molecular_system import *
-from napmo.interfaces.becke_grid import *
+from napmo.system.molecular_system import MolecularSystem
+from napmo.grids.becke import BeckeGrid
+from napmo.utilities.density import *
+import os
 
 
 def init_system(element, distance, basis_kind, basis_file):
     # Molecule definition
     molecule = MolecularSystem()
-    molecule.add_atom(element, [0.000000, 0.000000, distance/2.0], basis_kind=basis_kind, basis_file=basis_file)
-    molecule.add_atom(element, [0.000000, 0.000000, -distance/2.0], basis_kind=basis_kind, basis_file=basis_file)
+    molecule.add_atom(element, [0.000000, 0.000000, distance / 2.0],
+                      basis_kind=basis_kind, basis_file=basis_file)
+    molecule.add_atom(element, [0.000000, 0.000000, -distance / 2.0],
+                      basis_kind=basis_kind, basis_file=basis_file)
     # molecule.show()
-
-    # Get the stack of atoms.
-    atoms = molecule.get('atoms')
-
-    # Build the C interface.
-    system = CBinding(atoms)
-
-    # Calculating exact value (Total number of electrons in the system)
     exact = molecule.n_particles('e-')
 
-    return atoms, system, exact
+    return molecule, exact
 
 
 if __name__ == '__main__':
@@ -34,11 +30,15 @@ if __name__ == '__main__':
     # Grid definition
     angularPoints = 5810
     radialPoints = 1000
-    grid = BeckeGrid(radialPoints, angularPoints)
 
-    atoms, system, exact = init_system('C', 1.268, 'GTO', 'STO-3G.json')
+    molecule, exact = init_system('C', 1.268, 'GTO', 'STO-3G.json')
+    grid = BeckeGrid(molecule, radialPoints, angularPoints)
 
-    # Calculate integral (C Code)
-    integral = grid.integrate_c(system)
+    basis = molecule.get_basis_as_cstruct('e-')
 
-    grid.free()
+    # Calculate integral
+    file_dens = os.path.join(os.path.dirname(__file__), 'data.dens')
+    f = density_full_from_matrix_gto(file_dens, basis, grid.points)
+    integral = grid.integrate(f)
+
+    print(integral)

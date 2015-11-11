@@ -1,5 +1,0 @@
-analytical_integration
-========================
-
-.. automodule:: analytical_integration
-	:members:

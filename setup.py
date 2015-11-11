@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # file: setup.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
@@ -31,6 +31,6 @@ if __name__ == '__main__':
         packages=find_packages(),
         package_data={'': ['*.json', '*.dat', '*.so']},
         long_description=read('README.rst')
-        )
+    )
 
     exit(0)

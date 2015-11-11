@@ -5,6 +5,7 @@ addons:
   apt_packages:
   - gfortran
   - liblapack-dev
+  - libgsl0-dev
 install:
 - conda update --yes conda
 - conda create -n testenv --yes scipy numpy pip nose setuptools python=3.4
@@ -21,7 +22,7 @@ before_install:
 - export PATH=/home/travis/mc/bin:$PATH
 before_script:
 - pip install coverage
+- gcc --version
 - make
-- cd tests
 script:
 - nosetests --with-coverage --with-doctest

@@ -8,13 +8,14 @@
 TOPDIR=.
 include $(TOPDIR)/config.make
 
-SUBDIRS = napmo tests src
+SUBDIRS = napmo src
 
 default: SERIAL
 
 $(BUILD):
 	cd src && $(MAKE) $@
-	./setup.py install --record files.txt --user
+	# python2 setup.py install --record files.txt --user
+	python setup.py install --record files.txt --user
 
 clean:
 	for dir in $(SUBDIRS); \

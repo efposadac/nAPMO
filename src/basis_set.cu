@@ -6,19 +6,17 @@ Version: 0.1
 efposadac@sissa.it*/
 
 extern "C" {
-#include "basis_set.h"
+#include "include/basis_set.h"
 }
 
-#include "cuda_helper.cuh"
+#include "include/cuda_helper.cuh"
 
-void basis_set_init_cuda(BasisSet *basis, BasisSet *basis_d)
-{
+void basis_set_init(BasisSet *basis, BasisSet *basis_d) {
   int i, basisSize;
 
   /*Calculating total size of the basis set*/
   basisSize = 0;
-  for (i = 0; i < basis->n_cont; ++i)
-  {
+  for (i = 0; i < basis->n_cont; ++i) {
     basisSize += basis->n_prim_cont[i];
   }
 
@@ -36,16 +34,21 @@ void basis_set_init_cuda(BasisSet *basis, BasisSet *basis_d)
 
   /*Copying data to device*/
   basis_d->n_cont = basis->n_cont;
-  cudaMemcpy(basis_d->n_prim_cont, basis->n_prim_cont, bytes_int, cudaMemcpyHostToDevice);
-  cudaMemcpy(basis_d->basis_l, basis->basis_l, 3 * bytes_int, cudaMemcpyHostToDevice);
-  cudaMemcpy(basis_d->normalization, basis->normalization, bytes_double, cudaMemcpyHostToDevice);
-  cudaMemcpy(basis_d->origin, basis->origin, 3 * bytes_double, cudaMemcpyHostToDevice);
-  cudaMemcpy(basis_d->exponent, basis->exponent, bytes_basis, cudaMemcpyHostToDevice);
-  cudaMemcpy(basis_d->coefficient, basis->coefficient, bytes_basis, cudaMemcpyHostToDevice);
+  cudaMemcpy(basis_d->n_prim_cont, basis->n_prim_cont, bytes_int,
+             cudaMemcpyHostToDevice);
+  cudaMemcpy(basis_d->basis_l, basis->basis_l, 3 * bytes_int,
+             cudaMemcpyHostToDevice);
+  cudaMemcpy(basis_d->normalization, basis->normalization, bytes_double,
+             cudaMemcpyHostToDevice);
+  cudaMemcpy(basis_d->origin, basis->origin, 3 * bytes_double,
+             cudaMemcpyHostToDevice);
+  cudaMemcpy(basis_d->exponent, basis->exponent, bytes_basis,
+             cudaMemcpyHostToDevice);
+  cudaMemcpy(basis_d->coefficient, basis->coefficient, bytes_basis,
+             cudaMemcpyHostToDevice);
 }
 
-void basis_set_free_cuda(BasisSet *basis_d)
-{
+void basis_set_free(BasisSet *basis_d) {
   cudaFree(basis_d->n_prim_cont);
   cudaFree(basis_d->basis_l);
   cudaFree(basis_d->normalization);
