@@ -17,10 +17,10 @@ class ContractedSlater(dict):
     Defines a Slater Type Orbital (STO)  as a combination of PrimitiveSlater Functions (spherical coordinates). (dict)
 
     Args:
-        exponents (numpy.ndarray): Slater exponent.
-        coefficient (numpy.ndarray): Slater coefficients.
-        origin (numpy.ndarray(3)) : coordinates (spherical)
-        n (numpy.ndarray): Quantum number n = 1, 2, 3, etc. (one for each primitive)
+        exponents (ndarray): Slater exponent.
+        coefficient (ndarray): Slater coefficients.
+        origin (ndarray) : coordinates (spherical)
+        n (ndarray): Quantum number n = 1, 2, 3, etc. (one for each primitive)
         l (int): Quantum number l = S=0, P=1, D=2, etc.
         m (int): Quantum number m = order of the harmonic, m <= l
     """
@@ -76,6 +76,9 @@ class ContractedSlater(dict):
     def compute(self, coord):
         """
         Computes the value of the contracted STO at ``coord``.
+
+        Args:
+            coord (ndarray) : array with the points where the function will be calculated.
         """
         RP = np.zeros(3, dtype=np.float64)
         RP = coord - self.get('origin')

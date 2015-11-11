@@ -1,8 +1,0 @@
-Utilitites
-==========
-
-.. toctree::
-
-   databases
-   numerical_integration
-   analytical_integration

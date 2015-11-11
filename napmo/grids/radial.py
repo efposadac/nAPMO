@@ -17,9 +17,12 @@ class RadialGrid(Structure):
     """
     Defines a radial grid for multi-center molecular integration.
 
-    This grid is based on Becke's paper, the transformation requires the covalent radius `rm` of a given atom, such that;
+    This grid is based on Becke's paper, the transformation requires the covalent radius ``rm`` of a given atom, such that;
 
-    :math:`r = rm \\frac{1+x}{1-x}`
+    :math:`r = rm \\dfrac{1+x}{1-x}`
+
+    When the object is instanced calculates the mapped uniform grid ``z`` and its first and second derivatives needed to calculate
+    coulomb potentials.
 
     References:
         Becke, A. D. A multi-center numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
@@ -58,7 +61,7 @@ class RadialGrid(Structure):
 
     def _get_z(self):
         """
-        Returns the radial points mapped uniformly in the interval [0,1], see Becke's paper.
+        Returns the radial points mapped uniformly in the interval :mat:`[0,1]`, see Becke's paper.
         """
         self.z = np.empty(self.size, dtype=np.float64)
         self._z = np.ctypeslib.as_ctypes(self.z)
@@ -67,7 +70,7 @@ class RadialGrid(Structure):
 
     def _deriv_z(self):
         """
-        Returns the first derivative of the uniform z grid.
+        Returns the first derivative of the uniform ``z`` grid.
         """
         self.dz = np.empty(self.size, dtype=np.float64)
         self._dz = np.ctypeslib.as_ctypes(self.dz)
@@ -76,7 +79,7 @@ class RadialGrid(Structure):
 
     def _deriv2_z(self):
         """
-        Returns the second derivative of the uniform z grid.
+        Returns the second derivative of the uniform ``z`` grid.
         """
         self.d2z = np.empty(self.size, dtype=np.float64)
         self._d2z = np.ctypeslib.as_ctypes(self.d2z)

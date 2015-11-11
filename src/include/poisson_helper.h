@@ -10,6 +10,9 @@ efposadac@sissa.it*/
 
 #include "radial.h"
 
+/*
+Build the A matrix to solve a second order PDE, eq. 21 Becke's paper.
+*/
 void finite_difference_matrix(RadialGrid *rgrid, double *A, int l);
 
 #endif

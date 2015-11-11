@@ -30,7 +30,7 @@ napmo_library.density_gto.argtypes = [
 
 def density_full_from_matrix_gto(density_file, basis, coords):
     """
-    Calculates the value of density at point ``coord``
+    Calculates the value of density :math:`\\rho` at point ``coord``
 
 
     Args:
@@ -39,7 +39,7 @@ def density_full_from_matrix_gto(density_file, basis, coords):
         coords (ndarray): array with the points to calculate the density. ``ndim=2, shape=(n,3)``
 
     Returns:
-        rho (ndarray): Array with the value of density at ``coords`` points.
+        rho (ndarray): Array with the value of density :math:`\\rho` at ``coords`` points.
     """
     size = coords.shape[0]
     P = np.array(np.loadtxt(density_file), order='C', dtype=np.float64)

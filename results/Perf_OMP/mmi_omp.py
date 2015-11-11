@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # file: mmi_omp.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada

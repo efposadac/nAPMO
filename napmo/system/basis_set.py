@@ -99,7 +99,7 @@ class BasisSet(dict):
         Compute all the basis-set functions at given ``coord``.
 
         Args:
-            coord (numpy.ndarray(3)): coordinates in which the basis set will be evaluated.
+            coord (ndarray): coordinates in which the basis set will be evaluated. Array shape should be (n, 3)
 
         """
         output = []
@@ -135,7 +135,7 @@ class BasisSet_C(Structure):
     C interface to the BasisSet class.
 
     Args:
-        basis (BasisSet) : Basis-set of the system.
+        basis (BasisSet) : Basis set of the system.
     """
     _fields_ = [
         ("n_cont", c_int),

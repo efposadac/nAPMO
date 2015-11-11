@@ -37,7 +37,7 @@ class MolecularSystem(dict):
 
         Args:
             symbol (str): Symbol of the atom.
-            origin (numpy.ndarray(3)): Origin of the atom (Cartesian coordinates)
+            origin (ndarray): Origin of the atom (Cartesian coordinates)
             BOA (bool, optional): Whether the atom nuclei will be treated in the BOA approach or not. Default is True
             mass_number (int, optional): Mass number of element 'symbol' :math:`:= A = p^+ + n^o`.
                 If 0 the system will choose the most abundant one. Default is 0.
@@ -96,7 +96,7 @@ class MolecularSystem(dict):
 
         Args:
             symbol (str): Symbol of the elementary particle.
-            origin (array[3]): Origin of the elementary particle (Cartesian coordinates)
+            origin (ndarray): Origin of the elementary particle (Cartesian coordinates)
             size (int): Number of elementary particle to be added.
             units (str, optional): Units of the origin, valid values are 'ANGSTROMS' or 'Bohr'
         """
@@ -185,6 +185,12 @@ class MolecularSystem(dict):
         return output
 
     def get_basis(self, symbol):
+        """
+        Returns the basis set of the system of a given ``symbol`` particle.
+
+        Returns:
+            BasisSet: basis set
+        """
         if symbol in self:
             basis = self[symbol].get('basis')
         else:
@@ -198,6 +204,12 @@ class MolecularSystem(dict):
             raise KeyError
 
     def get_basis_as_cstruct(self, symbol):
+        """
+        Returns the basis set of the system of a given ``symbol`` particle as a CTYPES struct.
+
+        Returns:
+            BasisSet_C: basis set CTYPES struct
+        """
         basis = self.get_basis(symbol)
         return BasisSet_C(basis)
 

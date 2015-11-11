@@ -33,11 +33,11 @@ class PrimitiveSlater(dict):
 At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
 
     Args:
-        zeta (float64): Slater exponent.
+        zeta (double): Slater exponent.
         n (int): Quantum number n = 1, 2, 3, etc.
         l (int): Quantum number l = S=0, P=1, D=2, etc.
         m (int): Quantum number m = order of the harmonic, m <= l
-        origin (numpy.ndarray(3)) : coordinates (spherical)
+        origin (ndarray) : coordinates (spherical)
 
     """
 
@@ -72,13 +72,13 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
         Calculates the value of PrimitiveSlater at given coordinates (spherical)
 
         Args:
-            coord (array[3]): spherical coordinates (see description below)
-            theta (float): [0, 2*pi]; the azimuthal (longitudinal) coordinate.
-            phi (float): [0, pi]; the polar (co-latitudinal) coordinate.
-            r (float): The r coordinate.
+            coord (ndarray): spherical coordinates (see description below)
+            theta (double): [0, 2*pi]; the azimuthal (longitudinal) coordinate.
+            phi (double): [0, pi]; the polar (co-latitudinal) coordinate.
+            r (double): The r coordinate.
 
         Returns:
-        x (complex float): The value of :math:`\chi_{p \lambda \\alpha}(r, \\theta, \phi)` sampled at ``r``, ``theta`` and ``phi``
+        x (complex double): The value of :math:`\chi_{p \lambda \\alpha}(r, \\theta, \phi)` sampled at ``r``, ``theta`` and ``phi``
         """
         RP = coord - self['origin']
 
@@ -139,10 +139,10 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
         :math:`N_{\lambda p} = [(2n_{\lambda p})!]^{-1/2}(2\zeta_{\lambda p})^{n_{\lambda p}+1/2}`
 
         Args:
-            r (float): The r coordinate.
+            r (double): The r coordinate.
 
         Returns:
-            R (float): The radial :math:`R_{\lambda p}` value sampled at ``r``.
+            R (double): The radial :math:`R_{\lambda p}` value sampled at ``r``.
         """
 
         # Radial part eq. 6
@@ -156,11 +156,11 @@ At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).
         Calculates the spherical harmonic part of the Slater orbital. Uses scipy.special.sph_harm
 
         Args:
-            theta (float): [0, 2*pi]; the azimuthal (longitudinal) coordinate.
-            phi (float): [0, pi]; the polar (co-latitudinal) coordinate.
+            theta (double): [0, 2*pi]; the azimuthal (longitudinal) coordinate.
+            phi (double): [0, pi]; the polar (co-latitudinal) coordinate.
 
         Returns:
-            y (float): The harmonic :math:`Y^m_l` sampled at ``theta`` and ``phi``
+            y (double): The harmonic :math:`Y^m_l` sampled at ``theta`` and ``phi``
 
         """
 

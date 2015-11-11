@@ -60,6 +60,18 @@ class AtomicGrid(Structure):
         self.points += origin
 
     def spherical_expansion(self, lmax, f):
+        """
+        Performs the spherical expansion:
+
+        :math:`f_{\ell m}=\int_{\Omega} f(\\theta,\\varphi)\, Y_{\ell m}(\\theta,\\varphi)\,d\Omega`
+
+        Args:
+            lmax (int): Maximum :math:`\ell` order of the expansion.
+            f (ndarray): Array with the values of function :math:`f(x)` calculated in each point of the atomic grid.
+
+        Returns:
+            integral (ndarray): Spherical expansion array with shape (nrad, lsize), where :math:`\ell_{size} = (\ell_{max} + 1)^2`
+        """
         lsize = (lmax + 1) * (lmax + 1)
         output = np.empty([self.radial_grid.size, lsize], dtype=np.float64)
         napmo_library.angular_spherical_expansion(
@@ -67,12 +79,30 @@ class AtomicGrid(Structure):
         return output
 
     def evaluate_expansion(self, lmax, expansion):
+        """
+        Evaluate the spherical expansion:
+
+        :math:`f(\\theta, \\varphi) = \sum_{\ell=0}^{\ell_{max}} \sum_{m=-\ell}^\ell f_{\ell m} \, Y_{\ell m}(\\theta, \\varphi)`
+
+        Args:
+            lmax (int): Maximum :math:`\ell` order of the expansion.
+            expansion (ndarray): Spherical expansion array with shape (nrad, lsize), where :math:`\ell_{size} = (\ell_{max} + 1)^2`
+
+        Returns:
+            output (ndarray): array with the values of the approximated :math:`f(x)`.
+        """
         output = np.empty(self.size, dtype=np.float64)
         napmo_library.angular_eval_expansion(
             byref(self.angular_grid), lmax, self.radial_grid.size, expansion, output)
         return output
 
     def integrate(self, *args):
+        """
+        Perform an integration of function :math:`f` using AtomicGrid.
+
+        Args:
+            f (ndarray): array of :math:`f` computed in all grid points.
+        """
         f = np.concatenate(args)
         integral = napmo_library.atomic_grid_integrate(
             byref(self), len(args), f)

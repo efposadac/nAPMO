@@ -13,7 +13,7 @@ import numpy.ctypeslib as npct
 from ctypes import *
 
 from napmo.system.cext import napmo_library
-from napmo.system.basis_set import BasisSet_C
+from napmo.system.molecular_system import MolecularSystem
 from napmo.grids.atomic import AtomicGrid
 
 
@@ -25,6 +25,7 @@ class BeckeGrid(Structure):
         Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
 
     Args:
+        molecule (MolecularSystem): Molecular system to be calculated.
         n_radial (int, optional): Number of radial points. Default is 40
         n_angular (int, optional): Number of angular points. Default is 110
     """
@@ -39,6 +40,9 @@ class BeckeGrid(Structure):
 
     def __init__(self, molecule, n_radial=40, n_angular=110):
         super(BeckeGrid, self).__init__()
+
+        assert isinstance(molecule, MolecularSystem)
+
         centers = molecule.get('atoms')
 
         self._ncenter = len(centers)

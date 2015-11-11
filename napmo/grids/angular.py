@@ -39,6 +39,15 @@ class AngularGrid(Structure):
             napmo_library.angular_to_spherical(byref(self))
 
     def integrate(self, *args):
+        """
+        Performs integration over unit sphere by using Lebedev's quadrature.
+
+        Args:
+            *args (ndarray): Arrays with the values of function :math:`F(x)` calculated in each point of the sphere.
+
+        Returns:
+            integral (double): Integral value.
+        """
         f = np.concatenate(args)
         return napmo_library.angular_integrate(byref(self), len(args), f)
 

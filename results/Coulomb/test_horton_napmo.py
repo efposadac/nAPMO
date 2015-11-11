@@ -1,5 +1,7 @@
 #!/usr/bin/env python2
 
+# napmo must be compiled with python2 in order to work with horton.
+
 from __future__ import division
 from __future__ import print_function
 

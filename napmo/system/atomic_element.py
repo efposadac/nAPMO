@@ -22,7 +22,7 @@ class AtomicElement(dict):
 
     Args:
         symbol (str): Symbol of the atom.
-        origin (numpy.ndarray(3)): Origin of the atom (cartesian coordinates)
+        origin (ndarray, optional): Origin of the atom (cartesian coordinates). Default is [0.,0.,0.]
         BOA (bool, optional): Whether the atom nuclei will be treated in the BOA approach or not. Default is True
         mass_number (int, optional): Mass number of element ``symbol`` :math:`:= A = p^+ + n^o`.
             If 0 the system will choose the most abundant isotope. Default is 0.

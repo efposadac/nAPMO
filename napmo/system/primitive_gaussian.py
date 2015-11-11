@@ -28,10 +28,10 @@ class PrimitiveGaussian(Structure):
     and be referred to as the angular momentum or orbital quantum number of the Gaussian function.
 
     Args:
-        exponent (float64): GTO exponent.
-        coefficient (float64): GTO coefficients.
-        origin (numpy.ndarray(3)) : coordinates (cartesian)
-        l (numpy.ndarray(3)) : :math:`\\bf n`. Angular moment (x, y, and z components)
+        exponent (double): GTO exponent.
+        coefficient (double): GTO coefficients.
+        origin (ndarray) : coordinates (cartesian)
+        l (ndarray) : :math:`\\bf n`. Angular moment (x, y, and z components)
     """
     _fields_ = [
         ("_l", c_int * 3),

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # file: Slater_density.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada

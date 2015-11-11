@@ -14,6 +14,12 @@ import numpy as np
 def lebedev_get_order(n):
     """
     Return the order of the Lebedev quadrature from the number of points ``n``.
+
+    Args:
+        n (int) : number of points.
+
+    Returns:
+        int: order of lebedev quadrature.
     """
     lebpoints = {
         6: 3, 14: 5, 110: 17, 146: 19, 170: 21, 194: 23, 230: 25, 266: 27, 302: 29, 350: 31, 434: 35,

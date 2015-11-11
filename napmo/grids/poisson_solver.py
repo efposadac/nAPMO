@@ -25,6 +25,23 @@ def print_matrix(A, n):
 
 
 def poisson_solver(grid, rho, lmax):
+    """
+    Returns the spherically expanded potential :math:`U_{\ell m}(r)` obtained following Becke's procedure.
+
+    References:
+        Becke, A. D. Dickson, R. M. Numerical solution of Poisson’s equation in polyatomic molecules. J. Chem. Phys. 89(5), 1988.
+
+    Args:
+        grid (BeckeGrid): Molecular grid.
+        rho (ndarray): Array with the source density calculated in each point of the grid.
+        lmax (int): Maximum :math:`\ell` order of the expansion.
+
+    Returns:
+        U (ndarray): Spherical expanded potential. Array with shape (nrad, lsize), where :math:`\ell_{size} = (\ell_{max} + 1)^2`
+    """
+
+    assert isinstance(grid, BeckeGrid)
+
     offset = 0
     for i in range(grid.ncenter):
         atgrid = grid.atgrids[i]

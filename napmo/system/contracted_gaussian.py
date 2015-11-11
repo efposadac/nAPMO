@@ -36,10 +36,10 @@ class ContractedGaussian(dict):
     :math:`N = \\dfrac{1}{\sqrt{<\phi | \phi>}}`
 
     Args:
-        exponents (numpy.ndarray): GTO exponent.
-        coefficients (numpy.ndarray): GTO coefficients.
-        origin (numpy.ndarray(3)) : coordinates (cartesian)
-        l (numpy.ndarray(3)) : :math:`\\bf n`. Angular moment (x, y, and z components)
+        exponents (ndarray): GTO exponent.
+        coefficients (ndarray): GTO coefficients.
+        origin (ndarray) : coordinates (cartesian)
+        l (ndarray) : :math:`\\bf n`. Angular moment (x, y, and z components)
     """
 
     def __init__(self,
@@ -88,6 +88,9 @@ class ContractedGaussian(dict):
     def compute(self, coord):
         """
         Computes the value of the contracted Gaussian at ``coord``.
+
+        Args:
+            coord (ndarray) : array with the points where the function will be calculated.
         """
         output = 0.0
         for primitive in self.get('primitive'):

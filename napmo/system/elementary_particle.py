@@ -24,7 +24,7 @@ class ElementaryParticle(dict):
 
     Args:
         symbol (str): Symbol for the particle.
-        origin (numpy.ndarray(3)): Origin for the particle (atomic units.)
+        origin (ndarray): Origin for the particle (atomic units.)
     """
 
     def __init__(self, symbol='null'):

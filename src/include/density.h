@@ -18,12 +18,18 @@ efposadac@sissa.it*/
 #include <omp.h>
 #endif
 
+/*
+Calculate the density at point r
+*/
 void density_gto(BasisSet *basis, double *r, double *dens, double *output,
                  int size);
 
 #ifdef _CUDA
 #include "cuda_helper.cuh"
 
+/*
+Calculate the density at point r (CUDA version)
+*/
 __global__ void density_gto_kernel(BasisSet basis, double *r, double *dens,
                                    double *output, int size);
 #endif
