@@ -19,10 +19,15 @@ efposadac@sissa.it*/
 #endif
 
 /*
-Calculate the density at point r
+Calculate the density values for an array of points r
 */
 void density_gto(BasisSet *basis, double *r, double *dens, double *output,
                  int size);
+
+/*
+Calculate the density at point r
+*/
+double density_gto_r(BasisSet *basis, double r[3], double *dens);
 
 #ifdef _CUDA
 #include "cuda_helper.cuh"

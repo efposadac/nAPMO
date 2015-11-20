@@ -40,9 +40,9 @@ static inline void utils_multiply_segmented_array(const int size,
   memcpy(output, array, size * sizeof(double));
 
   for (i = 1; i < segments; ++i) {
-#ifdef _OMP
-#pragma omp parallel for default(shared) firstprivate(i) private(j)
-#endif
+// #ifdef _OMP
+// #pragma omp parallel for default(shared) firstprivate(i) private(j)
+// #endif
     for (j = 0; j < size; ++j) {
 
       output[j] *= array[i * size + j];

@@ -36,9 +36,9 @@ void angular_to_spherical(AngularGrid *grid) {
   int i, idx;
   double t, p;
 
-#ifdef _OMP
-#pragma omp parallel for default(shared) private(i, idx, t, p)
-#endif
+// #ifdef _OMP
+// #pragma omp parallel for default(shared) private(i, idx, t, p)
+// #endif
   for (i = 0; i < grid->lorder; ++i) {
     idx = i * 3;
     xyz_to_tp(grid->points[idx + 0], grid->points[idx + 1],
@@ -48,28 +48,6 @@ void angular_to_spherical(AngularGrid *grid) {
     grid->points[idx + 1] = t;
     grid->points[idx + 2] = p;
   }
-}
-
-void lebedev_spherical(const int lorder, double *t, double *p, double *w) {
-  int i;
-  double *x, *y, *z;
-
-  x = (double *)malloc(lorder * sizeof(double));
-  y = (double *)malloc(lorder * sizeof(double));
-  z = (double *)malloc(lorder * sizeof(double));
-
-  ld_by_order(lorder, x, y, z, w);
-
-#ifdef _OMP
-#pragma omp parallel for default(shared) private(i)
-#endif
-  for (i = 0; i < lorder; ++i) {
-    xyz_to_tp(x[i], y[i], z[i], &t[i], &p[i]);
-  }
-
-  free(x);
-  free(y);
-  free(z);
 }
 
 void angular_spherical_expansion(AngularGrid *grid, const int lmax,
@@ -83,9 +61,9 @@ void angular_spherical_expansion(AngularGrid *grid, const int lmax,
   t = (double *)malloc(lorder * sizeof(double));
   p = (double *)malloc(lorder * sizeof(double));
 
-#ifdef _OMP
-#pragma omp parallel for default(shared) private(i, idx)
-#endif
+// #ifdef _OMP
+// #pragma omp parallel for default(shared) private(i, idx)
+// #endif
   for (i = 0; i < lorder; ++i) {
     idx = i * 3;
     xyz_to_tp(grid->points[idx + 0], grid->points[idx + 1],
@@ -99,7 +77,7 @@ void angular_spherical_expansion(AngularGrid *grid, const int lmax,
   lsize = (lmax + 1) * (lmax + 1);
   for (l = 0; l <= lmax; ++l) {
     for (m = -l; m <= l; ++m) {
-      real_spherical(l, m, t, p, s, lorder);
+      spherical_harmonics_real(l, m, t, p, s, lorder);
       for (i = 0; i < size_f; ++i) {
         memcpy(&s[lorder], &f[i * lorder], lorder * sizeof(double));
         output[i * lsize + idx] = angular_integrate(grid, 2, s);
@@ -124,9 +102,9 @@ void angular_eval_expansion(AngularGrid *grid, const int lmax, const int size_f,
   t = (double *)malloc(lorder * sizeof(double));
   p = (double *)malloc(lorder * sizeof(double));
 
-#ifdef _OMP
-#pragma omp parallel for default(shared) private(i, idx)
-#endif
+// #ifdef _OMP
+// #pragma omp parallel for default(shared) private(i, idx)
+// #endif
   for (i = 0; i < lorder; ++i) {
     idx = i * 3;
     xyz_to_tp(grid->points[idx + 0], grid->points[idx + 1],
@@ -140,7 +118,7 @@ void angular_eval_expansion(AngularGrid *grid, const int lmax, const int size_f,
   idx = 0;
   for (l = 0; l <= lmax; ++l) {
     for (m = -l; m <= l; ++m) {
-      real_spherical(l, m, t, p, &s[idx * lorder], lorder);
+      spherical_harmonics_real(l, m, t, p, &s[idx * lorder], lorder);
       idx++;
     }
   }
@@ -177,9 +155,9 @@ double angular_integrate(AngularGrid *grid, const int segments, double *f) {
   }
 
   output = 0.0;
-#ifdef _OMP
-#pragma omp parallel for default(shared) private(i) reduction(+ : output)
-#endif
+// #ifdef _OMP
+// #pragma omp parallel for default(shared) private(i) reduction(+ : output)
+// #endif
   for (i = 0; i < lorder; ++i) {
     output += work[i] * grid->weights[i];
   }

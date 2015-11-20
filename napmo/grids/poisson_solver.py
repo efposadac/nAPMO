@@ -13,6 +13,7 @@ import numpy.ctypeslib as npct
 from ctypes import *
 
 from napmo.grids.radial import RadialGrid
+from napmo.grids.becke import BeckeGrid
 from napmo.system.cext import napmo_library
 
 
@@ -59,10 +60,11 @@ def poisson_solver(grid, rho, lmax):
             u_00 = np.sqrt(4.0 * np.pi * q)
 
         # Solve differential equation Ax = b
-        U = np.zeros(sph_expansion.shape)
-        b = np.zeros(atgrid.radial_grid.size + 2)
-        A = np.zeros([atgrid.radial_grid.size + 2,
-                      atgrid.radial_grid.size + 2])
+        U = np.zeros(sph_expansion.shape, dtype=np.float64)
+        b = np.zeros(atgrid.radial_grid.size + 2, dtype=np.float64)
+        data = np.zeros(atgrid.radial_grid.size * 3 + 2, dtype=np.float64)
+        row = np.zeros(atgrid.radial_grid.size * 3 + 2, dtype=np.int32)
+        col = np.zeros(atgrid.radial_grid.size * 3 + 2, dtype=np.int32)
 
         idx = 0
         pi4 = -4 * np.pi
@@ -70,7 +72,7 @@ def poisson_solver(grid, rho, lmax):
         for l in range(lmax + 1):
             # Build A
             napmo_library.finite_difference_matrix(
-                byref(atgrid.radial_grid), A, l)
+                byref(atgrid.radial_grid), data, row, col, l)
 
             for m in range(-l, l + 1):
                 # Build b
@@ -81,7 +83,9 @@ def poisson_solver(grid, rho, lmax):
                     b[0] = u_00
 
                 # Solve
-                x = spsolve(csc_matrix(A), b)
+                x = spsolve(csc_matrix((data, (row, col)), shape=(
+                    atgrid.radial_grid.size + 2, atgrid.radial_grid.size + 2)), b)
+
                 U[:, idx] = x[1:-1]
 
                 idx += 1
@@ -89,11 +93,14 @@ def poisson_solver(grid, rho, lmax):
 
     return U
 
-array_2d_double = npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
+array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
+array_1d_int = npct.ndpointer(dtype=np.int32, ndim=1, flags='CONTIGUOUS')
 
 napmo_library.finite_difference_matrix.restype = None
 napmo_library.finite_difference_matrix.argtypes = [
     POINTER(RadialGrid),
-    array_2d_double,
+    array_1d_double,
+    array_1d_int,
+    array_1d_int,
     c_int
 ]

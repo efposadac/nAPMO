@@ -13,6 +13,6 @@ efposadac@sissa.it*/
 /*
 Build the A matrix to solve a second order PDE, eq. 21 Becke's paper.
 */
-void finite_difference_matrix(RadialGrid *rgrid, double *A, int l);
+void finite_difference_matrix(RadialGrid *rgrid, double *data, int *row, int *col, int l);
 
 #endif

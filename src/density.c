@@ -11,65 +11,56 @@ efposadac@sissa.it*/
 
 void density_gto(BasisSet *basis, double *r, double *dens, double *output,
                  int size) {
-  int i, j, idx, aux, counter, point;
-  int n_cont = basis->n_cont;
-  double temp, temp_val = 0.0;
-  double function_value;
-  double RP2, factor;
+  int point, idx;
 
 #ifdef _OMP
-#pragma omp parallel default(shared) private(                                  \
-    point, idx, counter, j, aux, factor, RP2, temp, function_value)            \
-        reduction(+ : temp_val)
+#pragma omp parallel for default(shared) private(point, idx)
 #endif
-  {
-    double *basis_val = (double *)calloc(n_cont * 2, sizeof(double));
-#ifdef _OMP
-#pragma omp for
-#endif
-    for (point = 0; point < size; ++point) {
-      idx = point * 3;
-      counter = 0;
-      temp_val = 0.0;
-
-      for (j = 0; j < n_cont * 2; ++j) {
-        basis_val[j] = 0.0;
-      }
-
-      for (i = 0; i < n_cont; ++i) {
-        aux = i * 3;
-        factor = 1.0; 
-        RP2 = 0.0;
-        for (j = 0; j < 3; ++j) {
-          temp = r[idx + j] - basis->origin[aux + j];
-          RP2 += (temp * temp);
-          factor *= pow(temp, basis->basis_l[aux + j]);
-        }
-
-        function_value = 0.0;
-        for (j = 0; j < basis->n_prim_cont[i]; ++j) {
-          function_value += basis->coefficient[counter] *
-                            exp(-basis->exponent[counter] * RP2);
-          counter += 1;
-        }
-
-        function_value *= factor * basis->normalization[i];
-
-        for (j = 0; j < n_cont; ++j) {
-          basis_val[n_cont + j] += function_value * dens[i * n_cont + j];
-        }
-
-        basis_val[i] = function_value;
-      }
-
-      for (i = 0; i < n_cont; ++i) {
-        temp_val += basis_val[i] * basis_val[n_cont + i];
-      }
-      output[point] = temp_val;
-    }
-
-    free(basis_val);
+  for (point = 0; point < size; ++point) {
+    idx = point * 3;
+    output[point] = density_gto_r(basis, &r[idx], dens);
   }
 }
 
+double density_gto_r(BasisSet *basis, double r[3], double *dens) {
+  int i, j, idx, counter = 0;
+  int n_cont = basis->n_cont;
+  double temp;
+  double function_value, output = 0.0;
+  double RP2, factor;
+
+  double *basis_val = (double *)calloc(n_cont * 2, sizeof(double));
+
+  for (i = 0; i < n_cont; ++i) {
+    factor = 1.0, RP2 = 0.0;
+    for (j = 0; j < 3; ++j) {
+      idx = i * 3;
+      temp = r[j] - basis->origin[idx + j];
+      RP2 += (temp * temp);
+      factor *= pow(temp, basis->basis_l[idx + j]);
+    }
+
+    function_value = 0.0;
+    for (j = 0; j < basis->n_prim_cont[i]; ++j) {
+      function_value +=
+          basis->coefficient[counter] * exp(-basis->exponent[counter] * RP2);
+      counter += 1;
+    }
+
+    function_value *= factor * basis->normalization[i];
+
+    for (j = 0; j < n_cont; ++j) {
+      basis_val[n_cont + j] += function_value * dens[i * n_cont + j];
+    }
+
+    basis_val[i] = function_value;
+  }
+
+  for (i = 0; i < n_cont; ++i) {
+    output += basis_val[i] * basis_val[n_cont + i];
+  }
+
+  free(basis_val);
+  return output;
+}
 #endif

@@ -20,8 +20,6 @@ struct _angular {
 
 typedef struct _angular AngularGrid;
 
-void lebedev_spherical(const int lorder, double *t, double *p, double *w);
-
 /*
 returns the lorder number of abscissas and weights of the Lebedev quadrature
 in spherical coordinates (r, theta, phi)

@@ -15,7 +15,7 @@ efposadac@sissa.it*/
 Calculates the real spherical harmonic lm at theta, phi point.
 Uses GNU Scientific Library GSL
 */
-void real_spherical(int l, int m, double *theta, double *phi, double *output,
+void spherical_harmonics_real(int l, int m, double *theta, double *phi, double *output,
                     int size);
 
 #endif

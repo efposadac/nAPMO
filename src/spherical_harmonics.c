@@ -7,16 +7,16 @@ efposadac@sissa.it*/
 
 #include "include/spherical_harmonics.h"
 
-void real_spherical(int l, int m, double *theta, double *phi, double *output,
+void spherical_harmonics_real(int l, int m, double *theta, double *phi, double *output,
                     int size) {
 
   int i;
   double x;
   double p;
 
-#ifdef _OMP
-#pragma omp parallel for default(shared) private(i, x, p)
-#endif
+// #ifdef _OMP
+// #pragma omp parallel for default(shared) private(i, x, p)
+// #endif
   for (i = 0; i < size; ++i) {
     x = cos(theta[i]);
     p = gsl_sf_legendre_sphPlm(l, abs(m), x);
