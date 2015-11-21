@@ -46,18 +46,8 @@ class AtomicGrid(Structure):
 
         self._symbol = atomic_symbol
 
-        offset = 0
-        for i in range(nrad):
-            self.points[offset:offset + nang] = (
-                self.radial_grid.points[i] * self.angular_grid.points
-            )
-            self.weights[offset:offset + nang] = (
-                self.radial_grid.weights[i] * self.angular_grid.weights *
-                self.radial_grid.points[i] * self.radial_grid.points[i]
-            )
-            offset += nang
-
-        self.points += origin
+        napmo_library.atomic_grid_init(byref(self), byref(
+            self.angular_grid), byref(self.radial_grid))
 
     def spherical_expansion(self, lmax, f):
         """
@@ -122,6 +112,13 @@ array_1d_double = npct.ndpointer(
 
 array_2d_double = npct.ndpointer(
     dtype=np.double, ndim=2, flags='CONTIGUOUS')
+
+napmo_library.atomic_grid_init.restype = None
+napmo_library.atomic_grid_init.argtypes = [
+    POINTER(AtomicGrid),
+    POINTER(AngularGrid),
+    POINTER(RadialGrid)
+]
 
 napmo_library.angular_spherical_expansion.restype = None
 napmo_library.angular_spherical_expansion.argtypes = [

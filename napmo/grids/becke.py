@@ -65,7 +65,8 @@ class BeckeGrid(Structure):
         offset = 0
         for i in range(self.ncenter):
             self.atgrids.append(
-                AtomicGrid(n_radial, n_angular, centers[i].get('origin'), centers[i].get('symbol')))
+                AtomicGrid(n_radial, n_angular, centers[i].get('origin'),
+                           centers[i].get('symbol')))
 
             self.origin[i] = self.atgrids[-1].origin
 

@@ -21,10 +21,10 @@ LDLIBS := -lgsl -lgslcblas -lm
 #-----------------------
 
 # INTEL
-CC := icc
+# CC := icc
 
 # GCC
-# CC := gcc
+CC := gcc
 
 # CFLAGS := -Wall -O2 -ffast-math -fPIC -g -pg 
 CFLAGS := -Wall -O2 -fPIC -g -pg  
@@ -45,14 +45,14 @@ NVLDFLAGS := $(LDFLAGS)
 
 # INTEL
 #-------
-OMP: CFLAGS += -D_OMP -DMKL_ILP64 -openmp -mkl=parallel
-OMP: LDLIBS += -liomp5
-OMP: LDFLAGS += -lpthread
+# OMP: CFLAGS += -D_OMP -DMKL_ILP64 -openmp -mkl=parallel
+# OMP: LDLIBS += -liomp5
+# OMP: LDFLAGS += -lpthread
 
 # GCC
 #-------
-# OMP: CFLAGS +=  -fopenmp -D_OMP
-# OMP: LDFLAGS += -lgomp 
+OMP: CFLAGS +=  -fopenmp -D_OMP
+OMP: LDLIBS += -lgomp 
 
 CUDA: CFLAGS += -fopenmp -D_OMP -D_CUDA
 CUDA: NVCC := nvcc

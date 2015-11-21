@@ -9,6 +9,7 @@ efposadac@sissa.it*/
 #define ATOMIC_GRID_H
 
 #include "angular.h"
+#include "radial.h"
 
 #ifdef _OMP
 #include <omp.h>
@@ -23,12 +24,16 @@ struct _atomic_grid {
 };
 typedef struct _atomic_grid AtomicGrid;
 
+void atomic_grid_init(AtomicGrid *grid, AngularGrid *angular,
+                      RadialGrid *radial);
+
 /*
 Calculates the integral over an atomic grid.
 
 Args:
     segments (int): Number of array of size ``grid.size`` in the array ``f``
-    f (double *): array with the value of the function ``F`` calculated in each point of the grid.
+    f (double *): array with the value of the function ``F`` calculated in each
+point of the grid.
 
 Return:
     integral (double): value of the integral.
@@ -46,7 +51,8 @@ Calculates the integral over an atomic grid. (CUDA kernel)
 
 Args:
     segments (int): Number of array of size ``grid.size`` in the array ``f``
-    f (double *): array with the value of the function ``F`` calculated in each point of the grid.
+    f (double *): array with the value of the function ``F`` calculated in each
+point of the grid.
 
 Return:
     integral (double): value of the integral.
