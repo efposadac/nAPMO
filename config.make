@@ -10,41 +10,26 @@
 # Kind of builds supported (list)
 BUILD = SERIAL CUDA OMP
 
-#------------------
-# Libraries needed
-#------------------
-
-LDLIBS := -lgsl -lgslcblas -lm 
-
 #-----------------------
-# C flags and compilers
+# Compiler
 #-----------------------
-
-# INTEL
+CC := gcc
 # CC := icc
 
-# GCC
-CC := gcc
-
-# CFLAGS := -Wall -O2 -ffast-math -fPIC -g -pg 
+#-----------------------
+# Initial configuration
+#-----------------------
 CFLAGS := -Wall -O2 -fPIC -g -pg  
-LDFLAGS := -shared -lpthread 
+LDLIBS := -lgsl -lgslcblas -lm 
+LDFLAGS := -shared
 
-#----------------
-# Nvidia support 
-#----------------
-
-# same as C as initialization
-NVCC := $(CC)
-NVCFLAGS := $(CFLAGS)
-NVLDFLAGS := $(LDFLAGS)
-
-#--------------------------
-# Build specific variables
-#--------------------------
+#-----------------------
+# OpenMP support
+#-----------------------
 
 # INTEL
 #-------
+
 # OMP: CFLAGS += -D_OMP -DMKL_ILP64 -openmp -mkl=parallel
 # OMP: LDLIBS += -liomp5
 # OMP: LDFLAGS += -lpthread
@@ -54,7 +39,9 @@ NVLDFLAGS := $(LDFLAGS)
 OMP: CFLAGS +=  -fopenmp -D_OMP
 OMP: LDLIBS += -lgomp 
 
-CUDA: CFLAGS += -fopenmp -D_OMP -D_CUDA
-CUDA: NVCC := nvcc
-CUDA: NVCFLAGS := -Xcompiler '$(CFLAGS)' -use_fast_math -arch=sm_50 -lineinfo -Xptxas="-v" 
-CUDA: NVLDFLAGS := -Xcompiler '$(LDFLAGS)' -arch=sm_50 -lineinfo 
+#----------------
+# Nvidia support 
+#----------------
+CUDA: CC := nvcc
+CUDA: CFLAGS := -Xcompiler '$(CFLAGS) -fopenmp -D_OMP -D_CUDA' -use_fast_math -arch=sm_50 -lineinfo -Xptxas="-v" 
+CUDA: LDFLAGS := -Xcompiler '$(LDFLAGS) -lgomp' -arch=sm_50 -lineinfo 

@@ -35,8 +35,9 @@ double density_gto_r(BasisSet *basis, double r[3], double *dens);
 /*
 Calculate the density at point r (CUDA version)
 */
-__global__ void density_gto_kernel(BasisSet basis, double *r, double *dens,
-                                   double *output, int size);
+__global__ void density_gto_kernel(BasisSet basis, double *x, double *y,
+                                   double *z, double *dens, double *output,
+                                   int size);
 #endif
 
 #endif

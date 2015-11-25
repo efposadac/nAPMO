@@ -20,7 +20,7 @@ CUDA: OBJ += $(NVOBJ)
 default: SERIAL
 
 $(BUILD): $$(OBJ)
-	$(NVCC) -o $(LIBRARY) $(NVLDFLAGS) $^ $(LDLIBS)
+	$(CC) -o $(LIBRARY) $(LDFLAGS) $^ $(LDLIBS)
 	cp $(LIBRARY) $(TOPDIR)/napmo/utilities
 
 %.o: %.c
@@ -29,7 +29,7 @@ $(BUILD): $$(OBJ)
 %.c: %.h
 
 %.cuda.o: %.cu
-	$(NVCC) -c $(NVCFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $< -o $@
 
 %.cu: %.cuh
 

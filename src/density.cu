@@ -15,7 +15,7 @@ void density_gto(BasisSet *basis, double *r, double *dens, double *output,
                  int size) {
 
   int sizeBasis;
-  double *dens_d, *r_d, *output_d;
+  double *dens_d, *x_d, *y_d, *z_d, *output_d;
   BasisSet basis_d;
 
   /*
@@ -23,13 +23,42 @@ void density_gto(BasisSet *basis, double *r, double *dens, double *output,
   */
   basis_set_init(basis, &basis_d);
 
-  cudaMalloc((void **)&r_d, size * 3 * sizeof(double));
-  cudaMemcpy(r_d, r, size * 3 * sizeof(double), cudaMemcpyHostToDevice);
+  /*
+  Copy points to device
+  */
+  cudaMalloc((void **)&x_d, size * sizeof(double));
+  cudaMalloc((void **)&y_d, size * sizeof(double));
+  cudaMalloc((void **)&z_d, size * sizeof(double));
 
+  double *x = (double *)malloc(size * sizeof(double));
+  double *y = (double *)malloc(size * sizeof(double));
+  double *z = (double *)malloc(size * sizeof(double));
+
+  for (int i = 0; i < size; ++i) {
+    int idx = i * 3;
+    x[i] = r[idx + 0];
+    y[i] = r[idx + 1];
+    z[i] = r[idx + 2];
+  }
+
+  cudaMemcpy(x_d, x, size * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(y_d, y, size * sizeof(double), cudaMemcpyHostToDevice);
+  cudaMemcpy(z_d, z, size * sizeof(double), cudaMemcpyHostToDevice);
+
+  free(x);
+  free(y);
+  free(z);
+
+  /*
+  Copy density matrix to device
+  */
   sizeBasis = basis->n_cont * basis->n_cont;
   cudaMalloc((void **)&dens_d, sizeBasis * sizeof(double));
   cudaMemcpy(dens_d, dens, sizeBasis * sizeof(double), cudaMemcpyHostToDevice);
 
+  /*
+  Allocate space for output
+  */
   cudaMalloc((void **)&output_d, size * sizeof(double));
 
   /*
@@ -37,8 +66,8 @@ void density_gto(BasisSet *basis, double *r, double *dens, double *output,
   */
   dim3 dimGrid(((size + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK), 1, 1);
 
-  density_gto_kernel<<<dimGrid, THREADS_PER_BLOCK>>>(basis_d, r_d, dens_d,
-                                                     output_d, size);
+  density_gto_kernel<<<dimGrid, THREADS_PER_BLOCK>>>(basis_d, x_d, y_d, z_d,
+                                                     dens_d, output_d, size);
   CUERR
 
   /*
@@ -49,64 +78,51 @@ void density_gto(BasisSet *basis, double *r, double *dens, double *output,
   /*
   clear memory
   */
-  cudaFree(r_d);
+  cudaFree(x_d);
+  cudaFree(y_d);
+  cudaFree(z_d);
   cudaFree(dens_d);
   cudaFree(output_d);
   basis_set_free(&basis_d);
 }
 
-__global__ void density_gto_kernel(BasisSet basis, double *r, double *dens,
-                                   double *output, int size) {
+__global__ void density_gto_kernel(BasisSet basis, double *x, double *y,
+                                   double *z, double *dens, double *output,
+                                   int size) {
 
   const unsigned int point = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
   const unsigned int n_cont = basis.n_cont;
 
-  int i, j, idx, aux, counter;
-  double temp_val, factor, RP2, temp, function_value;
-  double basis_val[64];
+  __shared__ double buffer[THREADS_PER_BLOCK];
 
-  for (i = n_cont; i < n_cont * 2; ++i) {
-    basis_val[i] = 0.0;
-  }
+  double temp_val, function_value;
+  double basis_val[64], r[3];
 
   if (point < size) {
-    idx = point * 3;
-    counter = 0;
-    temp_val = 0.0;
 
-    for (j = 0; j < n_cont * 2; ++j) {
-      basis_val[j] = 0.0;
-    }
+    r[0] = x[point];
+    r[1] = y[point];
+    r[2] = z[point];
 
-    for (i = 0; i < n_cont; ++i) {
+    basis_set_compute_gto(basis, r, basis_val);
 
-      aux = i * 3;
-      factor = 1.0, RP2 = 0.0;
-      for (j = 0; j < 3; ++j) {
-        temp = r[idx + j] - basis.origin[aux + j];
-        RP2 += (temp * temp);
-        factor *= pow(temp, basis.basis_l[aux + j]);
+    function_value = 0.0;
+    for (int i = 0; i < n_cont; ++i) {
+
+      for (int j = threadIdx.x; j < n_cont; j+=THREADS_PER_BLOCK) {
+        buffer[j] = dens[i * n_cont + j];
       }
 
-      function_value = 0.0;
-      for (j = 0; j < basis.n_prim_cont[i]; ++j) {
-        function_value +=
-            basis.coefficient[counter] * exp(-basis.exponent[counter] * RP2);
-        counter += 1;
+      __syncthreads();
+
+      temp_val = 0.0;
+      for (int j = 0; j < n_cont; ++j) {
+        temp_val += basis_val[j] * buffer[j];
       }
 
-      function_value *= factor * basis.normalization[i];
-
-      for (j = 0; j < n_cont; ++j) {
-        basis_val[n_cont + j] += function_value * dens[i * n_cont + j];
-      }
-
-      basis_val[i] = function_value;
+      function_value += temp_val * basis_val[i];
     }
 
-    for (i = 0; i < n_cont; ++i) {
-      temp_val += basis_val[i] * basis_val[n_cont + i];
-    }
-    output[point] = temp_val;
+    output[point] = function_value;
   }
 }

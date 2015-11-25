@@ -7,23 +7,22 @@ efposadac@sissa.it*/
 
 #include "include/atomic_grid.h"
 
-#ifndef _CUDA
-
 void atomic_grid_init(AtomicGrid *grid, AngularGrid *angular,
                       RadialGrid *radial) {
 
   int i, j, idx, idy, aux;
-  double pw[3], aw, rp, rw;
+  double ap[3], aw, rp, rw;
 
 #ifdef _OMP
-#pragma omp parallel for default(shared) private(i, j, aux, idx, idy, pw, aw, rp, rw)
+#pragma omp parallel for default(shared) private(i, j, aux, idx, idy, ap, aw,  \
+                                                 rp, rw)
 #endif
   for (i = 0; i < angular->lorder; ++i) {
 
     idx = i * 3;
-    pw[0] = angular->points[idx + 0];
-    pw[1] = angular->points[idx + 1];
-    pw[2] = angular->points[idx + 2];
+    ap[0] = angular->points[idx + 0];
+    ap[1] = angular->points[idx + 1];
+    ap[2] = angular->points[idx + 2];
 
     aw = angular->weights[i];
 
@@ -34,15 +33,16 @@ void atomic_grid_init(AtomicGrid *grid, AngularGrid *angular,
       aux = i * radial->size + j;
       idy = aux * 3;
 
-      grid->points[idy + 0] = pw[0] * rp + grid->origin[0];
-      grid->points[idy + 1] = pw[1] * rp + grid->origin[1];
-      grid->points[idy + 2] = pw[2] * rp + grid->origin[2];
+      grid->points[idy + 0] = ap[0] * rp + grid->origin[0];
+      grid->points[idy + 1] = ap[1] * rp + grid->origin[1];
+      grid->points[idy + 2] = ap[2] * rp + grid->origin[2];
 
       grid->weights[aux] = aw * rw * rp * rp;
     }
   }
 }
 
+#ifndef _CUDA
 double atomic_grid_integrate(AtomicGrid *grid, const int segments, double *f) {
   int i;
   double *work;

@@ -56,7 +56,7 @@ def test_multicenter_integrator():
         f = density_full_from_matrix_gto(file_dens, basis, grid.points)
         integral = grid.integrate(f)
 
-        np.testing.assert_allclose(integral, results[count])
+        np.testing.assert_allclose(integral, results[count], rtol=10e-6)
 
         print(integral)
 

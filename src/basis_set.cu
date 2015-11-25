@@ -5,6 +5,8 @@ All rights reserved.
 Version: 0.1
 efposadac@sissa.it*/
 
+#define THREADS_PER_BLOCK 64
+
 extern "C" {
 #include "include/basis_set.h"
 }
@@ -26,9 +28,9 @@ void basis_set_init(BasisSet *basis, BasisSet *basis_d) {
 
   /*Allocating space for the device structure*/
   cudaMalloc((void **)&basis_d->n_prim_cont, bytes_int);
+  cudaMalloc((void **)&basis_d->origin, 3 * bytes_double);
   cudaMalloc((void **)&basis_d->basis_l, 3 * bytes_int);
   cudaMalloc((void **)&basis_d->normalization, bytes_double);
-  cudaMalloc((void **)&basis_d->origin, 3 * bytes_double);
   cudaMalloc((void **)&basis_d->exponent, bytes_basis);
   cudaMalloc((void **)&basis_d->coefficient, bytes_basis);
 
