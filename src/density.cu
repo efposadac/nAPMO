@@ -93,8 +93,6 @@ __global__ void density_gto_kernel(BasisSet basis, double *x, double *y,
   const unsigned int point = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
   const unsigned int n_cont = basis.n_cont;
 
-  __shared__ double buffer[THREADS_PER_BLOCK];
-
   double temp_val, function_value;
   double basis_val[64], r[3];
 
@@ -109,15 +107,9 @@ __global__ void density_gto_kernel(BasisSet basis, double *x, double *y,
     function_value = 0.0;
     for (int i = 0; i < n_cont; ++i) {
 
-      for (int j = threadIdx.x; j < n_cont; j+=THREADS_PER_BLOCK) {
-        buffer[j] = dens[i * n_cont + j];
-      }
-
-      __syncthreads();
-
       temp_val = 0.0;
       for (int j = 0; j < n_cont; ++j) {
-        temp_val += basis_val[j] * buffer[j];
+        temp_val += basis_val[j] * dens[i * n_cont + j];
       }
 
       function_value += temp_val * basis_val[i];

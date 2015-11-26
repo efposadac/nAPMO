@@ -64,3 +64,4 @@ double density_gto_r(BasisSet *basis, double r[3], double *dens) {
   return output;
 }
 #endif
+
