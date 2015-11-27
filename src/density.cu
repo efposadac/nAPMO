@@ -15,13 +15,15 @@ void density_gto(BasisSet *basis, double *r, double *dens, double *output,
                  int size) {
 
   int sizeBasis;
-  double *dens_d, *x_d, *y_d, *z_d, *output_d;
+  double *dens_d, *x_d, *y_d, *z_d, *output_d, *work;
   BasisSet basis_d;
+
+  basis_set_init(basis, &basis_d);
 
   /*
   Allocating Space
   */
-  basis_set_init(basis, &basis_d);
+  cudaMalloc((void **)&work, size * basis->n_cont * sizeof(double));
 
   /*
   Copy points to device
@@ -66,8 +68,8 @@ void density_gto(BasisSet *basis, double *r, double *dens, double *output,
   */
   dim3 dimGrid(((size + THREADS_PER_BLOCK - 1) / THREADS_PER_BLOCK), 1, 1);
 
-  density_gto_kernel<<<dimGrid, THREADS_PER_BLOCK>>>(basis_d, x_d, y_d, z_d,
-                                                     dens_d, output_d, size);
+  density_gto_kernel<<<dimGrid, THREADS_PER_BLOCK>>>(
+      basis_d, x_d, y_d, z_d, dens_d, output_d, work, size);
   CUERR
 
   /*
@@ -81,6 +83,7 @@ void density_gto(BasisSet *basis, double *r, double *dens, double *output,
   cudaFree(x_d);
   cudaFree(y_d);
   cudaFree(z_d);
+  cudaFree(work);
   cudaFree(dens_d);
   cudaFree(output_d);
   basis_set_free(&basis_d);
@@ -88,13 +91,12 @@ void density_gto(BasisSet *basis, double *r, double *dens, double *output,
 
 __global__ void density_gto_kernel(BasisSet basis, double *x, double *y,
                                    double *z, double *dens, double *output,
-                                   int size) {
+                                   double *work, int size) {
 
   const unsigned int point = __umul24(blockIdx.x, blockDim.x) + threadIdx.x;
   const unsigned int n_cont = basis.n_cont;
-
-  double temp_val, function_value;
-  double basis_val[64], r[3];
+  const unsigned int width = min(32, size);
+  double temp_val, function_value, r[3];
 
   if (point < size) {
 
@@ -102,17 +104,19 @@ __global__ void density_gto_kernel(BasisSet basis, double *x, double *y,
     r[1] = y[point];
     r[2] = z[point];
 
-    basis_set_compute_gto(basis, r, basis_val);
+    for (int i = 0; i < n_cont; ++i) {
+      work[i * size + point] = basis_set_compute_gto(basis, i, r);
+    }
 
     function_value = 0.0;
     for (int i = 0; i < n_cont; ++i) {
 
       temp_val = 0.0;
       for (int j = 0; j < n_cont; ++j) {
-        temp_val += basis_val[j] * dens[i * n_cont + j];
+        temp_val += work[j * size + point] * dens[i * n_cont + j];
       }
 
-      function_value += temp_val * basis_val[i];
+      function_value += temp_val * work[i * size + point];
     }
 
     output[point] = function_value;

@@ -28,8 +28,9 @@ void basis_set_init(BasisSet *basis, BasisSet *basis_d) {
 
   /*Allocating space for the device structure*/
   cudaMalloc((void **)&basis_d->n_prim_cont, bytes_int);
-  cudaMalloc((void **)&basis_d->origin, 3 * bytes_double);
+  cudaMalloc((void **)&basis_d->prim_index, bytes_int);
   cudaMalloc((void **)&basis_d->basis_l, 3 * bytes_int);
+  cudaMalloc((void **)&basis_d->origin, 3 * bytes_double);
   cudaMalloc((void **)&basis_d->normalization, bytes_double);
   cudaMalloc((void **)&basis_d->exponent, bytes_basis);
   cudaMalloc((void **)&basis_d->coefficient, bytes_basis);
@@ -37,6 +38,8 @@ void basis_set_init(BasisSet *basis, BasisSet *basis_d) {
   /*Copying data to device*/
   basis_d->n_cont = basis->n_cont;
   cudaMemcpy(basis_d->n_prim_cont, basis->n_prim_cont, bytes_int,
+             cudaMemcpyHostToDevice);
+  cudaMemcpy(basis_d->prim_index, basis->prim_index, bytes_int,
              cudaMemcpyHostToDevice);
   cudaMemcpy(basis_d->basis_l, basis->basis_l, 3 * bytes_int,
              cudaMemcpyHostToDevice);
@@ -52,6 +55,7 @@ void basis_set_init(BasisSet *basis, BasisSet *basis_d) {
 
 void basis_set_free(BasisSet *basis_d) {
   cudaFree(basis_d->n_prim_cont);
+  cudaFree(basis_d->prim_index);
   cudaFree(basis_d->basis_l);
   cudaFree(basis_d->normalization);
   cudaFree(basis_d->origin);

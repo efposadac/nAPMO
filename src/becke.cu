@@ -19,7 +19,7 @@ void becke_init(BeckeGrid *grid, BeckeGridCUDA *grid_d) {
   grid_d->gridDim = make_int2(grid->size, grid->ncenter);
 
   /* Allocate space for grid on device*/
-  int ncenter = grid_d->gridDim.y * sizeof(double2);
+  int ncenter = grid_d->gridDim.y * sizeof(double);
   cudaMalloc((void **)&grid_d->radii, ncenter);
   cudaMalloc((void **)&grid_d->origin, ncenter * 3);
 

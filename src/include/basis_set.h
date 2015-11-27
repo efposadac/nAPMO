@@ -10,11 +10,12 @@ efposadac@sissa.it*/
 struct _basis_set {
   int n_cont;            // Number of contractions.
   int *n_prim_cont;      // Number of primitives for each contraction.
-  int *basis_l;          // Angular moment index sizeof (3*n_cont).
+  int *prim_index;       // Indexes to access to primitives arrays.
+  int *basis_l;          // Angular moment index, size (3*n_cont).
+  double *origin;        // origin for each contraction.
+  double *normalization; // Normalization constant for each primitive.
   double *exponent;      // exponent of each primitive.
   double *coefficient;   // contraction coefficient of each primitive.
-  double *normalization; // Normalization constant for each primitive.
-  double *origin;        // origin for each contraction.
 };
 
 typedef struct _basis_set BasisSet;
@@ -36,35 +37,33 @@ void basis_set_free(BasisSet *basis_d);
 Calculate the basis-set at point r
 */
 /*
-Calculate the basis-set at point r
+Calculate the contraction ``cont`` at point ``r``
 */
-__device__ __forceinline__ void basis_set_compute_gto(BasisSet basis, double *r,
-                                      double *output) {
-  const int n_cont = basis.n_cont;
+__device__ __forceinline__ double basis_set_compute_gto(BasisSet basis,
+                                                        int cont, double *r) {
+
+  const int n_prim = basis.n_prim_cont[cont];
+  const int prim_index = basis.prim_index[cont];
+  const int aux = cont * 3;
+
   double factor, RP2, temp, function_value;
 
-  int counter = 0;
-  for (int i = 0; i < n_cont; ++i) {
-
-    int aux = i * 3;
-    factor = 1.0, RP2 = 0.0;
-
-    for (int j = 0; j < 3; ++j) {
-      temp = r[j] - basis.origin[aux + j];
-      RP2 += (temp * temp);
-      factor *= pow(temp, basis.basis_l[aux + j]);
-    }
-
-    function_value = 0.0;
-    for (int j = 0; j < basis.n_prim_cont[i]; ++j) {
-      function_value +=
-          basis.coefficient[counter] * exp(-basis.exponent[counter] * RP2);
-      counter += 1;
-    }
-
-    function_value *= factor * basis.normalization[i];
-    output[i] = function_value;
+  factor = 1.0, RP2 = 0.0;
+  for (int j = 0; j < 3; ++j) {
+    temp = r[j] - basis.origin[aux + j];
+    RP2 += (temp * temp);
+    factor *= pow(temp, basis.basis_l[aux + j]);
   }
+
+  function_value = 0.0;
+  for (int j = 0; j < n_prim; ++j) {
+    function_value += basis.coefficient[prim_index + j] *
+                      exp(-basis.exponent[prim_index + j] * RP2);
+  }
+
+  function_value *= factor * basis.normalization[cont];
+
+  return function_value;
 }
 
 #endif

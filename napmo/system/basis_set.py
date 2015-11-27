@@ -140,11 +140,12 @@ class BasisSet_C(Structure):
     _fields_ = [
         ("n_cont", c_int),
         ("n_prim_cont", POINTER(c_int)),
+        ("prim_index", POINTER(c_int)),
         ("l_index", POINTER(c_int)),
-        ("exponent", POINTER(c_double)),
-        ("coefficient", POINTER(c_double)),  # normalized
+        ("origin", POINTER(c_double)),
         ("normalization", POINTER(c_double)),
-        ("origin", POINTER(c_double))
+        ("exponent", POINTER(c_double)),
+        ("coefficient", POINTER(c_double))  # normalized
     ]
 
     def __init__(self, basis):
@@ -152,17 +153,20 @@ class BasisSet_C(Structure):
 
         self.n_cont = basis.get('length')
 
-        size = (c_double * self.n_cont)()
-        self.normalization = cast(size, POINTER(c_double))
+        size = (c_int * self.n_cont)()
+        self.n_prim_cont = cast(size, POINTER(c_int))
+
+        size = (c_int * self.n_cont)()
+        self.prim_index = cast(size, POINTER(c_int))
+
+        size = (c_int * self.n_cont * 3)()
+        self.l_index = cast(size, POINTER(c_int))
 
         size = (c_double * self.n_cont * 3)()
         self.origin = cast(size, POINTER(c_double))
 
-        size = (c_int * self.n_cont)()
-        self.n_prim_cont = cast(size, POINTER(c_int))
-
-        size = (c_int * self.n_cont * 3)()
-        self.l_index = cast(size, POINTER(c_int))
+        size = (c_double * self.n_cont)()
+        self.normalization = cast(size, POINTER(c_double))
 
         size = (c_double * basis.get('t_length'))()
         self.exponent = cast(size, POINTER(c_double))
@@ -180,6 +184,8 @@ class BasisSet_C(Structure):
                 self.origin[i * 3 + j] = F.get('origin')[j]
 
             self.n_prim_cont[i] = F.get('length')
+            self.prim_index[i] = counter
+
             for j in range(self.n_prim_cont[i]):
                 P = F.get('primitive')[j]
                 self.exponent[counter] = P.exponent
