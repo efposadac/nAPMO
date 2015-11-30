@@ -68,7 +68,7 @@ Args:
 sphere.
         w: array with the Lebedev's weights.
 */
-double angular_integrate(AngularGrid *grid, const int segments, double *f);
+double angular_integrate(AngularGrid *grid, const int segments, double *f, double *s);
 
 #ifdef _CUDA
 

@@ -14,9 +14,6 @@ void spherical_harmonics_real(int l, int m, double *theta, double *phi, double *
   double x;
   double p;
 
-// #ifdef _OMP
-// #pragma omp parallel for default(shared) private(i, x, p)
-// #endif
   for (i = 0; i < size; ++i) {
     x = cos(theta[i]);
     p = gsl_sf_legendre_sphPlm(l, abs(m), x);

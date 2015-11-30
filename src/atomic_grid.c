@@ -17,20 +17,19 @@ void atomic_grid_init(AtomicGrid *grid, AngularGrid *angular,
 #pragma omp parallel for default(shared) private(i, j, aux, idx, idy, ap, aw,  \
                                                  rp, rw)
 #endif
-  for (i = 0; i < angular->lorder; ++i) {
+  for (i = 0; i < radial->size; ++i) {
+    rp = radial->points[i];
+    rw = radial->weights[i];
 
-    idx = i * 3;
-    ap[0] = angular->points[idx + 0];
-    ap[1] = angular->points[idx + 1];
-    ap[2] = angular->points[idx + 2];
+    for (j = 0; j < angular->lorder; ++j) {
+      idx = j * 3;
+      ap[0] = angular->points[idx + 0];
+      ap[1] = angular->points[idx + 1];
+      ap[2] = angular->points[idx + 2];
 
-    aw = angular->weights[i];
+      aw = angular->weights[j];
 
-    for (j = 0; j < radial->size; ++j) {
-      rp = radial->points[j];
-      rw = radial->weights[j];
-
-      aux = i * radial->size + j;
+      aux = i * angular->lorder + j;
       idy = aux * 3;
 
       grid->points[idy + 0] = ap[0] * rp + grid->origin[0];
