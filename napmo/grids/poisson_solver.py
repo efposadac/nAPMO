@@ -97,6 +97,7 @@ def poisson_solver(grid, rho, lmax):
                 U[:, idx] = x[1:-1]
 
                 idx += 1
+
         offset += atgrid.size
 
     return U
