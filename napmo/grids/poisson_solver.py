@@ -25,6 +25,14 @@ def print_matrix(A, n):
     print("")
 
 
+def print_matrix(A, n):
+    for i in range(n):
+        for j in range(n):
+            print("%12.5f" % (A[i, j]), end="")
+        print("")
+    print("")
+
+
 def poisson_solver(grid, rho, lmax):
     """
     Returns the spherically expanded potential :math:`U_{\ell m}(r)` obtained following Becke's procedure.

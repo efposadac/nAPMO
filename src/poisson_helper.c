@@ -28,10 +28,6 @@ void finite_difference_matrix(RadialGrid *rgrid, double *data, int *row,
 
   aux[1] = l * (l + 1.0);
 
-// #ifdef _OMP
-// #pragma omp parallel for default(shared)                                       \
-//     firstprivate(aux) private(i, j, idx, point, dz, d2z)
-// #endif
   for (i = 0; i < npoints; ++i) {
     point = rgrid->points[i];
 

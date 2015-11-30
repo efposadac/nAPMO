@@ -13,13 +13,14 @@ BUILD = SERIAL CUDA OMP
 #-----------------------
 # Compiler
 #-----------------------
-CC := gcc
-# CC := icc
+# CC := gcc
+CC := icc
 
 #-----------------------
 # Initial configuration
 #-----------------------
 CFLAGS := -Wall -O2 -fPIC -g -pg  
+# LDLIBS := -lgsl -lgslcblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lblas -lm 
 LDLIBS := -lgsl -lgslcblas -lm 
 LDFLAGS := -shared
 
@@ -30,14 +31,14 @@ LDFLAGS := -shared
 # INTEL
 #-------
 
-# OMP: CFLAGS += -D_OMP -DMKL_ILP64 -openmp -mkl=parallel
-# OMP: LDLIBS += -liomp5
-# OMP: LDFLAGS += -lpthread
+OMP: CFLAGS += -D_OMP -DMKL_ILP64 -openmp -mkl=parallel
+OMP: LDLIBS += -liomp5
+OMP: LDFLAGS += -lpthread
 
 # GCC
 #-------
-OMP: CFLAGS +=  -fopenmp -D_OMP
-OMP: LDLIBS += -lgomp 
+# OMP: CFLAGS +=  -fopenmp -D_OMP
+# OMP: LDLIBS += -lgomp 
 
 #----------------
 # Nvidia support 

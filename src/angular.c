@@ -151,7 +151,7 @@ void angular_eval_expansion(AngularGrid *grid, const int lmax, const int size_f,
 
   // Evaluate expansion
 #ifdef _OMP
-#pragma omp parallel for default(shared) private(i, j, l, aux)
+#pragma omp parallel for default(shared) private(i, j, l, aux) collapse(2)
 #endif
   for (i = 0; i < size_f; ++i) {
     for (j = 0; j < lorder; ++j) {
