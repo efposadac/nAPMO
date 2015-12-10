@@ -144,9 +144,9 @@ if __name__ == '__main__':
     plt.xlabel('Radial Points')
     plt.ylabel('Error (log)')
     plt.plot(radialList, np.abs(np.array(h_ints) -
-                                0.79788456080286518), label='horton')
+                                1.05571294273507), label='horton')
     plt.plot(radialList, np.abs(np.array(n_ints) -
-                                0.79788456080286518), label='napmo-7')
+                                1.05571294273507), label='napmo-7')
 
     plt.legend()
     plt.show()
