@@ -1,2 +1,2 @@
 [report] 
-omit = *numpy*, *ctypes*, *numbers*, *scipy*, *json*, *PIL*
+omit = *numpy*, *ctypes*, *numbers*, *scipy*, scipy._lib.decorator, *json*, *PIL*, FIxTk

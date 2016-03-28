@@ -13,12 +13,13 @@ from napmo.utilities.lebedev import lebedev_get_order
 from napmo.system.molecular_system import MolecularSystem
 from napmo.grids.becke import BeckeGrid
 from napmo.grids.poisson_solver import poisson_solver
+from napmo.utilities.cubic_spline import CubicSpline as CS
 
 from horton import *
 
 if __name__ == '__main__':
 
-    basis_file = "/home/fernando/PhD/Develop/nAPMO/results/Coulomb/TEST.json"
+    basis_file = "/home/edwin/PhD/Develop/nAPMO/results/Coulomb/TEST.json"
     molecule = MolecularSystem()
     molecule.add_atom("He", [0.0, 0.0, 0.0],
                       basis_kind="GTO", basis_file=basis_file)
@@ -26,7 +27,7 @@ if __name__ == '__main__':
 
     # Grid definition
     angularPoints = 110
-    # radialList = [100]
+    # radialList = [6]
     radialList = [6, 14, 110, 170, 194, 230, 266, 302, 350, 434]
 
     h_ints = []
@@ -40,8 +41,13 @@ if __name__ == '__main__':
         # Grids
         grid = BeckeGrid(molecule, radialPoints, angularPoints)
 
-        h_grid_spec = AtomicGridSpec('power:' + str(grid.atgrids[-1].radial_grid.points.min()) + ':' + str(
-            grid.atgrids[-1].radial_grid.points.max()) + ':' + str(radialPoints) + ':' + str(angularPoints))
+        rmin = grid.atgrids[-1].radial_grid.points.min()
+        rmax = grid.atgrids[-1].radial_grid.points.max()
+
+        print(rmin, rmax)
+
+        h_grid_spec = AtomicGridSpec(
+            'power:' + str(rmin) + ':' + str(rmax) + ':' + str(radialPoints) + ':' + str(angularPoints))
 
         molgrid = BeckeMolGrid(np.array([[0.0, 0.0, 0.0]]), np.array([2]), np.array(
             [2.0]), agspec=h_grid_spec, random_rotate=False, mode='keep')
@@ -81,7 +87,17 @@ if __name__ == '__main__':
         # Build rho again:
 
         # napmo
-        rho_n = grid.atgrids[-1].evaluate_expansion(lmax, p_lm_n)
+        rho_n = np.zeros(grid.size)
+        p_lm_n_cs = []
+        idx = 0
+
+        for l in range(lmax + 1):
+            for m in range(-l, l + 1):
+                aux = np.array(p_lm_n[:, idx])
+                p_lm_n_cs.append(CS(aux, rtransform=grid.atgrids[-1].radial_grid.rtransform))
+                idx += 1
+
+        grid.evaluate_decomposition(p_lm_n_cs, grid.origin[0, :], rho_n)
         print('rebuild napmo:', np.allclose(rho_n, rho))
 
         # horton
@@ -117,10 +133,10 @@ if __name__ == '__main__':
 
         # napmo
         print('napmo')
-        for i in range(grid.atgrids[-1].radial_grid.size):
-            U_lm_n[i, :] /= grid.atgrids[-1].radial_grid.points[i]
+        V_ab_n = np.zeros(grid.size, dtype=np.float64)
+        grid.evaluate_decomposition(
+            U_lm_n[-1][:], grid.origin[-1, :], V_ab_n)
 
-        V_ab_n = grid.atgrids[-1].evaluate_expansion(lmax, U_lm_n)
         val_n = grid.integrate(rho_n * V_ab_n)
         n_ints.append(val_n)
 

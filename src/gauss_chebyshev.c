@@ -9,7 +9,7 @@ efposadac@sissa.it*/
 
 void gaussChebyshev(int n, double rm, double *abscissas, double *weights) {
   int i;
-  double aux_a, aux_w;
+  double aux_a, aux_b, aux_w;
   double aux = M_PI / (n + 1.0);
 
 #ifdef _OMP
@@ -17,7 +17,9 @@ void gaussChebyshev(int n, double rm, double *abscissas, double *weights) {
 #endif
   for (i = 0; i < n; ++i) {
     aux_a = cos((i + 1) * aux);
-    aux_w = aux * (1.0 - aux_a * aux_a);
+    aux_b = sin((i + 1) * aux);
+
+    aux_w = aux * aux_b * aux_b;
 
     /* Scale from interval (-1, 1) to (0, inf) */
     abscissas[i] = rm * (1.0 + aux_a) / (1.0 - aux_a); // (25)

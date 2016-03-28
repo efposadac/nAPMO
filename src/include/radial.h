@@ -9,6 +9,8 @@ efposadac@sissa.it*/
 #define RADIAL_H
 
 #include <math.h>
+#include <stdlib.h>
+#include "utils.h"
 #include "gauss_chebyshev.h"
 
 struct _radial {
@@ -37,5 +39,7 @@ void radial_deriv_z(RadialGrid *grid);
 Returns the second derivative of the uniform z grid.
 */
 void radial_deriv2_z(RadialGrid *grid);
+
+double radial_integrate(RadialGrid *grid, const int segments, double *f);
 
 #endif

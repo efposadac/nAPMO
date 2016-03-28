@@ -9,21 +9,16 @@ import numpy.ctypeslib as npct
 import numpy as np
 from ctypes import *
 
-from napmo.system.cext import napmo_library
+from napmo.system.cext import napmo_library as nl
 from napmo.system.basis_set import BasisSet_C
 
-array_1d_double = npct.ndpointer(
-    dtype=np.double, ndim=1, flags='CONTIGUOUS')
+array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
 
-array_2d_double = npct.ndpointer(
-    dtype=np.double, ndim=2, flags='CONTIGUOUS')
+array_2d_double = npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
 
-napmo_library.density_gto.restype = None
-napmo_library.density_gto.argtypes = [
-    POINTER(BasisSet_C),
-    array_2d_double,
-    array_2d_double,
-    array_1d_double,
+nl.density_gto.restype = None
+nl.density_gto.argtypes = [
+    POINTER(BasisSet_C), array_2d_double, array_2d_double, array_1d_double,
     c_int
 ]
 
@@ -44,5 +39,5 @@ def density_full_from_matrix_gto(density_file, basis, coords):
     size = coords.shape[0]
     P = np.array(np.loadtxt(density_file), order='C', dtype=np.float64)
     rho = np.empty(size, dtype=np.float64)
-    napmo_library.density_gto(byref(basis), coords, P, rho, size)
+    nl.density_gto(byref(basis), coords, P, rho, size)
     return rho

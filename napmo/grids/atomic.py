@@ -11,10 +11,11 @@ from ctypes import *
 
 from napmo.grids.radial import RadialGrid
 from napmo.grids.angular import AngularGrid
-from napmo.system.cext import napmo_library
+from napmo.system.cext import napmo_library as nl
 
 
 class AtomicGrid(Structure):
+
     """
     Defines a spherical grid for each center in the system.
     """
@@ -46,8 +47,13 @@ class AtomicGrid(Structure):
 
         self._symbol = atomic_symbol
 
-        napmo_library.atomic_grid_init(byref(self), byref(
-            self.angular_grid), byref(self.radial_grid))
+        nl.atomic_grid_init.restype = None
+        nl.atomic_grid_init.argtypes = [
+            POINTER(AtomicGrid), POINTER(AngularGrid), POINTER(RadialGrid)
+        ]
+
+        nl.atomic_grid_init(
+            byref(self), byref(self.angular_grid), byref(self.radial_grid))
 
     def spherical_expansion(self, lmax, f):
         """
@@ -64,13 +70,22 @@ class AtomicGrid(Structure):
         """
         lsize = (lmax + 1) * (lmax + 1)
         output = np.empty([self.radial_grid.size, lsize], dtype=np.float64)
-        napmo_library.angular_spherical_expansion(
+
+        nl.angular_spherical_expansion.restype = None
+        nl.angular_spherical_expansion.argtypes = [
+            POINTER(AngularGrid), c_int, c_int,
+            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
+            npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
+        ]
+
+        nl.angular_spherical_expansion(
             byref(self.angular_grid), lmax, self.radial_grid.size, f, output)
+
         return output
 
     def evaluate_expansion(self, lmax, expansion):
         """
-        Evaluate the spherical expansion:
+        Evaluate the spherical expansion for one atom (do not use with molecules):
 
         :math:`f(\\theta, \\varphi) = \sum_{\ell=0}^{\ell_{max}} \sum_{m=-\ell}^\ell f_{\ell m} \, Y_{\ell m}(\\theta, \\varphi)`
 
@@ -82,8 +97,18 @@ class AtomicGrid(Structure):
             output (ndarray): array with the values of the approximated :math:`f(x)`.
         """
         output = np.empty(self.size, dtype=np.float64)
-        napmo_library.angular_eval_expansion(
-            byref(self.angular_grid), lmax, self.radial_grid.size, expansion, output)
+
+        nl.angular_eval_expansion.restype = None
+        nl.angular_eval_expansion.argtypes = [
+            POINTER(AngularGrid), c_int, c_int,
+            npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS'),
+            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
+        ]
+
+        nl.angular_eval_expansion(
+            byref(self.angular_grid), lmax, self.radial_grid.size, expansion,
+            output)
+
         return output
 
     def integrate(self, *args):
@@ -94,8 +119,16 @@ class AtomicGrid(Structure):
             f (ndarray): array of :math:`f` computed in all grid points.
         """
         f = np.concatenate(args)
-        integral = napmo_library.atomic_grid_integrate(
+
+        nl.atomic_grid_integrate.restype = c_double
+        nl.atomic_grid_integrate.argtypes = [
+            POINTER(AtomicGrid), c_int,
+            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
+        ]
+
+        integral = nl.atomic_grid_integrate(
             byref(self), len(args), f)
+
         return integral
 
     @property
@@ -105,42 +138,3 @@ class AtomicGrid(Structure):
     @property
     def symbol(self):
         return self._symbol
-
-
-array_1d_double = npct.ndpointer(
-    dtype=np.double, ndim=1, flags='CONTIGUOUS')
-
-array_2d_double = npct.ndpointer(
-    dtype=np.double, ndim=2, flags='CONTIGUOUS')
-
-napmo_library.atomic_grid_init.restype = None
-napmo_library.atomic_grid_init.argtypes = [
-    POINTER(AtomicGrid),
-    POINTER(AngularGrid),
-    POINTER(RadialGrid)
-]
-
-napmo_library.angular_spherical_expansion.restype = None
-napmo_library.angular_spherical_expansion.argtypes = [
-    POINTER(AngularGrid),
-    c_int,
-    c_int,
-    array_1d_double,
-    array_2d_double
-]
-
-napmo_library.angular_eval_expansion.restype = None
-napmo_library.angular_eval_expansion.argtypes = [
-    POINTER(AngularGrid),
-    c_int,
-    c_int,
-    array_2d_double,
-    array_1d_double
-]
-
-napmo_library.atomic_grid_integrate.restype = c_double
-napmo_library.atomic_grid_integrate.argtypes = [
-    POINTER(AtomicGrid),
-    c_int,
-    array_1d_double
-]

@@ -7,6 +7,7 @@ efposadac@sissa.it*/
 #ifndef SPHERICAL_HARMONICS_H
 #define SPHERICAL_HARMONICS_H
 
+#include <gsl/gsl_vector.h>
 #include <gsl/gsl_sf_legendre.h>
 #include <stdlib.h>
 #include <math.h>

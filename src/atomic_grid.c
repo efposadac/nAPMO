@@ -36,7 +36,7 @@ void atomic_grid_init(AtomicGrid *grid, AngularGrid *angular,
       grid->points[idy + 1] = ap[1] * rp + grid->origin[1];
       grid->points[idy + 2] = ap[2] * rp + grid->origin[2];
 
-      grid->weights[aux] = aw * rw * rp * rp;
+      grid->weights[aux] = aw * rw;
     }
   }
 }
@@ -66,7 +66,7 @@ double atomic_grid_integrate(AtomicGrid *grid, const int segments, double *f) {
 
   free(work);
 
-  return output * 4.0 * M_PI * grid->radii;
+  return output;
 }
 
 #endif

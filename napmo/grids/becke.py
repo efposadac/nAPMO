@@ -12,12 +12,15 @@ import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.system.cext import napmo_library
+from napmo.system.cext import napmo_library as nl
+
 from napmo.system.molecular_system import MolecularSystem
 from napmo.grids.atomic import AtomicGrid
+from napmo.utilities.cell import Cell
 
 
 class BeckeGrid(Structure):
+
     """
     This class creates the Becke grid.
 
@@ -30,11 +33,8 @@ class BeckeGrid(Structure):
         n_angular (int, optional): Number of angular points. Default is 110
     """
     _fields_ = [
-        ("_ncenter", c_int),
-        ("_size", c_int),
-        ("_radii", POINTER(c_double)),
-        ("_origin", POINTER(c_double * 3)),
-        ("_points", POINTER(c_double * 3)),
+        ("_ncenter", c_int), ("_size", c_int), ("_radii", POINTER(c_double)),
+        ("_origin", POINTER(c_double * 3)), ("_points", POINTER(c_double * 3)),
         ("_weights", POINTER(c_double))
     ]
 
@@ -64,19 +64,18 @@ class BeckeGrid(Structure):
 
         offset = 0
         for i in range(self.ncenter):
-            self.atgrids.append(
-                AtomicGrid(n_radial, n_angular, centers[i].get('origin'),
-                           centers[i].get('symbol')))
+            self.atgrids.append(AtomicGrid(n_radial, n_angular, centers[i].get(
+                'origin'), centers[i].get('symbol')))
 
             self.origin[i] = self.atgrids[-1].origin
 
             self.radii[i] = self.atgrids[-1].radial_grid.radii
 
-            self.points[offset:offset +
-                        self.atgrids[-1].size] = self.atgrids[-1].points
+            self.points[offset:offset + self.atgrids[-1].size] = self.atgrids[
+                -1].points
 
-            self.weights[offset:offset +
-                         self.atgrids[-1].size] = self.atgrids[-1].weights
+            self.weights[offset:offset + self.atgrids[-1].size] = self.atgrids[
+                -1].weights
 
             offset += self.atgrids[-1].size
 
@@ -92,8 +91,44 @@ class BeckeGrid(Structure):
             P (numpy.darray): The value of cell_function (eq. 13, Becke, 1988)
         """
         P = np.empty(self.size, dtype=np.float64)
-        napmo_library.becke_weights(byref(self), P)
+
+        nl.becke_weights.restype = None
+        nl.becke_weights.argtypes = [
+            POINTER(BeckeGrid),
+            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')]
+
+        nl.becke_weights(byref(self), P)
         return P
+
+    def evaluate_decomposition(self, cubic_splines, center, output, cell=None):
+        """
+        Evaluate the spherical decomposition:
+
+        :math:`f(\\theta, \\varphi) = \sum_{\ell=0}^{\ell_{max}} \sum_{m=-\ell}^\ell f_{\ell m} \, Y_{\ell m}(\\theta, \\varphi)`
+
+        Args:
+            lmax (int): Maximum :math:`\ell` order of the expansion.
+            expansion (ndarray): Spherical expansion array with shape (nrad, lsize), where :math:`\ell_{size} = (\ell_{max} + 1)^2`
+
+        Returns:
+            output (ndarray): array with the values of the approximated :math:`f(x)`.
+        """
+        if cell is None:
+            cell = Cell(None)
+
+        c_splines = [cubic_splines[i]._this for i in range(len(cubic_splines))]
+        splines = np.array(c_splines, dtype=c_void_p)
+
+        nl.eval_decomposition_grid.restype = None
+        nl.eval_decomposition_grid.argtypes = [
+            npct.ndpointer(c_void_p, flags="C_CONTIGUOUS"),
+            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
+            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
+            npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS'),
+            c_void_p, c_long, c_long]
+
+        nl.eval_decomposition_grid(splines, center, output, self.points,
+                                   cell._this, len(cubic_splines), self.size)
 
     def integrate(self, f):
         """
@@ -106,7 +141,8 @@ class BeckeGrid(Structure):
         integral = 0.0
         for i in range(self.ncenter):
             integral += self.atgrids[i].integrate(
-                f[offset:offset + self.atgrids[i].size], self.becke_weights[offset:offset + self.atgrids[i].size])
+                f[offset:offset + self.atgrids[i].size],
+                self.becke_weights[offset:offset + self.atgrids[i].size])
             offset += self.atgrids[i].size
         return integral
 
@@ -126,13 +162,3 @@ class BeckeGrid(Structure):
     @property
     def size(self):
         return self._size
-
-
-array_1d_double = npct.ndpointer(
-    dtype=np.double, ndim=1, flags='CONTIGUOUS')
-
-napmo_library.becke_weights.restype = None
-napmo_library.becke_weights.argtypes = [
-    POINTER(BeckeGrid),
-    array_1d_double
-]

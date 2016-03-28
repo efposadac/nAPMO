@@ -11,6 +11,7 @@ include $(TOPDIR)/config.make
 LIBRARY = libnapmo.so
 
 OBJ = $(patsubst %.c,%.o,$(wildcard *.c))
+OBJ += $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 NVOBJ = $(patsubst %.cu,%.cuda.o,$(wildcard *.cu))
 
 CUDA: OBJ += $(NVOBJ)
@@ -20,18 +21,21 @@ CUDA: OBJ += $(NVOBJ)
 default: SERIAL
 
 $(BUILD): $$(OBJ)
-	$(CC) -o $(LIBRARY) $(LDFLAGS) $^ $(LDLIBS)
+	$(CXX) -o $(LIBRARY) $(LDFLAGS) $^ $(LDLIBS)
 	cp $(LIBRARY) $(TOPDIR)/napmo/utilities
+
+%.o: %.cpp
+	$(CXX) -c $(CFLAGS) $< -o $@
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@
 
-%.c: %.h
+%.c: include/%.h
 
 %.cuda.o: %.cu
 	$(CC) -c $(CFLAGS) $< -o $@
 
-%.cu: %.cuh
+%.cu: include/%.cuh
 
 clean:
 	rm -rf $(LIBRARY)
