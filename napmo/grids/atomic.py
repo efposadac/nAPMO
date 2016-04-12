@@ -111,23 +111,52 @@ class AtomicGrid(Structure):
 
         return output
 
-    def integrate(self, *args):
+    def spherical_average(self, *args):
+        '''
+        Computes the spherical average of the product of given functions
+        '''
+
+        f = np.concatenate(args)
+        s = self.integrate(segmented=True)
+        output = self.integrate(f, segmented=True)
+        output /= s
+
+        return output
+
+    def integrate(self, *args, **kwargs):
         """
         Perform an integration of function :math:`f` using AtomicGrid.
 
         Args:
             f (ndarray): array of :math:`f` computed in all grid points.
-        """
-        f = np.concatenate(args)
+            segmented (logical): whether to calculate the integral in a segmented way along the number of radial points.
 
-        nl.atomic_grid_integrate.restype = c_double
+        return:
+            integral: float or array in the segmented case.
+        """
+        segmented = kwargs.pop('segmented', False)
+
+        args += (self.weights,)
+        nfunc = len(args)
+
+        if segmented:
+            nseg = self.radial_grid.size
+            sseg = self.angular_grid.lorder
+            integral = np.zeros(nseg)
+        else:
+            nseg = 1
+            sseg = self.size
+            integral = np.zeros(1)
+
+        f = np.concatenate(args)
+        print(f[0], f[-1], len(f))
         nl.atomic_grid_integrate.argtypes = [
-            POINTER(AtomicGrid), c_int,
+            POINTER(AtomicGrid), c_int, c_int, c_int,
+            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
         ]
 
-        integral = nl.atomic_grid_integrate(
-            byref(self), len(args), f)
+        nl.atomic_grid_integrate(byref(self), nfunc, nseg, sseg, f, integral)
 
         return integral
 

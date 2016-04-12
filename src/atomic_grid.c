@@ -42,31 +42,34 @@ void atomic_grid_init(AtomicGrid *grid, AngularGrid *angular,
 }
 
 #ifndef _CUDA
-double atomic_grid_integrate(AtomicGrid *grid, const int segments, double *f) {
-  int i;
+void atomic_grid_integrate(AtomicGrid *grid, const int functions,
+                           const int segments, const int size, double *f,
+                           double *output) {
+
+  int i, j;
+  int total_size = size * segments;
   double *work;
-  double output;
 
-  int size = grid->size;
-
-  if (segments > 1) {
-    work = (double *)malloc(size * sizeof(double));
-    utils_multiply_segmented_array(size, segments, f, work);
+  // Convert in one array of size ``total_size``
+  if (functions > 1) {
+    work = (double *)malloc(total_size * sizeof(double));
+    utils_multiply_segmented_array(total_size, functions, f, work);
   } else {
     work = &f[0];
   }
 
-  output = 0.0;
-#ifdef _OMP
-#pragma omp parallel for default(shared) private(i) reduction(+ : output)
-#endif
-  for (i = 0; i < size; ++i) {
-    output += work[i] * grid->weights[i];
+  //OMP?
+  
+  // Perform reduction
+  for (i = 0; i < segments; ++i) {
+    for (j = 0; j < size; ++j) {
+      output[i] += work[i*size+j];
+    }
   }
 
-  free(work);
-
-  return output;
+  if (functions > 1) {
+    free(work);
+  }
 }
 
 #endif

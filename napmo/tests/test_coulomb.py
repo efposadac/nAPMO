@@ -27,7 +27,8 @@ def test_coulomb_H():
     # Molecule definition
     basis_file = os.path.join(os.path.dirname(__file__), "TEST.json")
     molecule = MolecularSystem()
-    molecule.add_atom("H", [0.0, 0.0, 0.0], basis_kind="GTO", basis_file=basis_file)
+    molecule.add_atom("H", [0.0, 0.0, 0.0],
+                      basis_kind="GTO", basis_file=basis_file)
     molecule.show()
 
     # basis set
@@ -51,7 +52,7 @@ def test_coulomb_H():
 
     for i in range(grid.ncenter):
         grid.evaluate_decomposition(
-            U[i][:], grid.origin[i, :], v)
+            i, U[i][:], v)
 
     integral = grid.integrate(rho * v)
 

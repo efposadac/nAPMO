@@ -19,7 +19,7 @@ from horton import *
 
 if __name__ == '__main__':
 
-    basis_file = "/home/edwin/PhD/Develop/nAPMO/results/Coulomb/TEST.json"
+    basis_file = "/home/fernando/PhD/Develop/nAPMO/results/Coulomb/TEST.json"
     molecule = MolecularSystem()
     molecule.add_atom("He", [0.0, 0.0, 0.0],
                       basis_kind="GTO", basis_file=basis_file)
@@ -94,7 +94,8 @@ if __name__ == '__main__':
         for l in range(lmax + 1):
             for m in range(-l, l + 1):
                 aux = np.array(p_lm_n[:, idx])
-                p_lm_n_cs.append(CS(aux, rtransform=grid.atgrids[-1].radial_grid.rtransform))
+                p_lm_n_cs.append(
+                    CS(aux, rtransform=grid.atgrids[-1].radial_grid.rtransform))
                 idx += 1
 
         grid.evaluate_decomposition(p_lm_n_cs, grid.origin[0, :], rho_n)

@@ -100,18 +100,17 @@ class BeckeGrid(Structure):
         nl.becke_weights(byref(self), P)
         return P
 
-    def evaluate_decomposition(self, cubic_splines, center, output, cell=None):
+    def evaluate_decomposition(self, atom, cubic_splines, output, cell=None):
         """
-        Evaluate the spherical decomposition:
+        Evaluate the spherical decomposition for a given atom in the molecular grid:
 
         :math:`f(\\theta, \\varphi) = \sum_{\ell=0}^{\ell_{max}} \sum_{m=-\ell}^\ell f_{\ell m} \, Y_{\ell m}(\\theta, \\varphi)`
 
         Args:
-            lmax (int): Maximum :math:`\ell` order of the expansion.
-            expansion (ndarray): Spherical expansion array with shape (nrad, lsize), where :math:`\ell_{size} = (\ell_{max} + 1)^2`
-
-        Returns:
+            atom (int): Index of the atom.
+            cubic_splines (list): List of CubicSpline objects with the spherical expansion.
             output (ndarray): array with the values of the approximated :math:`f(x)`.
+
         """
         if cell is None:
             cell = Cell(None)
@@ -127,7 +126,7 @@ class BeckeGrid(Structure):
             npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS'),
             c_void_p, c_long, c_long]
 
-        nl.eval_decomposition_grid(splines, center, output, self.points,
+        nl.eval_decomposition_grid(splines, self.origin[atom, :], output, self.points,
                                    cell._this, len(cubic_splines), self.size)
 
     def integrate(self, f):

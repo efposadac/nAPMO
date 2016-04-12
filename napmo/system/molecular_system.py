@@ -20,6 +20,7 @@ from napmo.data.constants import ANGSTROM_TO_BOHR
 
 
 class MolecularSystem(dict):
+
     """
     Defines a molecular system, containing different kinds of quantum 'species' i.e. atoms, muons, positrons, etc. (dict)
 
@@ -191,6 +192,8 @@ class MolecularSystem(dict):
         Returns:
             BasisSet: basis set
         """
+        basis = None
+
         if symbol in self:
             basis = self[symbol].get('basis')
         else:
@@ -201,7 +204,7 @@ class MolecularSystem(dict):
         if isinstance(basis, BasisSet):
             return basis
         else:
-            raise KeyError
+            raise KeyError('The symbol:', symbol, 'does not exist in the molecular system!')
 
     def get_basis_as_cstruct(self, symbol):
         """

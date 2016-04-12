@@ -38,7 +38,9 @@ point of the grid.
 Return:
     integral (double): value of the integral.
 */
-double atomic_grid_integrate(AtomicGrid *grid, const int segments, double *f);
+void atomic_grid_integrate(AtomicGrid *grid, const int functions,
+                           const int segments, const int size, double *f,
+                           double *output);
 
 #ifdef _CUDA
 

@@ -61,7 +61,7 @@ def test_decomposition_grid():
                 p_lm_cs.append(CubicSpline(aux, rtransform=atgrid.radial_grid.rtransform))
                 idx += 1
 
-        grid.evaluate_decomposition(p_lm_cs, grid.origin[0, :], rho_n)
+        grid.evaluate_decomposition(0, p_lm_cs, rho_n)
         assert np.allclose(rho_n, rho)
 
 
