@@ -3,7 +3,7 @@
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 
 from napmo.grids.radial import RadialGrid
 from napmo.grids.radial_transform import *

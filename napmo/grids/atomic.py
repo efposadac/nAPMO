@@ -3,7 +3,7 @@
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 
 import numpy as np
 import numpy.ctypeslib as npct
@@ -149,7 +149,7 @@ class AtomicGrid(Structure):
             integral = np.zeros(1)
 
         f = np.concatenate(args)
-        print(f[0], f[-1], len(f))
+
         nl.atomic_grid_integrate.argtypes = [
             POINTER(AtomicGrid), c_int, c_int, c_int,
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),

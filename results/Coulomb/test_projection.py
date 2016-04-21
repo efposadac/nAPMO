@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# file: Density.py
+# file: test_projection.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
@@ -19,14 +19,16 @@ from napmo.grids.becke import BeckeGrid
 from napmo.utilities.density import *
 
 
-def init_system(element, distance, basis_kind, basis_file):
+if __name__ == '__main__':
     """
     Calcualtion of :math:`\int \\rho(\\bf r)` for several diatomic molecules.
     """
     # Molecule definition
     molecule = MolecularSystem()
+
     molecule.add_atom(element, [0.0, 0.0, distance / 2.0],
                       basis_kind=basis_kind, basis_file=basis_file)
+
     molecule.add_atom(element, [0.0, 0.0, -distance / 2.0],
                       basis_kind=basis_kind, basis_file=basis_file)
     # molecule.show()
@@ -36,11 +38,6 @@ def init_system(element, distance, basis_kind, basis_file):
 
     # Get the density matrix (from a previous calculation)
     file_dens = os.path.join(os.path.dirname(__file__), element + '_dens.dat')
-
-    return molecule, exact, file_dens
-
-
-if __name__ == '__main__':
 
     # Grid definition
     angularPoints = 194

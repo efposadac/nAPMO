@@ -4,7 +4,7 @@
 # Copyright (c) 2016, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 
 from __future__ import division
 from __future__ import print_function

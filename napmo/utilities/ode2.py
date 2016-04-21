@@ -3,7 +3,7 @@
 # Copyright (c) 2016, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 
 # -*- coding: utf-8 -*-
 # HORTON: Helpful Open-source Research TOol for N-fermion systems.
