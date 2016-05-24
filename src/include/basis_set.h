@@ -13,7 +13,7 @@ struct _basis_set {
   int *prim_index;       // Indexes to access to primitives arrays.
   int *basis_l;          // Angular moment index, size (3*n_cont).
   double *origin;        // origin for each contraction.
-  double *normalization; // Normalization constant for each primitive.
+  double *normalization; // Normalization constant for each contraction.
   double *exponent;      // exponent of each primitive.
   double *coefficient;   // contraction coefficient of each primitive.
 };

@@ -15,17 +15,21 @@ from napmo.system.cext import napmo_library
 
 
 class PrimitiveGaussian(Structure):
+
     """
     Defines a Cartesian primitive Gaussian type orbital (GTO). (dict)
 
-    Following Obara and Saika (1986) we write an unnormalized primitive Cartesian Gaussian function centered at :math:`\\bf A` as
+    Following Obara and Saika (1986) we write an unnormalized primitive
+    Cartesian Gaussian function centered at :math:`\\bf A` as
 
-    :math:`\phi ({\\bf r}; \zeta, {\\bf n}, {\\bf A}) = (x - A_x)^{n_x} (y - A_y)^{n_y} (z - A_z)^{n_z}
-    \\times \exp[-\zeta({\\bf r}-{\\bf A})^2]`
+    :math:`\phi ({\\bf r}; \zeta, {\\bf n}, {\\bf A}) = (x - A_x)^{n_x}
+    (y - A_y)^{n_y} (z - A_z)^{n_z} \\times \exp[-\zeta({\\bf r}-{\\bf A})^2]`
 
-    where :math:`{\\bf r}` is the coordinate vector of the electron, :math:`\zeta` is the orbital exponent, and :math:`\\bf n`
-    is a set of non-negative integers. The sum of :math:`n_x`, :math:`n_y`, and :math:`n_z` is denoted as :math:`\\bf n`
-    and be referred to as the angular momentum or orbital quantum number of the Gaussian function.
+    where :math:`{\\bf r}` is the coordinate vector of the electron,
+    :math:`\zeta` is the orbital exponent, and :math:`\\bf n` is a set of
+    non-negative integers. The sum of :math:`n_x`, :math:`n_y`, and :math:`n_z`
+    is denoted as :math:`\\bf n` and be referred to as the angular momentum or
+    orbital quantum number of the Gaussian function.
 
     Args:
         exponent (double): GTO exponent.
@@ -84,19 +88,20 @@ class PrimitiveGaussian(Structure):
         Calculates analytically the overlap integral between primitives.
 
         Args:
-            other (PrimitiveGaussian) : function to perform :math:`<\phi_{self} | \phi_{other}>`
+            other (PrimitiveGaussian) : function to perform :math:`<\phi_{self}
+             | \phi_{other}>`
         """
         return napmo_library.gto_overlap_primitive(byref(self), byref(other))
 
-    def show(self):
+    def __repr__(self):
         """
         Prints information about the object.
         """
-        print("    origin: ", self.origin)
-        print("    exponent: ", self.exponent)
-        print("    coefficient: ", self.coefficient)
-        print("    angular moment: ", self.l)
-        print("    normalization: ", self.normalization)
+        return("\n    origin: "+str(self.origin)+'\n'
+               "    exponent: "+str(self.exponent)+'\n'
+               "    coefficient: "+str(self.coefficient)+'\n'
+               "    angular moment: "+str(self.l)+'\n'
+               "    normalization: "+str(self.normalization))
 
 
 array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')

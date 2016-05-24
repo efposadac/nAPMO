@@ -14,20 +14,25 @@ from napmo.system.primitive_gaussian import PrimitiveGaussian
 
 
 class ContractedGaussian(dict):
-    """
-    Defines a linear combination of Cartesian Gaussian type orbitals GTO (dict).
 
-    A contracted Gaussian function is just a linear combination of primitive Gaussians (also termed primitives)
-    centered at the same center :math:`{\\bf A}` and with the same momentum indices  :math:`{\\bf n}`
+    """
+    Defines a linear combination of Cartesian Gaussian type orbitals GTO.
+
+    A contracted Gaussian function is just a linear combination of primitive
+    Gaussians (also termed primitives) centered at the same center
+    :math:`{\\bf A}` and with the same momentum indices  :math:`{\\bf n}`
     but with different exponents :math:`\zeta_i`:
 
-    :math:`\phi ({\\bf r}; {\\bf \zeta}, {\\bf C}, {\\bf n}, {\\bf A}) = (x - A_x)^{n_x} (y - A_y)^{n_y} (z - A_z)^{n_z} \\times
-    \sum_{i=1}^M C_i \exp[-\zeta_i ({\\bf r}-{\\bf A})^2]`
+    :math:`\phi ({\\bf r}; {\\bf \zeta}, {\\bf C}, {\\bf n}, {\\bf A}) =
+    (x - A_x)^{n_x} (y - A_y)^{n_y} (z - A_z)^{n_z} \\times \sum_{i=1}^M C_i
+    \exp[-\zeta_i ({\\bf r}-{\\bf A})^2]`
 
-    Contracted Gaussians form shells the same way as primitives. The contraction coefficients :math:`\\bf C`
-    already include normalization constants so that the resulting combination is properly normalized.
-    Published contraction coefficients :math:`\\bf c` are linear coefficients for normalized primitives,
-    hence the normalization-including contraction coefficients :math:`\\bf C` have to be computed from them as
+    Contracted Gaussians form shells the same way as primitives. The
+    contraction coefficients :math:`\\bf C`already include normalization
+    constants so that the resulting combination is properly normalized.
+    Published contraction coefficients :math:`\\bf c` are linear coefficients
+    for normalized primitives, hence the normalization-including contraction
+    coefficients :math:`\\bf C` have to be computed from them as
 
     :math:`C_i = c_i N(\zeta_i,{\\bf n})`
 
@@ -53,12 +58,10 @@ class ContractedGaussian(dict):
         self["length"] = len(exponents)
         self["l"] = l
         self["origin"] = origin
-        self["primitive"] = []
+        self["primitive"] = [
+            PrimitiveGaussian(exponent, coefficient, l, origin)
+            for (exponent, coefficient) in zip(exponents, coefficients)]
 
-        for (exponent, coefficient) in zip(exponents, coefficients):
-            self.get("primitive").append(PrimitiveGaussian(
-                exponent, coefficient, l, origin
-            ))
         self["normalization"] = 1.0
         aux = self.normalize()
         self["normalization"] = aux
@@ -74,14 +77,14 @@ class ContractedGaussian(dict):
         Calculates the overlap integral between two contractions.
 
         Args:
-            other (ContractedGaussian) : Contracted function to perform :math:`<\phi_{self} | \phi_{other}>`
+            other (ContractedGaussian) : Contracted function to perform
+            :math:`<\phi_{self} | \phi_{other}>`
         """
-        output = 0.0
-        for pa in self.get('primitive'):
-            for pb in other.get('primitive'):
-                output += pa.overlap(pb)
-
-        output *= self.get('normalization') * other.get('normalization')
+        output = (
+            sum([pa.overlap(pb)
+                 for pa in self.get('primitive')
+                 for pb in other.get('primitive')]) *
+            self.get('normalization') * other.get('normalization'))
 
         return output
 
@@ -90,24 +93,21 @@ class ContractedGaussian(dict):
         Computes the value of the contracted Gaussian at ``coord``.
 
         Args:
-            coord (ndarray) : array with the points where the function will be calculated.
+            coord (ndarray) : array with the points where the function will be
+            calculated.
         """
-        output = 0.0
-        for primitive in self.get('primitive'):
-            output += primitive.compute(coord) * self.get('normalization')
+        return sum([primitive.compute(coord) * self.get('normalization')
+                    for primitive in self.get('primitive')])
 
-        return output
-
-    def show(self):
+    def __repr__(self):
         """
         Prints the contents of the object.
         """
-        print("  origin: ", self.get('origin'))
-        print("  length: ", self.get('length'))
-        print("  normalization: ", self.get('normalization'))
-        print("  *** Primitives info: ")
-        i = 1
-        for primitive in self.get('primitive'):
-            print(i)
-            primitive.show()
-            i += 1
+        out = ("  origin: "+str(self.get('origin'))+'\n'
+               "  length: "+str(self.get('length'))+'\n'
+               "  normalization: "+str(self.get('normalization'))+'\n'
+               "\n  *** Primitives info: \n")
+
+        out += "\n".join([str(p) for p in self.get('primitive')])
+
+        return out

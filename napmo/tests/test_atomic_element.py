@@ -28,14 +28,14 @@ def test_atomic_element_interface():
     a = AtomicElement('C')
 
     assert a.get('name') == 'Carbon'
-    assert a.isQuantum() is False, 'Expecting Failure!'
+    assert a.isQuantum is False, 'Expecting Failure!'
 
     for i in range(3):
         assert a.get('origin')[i] == 0.
 
     a = AtomicElement('H', BOA=False)
 
-    assert a.isQuantum() is True
+    assert a.isQuantum is True
     assert a.get('mass_number') == 1
 
     a['mass_number'] = 2
@@ -45,7 +45,7 @@ def test_atomic_element_interface():
     assert a.get('symbol') == 'none'
 
     a = AtomicElement('H', mass_number=3)
-    assert a.isQuantum() is True
+    assert a.isQuantum is True
 
     try:
         a = AtomicElement('H', mass_number=100)
@@ -64,10 +64,5 @@ def test_atomic_element_interface():
 
     basis = BasisSet()
     a['basis'] = basis
-
-    try:
-        a.show()
-    except:
-        raise
 
 # test_atomic_element_interface()

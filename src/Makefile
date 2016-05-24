@@ -21,11 +21,11 @@ CUDA: OBJ += $(NVOBJ)
 default: SERIAL
 
 $(BUILD): $$(OBJ)
-	$(CXX) -o $(LIBRARY) $(LDFLAGS) $^ $(LDLIBS)
+	$(CXX) -o $(LIBRARY) $(LDFLAGS) $^ $(LDLIBS) -lint2
 	cp $(LIBRARY) $(TOPDIR)/napmo/utilities
 
 %.o: %.cpp
-	$(CXX) -c $(CFLAGS) $< -o $@
+	$(CXX) -c $(CFLAGS) -std=c++11 $< -o $@
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@

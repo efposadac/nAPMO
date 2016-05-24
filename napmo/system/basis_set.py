@@ -17,6 +17,7 @@ from napmo.system.contracted_gaussian import ContractedGaussian
 
 
 class BasisSet(dict):
+
     """
     Basis-set interface. (dict)
 
@@ -31,7 +32,8 @@ class BasisSet(dict):
         self['length'] = 0
         self['t_length'] = 0
 
-    def load_gaussian(self, particle, data, origin=np.zeros(3, dtype=np.float64)):
+    def load_gaussian(self, particle, data,
+                      origin=np.zeros(3, dtype=np.float64)):
         """
         Load a Gaussian Type Orbital (GTO) basis-set.
 
@@ -44,27 +46,25 @@ class BasisSet(dict):
 
         lvalue = {'s': 0, 'p': 1, 'd': 2, 'f': 3, 'g': 4}
 
-        for k in range(len(data)):
-            l = lvalue[data[k]['angular']]
-            for i in range(l + 1):
-                x = l - i
-                for j in range(i + 1):
-                    y = i - j
-                    z = j
-                    self['function'].append(ContractedGaussian(
-                        np.array(data[k]['prim'], dtype=np.float64),
-                        np.array(data[k]['cont'], dtype=np.float64),
-                        np.array(origin, dtype=np.float64),
-                        np.array([x, y, z], dtype=np.int32)
-                    ))
+        func = [ContractedGaussian(
+            np.array(cont['prim'], dtype=np.float64),
+            np.array(cont['cont'], dtype=np.float64),
+            np.array(origin, dtype=np.float64),
+            np.array([i, k-j, j], dtype=np.int32))
+            for cont in data
+            for k, i in enumerate(reversed(
+                range(lvalue.get(cont['angular']) + 1)))
+            for j in range(k + 1)]
 
+        self['function'] += func
         self['length'] = len(self.get('function'))
         self['t_length'] = 0
 
-        for function in self.get('function'):
-            self['t_length'] += function.get('length')
+        self['t_length'] = sum([function.get('length')
+                                for function in self.get('function')])
 
-    def load_slater(self, particle, data, origin=np.zeros(3, dtype=np.float64)):
+    def load_slater(self, particle, data,
+                    origin=np.zeros(3, dtype=np.float64)):
         """
         Load a Slater Type Orbital (STO) basis-set.
 
@@ -77,60 +77,56 @@ class BasisSet(dict):
 
         lvalue = {"s": 0, "p": 1, "d": 2, "f": 3, "g": 4}
 
-        for k in range(len(data)):
-            l = lvalue[data[k]["angular"]]
-            for m in range(-l, l + 1):
-                self["function"].append(ContractedSlater(
-                    np.array(data[k]["prim"], dtype=np.float64),
-                    np.array(data[k]["cont"], dtype=np.float64),
-                    np.array(origin, dtype=np.float64),
-                    np.array(data[k]["n"], dtype=np.int32),
-                    l,
-                    m
-                ))
+        func = [ContractedSlater(
+            np.array(cont["prim"], dtype=np.float64),
+            np.array(cont["cont"], dtype=np.float64),
+            np.array(origin, dtype=np.float64),
+            np.array(cont["n"], dtype=np.int32),
+            lvalue.get(cont['angular']),
+            m)
+            for cont in data
+            for m in range(-lvalue.get(cont['angular']),
+                           lvalue.get(cont['angular']) + 1)]
+
+        self['function'] += func
         self['length'] = len(self.get('function'))
         self['t_length'] = 0
 
-        for function in self.get('function'):
-            self['t_length'] += function.get('length')
+        self['t_length'] = sum([function.get('length')
+                                for function in self.get('function')])
 
     def compute(self, coord=np.zeros([1, 3], dtype=np.float64)):
         """
         Compute all the basis-set functions at given ``coord``.
 
         Args:
-            coord (ndarray): coordinates in which the basis set will be evaluated. Array shape should be (n, 3)
+            coord (ndarray): coordinates in which the basis set will be
+                evaluated. Array shape should be (n, 3)
 
         """
-        output = []
-        for i in range(self.get('length')):
-            output.append(self.get('function')[i].compute(coord))
+        return [func.compute(coord) for func in self.get('function')]
 
-        return output
-
-    def show(self):
+    def __repr__(self):
         """
         Prints extended information of the basis-set object.
         """
-        print("================")
-        print("Basis set info")
-        print("================")
-        print("Name: ", self.get('name'))
-        print("Kind: ", self.get('kind'))
-        print("Length: ", self.get('length'))
-        print("****************")
-        print("Functions info: ")
-        print("****************")
-        i = 1
-        for function in self.get('function'):
-            print("")
-            print("*** Function: ", i)
-            print("")
-            function.show()
-            i += 1
+        out = ('================\n' +
+               'Basis set info  \n' +
+               '================\n' +
+               'Name: '+self.get('name') + '\n'
+               'Kind: '+self.get('kind') + '\n'
+               'Length: '+str(self.get('length')) + '\n'
+               '****************\n' +
+               'Functions info: \n' +
+               '****************')
+
+        out += "\n".join([str(p) for p in self.get('function')])
+
+        return out
 
 
 class BasisSet_C(Structure):
+
     """
     C interface to the BasisSet class.
 

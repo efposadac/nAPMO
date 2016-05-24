@@ -58,7 +58,10 @@ def test_decomposition_grid():
         for l in range(lmax + 1):
             for m in range(-l, l + 1):
                 aux = np.array(p_lm[:, idx])
-                p_lm_cs.append(CubicSpline(aux, rtransform=atgrid.radial_grid.rtransform))
+                p_lm_cs.append(
+                    CubicSpline(
+                        aux,
+                        rtransform=atgrid.radial_grid.rtransform))
                 idx += 1
 
         grid.evaluate_decomposition(0, p_lm_cs, rho_n)

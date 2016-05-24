@@ -14,16 +14,16 @@ def test_molecular_system_interface():
     a = MolecularSystem()
     a.add_atom('C', [0., 0., 200.])
 
-    assert a.n_elementary_particles() == 1  # e-
-    assert a.n_atoms() == 1  # C
+    assert a.n_elementary_particles == 1  # e-
+    assert a.n_atoms == 1  # C
 
     a.add_elementary_particle('e-', [0, 0, 100])
-    assert a.n_elementary_particles() == 1
+    assert a.n_elementary_particles == 1
     assert a.n_particles('e-') == 7
 
     a.add_elementary_particle('u-', [0, 0, 0])
 
-    assert a.n_elementary_particles() == 2
+    assert a.n_elementary_particles == 2
 
     try:
         a.n_particles('x-')
@@ -44,11 +44,11 @@ def test_molecular_system_interface():
 
     assert a.get('u-').get('name') == 'muon'
 
-    assert a.get('atoms')[0].isQuantum() is False
+    assert a.get('atoms')[0].isQuantum is False
 
     a.add_atom('H', [0., 0., 0.], BOA=False)
 
-    assert a.get('atoms')[1].isQuantum() is True
+    assert a.get('atoms')[1].isQuantum is True
 
     # More real test
     particle = "N"
@@ -75,8 +75,8 @@ def test_molecular_system_interface():
     )
 
     assert molecule.n_particles('e-') == 14
-    assert molecule.n_elementary_particles() == 2
-    assert molecule.n_atoms() == 2
+    assert molecule.n_elementary_particles == 2
+    assert molecule.n_atoms == 2
     molecule.show()
 
     particle = "N"
@@ -104,8 +104,8 @@ def test_molecular_system_interface():
 
     assert molecule.n_particles('e-') == 14
     assert molecule.n_particles('u-') == 1
-    assert molecule.n_elementary_particles() == 2
-    assert molecule.n_atoms() == 2
+    assert molecule.n_elementary_particles == 2
+    assert molecule.n_atoms == 2
 
     try:
         molecule.show()

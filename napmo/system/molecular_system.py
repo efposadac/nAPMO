@@ -8,8 +8,6 @@
 from __future__ import division
 from __future__ import print_function
 
-from copy import deepcopy
-
 import numpy as np
 from math import ceil
 
@@ -22,7 +20,8 @@ from napmo.data.constants import ANGSTROM_TO_BOHR
 class MolecularSystem(dict):
 
     """
-    Defines a molecular system, containing different kinds of quantum 'species' i.e. atoms, muons, positrons, etc. (dict)
+    Defines a molecular system, containing different kinds of quantum 'species'
+    i.e. atoms, muons, positrons, etc. (dict)
 
     Args:
         name (str): Name of the object.
@@ -31,18 +30,22 @@ class MolecularSystem(dict):
     def __init__(self):
         super(MolecularSystem, self).__init__()
 
-    def add_atom(self, symbol, origin, BOA=True, mass_number=0, units='ANGSTROMS',
-                 basis_kind='GTO', basis_name=None, basis_file=None):
+    def add_atom(self, symbol, origin, BOA=True, mass_number=0,
+                 units='ANGSTROMS', basis_kind='GTO', basis_name=None,
+                 basis_file=None):
         """
         Adds an atom to the molecular system.
 
         Args:
             symbol (str): Symbol of the atom.
             origin (ndarray): Origin of the atom (Cartesian coordinates)
-            BOA (bool, optional): Whether the atom nuclei will be treated in the BOA approach or not. Default is True
-            mass_number (int, optional): Mass number of element 'symbol' :math:`:= A = p^+ + n^o`.
-                If 0 the system will choose the most abundant one. Default is 0.
-            units (str, optional): Units of the origin, valid values are 'ANGSTROMS' or 'BOHR'
+            BOA (bool, optional): Whether the atom nuclei will be treated in
+                the BOA approach or not. Default is True
+            mass_number (int, optional): Mass number of element 'symbol'
+                :math:`:= A = p^+ + n^o`. If 0 the system will choose the most
+                abundant one. Default is 0.
+            units (str, optional): Units of the origin, valid values are
+                'ANGSTROMS' or 'BOHR'
         """
         assert isinstance(symbol, str)
         assert len(origin) == 3
@@ -55,6 +58,7 @@ class MolecularSystem(dict):
 
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
+
         if units == 'ANGSTROMS':
             origin *= ANGSTROM_TO_BOHR
 
@@ -65,25 +69,28 @@ class MolecularSystem(dict):
             basis_name = basis_file
 
         self.add_elementary_particle(
-            'e-', size=atom.get('atomic_number'), units='BOHR', basis_name=basis_name)
+            'e-', size=atom.get('atomic_number'),
+            units='BOHR',
+            basis_name=basis_name)
 
         # load basis-set
         atom['basis'] = BasisSet(basis_name)
 
         if basis_file is not None:
-            file = open(basis_file)
-            basis_data = file.read().replace('\n', '')
-            file.close()
+            with open(basis_file) as f:
+                basis_data = f.read().replace('\n', '')
 
             if basis_kind == 'GTO':
                 atom.get('basis').load_gaussian(
                     symbol, basis_data, origin)
-                self.get('e-')['basis'].load_gaussian(symbol,
-                                                      basis_data, origin)
+
+                self.get('e-')['basis'].load_gaussian(
+                    symbol, basis_data, origin)
 
             elif basis_kind == 'STO':
                 atom.get('basis').load_slater(
                     symbol, basis_data, origin)
+
                 self.get('e-')['basis'].load_slater(
                     symbol, basis_data, origin)
 
@@ -91,15 +98,18 @@ class MolecularSystem(dict):
 
     def add_elementary_particle(self, symbol,
                                 origin=None, size=1, units='ANGSTROMS',
-                                basis_kind='GTO', basis_name=None, basis_file=None):
+                                basis_kind='GTO', basis_name=None,
+                                basis_file=None):
         """
         Adds an elementary particle into the molecular system.
 
         Args:
             symbol (str): Symbol of the elementary particle.
-            origin (ndarray): Origin of the elementary particle (Cartesian coordinates)
+            origin (ndarray): Origin of the elementary particle
+                (Cartesian coordinates)
             size (int): Number of elementary particle to be added.
-            units (str, optional): Units of the origin, valid values are 'ANGSTROMS' or 'Bohr'
+            units (str, optional): Units of the origin, valid values are
+                'ANGSTROMS' or 'Bohr'
         """
         assert isinstance(symbol, str)
         assert isinstance(size, int)
@@ -125,13 +135,13 @@ class MolecularSystem(dict):
 
         # load basis-set
         if basis_file is not None:
-            file = open(basis_file)
-            basis_data = file.read().replace('\n', '')
-            file.close()
+            with open(basis_file) as f:
+                basis_data = f.read().replace('\n', '')
 
             if basis_kind == 'GTO':
                 self[symbol].get('basis').load_gaussian(
                     symbol, basis_data, origin)
+
             elif basis_kind == 'STO':
                 self[symbol].get('basis').load_slater(
                     symbol, basis_data, origin)
@@ -145,6 +155,7 @@ class MolecularSystem(dict):
         """
         return ceil(self.n_particles(symbol) * self[symbol]['spin'])
 
+    @property
     def n_elementary_particles(self):
         """
         Returns the number of elementary particles in the system.
@@ -158,6 +169,7 @@ class MolecularSystem(dict):
 
         return output
 
+    @property
     def n_atoms(self):
         """
         Returns the number of atoms in the system
@@ -199,16 +211,19 @@ class MolecularSystem(dict):
         else:
             for atom in self.get('atoms'):
                 if atom.get('symbol') == symbol:
-                    basis = atom.get('basis')
+                    basis = atom.get('basis', 0)
 
-        if isinstance(basis, BasisSet):
-            return basis
+        if not basis:
+            raise KeyError(
+                'The symbol:', symbol,
+                'does not exist in the molecular system!')
         else:
-            raise KeyError('The symbol:', symbol, 'does not exist in the molecular system!')
+            return basis
 
     def get_basis_as_cstruct(self, symbol):
         """
-        Returns the basis set of the system of a given ``symbol`` particle as a CTYPES struct.
+        Returns the basis set of the system of a given ``symbol`` particle as a
+        CTYPES struct.
 
         Returns:
             BasisSet_C: basis set CTYPES struct
@@ -220,9 +235,9 @@ class MolecularSystem(dict):
         """
         Shows information about particles
         """
-        print('==================================================================')
+        print('==============================================================')
         print('Object: ' + type(self).__name__)
-        print('------------------------------------------------------------------')
+        print('--------------------------------------------------------------')
         for symbol in self.keys():
             particles = self.get(symbol)
             if symbol is 'atoms':
@@ -258,4 +273,4 @@ class MolecularSystem(dict):
                         '{0:40}'.format(str(particles.get('origin')[i])),
                         '{0:10}'.format(str(particles.get('basis')['name']))
                     )
-        print('------------------------------------------------------------------')
+        print('--------------------------------------------------------------')

@@ -13,8 +13,10 @@ from napmo.system.primitive_slater import PrimitiveSlater
 
 
 class ContractedSlater(dict):
+
     """
-    Defines a Slater Type Orbital (STO)  as a combination of PrimitiveSlater Functions (spherical coordinates). (dict)
+    Defines a Slater Type Orbital (STO)  as a combination of PrimitiveSlater
+    Functions (spherical coordinates). (dict)
 
     Args:
         exponents (ndarray): Slater exponent.
@@ -37,15 +39,13 @@ class ContractedSlater(dict):
 
         self["length"] = len(exponents)
         self["origin"] = origin
-        self["primitive"] = []
         self['n'] = n
         self['l'] = l
         self['m'] = m
 
-        for (exponent, coefficient, ni) in zip(exponents, coefficients, n):
-            self.get("primitive").append(PrimitiveSlater(
-                exponent, coefficient, ni, l, m, origin
-            ))
+        self["primitive"] = [
+            PrimitiveSlater(exponent, coefficient, ni, l, m, origin)
+            for (exponent, coefficient, ni) in zip(exponents, coefficients, n)]
 
         self["normalization"] = 1.0
         aux = self.normalize()
@@ -62,23 +62,21 @@ class ContractedSlater(dict):
         Calculates the overlap integral between two contractions.
 
         Args:
-            other (ContractedSlater) : Contracted function to perform :math:`<\phi_{self} | \phi_{other}>`
+            other (ContractedSlater) : Contracted function to perform
+                :math:`<\phi_{self} | \phi_{other}>`
         """
-        output = 0.0
-        for pa in self.get('primitive'):
-            for pb in other.get('primitive'):
-                output += pa.overlap(pb)
-
-        output *= self.get('normalization') * other.get('normalization')
-
-        return output
+        return (sum([pa.overlap(pb)
+                     for pa in self.get('primitive')
+                     for pb in other.get('primitive')]) *
+                self.get('normalization') * other.get('normalization'))
 
     def compute(self, coord):
         """
         Computes the value of the contracted STO at ``coord``.
 
         Args:
-            coord (ndarray) : array with the points where the function will be calculated.
+            coord (ndarray) : array with the points where the function will be
+                calculated.
         """
         RP = np.zeros(3, dtype=np.float64)
         RP = coord - self.get('origin')
@@ -93,39 +91,27 @@ class ContractedSlater(dict):
             xy = RP[0]**2 + RP[1]**2
             r = np.sqrt(xy + RP[2]**2)
             theta = np.arctan2(np.sqrt(xy), RP[2])
-            # if RP[0] == 0.0 and RP[1] == 0.0:
-            #     phi = np.arctan2(RP[2], RP[1])
-            # else:
-            #     phi = np.arctan2(RP[1], RP[0])
             phi = np.arctan2(RP[1], RP[0])
 
-        output = 0.0
-        for primitive in self.get('primitive'):
-            output += (
-                primitive.get('normalization') *
-                primitive.get('coefficient') *
-                primitive.radial(r) *
-                primitive.spherical(theta, phi) *
-                self.get('normalization')
-            )
+        return sum(primitive.get('normalization') *
+                   primitive.get('coefficient') *
+                   primitive.radial(r) *
+                   primitive.spherical(theta, phi) *
+                   self.get('normalization')
+                   for primitive in self.get('primitive'))
 
-        return output
-
-    def show(self):
+    def __repr__(self):
         """
         Prints the contents of the object.
         """
-        print("  origin: ", self.get('origin'))
-        print("  length: ", self.get('length'))
-        print("  n: ", self.get('n'))
-        print("  l: ", self.get('l'))
-        print("  m: ", self.get('m'))
-        print("  normalization: ", self.get('normalization'))
-        print("")
-        print("  *** Primitives info: ")
-        print("")
-        i = 1
-        for primitive in self.get('primitive'):
-            print(i)
-            primitive.show()
-            i += 1
+        out = ("  origin: "+str(self.get('origin'))+'\n'
+               "  length: "+str(self.get('length'))+'\n'
+               "  n: "+str(self.get('n'))+'\n'
+               "  l: "+str(self.get('l'))+'\n'
+               "  m: "+str(self.get('m'))+'\n'
+               "  normalization: "+str(self.get('normalization'))+'\n'
+               "\n  *** Primitives info: \n")
+
+        out += "\n".join([str(p) for p in self.get('primitive')])
+
+        return out

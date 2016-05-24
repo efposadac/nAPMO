@@ -15,8 +15,8 @@ def tests_basis_set_interface():
 
     test = BasisSet()
     assert test.get('name') == 'user'
-    assert test.get('particle') == None
-    assert test.get('kind') == None
+    assert test.get('particle') is None
+    assert test.get('kind') is None
 
     basis_file = os.path.join(os.path.dirname(__file__), 'basis.json')
     file = open(basis_file)
@@ -27,19 +27,14 @@ def tests_basis_set_interface():
     assert test.get('kind') == 'GTO'
     assert test.get('length') == 1
 
-    try:
-        test.show()
-    except:
-        raise
-
     value = 0.42377721
     np.testing.assert_allclose(test.compute(), value)
 
     test = BasisSet('STO-3G')
 
     assert test.get('name') == 'STO-3G'
-    assert test.get('particle') == None
-    assert test.get('kind') == None
+    assert test.get('particle') is None
+    assert test.get('kind') is None
 
     test.load_slater('N', basis_data)
 
@@ -56,7 +51,7 @@ def tests_basis_set_interface():
     assert test.get('t_length') == 24
 
     try:
-        test2.show()
+        print(test2)
     except:
         raise
 
