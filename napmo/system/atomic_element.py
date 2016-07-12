@@ -12,6 +12,8 @@ import numpy as np
 
 from napmo.data.databases import AtomicElementsDatabase
 from napmo.data.constants import ANGSTROM_TO_BOHR
+from napmo.data.constants import PROTON_MASS
+from napmo.data.constants import NEUTRON_MASS
 
 
 class AtomicElement(dict):
@@ -31,80 +33,91 @@ class AtomicElement(dict):
             :math:`:= A = p^+ + n^o`. If 0 the system will choose the most
             abundant isotope. (Default 0).
         units (str, optional): Units of the origin, valid values are
-            'Angstroms' or 'Bohr'
+            'ANGSTROMS' or 'BOHR'
     '''
 
-    def __init__(self, symbol, mass_number=0, BOA=True,
-                 origin=np.zeros(3, dtype=np.float64), units='Angstroms'):
+    def __init__(self, symbol, origin=np.zeros(3, dtype=np.float64), units='ANGSTROMS'):
         super(AtomicElement, self).__init__()
 
         assert isinstance(symbol, str)
-        assert isinstance(mass_number, int)
-        assert isinstance(BOA, bool)
         assert len(origin) == 3
         assert isinstance(units, str)
 
         data = AtomicElementsDatabase()
 
+        _symbol = symbol
+        mass_number = ''
+
+        nuclei = symbol.find("_")
+        if nuclei > 0:
+            _symbol = symbol[:nuclei]
+            mass_number = symbol[::-1][:nuclei]
+
         try:
-            self.update(data[symbol])
+            self.update(data[_symbol])
         except KeyError:
-            print('Element: ', symbol, ' not present!')
+            print('Element: ', _symbol, ' not present!')
             raise
 
         # choose the most abundant mass number (if mass number is not provided)
-        aux = data['isotopes_' + symbol]['most_abundant']
-        self['mass'] = data['isotopes_' + symbol][str(aux)]['atomic_weight']
+        aux = data['isotopes_' + _symbol]['most_abundant']
+        self['mass'] = (float(aux) * NEUTRON_MASS +
+                        self['atomic_number'] *
+                        (PROTON_MASS - NEUTRON_MASS))
 
         if mass_number:
-            BOA = False
+            try:
+                self.update(data['isotopes_' + _symbol][mass_number])
+                self['mass'] = (int(mass_number) * NEUTRON_MASS +
+                                self['atomic_number'] *
+                                (PROTON_MASS - NEUTRON_MASS))
 
-        if not BOA:
-            if mass_number:
-                try:
-                    self.update(data['isotopes_' + symbol][str(mass_number)])
-                    self['mass'] = self.get('atomic_weight')
-                    self['symbol'] = symbol + '_' + str(mass_number)
-
-                except KeyError:
-                    print('Mass number: ', str(mass_number), symbol,
-                          ' not present!')
-                    raise
-            else:
-                self.update(data['isotopes_' + symbol][str(aux)])
-                self['symbol'] = symbol + '_' + str(aux)
+            except KeyError:
+                print('Isotope: ', symbol, ' not present!')
+                raise
 
         # converting to Bohr
         origin = np.array(origin, dtype=np.float64)
-        if units == 'Angstroms':
+        if units == 'ANGSTROMS':
             origin *= ANGSTROM_TO_BOHR
+
         self['origin'] = origin
+        self['symbol'] = symbol
 
     @property
-    def isQuantum(self):
+    def is_quantum(self):
         """
         Returns:
             bool: Whether the nuclei of the atomic element is being treated in
                 the BOA framework
         """
-
-        output = False
-        if 'mass_number' in self:
-            output = True
-
-        return output
+        return self.get('is_quantum')
 
     def __repr__(self):
-        """
-        Prints out the information of the object
-        """
-        return('===================================\n'
-               'Object: ' + type(self).__name__+'\n'
-               'Name:   ' + self.get('name')+'\n'
-               'Symbol: ' + self.get('symbol')+'\n'
-               'Is quantum: ' + str(self.isQuantum)+'\n'
-               'Z: ' + str(self.get('atomic_number'))+'\n'
-               'Mass:' + str(self.get('mass'))+'\n'
-               'origin:' + str(self.get('origin'))+'\n'
-               'Basis set:' + self.get('basis', {}).get('name', "None")+'\n'
-               '-----------------------------------')
+
+        out = """
+==================================================
+Object:  {0:9s}
+--------------------------------------------------
+Name:    {1:9s}
+Symbol:  {2:9s}
+Quantum: {3:9s}
+Z:       {4:<4d}
+Mass:    {5:<5.3f}
+Origin:  {6:<5.3f} {7:<5.3f} {8:<5.3f}
+Basis:   {9:9s}
+--------------------------------------------------""".format(
+            type(self).__name__,
+            self.get('name'),
+            self.get('symbol'),
+            str(self.is_quantum),
+            self.get('atomic_number'),
+            self.get('mass'),
+            self.get('origin')[0],
+            self.get('origin')[1],
+            self.get('origin')[2],
+            self.get('basis', {}).get('name', "None"),
+        )
+
+        out += ''.join(str(self.get('basis', {})))
+        return out

@@ -29,7 +29,7 @@ if __name__ == '__main__':
         author_email="eposada@sissa.it",
         url="http://efposadac.github.io/nAPMO/",
         packages=find_packages(),
-        package_data={'': ['*.json', '*.dat', '*.so']},
+        package_data={'': ['*.json', '*.dat', '*.so', 'data/basis/*']},
         long_description=read('README.rst')
     )
 

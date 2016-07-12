@@ -55,6 +55,8 @@ class ContractedGaussian(dict):
 
         super(ContractedGaussian, self).__init__()
 
+        assert isinstance(exponents, np.ndarray) or isinstance(exponents, list)
+
         self["length"] = len(exponents)
         self["l"] = l
         self["origin"] = origin
@@ -99,15 +101,64 @@ class ContractedGaussian(dict):
         return sum([primitive.compute(coord) * self.get('normalization')
                     for primitive in self.get('primitive')])
 
-    def __repr__(self):
-        """
-        Prints the contents of the object.
-        """
-        out = ("  origin: "+str(self.get('origin'))+'\n'
-               "  length: "+str(self.get('length'))+'\n'
-               "  normalization: "+str(self.get('normalization'))+'\n'
-               "\n  *** Primitives info: \n")
+    @property
+    def l(self):
+        return self.get('l')
 
-        out += "\n".join([str(p) for p in self.get('primitive')])
+    @property
+    def origin(self):
+        return self.get('origin')
+
+    @property
+    def length(self):
+        return self.get('length')
+
+    @property
+    def norma(self):
+        return self.get('normalization')
+
+    def _show_compact(self):
+
+        out = ''
+        out += "".join([p._show_compact()
+                        for p in self.get('primitive') if p.l[0] == sum(p.l)])
+
+        return out
+
+    def __repr__(self):
+
+        out = """
+==================================================
+Object: {0:9s}
+--------------------------------------------------
+Origin: {1:<10.5f} {2:<10.5f} {3:<10.5f}
+l:      {4:<3d} {5:<3d} {6:<3d}
+length: {7:<10d}
+norma:  {8:<10.5f}
+--------------------------------------------------
+""".format(
+            type(self).__name__,
+            self.origin[0],
+            self.origin[1],
+            self.origin[2],
+            self.l[0],
+            self.l[1],
+            self.l[2],
+            self.length,
+            self.norma,
+        )
+
+        out += """
+  {0:<3s} {1:>10s} {2:>10s} {3:>10s}
+  ------------------------------------
+""".format(
+            "l",
+            "zeta",
+            "Coeff",
+            "Norma"
+        )
+
+        out += "".join([p._show_compact()
+                        for p in self.get('primitive')])
 
         return out

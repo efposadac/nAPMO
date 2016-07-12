@@ -93,19 +93,50 @@ class PrimitiveGaussian(Structure):
         """
         return napmo_library.gto_overlap_primitive(byref(self), byref(other))
 
-    def __repr__(self):
+    def _show_compact(self):
         """
         Prints information about the object.
         """
-        return("\n    origin: "+str(self.origin)+'\n'
-               "    exponent: "+str(self.exponent)+'\n'
-               "    coefficient: "+str(self.coefficient)+'\n'
-               "    angular moment: "+str(self.l)+'\n'
-               "    normalization: "+str(self.normalization))
+        lvalue = {0: "s", 1: "p", 2: "d", 3: "f", 4: "g"}
+        out = '  {0:3s} {1:10.5f} {2:10.5f} {2:10.5f}\n'.format(
+            lvalue[sum(self.l)],
+            self.exponent,
+            self.coefficient,
+            self.normalization
+        )
+        return out
+
+    def __repr__(self):
+
+        out = """
+==================================================
+Object: {0:9s}
+--------------------------------------------------
+Origin: {1:<10.5f} {2:<10.5f} {3:<10.5f}
+l:      {4:<3d} {5:<3d} {6:<3d}
+zeta:   {7:<10.5f}
+coeff:  {8:<10.5f}
+norma:  {9:<10.5f}
+--------------------------------------------------""".format(
+            type(self).__name__,
+            self.origin[0],
+            self.origin[1],
+            self.origin[2],
+            self.l[0],
+            self.l[1],
+            self.l[2],
+            self.exponent,
+            self.coefficient,
+            self.normalization,
+        )
+
+        return out
 
 
-array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
-array_2d_double = npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
+array_1d_double = npct.ndpointer(
+    dtype=np.double, ndim=1, flags='CONTIGUOUS')
+array_2d_double = npct.ndpointer(
+    dtype=np.double, ndim=2, flags='CONTIGUOUS')
 
 napmo_library.gto_normalize_primitive.restype = c_double
 napmo_library.gto_normalize_primitive.argtypes = [

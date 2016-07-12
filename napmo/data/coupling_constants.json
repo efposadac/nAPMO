@@ -1,0 +1,2899 @@
+{
+    "he-c_4": {
+        "name": "helium",
+        "lambda": 2.0,
+        "kappa": -1.0,
+        "symbol": "he-c_4",
+        "particlesfraction": 0.5,
+        "eta": 2.0
+    },
+    "li-a_6": {
+        "name": "lithium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "li-a_6",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-c_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-c_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-g_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-g_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ap_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ap_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-af_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-af_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ay_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ay_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bh_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bh_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ax_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ax_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "b-a_11": {
+        "name": "boron",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "b-a_11",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-a_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-a_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cd_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cd_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "u-b+": {
+        "name": "antimuon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "u-b+",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "e-beta": {
+        "name": "e-",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "e-beta",
+        "particlesfraction": 1.0,
+        "eta": 1.0
+    },
+    "h-bx_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bx_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bl_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bl_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "o-b_16": {
+        "name": "oxygen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "o-b_16",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bj_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bj_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-n_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-n_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bo_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bo_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cr_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cr_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dc_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dc_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bi_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bi_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bg_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bg_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bo_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bo_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bb_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bb_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ar_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ar_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bj_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bj_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bd_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bd_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-v_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-v_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ay_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ay_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-m_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-m_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-u_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-u_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dw_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dw_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-r_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-r_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-aj_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-aj_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "ne_22": {
+        "name": "neon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "ne_22",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "n-a_14": {
+        "name": "nitrogen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "n-a_14",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bb_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bb_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bt_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bt_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-o_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-o_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "he-a_3": {
+        "name": "helium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "he-a_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-an_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-an_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bz_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bz_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "f-h_19": {
+        "name": "fluorine",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "f-h_19",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-di_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-di_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "b_10": {
+        "name": "boron",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "b_10",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ai_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ai_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-f_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-f_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "f-j_19": {
+        "name": "fluorine",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "f-j_19",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "he-d_3": {
+        "name": "helium",
+        "lambda": 2.0,
+        "kappa": -1.0,
+        "symbol": "he-d_3",
+        "particlesfraction": 0.5,
+        "eta": 2.0
+    },
+    "h-bc_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bc_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-au_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-au_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "f-g_19": {
+        "name": "fluorine",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "f-g_19",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-l_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-l_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ap_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ap_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-j_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-j_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bu_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bu_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ai_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ai_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bh_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bh_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "ne-a_22": {
+        "name": "neon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "ne-a_22",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dp_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dp_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-by_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-by_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ap_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ap_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ah_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ah_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "be-a_9": {
+        "name": "beryllium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "be-a_9",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "b_11": {
+        "name": "boron",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "b_11",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dn_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dn_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cl_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cl_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ba_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ba_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bv_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bv_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bd_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bd_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-au_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-au_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bw_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bw_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-an_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-an_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ae_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ae_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-by_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-by_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "o_18": {
+        "name": "oxygen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "o_18",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-az_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-az_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "o-b_18": {
+        "name": "oxygen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "o-b_18",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "e-": {
+        "name": "electron",
+        "lambda": 2.0,
+        "kappa": -1.0,
+        "symbol": "e-",
+        "particlesfraction": 0.5,
+        "eta": 2.0
+    },
+    "h-d_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-d_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-d_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-d_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dk_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dk_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ch_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ch_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "he-d_4": {
+        "name": "helium",
+        "lambda": 2.0,
+        "kappa": -1.0,
+        "symbol": "he-d_4",
+        "particlesfraction": 0.5,
+        "eta": 2.0
+    },
+    "h-bd_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bd_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "he-c_3": {
+        "name": "helium",
+        "lambda": 2.0,
+        "kappa": -1.0,
+        "symbol": "he-c_3",
+        "particlesfraction": 0.5,
+        "eta": 2.0
+    },
+    "h-br_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-br_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "n-b_14": {
+        "name": "nitrogen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "n-b_14",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ah_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ah_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ag_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ag_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bu_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bu_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-j_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-j_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-al_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-al_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "eb-": {
+        "name": "ebalone",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "eb-",
+        "particlesfraction": 1.0,
+        "eta": 1.0
+    },
+    "h-aj_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-aj_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-k_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-k_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bn_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bn_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-da_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-da_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "f-f_19": {
+        "name": "fluorine",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "f-f_19",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-w_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-w_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bg_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bg_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bm_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bm_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-av_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-av_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-by_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-by_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-at_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-at_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "u-f+": {
+        "name": "antimuon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "u-f+",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "b-a_10": {
+        "name": "boron",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "b-a_10",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "o-b_17": {
+        "name": "oxygen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "o-b_17",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-de_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-de_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-t_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-t_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ct_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ct_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dd_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dd_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-a_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-a_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dy_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dy_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bf_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bf_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-n_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-n_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bo_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bo_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bx_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bx_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-d_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-d_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ai_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ai_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "he-b_3": {
+        "name": "helium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "he-b_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bn_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bn_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "e+a": {
+        "name": "e+alpha",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "e+a",
+        "particlesfraction": 1.0,
+        "eta": 1.0
+    },
+    "h-o_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-o_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "f_19": {
+        "name": "fluorine",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "f_19",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bw_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bw_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ad_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ad_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-v_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-v_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-at_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-at_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ar_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ar_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-m_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-m_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-am_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-am_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ba_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ba_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bu_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bu_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dt_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dt_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-f_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-f_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-s_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-s_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bs_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bs_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "neb_22": {
+        "name": "neon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "neb_22",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-br_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-br_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-s_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-s_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cp_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cp_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "be_9": {
+        "name": "beryllium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "be_9",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ag_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ag_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ba_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ba_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cv_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cv_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "he_4": {
+        "name": "helium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "he_4",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bw_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bw_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-v_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-v_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-aq_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-aq_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bk_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bk_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-a_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-a_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bi_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bi_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-az_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-az_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ao_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ao_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-du_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-du_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ab_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ab_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-an_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-an_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cf_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cf_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "c-a_12": {
+        "name": "carbon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "c-a_12",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bk_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bk_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "li-b_6": {
+        "name": "lithium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "li-b_6",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "oa_16": {
+        "name": "oxygen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "oa_16",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-t_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-t_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "f-b_19": {
+        "name": "fluorine",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "f-b_19",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-g_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-g_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cs_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cs_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bp_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bp_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-x_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-x_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-u_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-u_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ax_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ax_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bl_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bl_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ak_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ak_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "o-a_17": {
+        "name": "oxygen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "o-a_17",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "ea-": {
+        "name": "ealone",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "ea-",
+        "particlesfraction": 1.0,
+        "eta": 1.0
+    },
+    "h-z_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-z_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-aj_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-aj_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bl_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bl_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bv_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bv_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-u_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-u_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bq_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bq_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-do_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-do_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "n_15": {
+        "name": "nitrogen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "n_15",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-n_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-n_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dr_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dr_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-h_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-h_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ca_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ca_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "o_16": {
+        "name": "oxygen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "o_16",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bc_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bc_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ac_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ac_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cm_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cm_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-j_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-j_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-w_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-w_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-z_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-z_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-y_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-y_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-as_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-as_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cb_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cb_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "b-b_10": {
+        "name": "boron",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "b-b_10",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dv_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dv_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-b_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-b_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bb_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bb_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dx_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dx_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dm_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dm_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "c-a_13": {
+        "name": "carbon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "c-a_13",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-co_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-co_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bi_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bi_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "ne-a_21": {
+        "name": "neon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "ne-a_21",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ce_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ce_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cu_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cu_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ak_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ak_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bt_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bt_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-h_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-h_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ab_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ab_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dh_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dh_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "he-b_4": {
+        "name": "helium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "he-b_4",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cj_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cj_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bc_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bc_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-as_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-as_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ao_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ao_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-aw_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-aw_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-aw_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-aw_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-aa_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-aa_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-p_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-p_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "u-e+": {
+        "name": "antimuon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "u-e+",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cq_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cq_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-aw_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-aw_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-av_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-av_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ax_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ax_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-y_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-y_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-br_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-br_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ac_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ac_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-am_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-am_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "ne-a_20": {
+        "name": "neon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "ne-a_20",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "be-b_9": {
+        "name": "beryllium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "be-b_9",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-b_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-b_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ah_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ah_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-x_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-x_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "f-i_19": {
+        "name": "fluorine",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "f-i_19",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ar_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ar_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-r_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-r_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bf_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bf_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "e+b": {
+        "name": "e+beta",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "e+b",
+        "particlesfraction": 1.0,
+        "eta": 1.0
+    },
+    "li_6": {
+        "name": "lithium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "li_6",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bn_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bn_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "li-b_7": {
+        "name": "lithium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "li-b_7",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-o_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-o_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "ne_20": {
+        "name": "neon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "ne_20",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-aq_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-aq_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ac_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ac_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-p_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-p_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-x_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-x_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "ne-b_21": {
+        "name": "neon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "ne-b_21",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "c_13": {
+        "name": "carbon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "c_13",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-w_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-w_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-i_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-i_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bm_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bm_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "f-e_19": {
+        "name": "fluorine",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "f-e_19",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "c_12": {
+        "name": "carbon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "c_12",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bg_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bg_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-at_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-at_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "o-a_18": {
+        "name": "oxygen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "o-a_18",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-m_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-m_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ck_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ck_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-l_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-l_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "u-": {
+        "name": "muon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "u-",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "u+": {
+        "name": "muon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "u+",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dl_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dl_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-l_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-l_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cz_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cz_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "f-c_19": {
+        "name": "fluorine",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "f-c_19",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-db_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-db_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cw_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cw_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-q_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-q_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "u-a+": {
+        "name": "antimuon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "u-a+",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-av_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-av_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bv_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bv_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-z_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-z_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dq_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dq_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "u-d+": {
+        "name": "antimuon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "u-d+",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bf_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bf_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bh_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bh_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bz_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bz_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bz_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bz_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "e+s": {
+        "name": "e+singlet",
+        "lambda": 2.0,
+        "kappa": -1.0,
+        "symbol": "e+s",
+        "particlesfraction": 0.5,
+        "eta": 2.0
+    },
+    "h-am_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-am_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ak_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ak_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "null": {},
+    "h-bq_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bq_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-h_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-h_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "f-d_19": {
+        "name": "fluorine",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "f-d_19",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "f-a_19": {
+        "name": "fluorine",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "f-a_19",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cn_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cn_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cc_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cc_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ao_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ao_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "n_14": {
+        "name": "nitrogen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "n_14",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-i_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-i_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-be_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-be_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-q_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-q_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-f_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-f_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-c_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-c_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ag_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ag_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bs_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bs_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bk_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bk_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-au_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-au_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "he-a_4": {
+        "name": "helium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "he-a_4",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-y_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-y_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bj_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bj_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-s_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-s_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dz_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dz_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bs_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bs_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bm_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bm_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "e-alpha": {
+        "name": "e-",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "e-alpha",
+        "particlesfraction": 1.0,
+        "eta": 1.0
+    },
+    "h-aa_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-aa_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "o_17": {
+        "name": "oxygen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "o_17",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-k_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-k_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-c_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-c_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-al_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-al_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ab_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ab_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ad_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ad_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ad_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ad_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-t_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-t_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-af_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-af_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ay_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ay_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-r_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-r_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "ne-b_20": {
+        "name": "neon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "ne-b_20",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cg_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cg_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bx_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bx_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-b_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-b_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-k_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-k_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-p_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-p_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "b-b_11": {
+        "name": "boron",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "b-b_11",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-aa_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-aa_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "ne_21": {
+        "name": "neon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "ne_21",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bp_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bp_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-i_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-i_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dg_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dg_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "u-c+": {
+        "name": "antimuon",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "u-c+",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "n-b_15": {
+        "name": "nitrogen",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "n-b_15",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-g_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-g_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cx_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cx_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bq_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bq_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-al_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-al_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-q_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-q_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bp_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bp_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "he_3": {
+        "name": "helium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "he_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-cy_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-cy_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-bt_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-bt_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-aq_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-aq_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "e+": {
+        "name": "positron",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "e+",
+        "particlesfraction": 1.0,
+        "eta": 1.0
+    },
+    "h-as_2": {
+        "name": "deuterium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-as_2",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-af_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-af_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ci_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ci_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-dj_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-dj_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-ds_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-ds_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "li-a_7": {
+        "name": "lithium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "li-a_7",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "li_7": {
+        "name": "lithium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "li_7",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-df_1": {
+        "name": "protium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-df_1",
+        "particlesfraction": 1,
+        "eta": 1.0
+    },
+    "h-az_3": {
+        "name": "tritium",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "h-az_3",
+        "particlesfraction": 1,
+        "eta": 1.0
+    }
+}

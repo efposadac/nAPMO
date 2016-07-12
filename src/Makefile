@@ -10,9 +10,10 @@ include $(TOPDIR)/config.make
 
 LIBRARY = libnapmo.so
 
-OBJ = $(patsubst %.c,%.o,$(wildcard *.c))
-OBJ += $(patsubst %.cpp,%.o,$(wildcard *.cpp))
-NVOBJ = $(patsubst %.cu,%.cuda.o,$(wildcard *.cu))
+VPATH = grid horton ints system utils hf
+OBJ = $(foreach file, $(VPATH), $(patsubst %.c,%.o,$(wildcard $(file)/*.c)))
+OBJ += $(foreach file, $(VPATH), $(patsubst %.cpp,%.o,$(wildcard $(file)/*.cpp)))
+NVOBJ = $(foreach file, $(VPATH), $(patsubst %.cu,%.cuda.o,$(wildcard $(file)/*.cu)))
 
 CUDA: OBJ += $(NVOBJ)
 
@@ -39,8 +40,6 @@ $(BUILD): $$(OBJ)
 
 clean:
 	rm -rf $(LIBRARY)
-	rm -rf *.o
-	rm -rf *.optrpt
-	rm -rf r00*
+	find . -name "*.o" -exec rm {} \;
 
 .PHONY: default clean

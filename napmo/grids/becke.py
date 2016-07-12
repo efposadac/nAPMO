@@ -38,12 +38,12 @@ class BeckeGrid(Structure):
         ("_weights", POINTER(c_double))
     ]
 
-    def __init__(self, molecule, n_radial=40, n_angular=110):
+    def __init__(self, species, n_radial=40, n_angular=110):
         super(BeckeGrid, self).__init__()
 
-        assert isinstance(molecule, MolecularSystem)
+        assert isinstance(species, dict)
 
-        centers = molecule.get('atoms')
+        centers = species.get('particles')
 
         self._ncenter = len(centers)
         self._size = n_radial * n_angular * self.ncenter

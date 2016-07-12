@@ -33,3 +33,14 @@ def ElementaryParticlesDatabase():
 
     with open(fp) as f:
         return json.loads(f.read().replace('\n', ''))
+
+
+def CouplingConstantsDatabase():
+    """
+    This database contains all coupling constants for quatum species, ie.
+    electrons, muons, etc.
+    """
+    fp = os.path.join(os.path.dirname(__file__), 'coupling_constants.json')
+
+    with open(fp) as f:
+        return json.loads(f.read().replace('\n', ''))

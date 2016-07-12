@@ -1,5 +1,7 @@
 {
     "Al": {
+        "charge": -13,
+        "is_quantum": false,
         "atomic_number": 13,
         "atomic_radii": 2.286568622044715,
         "atomic_radii_2": 1.1432843110223574,
@@ -14,6 +16,8 @@
         "symbol": "Al"
     },
     "Ar": {
+        "charge": -18,
+        "is_quantum": false,
         "atomic_number": 18,
         "atomic_radii": 2.0031097019565274,
         "atomic_radii_2": 1.0015548509782637,
@@ -28,6 +32,8 @@
         "symbol": "Ar"
     },
     "B": {
+        "charge": -5,
+        "is_quantum": false,
         "atomic_number": 5,
         "atomic_radii": 1.5873699524938516,
         "atomic_radii_2": 0.7936849762469258,
@@ -42,6 +48,8 @@
         "symbol": "B"
     },
     "Be": {
+        "charge": -4,
+        "is_quantum": false,
         "atomic_number": 4,
         "atomic_radii": 1.814137088564402,
         "atomic_radii_2": 0.907068544282201,
@@ -56,6 +64,8 @@
         "symbol": "Be"
     },
     "Br": {
+        "charge": -35,
+        "is_quantum": false,
         "atomic_number": 35,
         "atomic_radii": 2.2676713607055023,
         "atomic_radii_2": 1.1338356803527512,
@@ -70,6 +80,8 @@
         "symbol": "Br"
     },
     "C": {
+        "charge": -6,
+        "is_quantum": false,
         "atomic_number": 6,
         "atomic_radii": 1.4069648596390618,
         "atomic_radii_2": 0.7034824298195309,
@@ -84,6 +96,8 @@
         "symbol": "C"
     },
     "Ca": {
+        "charge": -20,
+        "is_quantum": false,
         "atomic_number": 20,
         "atomic_radii": 3.3259179957014036,
         "atomic_radii_2": 1.6629589978507018,
@@ -98,6 +112,8 @@
         "symbol": "Ca"
     },
     "Cl": {
+        "charge": -17,
+        "is_quantum": false,
         "atomic_number": 17,
         "atomic_radii": 1.9275206565996772,
         "atomic_radii_2": 0.9637603282998386,
@@ -112,6 +128,8 @@
         "symbol": "Cl"
     },
     "F": {
+        "charge": -9,
+        "is_quantum": false,
         "atomic_number": 9,
         "atomic_radii": 1.0771438963351136,
         "atomic_radii_2": 0.5385719481675568,
@@ -126,6 +144,8 @@
         "symbol": "F"
     },
     "H": {
+        "charge": -1,
+        "is_quantum": false,
         "atomic_number": 1,
         "atomic_radii": 0.5858151015155881,
         "atomic_radii_2": 0.5858151015155881,
@@ -140,6 +160,8 @@
         "symbol": "H"
     },
     "He": {
+        "charge": -2,
+        "is_quantum": false,
         "atomic_number": 2,
         "atomic_radii": 0.5291233174979506,
         "atomic_radii_2": 0.2645616587489753,
@@ -154,6 +176,8 @@
         "symbol": "He"
     },
     "K": {
+        "charge": -19,
+        "is_quantum": false,
         "atomic_number": 19,
         "atomic_radii": 3.8361440518601415,
         "atomic_radii_2": 1.9180720259300708,
@@ -168,6 +192,8 @@
         "symbol": "K"
     },
     "Li": {
+        "charge": -3,
+        "is_quantum": false,
         "atomic_number": 3,
         "atomic_radii": 2.4188494514192027,
         "atomic_radii_2": 1.2094247257096014,
@@ -182,6 +208,8 @@
         "symbol": "Li"
     },
     "Mg": {
+        "charge": -12,
+        "is_quantum": false,
         "atomic_number": 12,
         "atomic_radii": 2.6645138488289652,
         "atomic_radii_2": 1.3322569244144826,
@@ -196,6 +224,8 @@
         "symbol": "Mg"
     },
     "N": {
+        "charge": -7,
+        "is_quantum": false,
         "atomic_number": 7,
         "atomic_radii": 1.3417055550840888,
         "atomic_radii_2": 0.6708527775420444,
@@ -210,6 +240,8 @@
         "symbol": "N"
     },
     "Na": {
+        "charge": -11,
+        "is_quantum": false,
         "atomic_number": 11,
         "atomic_radii": 3.1369453823092783,
         "atomic_radii_2": 1.5684726911546392,
@@ -224,6 +256,8 @@
         "symbol": "Na"
     },
     "Ne": {
+        "charge": -10,
+        "is_quantum": false,
         "atomic_number": 10,
         "atomic_radii": 1.096041157674326,
         "atomic_radii_2": 0.548020578837163,
@@ -238,6 +272,8 @@
         "symbol": "Ne"
     },
     "O": {
+        "charge": -8,
+        "is_quantum": false,
         "atomic_number": 8,
         "atomic_radii": 1.2472192483880264,
         "atomic_radii_2": 0.6236096241940132,
@@ -252,6 +288,8 @@
         "symbol": "O"
     },
     "P": {
+        "charge": -15,
+        "is_quantum": false,
         "atomic_number": 15,
         "atomic_radii": 2.02200696329574,
         "atomic_radii_2": 1.01100348164787,
@@ -266,6 +304,8 @@
         "symbol": "P"
     },
     "S": {
+        "charge": -16,
+        "is_quantum": false,
         "atomic_number": 16,
         "atomic_radii": 1.9842124406173147,
         "atomic_radii_2": 0.9921062203086574,
@@ -280,6 +320,8 @@
         "symbol": "S"
     },
     "Sc": {
+        "charge": -21,
+        "is_quantum": false,
         "atomic_number": 21,
         "atomic_radii": 3.2125344276661285,
         "atomic_radii_2": 1.6062672138330643,
@@ -294,6 +336,8 @@
         "symbol": "Sc"
     },
     "Si": {
+        "charge": -14,
+        "is_quantum": false,
         "atomic_number": 14,
         "atomic_radii": 2.09759600865259,
         "atomic_radii_2": 1.048798004326295,
@@ -312,7 +356,8 @@
             "abundance": 100,
             "atomic_weight": 26.98153844,
             "mass_number": 27,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 27
     },
@@ -321,19 +366,22 @@
             "abundance": 0.3365,
             "atomic_weight": 35.96754628,
             "mass_number": 36,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "38": {
             "abundance": 0.0632,
             "atomic_weight": 37.9627322,
             "mass_number": 38,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "40": {
             "abundance": 99.6003,
             "atomic_weight": 39.962383123,
             "mass_number": 40,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 39
     },
@@ -342,79 +390,92 @@
             "abundance": 19.9,
             "atomic_weight": 10.012937,
             "mass_number": 10,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "11": {
             "abundance": 80.1,
             "atomic_weight": 11.0093055,
             "mass_number": 11,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "12": {
             "abundance": 0,
             "atomic_weight": 12.0143521,
             "mass_number": 12,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "13": {
             "abundance": 0,
             "atomic_weight": 13.0177803,
             "mass_number": 13,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "14": {
             "abundance": 0,
             "atomic_weight": 14.025404,
             "mass_number": 14,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "15": {
             "abundance": 0,
             "atomic_weight": 15.031097,
             "mass_number": 15,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "16": {
             "abundance": 0,
             "atomic_weight": 16.03981,
             "mass_number": 16,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "17": {
             "abundance": 0,
             "atomic_weight": 17.04693,
             "mass_number": 17,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "18": {
             "abundance": 0,
             "atomic_weight": 18.05617,
             "mass_number": 18,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "19": {
             "abundance": 0,
             "atomic_weight": 19.06373,
             "mass_number": 19,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "7": {
             "abundance": 0,
             "atomic_weight": 7.02992,
             "mass_number": 7,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "8": {
             "abundance": 0,
             "atomic_weight": 8.0246067,
             "mass_number": 8,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "9": {
             "abundance": 0,
             "atomic_weight": 9.0133288,
             "mass_number": 9,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 11
     },
@@ -423,61 +484,71 @@
             "abundance": 0,
             "atomic_weight": 10.0135337,
             "mass_number": 10,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "11": {
             "abundance": 0,
             "atomic_weight": 11.021658,
             "mass_number": 11,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "12": {
             "abundance": 0,
             "atomic_weight": 12.026921,
             "mass_number": 12,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "13": {
             "abundance": 0,
             "atomic_weight": 13.03613,
             "mass_number": 13,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "14": {
             "abundance": 0,
             "atomic_weight": 14.04282,
             "mass_number": 14,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "5": {
             "abundance": 0,
             "atomic_weight": 5.04079,
             "mass_number": 5,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "6": {
             "abundance": 0,
             "atomic_weight": 6.019726,
             "mass_number": 6,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "7": {
             "abundance": 0,
             "atomic_weight": 7.0169292,
             "mass_number": 7,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "8": {
             "abundance": 0,
             "atomic_weight": 8.00530509,
             "mass_number": 8,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "9": {
             "abundance": 100,
             "atomic_weight": 9.0121821,
             "mass_number": 9,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 9
     },
@@ -486,169 +557,197 @@
             "abundance": 0,
             "atomic_weight": 66.964795,
             "mass_number": 67,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "68": {
             "abundance": 0,
             "atomic_weight": 67.9582558,
             "mass_number": 68,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "69": {
             "abundance": 0,
             "atomic_weight": 68.9501834,
             "mass_number": 69,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "70": {
             "abundance": 0,
             "atomic_weight": 69.9446239,
             "mass_number": 70,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "71": {
             "abundance": 0,
             "atomic_weight": 70.9392532,
             "mass_number": 71,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "72": {
             "abundance": 0,
             "atomic_weight": 71.9365028,
             "mass_number": 72,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "73": {
             "abundance": 0,
             "atomic_weight": 72.9317914,
             "mass_number": 73,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "74": {
             "abundance": 0,
             "atomic_weight": 73.92989116,
             "mass_number": 74,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "75": {
             "abundance": 0,
             "atomic_weight": 74.92577615,
             "mass_number": 75,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "76": {
             "abundance": 0,
             "atomic_weight": 75.9245421,
             "mass_number": 76,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "77": {
             "abundance": 0,
             "atomic_weight": 76.9213803,
             "mass_number": 77,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "78": {
             "abundance": 0,
             "atomic_weight": 77.9211464,
             "mass_number": 78,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "79": {
             "abundance": 50.697,
             "atomic_weight": 78.91833762,
             "mass_number": 79,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "80": {
             "abundance": 0,
             "atomic_weight": 79.91853002,
             "mass_number": 80,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "81": {
             "abundance": 49.317,
             "atomic_weight": 80.9162913,
             "mass_number": 81,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "82": {
             "abundance": 0,
             "atomic_weight": 81.9168053,
             "mass_number": 82,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "83": {
             "abundance": 0,
             "atomic_weight": 82.9151805,
             "mass_number": 83,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "84": {
             "abundance": 0,
             "atomic_weight": 83.91650427,
             "mass_number": 84,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "85": {
             "abundance": 0,
             "atomic_weight": 84.91560821,
             "mass_number": 85,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "86": {
             "abundance": 0,
             "atomic_weight": 85.91879712,
             "mass_number": 86,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "87": {
             "abundance": 0,
             "atomic_weight": 86.92071119,
             "mass_number": 87,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "88": {
             "abundance": 0,
             "atomic_weight": 87.9240704,
             "mass_number": 88,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "89": {
             "abundance": 0,
             "atomic_weight": 88.9263906,
             "mass_number": 89,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "90": {
             "abundance": 0,
             "atomic_weight": 89.9306308,
             "mass_number": 90,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "91": {
             "abundance": 0,
             "atomic_weight": 90.9339708,
             "mass_number": 91,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "92": {
             "abundance": 0,
             "atomic_weight": 91.9392605,
             "mass_number": 92,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "93": {
             "abundance": 0,
             "atomic_weight": 92.9431032,
             "mass_number": 93,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "94": {
             "abundance": 0,
             "atomic_weight": 93.9486843,
             "mass_number": 94,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 79
     },
@@ -657,91 +756,106 @@
             "abundance": 0,
             "atomic_weight": 10.0168531,
             "mass_number": 10,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "11": {
             "abundance": 0,
             "atomic_weight": 11.0114338,
             "mass_number": 11,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "12": {
             "abundance": 98.93,
             "atomic_weight": 12.0,
             "mass_number": 12,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "13": {
             "abundance": 1.07,
             "atomic_weight": 13.0033548378,
             "mass_number": 13,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "14": {
             "abundance": 0,
             "atomic_weight": 14.003241988,
             "mass_number": 14,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "15": {
             "abundance": 0,
             "atomic_weight": 15.0105993,
             "mass_number": 15,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "16": {
             "abundance": 0,
             "atomic_weight": 16.014701,
             "mass_number": 16,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "17": {
             "abundance": 0,
             "atomic_weight": 17.022584,
             "mass_number": 17,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "18": {
             "abundance": 0,
             "atomic_weight": 18.02676,
             "mass_number": 18,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "19": {
             "abundance": 0,
             "atomic_weight": 19.03525,
             "mass_number": 19,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "20": {
             "abundance": 0,
             "atomic_weight": 20.04032,
             "mass_number": 20,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "21": {
             "abundance": 0,
             "atomic_weight": 21.04934,
             "mass_number": 21,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "22": {
             "abundance": 0,
             "atomic_weight": 22.05645,
             "mass_number": 22,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "8": {
             "abundance": 0,
             "atomic_weight": 8.037675,
             "mass_number": 8,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "9": {
             "abundance": 0,
             "atomic_weight": 9.0310401,
             "mass_number": 9,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 12
     },
@@ -750,37 +864,43 @@
             "abundance": 96.941,
             "atomic_weight": 39.9625912,
             "mass_number": 40,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "42": {
             "abundance": 0.647,
             "atomic_weight": 41.9586183,
             "mass_number": 42,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "43": {
             "abundance": 0.135,
             "atomic_weight": 42.9587668,
             "mass_number": 43,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "44": {
             "abundance": 2.086,
             "atomic_weight": 43.9554811,
             "mass_number": 44,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "46": {
             "abundance": 0.004,
             "atomic_weight": 45.9536928,
             "mass_number": 46,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "48": {
             "abundance": 0.187,
             "atomic_weight": 46.9545465,
             "mass_number": 48,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 40
     },
@@ -789,145 +909,169 @@
             "abundance": 0,
             "atomic_weight": 28.02851,
             "mass_number": 28,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "29": {
             "abundance": 0,
             "atomic_weight": 29.01411,
             "mass_number": 29,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "30": {
             "abundance": 0,
             "atomic_weight": 30.00477,
             "mass_number": 30,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "31": {
             "abundance": 0,
             "atomic_weight": 30.99242,
             "mass_number": 31,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "32": {
             "abundance": 0,
             "atomic_weight": 31.985689,
             "mass_number": 32,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "33": {
             "abundance": 0,
             "atomic_weight": 32.9774518,
             "mass_number": 33,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "34": {
             "abundance": 0,
             "atomic_weight": 33.97376197,
             "mass_number": 34,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "35": {
             "abundance": 75.78,
             "atomic_weight": 34.96885271,
             "mass_number": 35,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "36": {
             "abundance": 0,
             "atomic_weight": 35.96830695,
             "mass_number": 36,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "37": {
             "abundance": 24.22,
             "atomic_weight": 36.9659026,
             "mass_number": 37,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "38": {
             "abundance": 0,
             "atomic_weight": 37.96801055,
             "mass_number": 38,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "39": {
             "abundance": 0,
             "atomic_weight": 38.9680077,
             "mass_number": 39,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "40": {
             "abundance": 0,
             "atomic_weight": 39.97042,
             "mass_number": 40,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "41": {
             "abundance": 0,
             "atomic_weight": 40.97065,
             "mass_number": 41,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "42": {
             "abundance": 0,
             "atomic_weight": 41.97317,
             "mass_number": 42,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "43": {
             "abundance": 0,
             "atomic_weight": 42.9742,
             "mass_number": 43,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "44": {
             "abundance": 0,
             "atomic_weight": 43.97854,
             "mass_number": 44,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "45": {
             "abundance": 0,
             "atomic_weight": 44.9797,
             "mass_number": 45,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "46": {
             "abundance": 0,
             "atomic_weight": 45.98412,
             "mass_number": 46,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "47": {
             "abundance": 0,
             "atomic_weight": 46.98795,
             "mass_number": 47,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "48": {
             "abundance": 0,
             "atomic_weight": 47.99485,
             "mass_number": 48,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "49": {
             "abundance": 0,
             "atomic_weight": 48.99989,
             "mass_number": 49,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "50": {
             "abundance": 0,
             "atomic_weight": 50.00773,
             "mass_number": 50,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "51": {
             "abundance": 0,
             "atomic_weight": 51.01353,
             "mass_number": 51,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 35
     },
@@ -936,97 +1080,113 @@
             "abundance": 0,
             "atomic_weight": 14.03608,
             "mass_number": 14,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "15": {
             "abundance": 0,
             "atomic_weight": 15.01801,
             "mass_number": 15,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "16": {
             "abundance": 0,
             "atomic_weight": 16.011466,
             "mass_number": 16,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "17": {
             "abundance": 0,
             "atomic_weight": 17.00209524,
             "mass_number": 17,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "18": {
             "abundance": 0,
             "atomic_weight": 18.0009377,
             "mass_number": 18,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "19": {
             "abundance": 100,
             "atomic_weight": 18.9984032,
             "mass_number": 19,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "20": {
             "abundance": 0,
             "atomic_weight": 19.99998132,
             "mass_number": 20,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "21": {
             "abundance": 0,
             "atomic_weight": 20.9999489,
             "mass_number": 21,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "22": {
             "abundance": 0,
             "atomic_weight": 22.002999,
             "mass_number": 22,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "23": {
             "abundance": 0,
             "atomic_weight": 23.00357,
             "mass_number": 23,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "24": {
             "abundance": 0,
             "atomic_weight": 24.0081,
             "mass_number": 24,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "25": {
             "abundance": 0,
             "atomic_weight": 25.01209,
             "mass_number": 25,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "26": {
             "abundance": 0,
             "atomic_weight": 26.01963,
             "mass_number": 26,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "27": {
             "abundance": 0,
             "atomic_weight": 27.02689,
             "mass_number": 27,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "28": {
             "abundance": 0,
             "atomic_weight": 28.03567,
             "mass_number": 28,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "29": {
             "abundance": 0,
             "atomic_weight": 29.04326,
             "mass_number": 29,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 19
     },
@@ -1035,37 +1195,43 @@
             "abundance": 99.9885,
             "atomic_weight": 1.0078250321,
             "mass_number": 1,
-            "nuclearSpin": 0.5
+            "spin": 0.5,
+            "is_quantum": true
         },
         "2": {
             "abundance": 0.0115,
             "atomic_weight": 2.014101778,
             "mass_number": 2,
-            "nuclearSpin": 1
+            "spin": 1,
+            "is_quantum": true
         },
         "3": {
             "abundance": 0.0,
             "atomic_weight": 3.0160492675,
             "mass_number": 3,
-            "nuclearSpin": 0.5
+            "spin": 0.5,
+            "is_quantum": true
         },
         "4": {
             "abundance": 0,
             "atomic_weight": 4.02783,
             "mass_number": 4,
-            "nuclearSpin": -2.0
+            "spin": -2.0,
+            "is_quantum": true
         },
         "5": {
             "abundance": 0,
             "atomic_weight": 5.03954,
             "mass_number": 5,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "6": {
             "abundance": 0,
             "atomic_weight": 6.04494,
             "mass_number": 6,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 1
     },
@@ -1074,49 +1240,57 @@
             "abundance": 0,
             "atomic_weight": 10.0524,
             "mass_number": 10,
-            "nuclearSpin": 0.0
+            "spin": 0.0,
+            "is_quantum": true
         },
         "3": {
             "abundance": 0.000137,
             "atomic_weight": 3.0160293097,
             "mass_number": 3,
-            "nuclearSpin": 0.5
+            "spin": 0.5,
+            "is_quantum": true
         },
         "4": {
             "abundance": 99.999863,
             "atomic_weight": 4.0026032497,
             "mass_number": 4,
-            "nuclearSpin": 0.0
+            "spin": 0.0,
+            "is_quantum": true
         },
         "5": {
             "abundance": 0,
             "atomic_weight": 5.01222,
             "mass_number": 5,
-            "nuclearSpin": -1.5
+            "spin": -1.5,
+            "is_quantum": true
         },
         "6": {
             "abundance": 0,
             "atomic_weight": 6.0188881,
             "mass_number": 6,
-            "nuclearSpin": 0.0
+            "spin": 0.0,
+            "is_quantum": true
         },
         "7": {
             "abundance": 0,
             "atomic_weight": 7.02803,
             "mass_number": 7,
-            "nuclearSpin": -1.5
+            "spin": -1.5,
+            "is_quantum": true
         },
         "8": {
             "abundance": 0,
             "atomic_weight": 8.033922,
             "mass_number": 8,
-            "nuclearSpin": 0.0
+            "spin": 0.0,
+            "is_quantum": true
         },
         "9": {
             "abundance": 0,
             "atomic_weight": 9.04382,
             "mass_number": 9,
-            "nuclearSpin": -0.5
+            "spin": -0.5,
+            "is_quantum": true
         },
         "most_abundant": 4
     },
@@ -1125,7 +1299,8 @@
             "abundance": 93.2581,
             "atomic_weight": 38.9637,
             "mass_number": 39,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 39
     },
@@ -1134,55 +1309,64 @@
             "abundance": 0,
             "atomic_weight": 10.035481,
             "mass_number": 10,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "11": {
             "abundance": 0,
             "atomic_weight": 11.043796,
             "mass_number": 11,
-            "nuclearSpin": -1.5
+            "spin": -1.5,
+            "is_quantum": true
         },
         "12": {
             "abundance": 0,
             "atomic_weight": 12.05378,
             "mass_number": 12,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "4": {
             "abundance": 0,
             "atomic_weight": 4.02718,
             "mass_number": 4,
-            "nuclearSpin": -2.0
+            "spin": -2.0,
+            "is_quantum": true
         },
         "5": {
             "abundance": 0,
             "atomic_weight": 5.01254,
             "mass_number": 5,
-            "nuclearSpin": -1.5
+            "spin": -1.5,
+            "is_quantum": true
         },
         "6": {
             "abundance": 7.59,
             "atomic_weight": 6.0151223,
             "mass_number": 6,
-            "nuclearSpin": 1.0
+            "spin": 1.0,
+            "is_quantum": true
         },
         "7": {
             "abundance": 92.41,
             "atomic_weight": 7.016004,
             "mass_number": 7,
-            "nuclearSpin": -1.5
+            "spin": -1.5,
+            "is_quantum": true
         },
         "8": {
             "abundance": 0,
             "atomic_weight": 8.0224867,
             "mass_number": 8,
-            "nuclearSpin": 2.0
+            "spin": 2.0,
+            "is_quantum": true
         },
         "9": {
             "abundance": 0,
             "atomic_weight": 9.0267891,
             "mass_number": 9,
-            "nuclearSpin": -1.5
+            "spin": -1.5,
+            "is_quantum": true
         },
         "most_abundant": 7
     },
@@ -1191,19 +1375,22 @@
             "abundance": 78.99,
             "atomic_weight": 23.9850419,
             "mass_number": 24,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "25": {
             "abundance": 10.0,
             "atomic_weight": 24.98583702,
             "mass_number": 25,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "26": {
             "abundance": 11.01,
             "atomic_weight": 25.98259304,
             "mass_number": 26,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 24
     },
@@ -1212,91 +1399,106 @@
             "abundance": 0,
             "atomic_weight": 10.04262,
             "mass_number": 10,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "11": {
             "abundance": 0,
             "atomic_weight": 11.0268,
             "mass_number": 11,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "12": {
             "abundance": 0,
             "atomic_weight": 12.0186132,
             "mass_number": 12,
-            "nuclearSpin": 1.0
+            "spin": 1.0,
+            "is_quantum": true
         },
         "13": {
             "abundance": 0,
             "atomic_weight": 13.00573858,
             "mass_number": 13,
-            "nuclearSpin": -0.5
+            "spin": -0.5,
+            "is_quantum": true
         },
         "14": {
             "abundance": 99.632,
             "atomic_weight": 14.0030740052,
             "mass_number": 14,
-            "nuclearSpin": 1.0
+            "spin": 1.0,
+            "is_quantum": true
         },
         "15": {
             "abundance": 0.368,
             "atomic_weight": 15.0001088984,
             "mass_number": 15,
-            "nuclearSpin": -0.5
+            "spin": -0.5,
+            "is_quantum": true
         },
         "16": {
             "abundance": 0,
             "atomic_weight": 16.0061014,
             "mass_number": 16,
-            "nuclearSpin": -2.0
+            "spin": -2.0,
+            "is_quantum": true
         },
         "17": {
             "abundance": 0,
             "atomic_weight": 17.00845,
             "mass_number": 17,
-            "nuclearSpin": -0.5
+            "spin": -0.5,
+            "is_quantum": true
         },
         "18": {
             "abundance": 0,
             "atomic_weight": 18.014082,
             "mass_number": 18,
-            "nuclearSpin": -1
+            "spin": -1,
+            "is_quantum": true
         },
         "19": {
             "abundance": 0,
             "atomic_weight": 19.017027,
             "mass_number": 19,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "20": {
             "abundance": 0,
             "atomic_weight": 20.02337,
             "mass_number": 20,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "21": {
             "abundance": 0,
             "atomic_weight": 21.02709,
             "mass_number": 21,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "22": {
             "abundance": 0,
             "atomic_weight": 22.03444,
             "mass_number": 22,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "23": {
             "abundance": 0,
             "atomic_weight": 23.04051,
             "mass_number": 23,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "24": {
             "abundance": 0,
             "atomic_weight": 24.0505,
             "mass_number": 24,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 14
     },
@@ -1305,7 +1507,8 @@
             "abundance": 100,
             "atomic_weight": 22.98976967,
             "mass_number": 23,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 23
     },
@@ -1314,103 +1517,120 @@
             "abundance": 0,
             "atomic_weight": 16.025757,
             "mass_number": 16,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "17": {
             "abundance": 0,
             "atomic_weight": 17.0177,
             "mass_number": 17,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "18": {
             "abundance": 0,
             "atomic_weight": 18.0056971,
             "mass_number": 18,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "19": {
             "abundance": 0,
             "atomic_weight": 19.0018798,
             "mass_number": 19,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "20": {
             "abundance": 90.48,
             "atomic_weight": 19.9924401759,
             "mass_number": 20,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "21": {
             "abundance": 0.27,
             "atomic_weight": 20.99384674,
             "mass_number": 21,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "22": {
             "abundance": 9.25,
             "atomic_weight": 21.99138551,
             "mass_number": 22,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "23": {
             "abundance": 0,
             "atomic_weight": 22.99446734,
             "mass_number": 23,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "24": {
             "abundance": 0,
             "atomic_weight": 23.993615,
             "mass_number": 24,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "25": {
             "abundance": 0,
             "atomic_weight": 24.99779,
             "mass_number": 25,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "26": {
             "abundance": 0,
             "atomic_weight": 26.00046,
             "mass_number": 26,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "27": {
             "abundance": 0,
             "atomic_weight": 27.00762,
             "mass_number": 27,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "28": {
             "abundance": 0,
             "atomic_weight": 28.01211,
             "mass_number": 28,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "29": {
             "abundance": 0,
             "atomic_weight": 29.01935,
             "mass_number": 29,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "30": {
             "abundance": 0,
             "atomic_weight": 30.02387,
             "mass_number": 30,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "31": {
             "abundance": 0,
             "atomic_weight": 31.03311,
             "mass_number": 31,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "32": {
             "abundance": 0,
             "atomic_weight": 32.03991,
             "mass_number": 32,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 20
     },
@@ -1419,91 +1639,106 @@
             "abundance": 0,
             "atomic_weight": 12.034405,
             "mass_number": 12,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "13": {
             "abundance": 0,
             "atomic_weight": 13.02481,
             "mass_number": 13,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "14": {
             "abundance": 0,
             "atomic_weight": 14.00859529,
             "mass_number": 14,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "15": {
             "abundance": 0,
             "atomic_weight": 15.0030654,
             "mass_number": 15,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "16": {
             "abundance": 99.757,
             "atomic_weight": 15.9949146221,
             "mass_number": 16,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "17": {
             "abundance": 0.038,
             "atomic_weight": 16.9991315,
             "mass_number": 17,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "18": {
             "abundance": 0.205,
             "atomic_weight": 17.9991604,
             "mass_number": 18,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "19": {
             "abundance": 0,
             "atomic_weight": 19.003579,
             "mass_number": 19,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "20": {
             "abundance": 0,
             "atomic_weight": 20.0040762,
             "mass_number": 20,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "21": {
             "abundance": 0,
             "atomic_weight": 21.008655,
             "mass_number": 21,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "22": {
             "abundance": 0,
             "atomic_weight": 22.00997,
             "mass_number": 22,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "23": {
             "abundance": 0,
             "atomic_weight": 23.01569,
             "mass_number": 23,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "24": {
             "abundance": 0,
             "atomic_weight": 24.02037,
             "mass_number": 24,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "25": {
             "abundance": 0,
             "atomic_weight": 25.02914,
             "mass_number": 25,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "26": {
             "abundance": 0,
             "atomic_weight": 26.03775,
             "mass_number": 26,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 16
     },
@@ -1512,7 +1747,8 @@
             "abundance": 100,
             "atomic_weight": 30.97376151,
             "mass_number": 31,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 31
     },
@@ -1521,145 +1757,169 @@
             "abundance": 0,
             "atomic_weight": 26.02788,
             "mass_number": 26,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "27": {
             "abundance": 0,
             "atomic_weight": 27.0188,
             "mass_number": 27,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "28": {
             "abundance": 0,
             "atomic_weight": 28.00437,
             "mass_number": 28,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "29": {
             "abundance": 0,
             "atomic_weight": 28.99661,
             "mass_number": 29,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "30": {
             "abundance": 0,
             "atomic_weight": 29.984903,
             "mass_number": 30,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "31": {
             "abundance": 0,
             "atomic_weight": 30.9795544,
             "mass_number": 31,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "32": {
             "abundance": 94.93,
             "atomic_weight": 31.97207069,
             "mass_number": 32,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "33": {
             "abundance": 0.76,
             "atomic_weight": 32.9714585,
             "mass_number": 33,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "34": {
             "abundance": 4.29,
             "atomic_weight": 33.96786683,
             "mass_number": 34,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "35": {
             "abundance": 0,
             "atomic_weight": 34.96903214,
             "mass_number": 35,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "36": {
             "abundance": 0.02,
             "atomic_weight": 35.96708088,
             "mass_number": 36,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "37": {
             "abundance": 0,
             "atomic_weight": 36.97112572,
             "mass_number": 37,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "38": {
             "abundance": 0,
             "atomic_weight": 37.971163,
             "mass_number": 38,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "39": {
             "abundance": 0,
             "atomic_weight": 38.97514,
             "mass_number": 39,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "40": {
             "abundance": 0,
             "atomic_weight": 39.97547,
             "mass_number": 40,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "41": {
             "abundance": 0,
             "atomic_weight": 40.98003,
             "mass_number": 41,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "42": {
             "abundance": 0,
             "atomic_weight": 41.98149,
             "mass_number": 42,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "43": {
             "abundance": 0,
             "atomic_weight": 42.9866,
             "mass_number": 43,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "44": {
             "abundance": 0,
             "atomic_weight": 43.98832,
             "mass_number": 44,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "45": {
             "abundance": 0,
             "atomic_weight": 44.99482,
             "mass_number": 45,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "46": {
             "abundance": 0,
             "atomic_weight": 45.99957,
             "mass_number": 46,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "47": {
             "abundance": 0,
             "atomic_weight": 47.00762,
             "mass_number": 47,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "48": {
             "abundance": 0,
             "atomic_weight": 48.01299,
             "mass_number": 48,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "49": {
             "abundance": 0,
             "atomic_weight": 49.02201,
             "mass_number": 49,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 32
     },
@@ -1668,7 +1928,8 @@
             "abundance": 100,
             "atomic_weight": 44.9559102,
             "mass_number": 45,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 45
     },
@@ -1677,19 +1938,22 @@
             "abundance": 92.2297,
             "atomic_weight": 27.9769265327,
             "mass_number": 28,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "29": {
             "abundance": 4.6832,
             "atomic_weight": 28.97649472,
             "mass_number": 29,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "30": {
             "abundance": 3.0872,
             "atomic_weight": 29.97377022,
             "mass_number": 30,
-            "nuclearSpin": 0
+            "spin": 0,
+            "is_quantum": true
         },
         "most_abundant": 28
     }

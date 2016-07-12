@@ -14,15 +14,15 @@ BUILD = SERIAL CUDA OMP
 # Compiler
 #-----------------------
 CC := gcc
-CXX := g++
+CXX := gcc
 # CC := icc
 
 #-----------------------
 # Initial configuration
 #-----------------------
 CFLAGS := -Wall -O2 -fPIC -g -pg  
-# LDLIBS := -lgsl -lgslcblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lblas -lm 
-LDLIBS := -lgsl -lgslcblas -lm 
+# LDLIBS := -lgsl -lgslcblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lblas -lm -lint2
+LDLIBS := -lgsl -lgslcblas -lm -lint2 -lstdc++
 # LDLIBS := /opt/local/lib/libgsl.19.dylib /opt/local/lib/libgslcblas.0.dylib -lm
 LDFLAGS := -shared
 

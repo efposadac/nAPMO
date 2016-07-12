@@ -1,2 +1,3 @@
 [report] 
 omit = *numpy*, *ctypes*, *numbers*, *scipy*, scipy._lib.decorator, *json*, *PIL*, FIxTk
+show_missing=True

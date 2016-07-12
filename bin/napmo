@@ -1,0 +1,85 @@
+#!/usr/bin/python
+
+from __future__ import print_function
+
+import argparse
+import os
+import sys
+
+import napmo
+
+
+def napmo_cli():
+    """
+    Parses the command line instructions
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("input", help="The input file")
+    parser.add_argument("-o", "--output", help="The output file")
+    args = parser.parse_args()
+
+    path = os.getcwd()
+    fin = os.path.join(path, args.input)
+    fout = args.output
+
+    if fout:
+        fout = os.path.join(path, fout)
+        sys.stdout = open(fout, 'w')
+
+    return fin, fout
+
+
+def napmo_banner():
+    """
+    return the package credits
+    """
+    print(
+        """
+==================================================
+      _______ _______ ______ _______ _______
+     |    |  |   _   |   __ \   |   |       |
+     |       |       |    __/       |   -   |
+     |__|____|___|___|___|  |__|_|__|_______|
+
+         NAPMO QUANTUM CHEMISTRY PACKAGE
+
+Posada E. F. Brandino G. Reyes A.
+National University of Colombia
+International Centre for Theoretical Physics
+                                              2016
+efposadac@unal.edu.co
+--------------------------------------------------"""
+    )
+
+
+def napmo_loadInput(file):
+    with open(file, 'r') as f:
+        data = f.read()
+
+    print(
+        """
+NAPMO is working with the following input file:
+{0:s}
+""".format(data)
+    )
+
+    return data
+
+
+if __name__ == '__main__':
+
+    # Parse cli arguments
+    fin, fout = napmo_cli()
+
+    # Show banner
+    napmo_banner()
+
+    # Load input file
+    data = napmo_loadInput(fin)
+    data = napmo.InputParser(data)
+
+    # Build NAPMO system
+    system = napmo.NAPMO(data)
+
+    # Run calculation
+    Energy = system.solve()

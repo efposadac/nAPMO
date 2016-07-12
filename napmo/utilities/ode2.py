@@ -40,7 +40,7 @@ from ctypes import *
 
 from napmo.system.cext import napmo_library as nl
 
-from napmo.utilities.cubic_spline import CubicSpline
+from napmo.grids.cubic_spline import CubicSpline
 
 
 def solve_ode2(b, a, f, bcs, extrapolation=None):

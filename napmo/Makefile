@@ -5,7 +5,7 @@
 # Version: 0.1
 # efposadac@unal.edu.co
 
-SUBDIRS = data grids system utilities tests
+SUBDIRS = data grids system utilities
 
 default::
 
