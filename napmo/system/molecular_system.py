@@ -207,6 +207,11 @@ class MolecularSystem(dict):
         assert isinstance(data, dict)
 
         for key in data:
+            if key not in self:
+                print("Imposible to set " + key +
+                      " charges: Particle does not exist!")
+                return
+
             multi = data.get(key, {}).get('multiplicity', None)
             charge = data.get(key, {}).get('charge', 0)
 
@@ -219,7 +224,10 @@ class MolecularSystem(dict):
 
                 spin = (multi - 1) * 0.5
 
-                if (spin > 0 and np % 2 == 0) or (spin % 2 == np % 2 and spin > 0):
+                nereq = spin * 2
+                eleft = np - nereq
+
+                if eleft % 2 != 0:
                     print("Bad charge / multiplicity")
                     raise ValueError
 
@@ -291,9 +299,6 @@ class MolecularSystem(dict):
         for species in self:
             if self.get(species, {}).get('id', -100) is sid:
                 return self.get(species)
-
-    def get_point_charges():
-        pass
 
     def get_basis_as_cstruct(self, symbol):
         """

@@ -66,6 +66,14 @@ def test_molecular_system_interface():
 
     assert molecule.size_particles('e-') == 14
     assert molecule.size_species == 1
+
+    charges = {'e-': {'charge': 1, 'multiplicity': 1}}
+    try:
+        molecule.set_charges(charges, open_shell=True)
+        assert False, 'Expecting Failure'
+    except ValueError:
+        assert True
+
     print(molecule)
 
     particle = "N"
@@ -94,6 +102,27 @@ def test_molecular_system_interface():
     basis = molecule.get_basis('H_1')
     basis = molecule.get_basis('N')
 
+    charges = {'e-': {'charge': 1, 'multiplicity': 2},
+               'U+': {'charge': 1}}
+
+    molecule.set_charges(charges, open_shell=True)
+
+    charges = {'e-': {'charge': 1, 'multiplicity': 2}}
+    molecule.set_charges(charges, open_shell=True)
+
     print(molecule)
+
+    particle = "N"
+    basis_name = "STO-3G"
+
+    molecule = MolecularSystem()
+
+    molecule.add_atom(
+        particle, [0.000000, 0.000000, 0.70997005], basis_name=basis_name, quantum=True)
+
+    charges = {'e-': {'charge': 1, 'multiplicity': 1}}
+    molecule.set_charges(charges, open_shell=False)
+
+    c_basis = molecule.get_basis_as_cstruct('e-')
 
 test_molecular_system_interface()

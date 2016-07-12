@@ -80,11 +80,92 @@ diff = ref_energy - Energy
     data = ("""# Molecule definition
 molecule {
     O   0.000000      0.000000     -0.066575
+    H   0.000000      0.754175      0.528381
+}
+
+# basis-set specification
+basis {
+    e- 6-311G /usr/local/lib
+}
+
+# scf options
+scf {
+    hf
+    analytic = False
+}
+
+# energy of reference
+ref_energy = -76.0001
+diff = ref_energy - Energy
+
+""")
+
+    test = InputParser(data)
+    print(test.data)
+    print(test.scf)
+    print(test.var)
+
+    data = ("""# Molecule definition
+molecule {
+    O   0.000000      0.000000     -0.066575
     H_1   0.000000      0.754175      0.528381
 }
 
 # basis-set specification
 basis = 6-311G
+
+# scf options
+scf {
+    hf
+    analytic
+    direct = False
+}
+
+# energy of reference
+ref_energy = -76.0001
+diff = ref_energy - Energy
+
+""")
+    try:
+        test = InputParser(data)
+        assert False, "Expecting Failure"
+    except ValueError:
+        assert True
+
+    data = ("""# Molecule definition
+# basis-set specification
+basis = 6-311G
+
+# scf options
+scf {
+    hf
+    analytic
+    direct = False
+}
+
+# energy of reference
+ref_energy = -76.0001
+diff = ref_energy - Energy
+
+""")
+    try:
+        test = InputParser(data)
+        assert False, "Expecting Failure"
+    except ValueError:
+        assert True
+
+    data = ("""# Molecule
+
+molecule [e-:0] {
+    O   0.000000      0.000000     -0.066575
+    H   0.000000      0.754175      0.528381
+}
+
+# basis-set specification
+basis {
+    e- 6-311G
+    H_1 Nakai-5-sp
+}
 
 # scf options
 scf {
@@ -129,4 +210,4 @@ diff = ref_energy - Energy
     test = InputParser(data)
     assert test.scf.get('debug') is True
 
-# test_input_parser_interface()
+test_input_parser_interface()
