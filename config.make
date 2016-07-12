@@ -13,8 +13,15 @@ BUILD = SERIAL CUDA OMP
 #-----------------------
 # Compiler
 #-----------------------
+
+ifeq ($(strip $(CC)),)
 CC := gcc
-CXX := gcc
+endif
+
+ifeq ($(strip $(CXX)),)
+CXX := g++
+endif
+
 # CC := icc
 
 #-----------------------

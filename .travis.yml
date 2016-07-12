@@ -1,28 +1,60 @@
+os:
+  - linux
 language : python
 python:
   - 3.4
+compiler:
+  - gcc
+env:
+  - GCC_VERSION=6
 addons:
-  apt_packages:
-  - gfortran
-  - liblapack-dev
-  - libgsl0-dev
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - boost-latest
+    packages:
+      - gcc-6
+      - g++-6
+      - liblapack-dev
+      - libgsl0-dev
+      - libeigen3-dev
+      - libgmp-dev
+      - git
+      - libmpfr-dev
+      - libboost1.55-dev
 install:
-- conda update --yes conda
-- conda create -n testenv --yes scipy numpy pip nose setuptools python=3.4
-- source activate testenv
-# for debugging...
-- echo $PATH
-- which python
-- conda info
-- conda list
+  - conda update --yes conda
+  - conda create -n testenv --yes scipy numpy pip nose setuptools python=3.4
+  - source activate testenv
 before_install:
-- wget http://repo.continuum.io/miniconda/Miniconda3-3.5.5-Linux-x86_64.sh -O miniconda.sh
-- chmod +x miniconda.sh
-- ./miniconda.sh -b -p /home/travis/mc
-- export PATH=/home/travis/mc/bin:$PATH
+  - gcc-6 --version
+  - wget http://repo.continuum.io/miniconda/Miniconda3-3.5.5-Linux-x86_64.sh -O miniconda.sh
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b -p /home/travis/mc
+  - export PATH=/home/travis/mc/bin:$PATH
+  # Build Libint2
+  - WORKDIR=$PWD
+  - git clone https://github.com/evaleev/libint.git
+  - cd libint
+  - export CC=gcc-6
+  - export CXX=g++-6
+  - export OPENMPFLAGS=-fopenmp
+  - export CXXFLAGS="-std=c++11 -fPIC -Wno-enum-compare $OPENMPFLAGS"
+  - export LDFLAGS=$OPENMPFLAGS
+  - git checkout master
+  - aclocal -I lib/autoconf
+  - autoconf
+  - ./configure --prefix=$WORKDIR CPPFLAGS='-I/usr/include/eigen3'
+  - make -j 4
+  - make install
+  - cd ..
+  # Setting up environment
+  - export C_INCLUDE_PATH=$C_INCLUDE_PATH:$WORKDIR/include:$WORKDIR/include/libint2:/usr/include/eigen3
+  - export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$WORKDIR/include:$WORKDIR/include/libint2:/usr/include/eigen3
+  - export LIBRARY_PATH=$LIBRARY_PATH:$WORKDIR/lib
+  - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WORKDIR/lib
 before_script:
-- pip install coverage
-- gcc --version
-- make
+  - pip install coverage
+  - make
 script:
-- nosetests --with-coverage --with-doctest
+  - nosetests --with-coverage --with-doctest

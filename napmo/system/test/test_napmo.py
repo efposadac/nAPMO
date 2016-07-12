@@ -97,7 +97,7 @@ scf {
     pe = -75.969790197894
     e = system.solve()
 
-    np.testing.assert_allclose(pe, e)
+    np.testing.assert_allclose(pe, e, rtol=10e-6)
 
     file = ("""
 # Molecule definition
@@ -126,7 +126,7 @@ scf {
     pe = -0.66217971
     e = system.solve()
 
-    np.testing.assert_allclose(pe, e)
+    np.testing.assert_allclose(pe, e, rtol=10e-6)
 
 # test_napmo_single()
 # test_napmo_multi()
