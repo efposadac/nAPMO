@@ -1,5 +1,0 @@
-density
-=======
-
-.. automodule:: density
-    :members:

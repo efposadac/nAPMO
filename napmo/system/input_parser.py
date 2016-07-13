@@ -5,7 +5,7 @@
 # Version: 0.1
 # efposadac@unal.edu.co
 
-import napmo as nap
+import napmo
 import numpy as np
 import os
 import re
@@ -122,7 +122,7 @@ class InputParser(object):
         """
         Load Molecule information from the input file (Only Cartesian coordinates for now)
         """
-        atomic_data = nap.AtomicElementsDatabase()
+        atomic_data = napmo.AtomicElementsDatabase()
         keys = ['charge', 'multiplicity']
 
         data = data.splitlines()
@@ -168,7 +168,7 @@ class InputParser(object):
                 for aux in options.split(',')}
 
     def load_basis(self, data, group=True, options=None):
-        atomic_data = nap.AtomicElementsDatabase()
+        atomic_data = napmo.AtomicElementsDatabase()
         data = data.splitlines()
 
         if len(self.data) < 1:
@@ -191,7 +191,7 @@ class InputParser(object):
                         'Check the "basis" block in your input file ' + symbol + ' is undefined in "molecular" block')
 
                 basis_name = line[1].strip()
-                basis_file = os.path.join(nap.basis_dir, basis_name)
+                basis_file = os.path.join(napmo.basis_dir, basis_name)
 
                 if len(line) > 2:
                     basis_file = line[2].strip()
@@ -224,7 +224,7 @@ class InputParser(object):
                     'Modify your input file and define a "basis" for each quantum species')
 
             basis_name = data[-1].strip()
-            basis_file = os.path.join(nap.basis_dir, basis_name)
+            basis_file = os.path.join(napmo.basis_dir, basis_name)
 
             for key in self.data:
                 for particle in self.data[key]:

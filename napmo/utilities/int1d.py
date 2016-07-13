@@ -31,7 +31,7 @@ from ctypes import *
 import numpy as np
 import numpy.ctypeslib as npct
 
-from napmo.system.cext import napmo_library as nl
+import napmo
 
 __all__ = [
     'Integrator1D', 'StubIntegrator1D', 'TrapezoidIntegrator1D',
@@ -95,7 +95,7 @@ class CubicIntegrator1D(Integrator1D):
         '''
         assert npoint >= self.npoint_min
         result = np.ones(npoint, dtype=np.float64)
-        nl.compute_cubic_spline_int_weights(result, npoint)
+        napmo.cext.compute_cubic_spline_int_weights(result, npoint)
         return result
 
 
@@ -123,5 +123,5 @@ class SimpsonIntegrator1D(Integrator1D):
 
 array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
 
-nl.compute_cubic_spline_int_weights.restype = None
-nl.compute_cubic_spline_int_weights.argtypes = [array_1d_double, c_int]
+napmo.cext.compute_cubic_spline_int_weights.restype = None
+napmo.cext.compute_cubic_spline_int_weights.argtypes = [array_1d_double, c_int]

@@ -12,10 +12,7 @@ from ctypes import *
 import numpy as np
 import numpy.ctypeslib as npct
 
-from napmo.system.cext import napmo_library as nl
-
-from napmo.grids.extrapolation import *
-from napmo.grids.radial_transform import *
+import napmo
 
 
 class CubicSpline(object):
@@ -53,7 +50,7 @@ class CubicSpline(object):
 
         # Set the rtransform
         if rtransform is None:
-            self._rtransform = IndentityRadialTransform(n)
+            self._rtransform = napmo.IndentityRadialTransform(n)
         else:
             self._rtransform = rtransform
             assert rtransform.size == n
@@ -62,7 +59,7 @@ class CubicSpline(object):
         v = self._rtransform.deriv_all()
         if dx is None:
             self._dt = np.zeros(n, np.float64)
-            nl.solve_cubic_spline_system(self._y, self._dt, n)
+            napmo.cext.solve_cubic_spline_system(self._y, self._dt, n)
             self._dx = self._dt / v
         else:
             assert dx.shape[0] == n
@@ -71,16 +68,16 @@ class CubicSpline(object):
 
         # Only exponential extrapolation is needed for now
         if extrapolation is None:
-            self._extrapolation = CuspExtrapolation()
+            self._extrapolation = napmo.CuspExtrapolation()
         else:
             self._extrapolation = extrapolation
 
-        self._this = nl.CubicSpline_new(self._y, self._dt,
-                                        self._extrapolation._this,
-                                        self._rtransform._this, n)
+        self._this = napmo.cext.CubicSpline_new(self._y, self._dt,
+                                                self._extrapolation._this,
+                                                self._rtransform._this, n)
 
     def __del__(self):
-        nl.CubicSpline_del(self._this)
+        napmo.cext.CubicSpline_del(self._this)
 
     def __call__(self, new_x, new_y=None):
         '''evaluate the spline on a grid
@@ -105,7 +102,7 @@ class CubicSpline(object):
         else:
             assert new_y.shape[0] == new_n
 
-        nl.CubicSpline_eval(self._this, new_x, new_y, new_n)
+        napmo.cext.CubicSpline_eval(self._this, new_x, new_y, new_n)
 
         return new_y
 
@@ -132,7 +129,7 @@ class CubicSpline(object):
         else:
             assert new_dx.shape[0] == new_n
 
-        nl.CubicSpline_eval_deriv(self._this, new_x, new_dx, new_n)
+        napmo.cext.CubicSpline_eval_deriv(self._this, new_x, new_dx, new_n)
         return new_dx
 
     @property
@@ -145,11 +142,11 @@ class CubicSpline(object):
 
     @property
     def first_x(self):
-        return nl.CubicSpline_get_first_x(self._this)
+        return napmo.cext.CubicSpline_get_first_x(self._this)
 
     @property
     def last_x(self):
-        return nl.CubicSpline_get_last_x(self._this)
+        return napmo.cext.CubicSpline_get_last_x(self._this)
 
     @property
     def extrapolation(self):
@@ -162,33 +159,33 @@ class CubicSpline(object):
 array_1d_double = npct.ndpointer(
     dtype=np.double, ndim=1, flags='CONTIGUOUS')
 
-nl.CubicSpline_new.restype = c_void_p
-nl.CubicSpline_new.argtypes = [array_1d_double,
-                               array_1d_double, c_void_p, c_void_p, c_int]
+napmo.cext.CubicSpline_new.restype = c_void_p
+napmo.cext.CubicSpline_new.argtypes = [array_1d_double,
+                                       array_1d_double, c_void_p, c_void_p, c_int]
 
-nl.CubicSpline_del.restype = None
-nl.CubicSpline_del.argtypes = [c_void_p]
+napmo.cext.CubicSpline_del.restype = None
+napmo.cext.CubicSpline_del.argtypes = [c_void_p]
 
-nl.CubicSpline_eval.restype = None
-nl.CubicSpline_eval.argtypes = [
+napmo.cext.CubicSpline_eval.restype = None
+napmo.cext.CubicSpline_eval.argtypes = [
     c_void_p, array_1d_double, array_1d_double, c_int]
 
-nl.CubicSpline_eval_deriv.restype = None
-nl.CubicSpline_eval_deriv.argtypes = [
+napmo.cext.CubicSpline_eval_deriv.restype = None
+napmo.cext.CubicSpline_eval_deriv.argtypes = [
     c_void_p, array_1d_double, array_1d_double, c_int]
 
-nl.CubicSpline_get_first_x.restype = c_double
-nl.CubicSpline_get_first_x.argtypes = [c_void_p]
+napmo.cext.CubicSpline_get_first_x.restype = c_double
+napmo.cext.CubicSpline_get_first_x.argtypes = [c_void_p]
 
-nl.CubicSpline_get_last_x.restype = c_double
-nl.CubicSpline_get_last_x.argtypes = [c_void_p]
+napmo.cext.CubicSpline_get_last_x.restype = c_double
+napmo.cext.CubicSpline_get_last_x.argtypes = [c_void_p]
 
-nl.CubicSpline_get_rtransform.restype = c_void_p
-nl.CubicSpline_get_rtransform.argtypes = [c_void_p]
+napmo.cext.CubicSpline_get_rtransform.restype = c_void_p
+napmo.cext.CubicSpline_get_rtransform.argtypes = [c_void_p]
 
-nl.CubicSpline_get_extrapolation.restype = c_void_p
-nl.CubicSpline_get_extrapolation.argtypes = [c_void_p]
+napmo.cext.CubicSpline_get_extrapolation.restype = c_void_p
+napmo.cext.CubicSpline_get_extrapolation.argtypes = [c_void_p]
 
-nl.solve_cubic_spline_system.restype = None
-nl.solve_cubic_spline_system.argtypes = [
+napmo.cext.solve_cubic_spline_system.restype = None
+napmo.cext.solve_cubic_spline_system.argtypes = [
     array_1d_double, array_1d_double, c_int]

@@ -7,6 +7,7 @@
 
 from napmo.grids.radial import RadialGrid
 from napmo.grids.radial_transform import *
+from napmo.utilities.int1d import StubIntegrator1D
 
 
 def test_integrate_gauss():

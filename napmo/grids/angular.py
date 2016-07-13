@@ -9,7 +9,7 @@ import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.system.cext import napmo_library as nl
+import napmo
 
 
 class AngularGrid(Structure):
@@ -34,14 +34,14 @@ class AngularGrid(Structure):
         self.weights = np.empty(self.lorder, dtype=np.float64)
         self._weights = np.ctypeslib.as_ctypes(self.weights)
 
-        nl.angular_cartesian.restype = None
-        nl.angular_cartesian.argtypes = [POINTER(AngularGrid)]
-        nl.angular_cartesian(byref(self))
+        napmo.cext.angular_cartesian.restype = None
+        napmo.cext.angular_cartesian.argtypes = [POINTER(AngularGrid)]
+        napmo.cext.angular_cartesian(byref(self))
 
         if spherical:
-            nl.angular_to_spherical.restype = None
-            nl.angular_to_spherical.argtypes = [POINTER(AngularGrid)]
-            nl.angular_to_spherical(byref(self))
+            napmo.cext.angular_to_spherical.restype = None
+            napmo.cext.angular_to_spherical.argtypes = [POINTER(AngularGrid)]
+            napmo.cext.angular_to_spherical(byref(self))
 
     def integrate(self, *args):
         """
@@ -54,14 +54,14 @@ class AngularGrid(Structure):
             integral (double): Integral value.
         """
 
-        nl.angular_integrate.restype = c_double
-        nl.angular_integrate.argtypes = [
+        napmo.cext.angular_integrate.restype = c_double
+        napmo.cext.angular_integrate.argtypes = [
             POINTER(AngularGrid), c_int, npct.ndpointer(
                 dtype=np.double, ndim=1, flags='CONTIGUOUS')
         ]
 
         f = np.concatenate(args)
-        return nl.angular_integrate(byref(self), len(args), f)
+        return napmo.cext.angular_integrate(byref(self), len(args), f)
 
     @property
     def lorder(self):

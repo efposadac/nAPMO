@@ -13,14 +13,7 @@ import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.system.cext import napmo_library as nl
-
-from napmo.grids.radial import RadialGrid
-from napmo.grids.becke import BeckeGrid
-from napmo.grids.cubic_spline import CubicSpline
-from napmo.grids.extrapolation import PowerExtrapolation
-
-from napmo.utilities.ode2 import solve_ode2
+import napmo
 
 
 def poisson_solver(grid, dens, lmax):
@@ -39,7 +32,7 @@ def poisson_solver(grid, dens, lmax):
         U (ndarray): Spherical expanded potential. Array with shape (nrad, lsize), where :math:`\ell_{size} = (\ell_{max} + 1)^2`
     """
 
-    assert isinstance(grid, BeckeGrid)
+    assert isinstance(grid, napmo.BeckeGrid)
 
     offset = 0
     U = []
@@ -58,10 +51,10 @@ def poisson_solver(grid, dens, lmax):
                 aux = np.array(sph_expansion[:, idx])
 
                 # Build b
-                rho = CubicSpline(aux,
-                                  rtransform=atgrid.radial_grid.rtransform)
+                rho = napmo.CubicSpline(aux,
+                                        rtransform=atgrid.radial_grid.rtransform)
                 rtf = rho.rtransform
-                rgrid = RadialGrid(rtransform=rtf)
+                rgrid = napmo.RadialGrid(rtransform=rtf)
                 radii = rtf.radius_all()
                 # The approach followed here is obtained after substitution of
                 # u = r*V in Eq. (21) in Becke's paper. After this transformation,
@@ -69,10 +62,10 @@ def poisson_solver(grid, dens, lmax):
                 # is more accurate.
                 fy = -4 * np.pi * rho.y
                 fd = -4 * np.pi * rho.dx
-                f = CubicSpline(fy, fd, rtf)
-                b = CubicSpline(2 / radii, -2 / radii**2, rtf)
-                a = CubicSpline(-l * (l + 1) * radii ** -2,
-                                2 * l * (l + 1) * radii ** -3, rtf)
+                f = napmo.CubicSpline(fy, fd, rtf)
+                b = napmo.CubicSpline(2 / radii, -2 / radii**2, rtf)
+                a = napmo.CubicSpline(-l * (l + 1) * radii ** -2,
+                                      2 * l * (l + 1) * radii ** -3, rtf)
                 # Derivation of boundary condition at rmax:
                 # Multiply differential equation with r**l and integrate. Using
                 # partial integration and the fact that V(r)=A/r**(l+1) for large
@@ -87,7 +80,8 @@ def poisson_solver(grid, dens, lmax):
                 V_rmin = rgrid.integrate(rho.y * radii**(-l - 1),
                                          1) * radii[0]**(l) / (2 * l + 1)
                 bcs = (V_rmin, None, V_rmax, None)
-                v = solve_ode2(b, a, f, bcs, PowerExtrapolation(-l - 1))
+                v = napmo.solve_ode2(
+                    b, a, f, bcs, napmo.PowerExtrapolation(-l - 1))
                 result.append(v)
                 idx += 1
 
@@ -98,11 +92,11 @@ def poisson_solver(grid, dens, lmax):
 
 
 def poisson_solver_finite_differences(grid, rho, lmax):
-    assert isinstance(grid, BeckeGrid)
+    assert isinstance(grid, napmo.BeckeGrid)
 
-    nl.finite_difference_matrix.restype = None
-    nl.finite_difference_matrix.argtypes = [
-        POINTER(RadialGrid),
+    napmo.cext.finite_difference_matrix.restype = None
+    napmo.cext.finite_difference_matrix.argtypes = [
+        POINTER(napmo.RadialGrid),
         npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
         npct.ndpointer(dtype=np.int32, ndim=1, flags='CONTIGUOUS'),
         npct.ndpointer(dtype=np.int32, ndim=1, flags='CONTIGUOUS'),
@@ -137,7 +131,7 @@ def poisson_solver_finite_differences(grid, rho, lmax):
         for l in range(lmax + 1):
 
             # Build A
-            nl.finite_difference_matrix(
+            napmo.cext.finite_difference_matrix(
                 byref(atgrid.radial_grid), data, row, col, l)
             for m in range(-l, l + 1):
 

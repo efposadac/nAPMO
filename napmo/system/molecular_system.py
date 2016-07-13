@@ -11,12 +11,7 @@ from __future__ import print_function
 import numpy as np
 import copy
 
-from napmo.system.atomic_element import AtomicElement
-from napmo.system.elementary_particle import ElementaryParticle
-from napmo.system.basis_set import BasisSet, BasisSet_C
-from napmo.data.databases import CouplingConstantsDatabase
-from napmo.data.constants import ANGSTROM_TO_BOHR
-from napmo.data.constants import SPIN_ELECTRON
+import napmo
 
 
 class MolecularSystem(dict):
@@ -51,15 +46,15 @@ class MolecularSystem(dict):
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
         if units is 'ANGSTROMS':
-            origin *= ANGSTROM_TO_BOHR
+            origin *= napmo.ANGSTROM_TO_BOHR
 
         # Fetching atom database
-        atom = AtomicElement(symbol, origin, 'BOHR')
+        atom = napmo.AtomicElement(symbol, origin, 'BOHR')
 
         # load basis-set
         basis = None
         if basis_name:
-            basis = BasisSet(
+            basis = napmo.BasisSet(
                 basis_name, symbol, origin=origin, basis_file=basis_file)
 
             atom['basis'] = basis
@@ -92,10 +87,10 @@ class MolecularSystem(dict):
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
         if units is 'ANGSTROMS':
-            origin *= ANGSTROM_TO_BOHR
+            origin *= napmo.ANGSTROM_TO_BOHR
 
         # Fetching information from data
-        eparticle = ElementaryParticle(symbol, origin, 'BOHR')
+        eparticle = napmo.ElementaryParticle(symbol, origin, 'BOHR')
 
         # setting defaults for species
         self.setdefault(symbol, eparticle)
@@ -109,13 +104,13 @@ class MolecularSystem(dict):
         # load basis-set
         basis = None
         if basis_name and not basis_set:
-            basis = BasisSet(basis_name, symbol, origin=origin,
-                             basis_file=basis_file)
+            basis = napmo.BasisSet(basis_name, symbol, origin=origin,
+                                   basis_file=basis_file)
         if basis_set:
             basis = basis_set
 
         if 'basis' not in self[symbol] and basis:
-            self.get(symbol)['basis'] = BasisSet(basis_name, symbol)
+            self.get(symbol)['basis'] = napmo.BasisSet(basis_name, symbol)
 
         if basis:
             self.get(symbol)['basis'].update(basis)
@@ -159,10 +154,10 @@ class MolecularSystem(dict):
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
         if units is 'ANGSTROMS':
-            origin *= ANGSTROM_TO_BOHR
+            origin *= napmo.ANGSTROM_TO_BOHR
 
         # Fetching atom object
-        nucleus = AtomicElement(symbol, origin, 'BOHR')
+        nucleus = napmo.AtomicElement(symbol, origin, 'BOHR')
 
         # setting defaults for species
         self.setdefault(symbol, {})
@@ -176,10 +171,10 @@ class MolecularSystem(dict):
         # load basis-set
         basis = None
         if basis_name:
-            basis = BasisSet(basis_name, symbol, origin, basis_file)
+            basis = napmo.BasisSet(basis_name, symbol, origin, basis_file)
 
         if 'basis' not in self[symbol] and basis:
-            self.get(symbol)['basis'] = BasisSet(basis_name, symbol)
+            self.get(symbol)['basis'] = napmo.BasisSet(basis_name, symbol)
 
         if basis:
             self.get(symbol)['basis'].update(basis)
@@ -188,7 +183,8 @@ class MolecularSystem(dict):
             nucleus['is_quantum'] = False
 
         # Adding coupling constants
-        self.get(symbol).update(CouplingConstantsDatabase()[symbol.lower()])
+        self.get(symbol).update(
+            napmo.CouplingConstantsDatabase()[symbol.lower()])
 
         # Add to the molecular system
         self.get(symbol)['size'] += size
@@ -232,13 +228,13 @@ class MolecularSystem(dict):
                     raise ValueError
 
                 alpha = (np - np % 2) * 0.5
-                alpha += spin / SPIN_ELECTRON
+                alpha += spin / napmo.SPIN_ELECTRON
                 beta = np - alpha
                 keys = {'e-alpha': alpha, 'e-beta': beta}
 
                 if alpha != beta or open_shell:
                     for k in keys:
-                        eparticle = ElementaryParticle(k)
+                        eparticle = napmo.ElementaryParticle(k)
                         eparticle.pop('origin')
 
                         self[k] = copy.deepcopy(self.get('e-'))
@@ -277,7 +273,7 @@ class MolecularSystem(dict):
         Returns the basis set of the system of a given ``symbol`` particle.
 
         Returns:
-            BasisSet: basis set
+            napmo.BasisSet: basis set
         """
         out = self.get(symbol, {}).get('basis', None)
 
@@ -306,12 +302,12 @@ class MolecularSystem(dict):
         CTYPES structure.
 
         Returns:
-            BasisSet_C: basis set CTYPES structure
+            napmo.BasisSet_C: basis set CTYPES structure
         """
         out = None
         basis = self.get_basis(symbol)
         if basis:
-            out = BasisSet_C(basis)
+            out = napmo.BasisSet_C(basis)
         return out
 
     @property

@@ -38,9 +38,7 @@ import numpy.ctypeslib as npct
 
 from ctypes import *
 
-from napmo.system.cext import napmo_library as nl
-
-from napmo.grids.cubic_spline import CubicSpline
+import napmo
 
 
 def solve_ode2(b, a, f, bcs, extrapolation=None):
@@ -111,7 +109,7 @@ def solve_ode2(b, a, f, bcs, extrapolation=None):
     rhs = np.zeros(2 * npoint, dtype=np.float64)
 
     # call c routine
-    nl.build_ode2(b, a, f, c_bcs, coeffs, rhs, npoint)
+    napmo.cext.build_ode2(b, a, f, c_bcs, coeffs, rhs, npoint)
 
     solution = spsolve(csc_matrix(coeffs), rhs)
     uy_new = solution[::2]
@@ -121,7 +119,7 @@ def solve_ode2(b, a, f, bcs, extrapolation=None):
     uy_orig = uy_new.copy()  # A copy of is needed to obtain contiguous arrays.
     ud_orig = ud_new / j1
 
-    return CubicSpline(uy_orig, ud_orig, rtf, extrapolation)
+    return napmo.CubicSpline(uy_orig, ud_orig, rtf, extrapolation)
 
 
 array_1d_double = npct.ndpointer(
@@ -130,8 +128,8 @@ array_1d_double = npct.ndpointer(
 array_2d_double = npct.ndpointer(
     dtype=np.double, ndim=2, flags='CONTIGUOUS')
 
-nl.build_ode2.restype = None
-nl.build_ode2.argtypes = [
+napmo.cext.build_ode2.restype = None
+napmo.cext.build_ode2.argtypes = [
     array_1d_double,
     array_1d_double,
     array_1d_double,

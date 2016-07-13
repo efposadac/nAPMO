@@ -12,7 +12,7 @@ from ctypes import *
 import numpy as np
 import numpy.ctypeslib as npct
 
-from napmo.system.cext import napmo_library as nl
+import napmo
 
 
 class Cell(object):
@@ -29,16 +29,16 @@ class Cell(object):
         if initvoid:
             self._this = None
         elif rvecs is None:
-            self._this = nl.Cell_new(None, 0)
+            self._this = napmo.cext.Cell_new(None, 0)
         else:
             nvec = rvecs.shape[0]
-            self._this = nl.Cell_new(np.PyArray_DATA(rvecs), nvec)
+            self._this = napmo.cext.Cell_new(np.PyArray_DATA(rvecs), nvec)
 
     def __del__(self):
-        nl.Cell_del(self._this)
+        napmo.cext.Cell_del(self._this)
 
-nl.Cell_new.restype = c_void_p
-nl.Cell_new.argtypes = [c_void_p, c_int]
+napmo.cext.Cell_new.restype = c_void_p
+napmo.cext.Cell_new.argtypes = [c_void_p, c_int]
 
-nl.Cell_del.restype = None
-nl.Cell_del.argtypes = [c_void_p]
+napmo.cext.Cell_del.restype = None
+napmo.cext.Cell_del.argtypes = [c_void_p]

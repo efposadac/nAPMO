@@ -10,13 +10,10 @@ from __future__ import print_function
 
 from ctypes import *
 import numpy as np
-import numpy.ctypeslib as npct
-
 import napmo
 
 
 class WaveFunction(Structure):
-
     """
     """
     _fields_ = [
@@ -196,49 +193,3 @@ class WaveFunction(Structure):
     @property
     def sid(self):
         return self._sid
-
-
-array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
-array_2d_double = npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
-
-napmo.cext.LibintInterface_new.restype = c_void_p
-napmo.cext.LibintInterface_new.argtypes = [c_int]
-
-napmo.cext.LibintInterface_del.restype = None
-
-napmo.cext.LibintInterface_add_pointcharges.restype = None
-napmo.cext.LibintInterface_add_pointcharges.argtypes = [
-    c_void_p, c_int, array_1d_double]
-
-napmo.cext.LibintInterface_add_basis.restype = None
-napmo.cext.LibintInterface_add_basis.argtypes = [
-    c_void_p, POINTER(napmo.BasisSet_C)]
-
-napmo.cext.LibintInterface_compute_1body_ints.restype = None
-napmo.cext.LibintInterface_compute_1body_ints.argtypes = [
-    c_void_p, c_int, array_2d_double]
-
-napmo.cext.LibintInterface_get_nbasis.restype = c_int
-napmo.cext.LibintInterface_get_nbasis.argtypes = [c_void_p]
-
-napmo.cext.LibintInterface_init_2body_ints.restype = None
-napmo.cext.LibintInterface_init_2body_ints.argtypes = [c_void_p]
-
-napmo.cext.LibintInterface_compute_2body_ints.restype = c_void_p
-napmo.cext.LibintInterface_compute_2body_ints.argtypes = [
-    c_void_p, array_2d_double]
-
-napmo.cext.LibintInterface_compute_2body_direct.restype = None
-napmo.cext.LibintInterface_compute_2body_direct.argtypes = [
-    c_void_p, array_2d_double, array_2d_double]
-
-napmo.cext.LibintInterface_compute_coupling_direct.restype = None
-napmo.cext.LibintInterface_compute_coupling_direct.argtypes = [
-    c_void_p, c_void_p, array_2d_double, array_2d_double]
-
-napmo.cext.wavefunction_guess_hcore.restype = None
-napmo.cext.wavefunction_guess_hcore.argtypes = [POINTER(WaveFunction)]
-
-napmo.cext.wavefunction_compute_2body_matrix.restype = None
-napmo.cext.wavefunction_compute_2body_matrix.argtypes = [
-    POINTER(WaveFunction), c_void_p]

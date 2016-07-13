@@ -12,11 +12,7 @@ import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.system.cext import napmo_library as nl
-
-from napmo.system.molecular_system import MolecularSystem
-from napmo.grids.atomic import AtomicGrid
-from napmo.utilities.cell import Cell
+import napmo
 
 
 class BeckeGrid(Structure):
@@ -28,7 +24,7 @@ class BeckeGrid(Structure):
         Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
 
     Args:
-        molecule (MolecularSystem): Molecular system to be calculated.
+        species (dict): Species to be calculated. see MolecularSystem
         n_radial (int, optional): Number of radial points. Default is 40
         n_angular (int, optional): Number of angular points. Default is 110
     """
@@ -64,7 +60,7 @@ class BeckeGrid(Structure):
 
         offset = 0
         for i in range(self.ncenter):
-            self.atgrids.append(AtomicGrid(n_radial, n_angular, centers[i].get(
+            self.atgrids.append(napmo.AtomicGrid(n_radial, n_angular, centers[i].get(
                 'origin'), centers[i].get('symbol')))
 
             self.origin[i] = self.atgrids[-1].origin
@@ -92,12 +88,12 @@ class BeckeGrid(Structure):
         """
         P = np.empty(self.size, dtype=np.float64)
 
-        nl.becke_weights.restype = None
-        nl.becke_weights.argtypes = [
+        napmo.cext.becke_weights.restype = None
+        napmo.cext.becke_weights.argtypes = [
             POINTER(BeckeGrid),
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')]
 
-        nl.becke_weights(byref(self), P)
+        napmo.cext.becke_weights(byref(self), P)
         return P
 
     def evaluate_decomposition(self, atom, cubic_splines, output, cell=None):
@@ -113,21 +109,21 @@ class BeckeGrid(Structure):
 
         """
         if cell is None:
-            cell = Cell(None)
+            cell = napmo.Cell(None)
 
         c_splines = [cubic_splines[i]._this for i in range(len(cubic_splines))]
         splines = np.array(c_splines, dtype=c_void_p)
 
-        nl.eval_decomposition_grid.restype = None
-        nl.eval_decomposition_grid.argtypes = [
+        napmo.cext.eval_decomposition_grid.restype = None
+        napmo.cext.eval_decomposition_grid.argtypes = [
             npct.ndpointer(c_void_p, flags="C_CONTIGUOUS"),
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS'),
             c_void_p, c_long, c_long]
 
-        nl.eval_decomposition_grid(splines, self.origin[atom, :], output, self.points,
-                                   cell._this, len(cubic_splines), self.size)
+        napmo.cext.eval_decomposition_grid(splines, self.origin[atom, :], output, self.points,
+                                           cell._this, len(cubic_splines), self.size)
 
     def integrate(self, f):
         """

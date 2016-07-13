@@ -9,8 +9,7 @@ import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.data.databases import AtomicElementsDatabase
-from napmo.system.cext import napmo_library as nl
+import napmo
 
 
 class RadialGridCheb(Structure):
@@ -44,7 +43,8 @@ class RadialGridCheb(Structure):
 
     def __init__(self, size, atomic_symbol):
         super(RadialGridCheb, self).__init__()
-        self._radii = AtomicElementsDatabase()[atomic_symbol]['atomic_radii_2']
+        self._radii = napmo.AtomicElementsDatabase()[atomic_symbol][
+            'atomic_radii_2']
         self._size = size
         self._symbol = atomic_symbol
 
@@ -54,7 +54,7 @@ class RadialGridCheb(Structure):
         self.weights = np.empty(self.size, dtype=np.float64)
         self._weights = np.ctypeslib.as_ctypes(self.weights)
 
-        nl.radial_init(byref(self))
+        napmo.cext.radial_init(byref(self))
 
         self._get_z()
         self._deriv_z()
@@ -67,7 +67,7 @@ class RadialGridCheb(Structure):
         self.z = np.empty(self.size, dtype=np.float64)
         self._z = np.ctypeslib.as_ctypes(self.z)
 
-        nl.radial_get_z(byref(self))
+        napmo.cext.radial_get_z(byref(self))
 
     def _deriv_z(self):
         """
@@ -76,7 +76,7 @@ class RadialGridCheb(Structure):
         self.dz = np.empty(self.size, dtype=np.float64)
         self._dz = np.ctypeslib.as_ctypes(self.dz)
 
-        nl.radial_deriv_z(byref(self))
+        napmo.cext.radial_deriv_z(byref(self))
 
     def _deriv2_z(self):
         """
@@ -85,7 +85,7 @@ class RadialGridCheb(Structure):
         self.d2z = np.empty(self.size, dtype=np.float64)
         self._d2z = np.ctypeslib.as_ctypes(self.d2z)
 
-        nl.radial_deriv2_z(byref(self))
+        napmo.cext.radial_deriv2_z(byref(self))
 
     @property
     def size(self):
@@ -99,14 +99,14 @@ class RadialGridCheb(Structure):
     def radii(self):
         return self._radii
 
-nl.radial_init.restype = None
-nl.radial_init.argtypes = [POINTER(RadialGridCheb)]
+napmo.cext.radial_init.restype = None
+napmo.cext.radial_init.argtypes = [POINTER(RadialGridCheb)]
 
-nl.radial_get_z.restype = None
-nl.radial_get_z.argtypes = [POINTER(RadialGridCheb)]
+napmo.cext.radial_get_z.restype = None
+napmo.cext.radial_get_z.argtypes = [POINTER(RadialGridCheb)]
 
-nl.radial_deriv_z.restype = None
-nl.radial_deriv_z.argtypes = [POINTER(RadialGridCheb)]
+napmo.cext.radial_deriv_z.restype = None
+napmo.cext.radial_deriv_z.argtypes = [POINTER(RadialGridCheb)]
 
-nl.radial_deriv2_z.restype = None
-nl.radial_deriv2_z.argtypes = [POINTER(RadialGridCheb)]
+napmo.cext.radial_deriv2_z.restype = None
+napmo.cext.radial_deriv2_z.argtypes = [POINTER(RadialGridCheb)]

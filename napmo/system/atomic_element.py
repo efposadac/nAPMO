@@ -10,10 +10,7 @@ from __future__ import print_function
 
 import numpy as np
 
-from napmo.data.databases import AtomicElementsDatabase
-from napmo.data.constants import ANGSTROM_TO_BOHR
-from napmo.data.constants import PROTON_MASS
-from napmo.data.constants import NEUTRON_MASS
+import napmo
 
 
 class AtomicElement(dict):
@@ -43,7 +40,7 @@ class AtomicElement(dict):
         assert len(origin) == 3
         assert isinstance(units, str)
 
-        data = AtomicElementsDatabase()
+        data = napmo.AtomicElementsDatabase()
 
         _symbol = symbol
         mass_number = ''
@@ -61,16 +58,16 @@ class AtomicElement(dict):
 
         # choose the most abundant mass number (if mass number is not provided)
         aux = data['isotopes_' + _symbol]['most_abundant']
-        self['mass'] = (float(aux) * NEUTRON_MASS +
+        self['mass'] = (float(aux) * napmo.NEUTRON_MASS +
                         self['atomic_number'] *
-                        (PROTON_MASS - NEUTRON_MASS))
+                        (napmo.PROTON_MASS - napmo.NEUTRON_MASS))
 
         if mass_number:
             try:
                 self.update(data['isotopes_' + _symbol][mass_number])
-                self['mass'] = (int(mass_number) * NEUTRON_MASS +
+                self['mass'] = (int(mass_number) * napmo.NEUTRON_MASS +
                                 self['atomic_number'] *
-                                (PROTON_MASS - NEUTRON_MASS))
+                                (napmo.PROTON_MASS - napmo.NEUTRON_MASS))
 
             except KeyError:
                 print('Isotope: ', symbol, ' not present!')
@@ -79,7 +76,7 @@ class AtomicElement(dict):
         # converting to Bohr
         origin = np.array(origin, dtype=np.float64)
         if units == 'ANGSTROMS':
-            origin *= ANGSTROM_TO_BOHR
+            origin *= napmo.ANGSTROM_TO_BOHR
 
         self['origin'] = origin
         self['symbol'] = symbol

@@ -9,10 +9,7 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-
-from napmo.data.databases import ElementaryParticlesDatabase
-from napmo.data.databases import CouplingConstantsDatabase
-from napmo.data.constants import ANGSTROM_TO_BOHR
+import napmo
 
 
 class ElementaryParticle(dict):
@@ -37,7 +34,7 @@ class ElementaryParticle(dict):
         assert isinstance(symbol, str)
 
         try:
-            self.update(ElementaryParticlesDatabase()[symbol.lower()])
+            self.update(napmo.ElementaryParticlesDatabase()[symbol.lower()])
         except KeyError:
             print('Elementary particle: ', symbol, ' not present!')
             raise
@@ -45,11 +42,11 @@ class ElementaryParticle(dict):
         # converting to Bohr
         origin = np.array(origin, dtype=np.float64)
         if units == 'ANGSTROMS':
-            origin *= ANGSTROM_TO_BOHR
+            origin *= napmo.ANGSTROM_TO_BOHR
 
         self['origin'] = origin
 
-        self.update(CouplingConstantsDatabase()[symbol.lower()])
+        self.update(napmo.CouplingConstantsDatabase()[symbol.lower()])
 
     @property
     def is_quantum(self):

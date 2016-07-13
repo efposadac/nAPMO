@@ -10,8 +10,6 @@ from __future__ import print_function
 
 from ctypes import *
 import numpy as np
-import numpy.ctypeslib as npct
-
 import napmo
 
 
@@ -46,6 +44,8 @@ class SCF(object):
         print("Point charges energy: {0:<12.8f}".format(self._pce))
 
     def compute(self, pprint=True):
+        """
+        """
         self.compute_1body_ints()
         self.compute_hamiltonian()
         self.compute_guess()
@@ -60,6 +60,8 @@ class SCF(object):
         return self._energy
 
     def compute_1body_ints(self):
+        """
+        """
         # Calculate Integrals
         for psi in self.PSI:
             psi.compute_overlap()
@@ -67,15 +69,21 @@ class SCF(object):
             psi.compute_nuclear()
 
     def compute_hamiltonian(self):
+        """
+        """
         for psi in self.PSI:
             psi.compute_hamiltonian()
 
     def compute_guess(self):
+        """
+        """
         # Compute guess Density (HCORE)
         for psi in self.PSI:
             psi.compute_guess()
 
     def iterate_single(self, psi, pprint=False):
+        """
+        """
 
         if pprint:
             print('{0:5s}  {1:^10s} {2:>12s} {3:>12s} {4:>12s}'
@@ -106,6 +114,8 @@ class SCF(object):
                       format(iterations, psi._energy, self._energy, e_diff, psi._rmsd))
 
     def iterate_multi(self):
+        """
+        """
 
         print('{0:5s}  {1:^10s} {2:>12s} {3:>12s}'
               .format("\nIter", "Energy", "Total E", "Delta(E)"))
@@ -139,6 +149,8 @@ class SCF(object):
                   format(iterations, self._energy - self.pce, self._energy, e_diff))
 
     def compute_energy(self):
+        """
+        """
 
         self._energy = 0.0
         self._coupling_energy = 0.0
@@ -165,6 +177,8 @@ class SCF(object):
         # Not implemented
 
     def get(self, key, default=None):
+        """
+        """
         return self.options.get(key, default)
 
     @property
@@ -187,24 +201,3 @@ Dens Tol: {4:<10.3e}
            ))
 
         return out
-
-
-# Import Library function
-
-
-array_1d_double = npct.ndpointer(
-    dtype=np.double, ndim=1, flags='CONTIGUOUS')
-array_2d_double = npct.ndpointer(
-    dtype=np.double, ndim=2, flags='CONTIGUOUS')
-
-napmo.cext.wavefunction_compute_energy.restype = None
-napmo.cext.wavefunction_compute_energy.argtypes = [
-    POINTER(napmo.WaveFunction)]
-
-napmo.cext.wavefunction_compute_density.restype = None
-napmo.cext.wavefunction_compute_density.argtypes = [
-    POINTER(napmo.WaveFunction)]
-
-napmo.cext.wavefunction_iterate.restype = None
-napmo.cext.wavefunction_iterate.argtypes = [
-    POINTER(napmo.WaveFunction)]

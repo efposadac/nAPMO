@@ -13,8 +13,7 @@ import numpy as np
 import numpy.ctypeslib as npct
 import numbers
 
-from napmo.system.cext import napmo_library as nl
-from napmo.utilities.int1d import *
+import napmo
 
 
 class RadialTransform(object):
@@ -34,23 +33,23 @@ class RadialTransform(object):
     def __init__(self):
         super(RadialTransform, self).__init__()
 
-        nl.RTransform_get_npoint.restype = c_int
-        nl.RTransform_get_npoint.argtypes = [c_void_p]
+        napmo.cext.RTransform_get_npoint.restype = c_int
+        napmo.cext.RTransform_get_npoint.argtypes = [c_void_p]
 
-        self._size = nl.RTransform_get_npoint(self._this)
+        self._size = napmo.cext.RTransform_get_npoint(self._this)
         self._points = np.arange(self.size, dtype=np.float64)
 
     def __dealloc__(self):
         if self._this != NULL:
-            nl.RTransform_del.restype = None
-            nl.RTransform_del.argtypes = [c_void_p]
-            nl.RTransform_del(self._this)
+            napmo.cext.RTransform_del.restype = None
+            napmo.cext.RTransform_del.argtypes = [c_void_p]
+            napmo.cext.RTransform_del(self._this)
 
     def radius(self, t):
         if isinstance(t, numbers.Number):
-            nl.RTransform_radius.restype = c_double
-            nl.RTransform_radius.argtypes = [c_void_p, c_double]
-            return nl.RTransform_radius(self._this, t)
+            napmo.cext.RTransform_radius.restype = c_double
+            napmo.cext.RTransform_radius.argtypes = [c_void_p, c_double]
+            return napmo.cext.RTransform_radius(self._this, t)
         elif isinstance(t, np.ndarray):
             return self.radius_all(points=t)
         else:
@@ -58,9 +57,9 @@ class RadialTransform(object):
 
     def deriv(self, t):
         if isinstance(t, numbers.Number):
-            nl.RTransform_deriv.restype = c_double
-            nl.RTransform_deriv.argtypes = [c_void_p, c_double]
-            return nl.RTransform_deriv(self._this, t)
+            napmo.cext.RTransform_deriv.restype = c_double
+            napmo.cext.RTransform_deriv.argtypes = [c_void_p, c_double]
+            return napmo.cext.RTransform_deriv(self._this, t)
         elif isinstance(t, np.ndarray):
             return self.deriv_all(points=t)
         else:
@@ -68,9 +67,9 @@ class RadialTransform(object):
 
     def deriv2(self, t):
         if isinstance(t, numbers.Number):
-            nl.RTransform_deriv2.restype = c_double
-            nl.RTransform_deriv2.argtypes = [c_void_p, c_double]
-            return nl.RTransform_deriv2(self._this, t)
+            napmo.cext.RTransform_deriv2.restype = c_double
+            napmo.cext.RTransform_deriv2.argtypes = [c_void_p, c_double]
+            return napmo.cext.RTransform_deriv2(self._this, t)
         elif isinstance(t, np.ndarray):
             return self.deriv2_all(points=t)
         else:
@@ -78,9 +77,9 @@ class RadialTransform(object):
 
     def deriv3(self, t):
         if isinstance(t, numbers.Number):
-            nl.RTransform_deriv3.restype = c_double
-            nl.RTransform_deriv3.argtypes = [c_void_p, c_double]
-            return nl.RTransform_deriv3(self._this, t)
+            napmo.cext.RTransform_deriv3.restype = c_double
+            napmo.cext.RTransform_deriv3.argtypes = [c_void_p, c_double]
+            return napmo.cext.RTransform_deriv3(self._this, t)
         elif isinstance(t, np.ndarray):
             return self.deriv3_all(points=t)
         else:
@@ -88,9 +87,9 @@ class RadialTransform(object):
 
     def inv(self, r):
         if isinstance(r, numbers.Number):
-            nl.RTransform_inv.restype = c_double
-            nl.RTransform_inv.argtypes = [c_void_p, c_double]
-            return nl.RTransform_inv(self._this, r)
+            napmo.cext.RTransform_inv.restype = c_double
+            napmo.cext.RTransform_inv.argtypes = [c_void_p, c_double]
+            return napmo.cext.RTransform_inv(self._this, r)
         elif isinstance(r, np.ndarray):
             return self.inv_all(points=r)
         else:
@@ -102,14 +101,14 @@ class RadialTransform(object):
 
         data = np.zeros(points.shape[0], dtype=np.float64)
 
-        nl.RTransform_radius_array.restype = None
-        nl.RTransform_radius_array.argtypes = [
+        napmo.cext.RTransform_radius_array.restype = None
+        napmo.cext.RTransform_radius_array.argtypes = [
             c_void_p,
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             c_int]
 
-        nl.RTransform_radius_array(
+        napmo.cext.RTransform_radius_array(
             self._this, points, data, points.shape[0])
 
         return data
@@ -120,14 +119,14 @@ class RadialTransform(object):
 
         data = np.zeros(points.shape[0], dtype=np.float64)
 
-        nl.RTransform_deriv_array.restype = None
-        nl.RTransform_deriv_array.argtypes = [
+        napmo.cext.RTransform_deriv_array.restype = None
+        napmo.cext.RTransform_deriv_array.argtypes = [
             c_void_p,
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             c_int]
 
-        nl.RTransform_deriv_array(
+        napmo.cext.RTransform_deriv_array(
             self._this, points, data, points.shape[0])
 
         return data
@@ -138,14 +137,14 @@ class RadialTransform(object):
 
         data = np.zeros(points.shape[0], dtype=np.float64)
 
-        nl.RTransform_deriv2_array.restype = None
-        nl.RTransform_deriv2_array.argtypes = [
+        napmo.cext.RTransform_deriv2_array.restype = None
+        napmo.cext.RTransform_deriv2_array.argtypes = [
             c_void_p,
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             c_int]
 
-        nl.RTransform_deriv2_array(
+        napmo.cext.RTransform_deriv2_array(
             self._this, points, data, points.shape[0])
 
         return data
@@ -156,14 +155,14 @@ class RadialTransform(object):
 
         data = np.zeros(points.shape[0], dtype=np.float64)
 
-        nl.RTransform_deriv3_array.restype = None
-        nl.RTransform_deriv3_array.argtypes = [
+        napmo.cext.RTransform_deriv3_array.restype = None
+        napmo.cext.RTransform_deriv3_array.argtypes = [
             c_void_p,
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             c_int]
 
-        nl.RTransform_deriv3_array(
+        napmo.cext.RTransform_deriv3_array(
             self._this, points, data, points.shape[0])
 
         return data
@@ -171,20 +170,20 @@ class RadialTransform(object):
     def inv_all(self, points):
         data = np.zeros(points.shape[0], dtype=np.float64)
 
-        nl.RTransform_inv_array.restype = None
-        nl.RTransform_inv_array.argtypes = [
+        napmo.cext.RTransform_inv_array.restype = None
+        napmo.cext.RTransform_inv_array.argtypes = [
             c_void_p,
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             c_int]
 
-        nl.RTransform_inv_array(
+        napmo.cext.RTransform_inv_array(
             self._this, points, data, points.shape[0])
 
         return data
 
     def get_default_int1d(self):
-        return SimpsonIntegrator1D()
+        return napmo.SimpsonIntegrator1D()
 
     @property
     def size(self):
@@ -198,9 +197,9 @@ class IndentityRadialTransform(RadialTransform):
     """
 
     def __init__(self, size):
-        nl.IdentityRTransform_new.restype = c_void_p
-        nl.IdentityRTransform_new.argtypes = [c_int]
-        self._this = nl.IdentityRTransform_new(size)
+        napmo.cext.IdentityRTransform_new.restype = c_void_p
+        napmo.cext.IdentityRTransform_new.argtypes = [c_int]
+        self._this = napmo.cext.IdentityRTransform_new(size)
 
         super(IndentityRadialTransform, self).__init__()
 
@@ -224,21 +223,21 @@ class PowerRadialTransform(RadialTransform):
     """
 
     def __init__(self, rmin, rmax, size):
-        nl.PowerRTransform_new.restype = c_void_p
-        nl.PowerRTransform_new.argtypes = [c_double, c_double, c_int]
-        self._this = nl.PowerRTransform_new(rmin, rmax, size)
+        napmo.cext.PowerRTransform_new.restype = c_void_p
+        napmo.cext.PowerRTransform_new.argtypes = [c_double, c_double, c_int]
+        self._this = napmo.cext.PowerRTransform_new(rmin, rmax, size)
 
-        nl.PowerRTransform_get_rmin.restype = c_double
-        nl.PowerRTransform_get_rmin.argtypes = [c_void_p]
-        self._rmin = nl.PowerRTransform_get_rmin(self._this)
+        napmo.cext.PowerRTransform_get_rmin.restype = c_double
+        napmo.cext.PowerRTransform_get_rmin.argtypes = [c_void_p]
+        self._rmin = napmo.cext.PowerRTransform_get_rmin(self._this)
 
-        nl.PowerRTransform_get_rmax.restype = c_double
-        nl.PowerRTransform_get_rmax.argtypes = [c_void_p]
-        self._rmax = nl.PowerRTransform_get_rmax(self._this)
+        napmo.cext.PowerRTransform_get_rmax.restype = c_double
+        napmo.cext.PowerRTransform_get_rmax.argtypes = [c_void_p]
+        self._rmax = napmo.cext.PowerRTransform_get_rmax(self._this)
 
-        nl.PowerRTransform_get_power.restype = c_double
-        nl.PowerRTransform_get_power.argtypes = [c_void_p]
-        self._power = nl.PowerRTransform_get_power(self._this)
+        napmo.cext.PowerRTransform_get_power.restype = c_double
+        napmo.cext.PowerRTransform_get_power.argtypes = [c_void_p]
+        self._power = napmo.cext.PowerRTransform_get_power(self._this)
 
         super(PowerRadialTransform, self).__init__()
 
@@ -246,7 +245,7 @@ class PowerRadialTransform(RadialTransform):
         return ' '.join(['PowerRTransform', repr(self.rmin), repr(self.rmax), repr(self.size)])
 
     def get_default_int1d(self):
-        return StubIntegrator1D()
+        return napmo.StubIntegrator1D()
 
     @property
     def rmin(self):
@@ -268,18 +267,18 @@ class ChebyshevRadialTransform(RadialTransform):
     """
 
     def __init__(self, radii, size):
-        nl.ChebyshevRTransform_new.restype = c_void_p
-        nl.ChebyshevRTransform_new.argtypes = [c_double, c_int]
-        self._this = nl.ChebyshevRTransform_new(radii, size)
+        napmo.cext.ChebyshevRTransform_new.restype = c_void_p
+        napmo.cext.ChebyshevRTransform_new.argtypes = [c_double, c_int]
+        self._this = napmo.cext.ChebyshevRTransform_new(radii, size)
 
-        nl.ChebyshevRTransform_get_radii.restype = c_double
-        nl.ChebyshevRTransform_get_radii.argtypes = [c_void_p]
-        self._radii = nl.ChebyshevRTransform_get_radii(self._this)
+        napmo.cext.ChebyshevRTransform_get_radii.restype = c_double
+        napmo.cext.ChebyshevRTransform_get_radii.argtypes = [c_void_p]
+        self._radii = napmo.cext.ChebyshevRTransform_get_radii(self._this)
 
         super(ChebyshevRadialTransform, self).__init__()
 
     def get_default_int1d(self):
-        return StubIntegrator1D()
+        return napmo.StubIntegrator1D()
 
     def to_string(self):
         return ' '.join(['ChebyshevRTransform', repr(self.radii), repr(self.size)])

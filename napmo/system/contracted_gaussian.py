@@ -10,7 +10,7 @@ from __future__ import print_function
 import numpy as np
 import scipy.misc
 
-from napmo.system.primitive_gaussian import PrimitiveGaussian
+import napmo
 
 
 class ContractedGaussian(dict):
@@ -28,11 +28,11 @@ class ContractedGaussian(dict):
     \exp[-\zeta_i ({\\bf r}-{\\bf A})^2]`
 
     Contracted Gaussians form shells the same way as primitives. The
-    contraction coefficients :math:`\\bf C`already include normalization
+    contraction coefficients :math:`\\bf C` already include normalization
     constants so that the resulting combination is properly normalized.
     Published contraction coefficients :math:`\\bf c` are linear coefficients
     for normalized primitives, hence the normalization-including contraction
-    coefficients :math:`\\bf C` have to be computed from them as
+    coefficients :math:`\\bf C` have to be computed from them as;
 
     :math:`C_i = c_i N(\zeta_i,{\\bf n})`
 
@@ -61,7 +61,7 @@ class ContractedGaussian(dict):
         self["l"] = l
         self["origin"] = origin
         self["primitive"] = [
-            PrimitiveGaussian(exponent, coefficient, l, origin)
+            napmo.PrimitiveGaussian(exponent, coefficient, l, origin)
             for (exponent, coefficient) in zip(exponents, coefficients)]
 
         self["normalization"] = 1.0
@@ -79,8 +79,8 @@ class ContractedGaussian(dict):
         Calculates the overlap integral between two contractions.
 
         Args:
-            other (ContractedGaussian) : Contracted function to perform
-            :math:`<\phi_{self} | \phi_{other}>`
+            other (ContractedGaussian) : Contracted function to perform :math:`<\phi_{self} | \phi_{other}>`
+
         """
         output = (
             sum([pa.overlap(pb)
@@ -118,6 +118,9 @@ class ContractedGaussian(dict):
         return self.get('normalization')
 
     def _show_compact(self):
+        """
+        contractions information of the object in a "compact" way
+        """
 
         out = ''
         out += "".join([p._show_compact()
@@ -145,8 +148,7 @@ norma:  {8:<10.5f}
             self.l[1],
             self.l[2],
             self.length,
-            self.norma,
-        )
+            self.norma)
 
         out += """
   {0:<3s} {1:>10s} {2:>10s} {3:>10s}
@@ -155,8 +157,7 @@ norma:  {8:<10.5f}
             "l",
             "zeta",
             "Coeff",
-            "Norma"
-        )
+            "Norma")
 
         out += "".join([p._show_compact()
                         for p in self.get('primitive')])

@@ -3,10 +3,10 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
+SPHINXBUILD   = sphinx-build2
 PAPER         =
-#BUILDDIR      = _build
-#This flag is to build the official documentation (http://efposadac.github.io/nAPMO)
+# BUILDDIR      = _build
+# This flag is to build the official documentation (http://efposadac.github.io/nAPMO)
 BUILDDIR      = ../../nAPMO-docs
 
 

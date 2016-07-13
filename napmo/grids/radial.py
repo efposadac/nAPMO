@@ -9,14 +9,7 @@ import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.data.constants import ANGSTROM_TO_BOHR
-
-from napmo.grids.radial_cheb import RadialGridCheb
-from napmo.grids.radial_transform import *
-
-from napmo.data.databases import AtomicElementsDatabase
-
-from napmo.system.cext import napmo_library as nl
+import napmo
 
 
 class RadialGrid(Structure):
@@ -34,15 +27,16 @@ class RadialGrid(Structure):
 
         if rtransform is None:
             self._size = size
-            self._radii = AtomicElementsDatabase()[atomic_symbol][
+            self._radii = napmo.AtomicElementsDatabase()[atomic_symbol][
                 'atomic_radii_2']
 
-            # tmp = RadialGridCheb(size, atomic_symbol)
+            # tmp = napmo.RadialGridCheb(size, atomic_symbol)
 
             # self._rtransform = PowerRadialTransform(tmp.points.min(),
             #                                         tmp.points.max(),
             #                                         tmp.size)
-            self._rtransform = ChebyshevRadialTransform(self._radii, size)
+            self._rtransform = napmo.ChebyshevRadialTransform(
+                self._radii, size)
         else:
             self._rtransform = rtransform
             self._size = self._rtransform.size
@@ -66,13 +60,13 @@ class RadialGrid(Structure):
         self._size = self._rtransform.size
 
     def integrate(self, f, segments):
-        nl.radial_integrate.restype = c_double
-        nl.radial_integrate.argtypes = [
-            POINTER(RadialGrid),
+        napmo.cext.radial_integrate.restype = c_double
+        napmo.cext.radial_integrate.argtypes = [
+            POINTER(napmo.RadialGrid),
             c_int,
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')]
 
-        return nl.radial_integrate(byref(self), segments, f)
+        return napmo.cext.radial_integrate(byref(self), segments, f)
 
     @property
     def size(self):

@@ -9,9 +9,7 @@ import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.grids.radial import RadialGrid
-from napmo.grids.angular import AngularGrid
-from napmo.system.cext import napmo_library as nl
+import napmo
 
 
 class AtomicGrid(Structure):
@@ -34,8 +32,8 @@ class AtomicGrid(Structure):
         self.origin = np.array([origin], dtype=np.float64)
         self._origin = np.ctypeslib.as_ctypes(self.origin)
 
-        self.radial_grid = RadialGrid(nrad, atomic_symbol)
-        self.angular_grid = AngularGrid(nang)
+        self.radial_grid = napmo.RadialGrid(nrad, atomic_symbol)
+        self.angular_grid = napmo.AngularGrid(nang)
 
         self._radii = self.radial_grid.radii
 
@@ -47,12 +45,13 @@ class AtomicGrid(Structure):
 
         self._symbol = atomic_symbol
 
-        nl.atomic_grid_init.restype = None
-        nl.atomic_grid_init.argtypes = [
-            POINTER(AtomicGrid), POINTER(AngularGrid), POINTER(RadialGrid)
+        napmo.cext.atomic_grid_init.restype = None
+        napmo.cext.atomic_grid_init.argtypes = [
+            POINTER(AtomicGrid), POINTER(
+                napmo.AngularGrid), POINTER(napmo.RadialGrid)
         ]
 
-        nl.atomic_grid_init(
+        napmo.cext.atomic_grid_init(
             byref(self), byref(self.angular_grid), byref(self.radial_grid))
 
     def spherical_expansion(self, lmax, f):
@@ -71,14 +70,14 @@ class AtomicGrid(Structure):
         lsize = (lmax + 1) * (lmax + 1)
         output = np.empty([self.radial_grid.size, lsize], dtype=np.float64)
 
-        nl.angular_spherical_expansion.restype = None
-        nl.angular_spherical_expansion.argtypes = [
-            POINTER(AngularGrid), c_int, c_int,
+        napmo.cext.angular_spherical_expansion.restype = None
+        napmo.cext.angular_spherical_expansion.argtypes = [
+            POINTER(napmo.AngularGrid), c_int, c_int,
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
         ]
 
-        nl.angular_spherical_expansion(
+        napmo.cext.angular_spherical_expansion(
             byref(self.angular_grid), lmax, self.radial_grid.size, f, output)
 
         return output
@@ -98,14 +97,14 @@ class AtomicGrid(Structure):
         """
         output = np.empty(self.size, dtype=np.float64)
 
-        nl.angular_eval_expansion.restype = None
-        nl.angular_eval_expansion.argtypes = [
-            POINTER(AngularGrid), c_int, c_int,
+        napmo.cext.angular_eval_expansion.restype = None
+        napmo.cext.angular_eval_expansion.argtypes = [
+            POINTER(napmo.AngularGrid), c_int, c_int,
             npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS'),
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
         ]
 
-        nl.angular_eval_expansion(
+        napmo.cext.angular_eval_expansion(
             byref(self.angular_grid), lmax, self.radial_grid.size, expansion,
             output)
 
@@ -150,13 +149,14 @@ class AtomicGrid(Structure):
 
         f = np.concatenate(args)
 
-        nl.atomic_grid_integrate.argtypes = [
+        napmo.cext.atomic_grid_integrate.argtypes = [
             POINTER(AtomicGrid), c_int, c_int, c_int,
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
             npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
         ]
 
-        nl.atomic_grid_integrate(byref(self), nfunc, nseg, sseg, f, integral)
+        napmo.cext.atomic_grid_integrate(
+            byref(self), nfunc, nseg, sseg, f, integral)
 
         return integral
 

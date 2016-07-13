@@ -7,11 +7,9 @@
 from __future__ import division
 from __future__ import print_function
 
-import numpy as np
-import numpy.ctypeslib as npct
 from ctypes import *
-
-from napmo.system.cext import napmo_library
+import numpy as np
+import napmo
 
 
 class PrimitiveGaussian(Structure):
@@ -70,7 +68,7 @@ class PrimitiveGaussian(Structure):
         """
         Calculates the normalization constant of this primitive.
         """
-        return napmo_library.gto_normalize_primitive(byref(self))
+        return napmo.cext.gto_normalize_primitive(byref(self))
 
     def compute(self, coord):
         """
@@ -78,7 +76,7 @@ class PrimitiveGaussian(Structure):
         """
         n_coord = coord.shape[0]
         output = np.empty(n_coord)
-        napmo_library.gto_compute_primitive(
+        napmo.cext.gto_compute_primitive(
             byref(self), coord, output, n_coord)
 
         return output
@@ -91,7 +89,7 @@ class PrimitiveGaussian(Structure):
             other (PrimitiveGaussian) : function to perform :math:`<\phi_{self}
              | \phi_{other}>`
         """
-        return napmo_library.gto_overlap_primitive(byref(self), byref(other))
+        return napmo.cext.gto_overlap_primitive(byref(self), byref(other))
 
     def _show_compact(self):
         """
@@ -131,27 +129,3 @@ norma:  {9:<10.5f}
         )
 
         return out
-
-
-array_1d_double = npct.ndpointer(
-    dtype=np.double, ndim=1, flags='CONTIGUOUS')
-array_2d_double = npct.ndpointer(
-    dtype=np.double, ndim=2, flags='CONTIGUOUS')
-
-napmo_library.gto_normalize_primitive.restype = c_double
-napmo_library.gto_normalize_primitive.argtypes = [
-    POINTER(PrimitiveGaussian)
-]
-
-napmo_library.gto_compute_primitive.restype = None
-napmo_library.gto_compute_primitive.argtypes = [
-    POINTER(PrimitiveGaussian),
-    array_2d_double, array_1d_double,
-    c_int
-]
-
-napmo_library.gto_overlap_primitive.restype = c_double
-napmo_library.gto_overlap_primitive.argtypes = [
-    POINTER(PrimitiveGaussian),
-    POINTER(PrimitiveGaussian)
-]
