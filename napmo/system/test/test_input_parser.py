@@ -30,8 +30,10 @@ scf {
 }
 
 # energy of reference
+code {
 ref_energy = -76.0001
 diff = ref_energy - Energy
+}
 
 # basis STO-3G
 """)
@@ -39,7 +41,7 @@ diff = ref_energy - Energy
     test = InputParser(data)
     print(test.data)
     print(test.scf)
-    print(test.var)
+    print(test.code)
 
     assert fix_casting('5') == 5
     assert fix_casting('5.0') == 5.0
@@ -67,15 +69,17 @@ scf {
 }
 
 # energy of reference
+code {
 ref_energy = -76.0001
 diff = ref_energy - Energy
+}
 
 """)
 
     test = InputParser(data)
     print(test.data)
     print(test.scf)
-    print(test.var)
+    print(test.code)
 
     data = ("""# Molecule definition
 molecule {
@@ -95,15 +99,16 @@ scf {
 }
 
 # energy of reference
+code {
 ref_energy = -76.0001
 diff = ref_energy - Energy
-
+}
 """)
 
     test = InputParser(data)
     print(test.data)
     print(test.scf)
-    print(test.var)
+    print(test.code)
 
     data = ("""# Molecule definition
 molecule {
@@ -202,12 +207,13 @@ scf {
 }
 
 # energy of reference
+code {
 ref_energy = -76.0001
 diff = ref_energy - Energy
-
+}
 """)
 
     test = InputParser(data)
     assert test.scf.get('debug') is True
 
-test_input_parser_interface()
+# test_input_parser_interface()

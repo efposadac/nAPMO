@@ -5,7 +5,7 @@ import numpy.ctypeslib as npct
 from ctypes import *
 
 from napmo.system.cext import napmo_library as cext
-from napmo.system.timer import timeblock
+from napmo.system.timer import Timer
 from napmo.system.input_parser import InputParser
 from napmo.system.atomic_element import AtomicElement
 from napmo.system.elementary_particle import ElementaryParticle
@@ -48,6 +48,16 @@ from napmo.data.constants import SPIN_ELECTRON
 from napmo.hf.wavefunction import WaveFunction
 from napmo.hf.scf import SCF
 
+# OMP Threads
+threads = os.environ.get('OMP_NUM_THREADS')
+
+if not threads:
+    threads = 1
+else:
+    threads = int(threads)
+
+# Timer singleton
+runtime = Timer()
 
 # Basis-set path
 basis_dir = os.path.join(os.path.dirname(__file__), 'data/basis')

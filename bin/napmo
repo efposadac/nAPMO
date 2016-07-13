@@ -82,4 +82,10 @@ if __name__ == '__main__':
     system = napmo.NAPMO(data)
 
     # Run calculation
-    Energy = system.solve()
+    system.solve()
+
+    # Execute code
+    system.exec_code()
+
+    # Show time information
+    napmo.runtime.show_summary()

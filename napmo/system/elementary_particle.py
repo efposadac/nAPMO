@@ -79,8 +79,7 @@ Basis:    {8:9s}
             self.get('charge'),
             self.get('mass'),
             self.get('spin'),
-            self.get('basis', {}).get('name', "None")
-        )
+            self.get('basis', {}).get('name', "None"))
 
         if 'origin' in self:
             out += 'Origin:   {0:<5.3f} {1:<5.3f} {2:<5.3f}\n'.format(

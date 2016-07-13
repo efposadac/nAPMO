@@ -6,6 +6,7 @@
 # efposadac@unal.edu.co
 
 import napmo
+import matplotlib.pylab as plt
 
 
 class NAPMO(object):
@@ -19,6 +20,8 @@ class NAPMO(object):
         super(NAPMO, self).__init__()
 
         assert isinstance(data, napmo.InputParser)
+
+        self._energy = 0.0
 
         self.data = data
 
@@ -63,7 +66,20 @@ class NAPMO(object):
     def solve(self):
         # TODO: Parse method and others (class solver maybe?)
         self.solver = napmo.SCF(self.system, options=self.data.scf)
-        return self.solver.compute()
+        self._energy = self.solver.compute()
+
+    def exec_code(self):
+        print('\n--------------------------------------------------')
+
+        g = {'plt': plt}
+
+        l = {"Energy": self._energy,
+             "D": [psi.D for psi in self.solver.PSI],
+             "C": [psi.C for psi in self.solver.PSI]}
+
+        if self.data.code != '':
+            print('Code results:')
+            exec(self.data.code, g, l)
 
     def show(self):
         print(self.system)

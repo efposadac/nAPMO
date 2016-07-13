@@ -35,7 +35,8 @@ scf {
     data = InputParser(file)
     system = NAPMO(data)
     pe = -76.008843007747
-    e = system.solve()
+    system.solve()
+    e = system._energy
     print(e)
     np.testing.assert_allclose(pe, e)
 
@@ -62,7 +63,8 @@ scf {
     data = InputParser(file)
     system = NAPMO(data)
     pe = -76.008843007747
-    e = system.solve()
+    system.solve()
+    e = system._energy
 
     np.testing.assert_allclose(pe, e)
 
@@ -95,7 +97,8 @@ scf {
     data = InputParser(file)
     system = NAPMO(data)
     pe = -75.969790197894
-    e = system.solve()
+    system.solve()
+    e = system._energy
 
     np.testing.assert_allclose(pe, e, rtol=10e-6)
 
@@ -119,12 +122,19 @@ scf {
     uhf
     analytic
 }
+
+code {
+ref_energy = -0.66217971
+diff_energy = ref_energy - Energy
+}
 """)
 
     data = InputParser(file)
     system = NAPMO(data)
     pe = -0.66217971
-    e = system.solve()
+    system.solve()
+    e = system._energy
+    system.exec_code()
 
     np.testing.assert_allclose(pe, e, rtol=10e-6)
 

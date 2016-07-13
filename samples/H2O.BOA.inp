@@ -1,0 +1,25 @@
+# Molecule definition
+molecule {
+    O  0.000   0.000   0.111
+    H  0.000   0.758   -0.444
+    H  0.000   -0.758  -0.444
+}
+
+# basis-set specification
+basis {
+    e- 6-311G*
+}
+
+# scf options
+scf {
+    # direct # for eris calculation on-the-fly (slower)
+    hf
+    analytic
+}
+
+code {
+result = lambda x: print("PASS!") if x < 1e-7  else print("FAILED!")
+ref_energy = -76.032776981798
+diff_energy = ref_energy - Energy
+result(diff_energy)    
+}

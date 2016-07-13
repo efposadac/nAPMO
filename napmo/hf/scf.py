@@ -22,7 +22,7 @@ class SCF(object):
         super(SCF, self).__init__()
         print('\nStarting SCF Calculation...')
 
-        self.options = {'maxiter': 100, 'eps_e': 1e-7,  'eps_d': 1e-6,
+        self.options = {'maxiter': 100, 'eps_e': 1e-7,  'eps_d': 1e-7,
                         'method': 'hf', 'kind': 'analytic', 'direct': False}
 
         if options:
@@ -51,10 +51,10 @@ class SCF(object):
         self.compute_guess()
 
         if len(self.PSI) > 1:
-            with napmo.timeblock("SCF Multi Total Time"):
+            with napmo.runtime.timeblock('SCF Multi'):
                 self.iterate_multi()
         else:
-            with napmo.timeblock("SCF Single Total Time"):
+            with napmo.runtime.timeblock('SCF Single'):
                 self.iterate_single(self.PSI[-1], pprint=pprint)
 
         return self._energy
@@ -63,10 +63,11 @@ class SCF(object):
         """
         """
         # Calculate Integrals
-        for psi in self.PSI:
-            psi.compute_overlap()
-            psi.compute_kinetic()
-            psi.compute_nuclear()
+        with napmo.runtime.timeblock('1 body ints'):
+            for psi in self.PSI:
+                psi.compute_overlap()
+                psi.compute_kinetic()
+                psi.compute_nuclear()
 
     def compute_hamiltonian(self):
         """
@@ -99,10 +100,14 @@ class SCF(object):
             iterations += 1
             e_last = psi._energy
 
-            psi.compute_2body(self.get('direct'))
+            with napmo.runtime.timeblock('2 body ints'):
+                psi.compute_2body(self.get('direct'))
+
             psi.build_fock()
+
             # solve F C = e S C
-            napmo.cext.wavefunction_iterate(byref(psi))
+            with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
+                napmo.cext.wavefunction_iterate(byref(psi))
 
             e_diff = psi._energy - e_last
 
@@ -132,14 +137,23 @@ class SCF(object):
 
             for psi in self.PSI:
                 # Calculate 2 body Matrix
-                psi.compute_2body(self.get('direct'))
+                with napmo.runtime.timeblock('2 body ints'):
+                    psi.compute_2body(self.get('direct'))
+
                 psi.build_fock()
+
                 # solve F C = e S C
-                napmo.cext.wavefunction_iterate(byref(psi))
-                psi.compute_couling(self.PSI, direct=self.get('direct'))
+                with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
+                    napmo.cext.wavefunction_iterate(byref(psi))
+
+                with napmo.runtime.timeblock('Coupling ints'):
+                    psi.compute_couling(self.PSI, direct=self.get('direct'))
+
                 psi.build_fock()
+
                 # solve F C = e S C
-                napmo.cext.wavefunction_iterate(byref(psi))
+                with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
+                    napmo.cext.wavefunction_iterate(byref(psi))
 
             self.compute_energy()
 

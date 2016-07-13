@@ -79,10 +79,11 @@ class InputParser(object):
         action = {
             'molecule': self.load_molecule,
             'basis': self.load_basis,
-            'scf': self.load_scf
+            'scf': self.load_scf,
+            'code': self.load_code
         }
 
-        self.var = []  # variables for some math in input
+        self.code = ''  # code to execute at the end of the calculation
         self.data = {}  # data of the molecule
         self.charges = {}  # options for charges and multiplicity
         self.scf = {}  # options for SCF engine
@@ -112,9 +113,10 @@ class InputParser(object):
 
                     action[keyword](keydata, ingroup)
                 else:
-                    self.var.append(
-                        keyword + data[pos:data.find('\n', pos)].strip()
-                    )
+                    raise_exception(
+                        ValueError,
+                        "Keywork action not known!",
+                        'Check your input file ' + keyword + ' is undefined')
 
             pos += 1
 
@@ -254,3 +256,6 @@ class InputParser(object):
                 aux.update(options[line])
 
         self.scf.update(aux)
+
+    def load_code(self,  data, group=True, options=None):
+        self.code = data

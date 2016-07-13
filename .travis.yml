@@ -24,7 +24,7 @@ addons:
       - libboost1.55-dev
 install:
   - conda update --yes conda
-  - conda create -n testenv --yes scipy numpy pip nose setuptools python=3.4
+  - conda create -n testenv --yes scipy numpy pip nose setuptools matplotlib python=3.4
   - source activate testenv
 before_install:
   - gcc-6 --version
