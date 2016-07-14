@@ -10,7 +10,7 @@ from __future__ import print_function
 from ctypes import *
 
 import numpy as np
-import napmo as nap
+import napmo
 import re
 import os
 
@@ -19,8 +19,6 @@ class BasisSet(dict):
 
     """
     Basis-set interface. (dict)
-
-    Basis-set manager
     """
 
     def __init__(self, basis_name, particle, origin=None, basis_file=None):
@@ -33,7 +31,7 @@ class BasisSet(dict):
 
         if origin is not None:
             if not basis_file:
-                basis_file = os.path.join(nap.basis_dir, basis_name)
+                basis_file = os.path.join(napmo.basis_dir, basis_name)
 
             basis_data = self.load_file(particle, basis_file)
             self.load_gaussian(particle, basis_data, origin)
@@ -53,11 +51,12 @@ class BasisSet(dict):
             basis_file (str): Path to the basis file.
 
         Return:
-            basis_data(list): dict list with the basis-set data
+            basis_data(list): List of dicts with the basis-set data
 
-            Example:
+            Example::
 
-            [{'angular': 's', 'cont': [0.15432897, 0.15432897, 0.15432897], 'prim': [3.42525091, 3.42525091, 3.42525091]}]
+                [{'angular': 's', 'cont': [0.15432897, 0.15432897, 0.15432897],
+                'prim': [3.42525091, 3.42525091, 3.42525091]}]
 
         """
 
@@ -115,9 +114,10 @@ class BasisSet(dict):
         Args:
             particle (str): Symbol of the particle.
             basis_data (list): Information of the basis.
+            origin (ndarray) : Center of the functions
         """
 
-        func = [nap.ContractedGaussian(
+        func = [napmo.ContractedGaussian(
             np.array(cont['prim'], dtype=np.float64),
             np.array(cont['cont'], dtype=np.float64),
             np.array(origin, dtype=np.float64),

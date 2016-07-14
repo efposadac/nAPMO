@@ -11,7 +11,10 @@ import matplotlib.pylab as plt
 
 class NAPMO(object):
     """
-    nAPMO system manager
+    NAPMO system manager
+
+    Args:
+        data (InputParser) : parsed input data
     """
 
     Energy = 0.0
@@ -32,6 +35,9 @@ class NAPMO(object):
         self.show()
 
     def build_system(self):
+        """
+        Builds the MolecularSystem object for the calculation
+        """
         self.system = napmo.MolecularSystem()
 
         atomic_data = napmo.AtomicElementsDatabase()
@@ -64,11 +70,17 @@ class NAPMO(object):
             self.data.charges, self.data.scf.get('method', 'rhf') == 'uhf')
 
     def solve(self):
+        """
+        Executes the tasks to be performed
+        """
         # TODO: Parse method and others (class solver maybe?)
         self.solver = napmo.SCF(self.system, options=self.data.scf)
         self._energy = self.solver.compute()
 
     def exec_code(self):
+        """
+        Executes the source code from the block ``code`` in the input file.
+        """
         print('\n--------------------------------------------------')
 
         g = {'plt': plt}

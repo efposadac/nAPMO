@@ -10,8 +10,6 @@ from __future__ import print_function
 
 from ctypes import *
 import numpy as np
-import numpy.ctypeslib as npct
-
 import napmo
 
 
@@ -20,26 +18,19 @@ class CubicSpline(object):
     """
     A cubic spline object
 
-    **Arguments:**
+    Args:
 
-    y
-        The function values at the 1D grid.
+        y : The function values at the 1D grid.
+        dx (optional) : The derivative of the function values at the 1D grid. If not given,
+            they are determined such that the second derivative of the cubic
+            spline is continuous at the grid points.
 
-    **Optional arguments:**
+        rtransform (optional) : The transformation object that specifies the 1D grid. If not given,
+            an identity transform is used
 
-    dx
-        The derivative of the function values at the 1D grid. If not given,
-        they are determined such that the second derivative of the cubic
-        spline is continuous at the grid points.
-
-    rtransform
-        The transformation object that specifies the 1D grid. If not given,
-        an identity transform is used
-
-    extrapolation
-        The extrapolation object that specifies the spline function outside
-        the interval determined by the 1D grid. By default,
-        CuspExtrapolation() is used.
+        extrapolation (optional) : The extrapolation object that specifies the spline function outside
+            the interval determined by the 1D grid. By default,
+            CuspExtrapolation() is used.
     """
 
     def __init__(self, y, dx=None, rtransform=None, extrapolation=None):
@@ -80,22 +71,16 @@ class CubicSpline(object):
         napmo.cext.CubicSpline_del(self._this)
 
     def __call__(self, new_x, new_y=None):
-        '''evaluate the spline on a grid
+        """
+        evaluate the spline on a grid
 
-           **Arguments:**
-
-           new_x
-                A numpy array with the x-values at which the spline must be
-                evaluated.
-
-           **Optional arguments:**
-
-           new_y
-                When given, it is used as output argument. This array must have
+        Args:
+            new_x (ndarray): A numpy array with the x-values at which the spline must be evaluated.
+            new_y (ndarray, optional) : When given, it is used as output argument. This array must have
                 the same size of new_x.
-
-           **Returns:** new_y
-        '''
+        Returns:
+            new_y
+        """
         new_n = new_x.shape[0]
         if new_y is None:
             new_y = np.zeros(new_n, np.float64)
@@ -107,22 +92,18 @@ class CubicSpline(object):
         return new_y
 
     def deriv(self, new_x, new_dx=None):
-        '''Evaluate the derivative of the spline (towards x) on a grid
+        """
+        Evaluate the derivative of the spline (towards x) on a grid
 
-           **Arguments:**
+        Args:
 
-           new_x
-                A numpy array with the x-values at which the spline must be
+            new_x (ndarray) : A numpy array with the x-values at which the spline must be
                 evaluated.
-
-           **Optional arguments:**
-
-           new_dx
-                When given, it is used as output argument. This array must have
+            new_dx (ndarray, optional) : When given, it is used as output argument. This array must have
                 the same size of new_x.
-
-           **Returns:** new_dx
-        '''
+        Returns:
+            new_dx
+        """
         new_n = new_x.shape[0]
         if new_dx is None:
             new_dx = np.zeros(new_n, np.float64)
@@ -155,37 +136,3 @@ class CubicSpline(object):
     @property
     def rtransform(self):
         return self._rtransform
-
-array_1d_double = npct.ndpointer(
-    dtype=np.double, ndim=1, flags='CONTIGUOUS')
-
-napmo.cext.CubicSpline_new.restype = c_void_p
-napmo.cext.CubicSpline_new.argtypes = [array_1d_double,
-                                       array_1d_double, c_void_p, c_void_p, c_int]
-
-napmo.cext.CubicSpline_del.restype = None
-napmo.cext.CubicSpline_del.argtypes = [c_void_p]
-
-napmo.cext.CubicSpline_eval.restype = None
-napmo.cext.CubicSpline_eval.argtypes = [
-    c_void_p, array_1d_double, array_1d_double, c_int]
-
-napmo.cext.CubicSpline_eval_deriv.restype = None
-napmo.cext.CubicSpline_eval_deriv.argtypes = [
-    c_void_p, array_1d_double, array_1d_double, c_int]
-
-napmo.cext.CubicSpline_get_first_x.restype = c_double
-napmo.cext.CubicSpline_get_first_x.argtypes = [c_void_p]
-
-napmo.cext.CubicSpline_get_last_x.restype = c_double
-napmo.cext.CubicSpline_get_last_x.argtypes = [c_void_p]
-
-napmo.cext.CubicSpline_get_rtransform.restype = c_void_p
-napmo.cext.CubicSpline_get_rtransform.argtypes = [c_void_p]
-
-napmo.cext.CubicSpline_get_extrapolation.restype = c_void_p
-napmo.cext.CubicSpline_get_extrapolation.argtypes = [c_void_p]
-
-napmo.cext.solve_cubic_spline_system.restype = None
-napmo.cext.solve_cubic_spline_system.argtypes = [
-    array_1d_double, array_1d_double, c_int]

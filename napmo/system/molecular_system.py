@@ -20,8 +20,6 @@ class MolecularSystem(dict):
     Defines a molecular system, containing different kinds of quantum 'species'
     i.e. atoms, muon, positrons, etc. (dict)
 
-    Args:
-        name (str): Name of the object.
     """
 
     def __init__(self):
@@ -199,7 +197,14 @@ class MolecularSystem(dict):
             self._point_charges.append(self.get(symbol).get('particles')[-1])
 
     def set_charges(self, data, open_shell=False):
+        """
+        Adds new particles to the existent species in the system. If electrons, split the species ``e-``
+        into ``e-alpha`` and ``e-beta`` electrons accordingly to the given charge and multiplicity.
 
+        Args:
+            data(dict) : information with charge and multiplicity for each species
+            open_shell (bool) : whether the electrons should be split or not.
+        """
         assert isinstance(data, dict)
 
         for key in data:
@@ -314,14 +319,14 @@ class MolecularSystem(dict):
     def size_species(self):
         """
         Returns the number of quantum species in the system.
-
-        Returns:
-            int: Number of quantum species in the system.
         """
         return len(self)
 
     @property
     def point_charges(self):
+        """
+        List with the point charges in the molecule
+        """
         return self._point_charges
 
     def __repr__(self):

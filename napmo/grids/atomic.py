@@ -45,12 +45,6 @@ class AtomicGrid(Structure):
 
         self._symbol = atomic_symbol
 
-        napmo.cext.atomic_grid_init.restype = None
-        napmo.cext.atomic_grid_init.argtypes = [
-            POINTER(AtomicGrid), POINTER(
-                napmo.AngularGrid), POINTER(napmo.RadialGrid)
-        ]
-
         napmo.cext.atomic_grid_init(
             byref(self), byref(self.angular_grid), byref(self.radial_grid))
 
@@ -69,13 +63,6 @@ class AtomicGrid(Structure):
         """
         lsize = (lmax + 1) * (lmax + 1)
         output = np.empty([self.radial_grid.size, lsize], dtype=np.float64)
-
-        napmo.cext.angular_spherical_expansion.restype = None
-        napmo.cext.angular_spherical_expansion.argtypes = [
-            POINTER(napmo.AngularGrid), c_int, c_int,
-            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
-            npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
-        ]
 
         napmo.cext.angular_spherical_expansion(
             byref(self.angular_grid), lmax, self.radial_grid.size, f, output)
@@ -97,13 +84,6 @@ class AtomicGrid(Structure):
         """
         output = np.empty(self.size, dtype=np.float64)
 
-        napmo.cext.angular_eval_expansion.restype = None
-        napmo.cext.angular_eval_expansion.argtypes = [
-            POINTER(napmo.AngularGrid), c_int, c_int,
-            npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS'),
-            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
-        ]
-
         napmo.cext.angular_eval_expansion(
             byref(self.angular_grid), lmax, self.radial_grid.size, expansion,
             output)
@@ -111,9 +91,12 @@ class AtomicGrid(Structure):
         return output
 
     def spherical_average(self, *args):
-        '''
+        """
         Computes the spherical average of the product of given functions
-        '''
+
+        Returns:
+            output (array) : the spherical average
+        """
 
         f = np.concatenate(args)
         s = self.integrate(segmented=True)
@@ -130,7 +113,7 @@ class AtomicGrid(Structure):
             f (ndarray): array of :math:`f` computed in all grid points.
             segmented (logical): whether to calculate the integral in a segmented way along the number of radial points.
 
-        return:
+        Returns:
             integral: float or array in the segmented case.
         """
         segmented = kwargs.pop('segmented', False)
@@ -149,12 +132,6 @@ class AtomicGrid(Structure):
 
         f = np.concatenate(args)
 
-        napmo.cext.atomic_grid_integrate.argtypes = [
-            POINTER(AtomicGrid), c_int, c_int, c_int,
-            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
-            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
-        ]
-
         napmo.cext.atomic_grid_integrate(
             byref(self), nfunc, nseg, sseg, f, integral)
 
@@ -162,8 +139,14 @@ class AtomicGrid(Structure):
 
     @property
     def size(self):
+        """
+        Number of points in the grid
+        """
         return self._size
 
     @property
     def symbol(self):
+        """
+        Owner of the grid
+        """
         return self._symbol

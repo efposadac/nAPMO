@@ -45,9 +45,13 @@ class SCF(object):
 
     def compute(self, pprint=True):
         """
+        Computes APMO-HF or HF depending on the number of quantum species
+
+        Args:
+            pprint (bool): Whether to print or not the progress of the calculation.
         """
         self.compute_1body_ints()
-        self.compute_hamiltonian()
+        self.compute_hcore()
         self.compute_guess()
 
         if len(self.PSI) > 1:
@@ -61,6 +65,11 @@ class SCF(object):
 
     def compute_1body_ints(self):
         """
+        Computes one boy molecular integrals for all quantum species in the system, including:
+
+        * Overlap
+        * Kinetic
+        * Nuclear potential
         """
         # Calculate Integrals
         with napmo.runtime.timeblock('1 body ints'):
@@ -69,14 +78,17 @@ class SCF(object):
                 psi.compute_kinetic()
                 psi.compute_nuclear()
 
-    def compute_hamiltonian(self):
+    def compute_hcore(self):
         """
+        Builds the one particle hcore.
         """
         for psi in self.PSI:
-            psi.compute_hamiltonian()
+            psi.compute_hcore()
 
     def compute_guess(self):
         """
+        Computes the density guess using the *HCORE* method:
+        :math:`H C = e S C`
         """
         # Compute guess Density (HCORE)
         for psi in self.PSI:
@@ -84,6 +96,11 @@ class SCF(object):
 
     def iterate_single(self, psi, pprint=False):
         """
+        Perform SCF procedure for one species.
+
+        Args:
+            psi (WaveFunction) : WaveFunction object for one species.
+            pprint (bool): Whether to print or not the progress of the calculation.
         """
 
         if pprint:
@@ -120,6 +137,7 @@ class SCF(object):
 
     def iterate_multi(self):
         """
+        Perform SCF iteration for all species in this object.
         """
 
         print('{0:5s}  {1:^10s} {2:>12s} {3:>12s}'
@@ -164,6 +182,7 @@ class SCF(object):
 
     def compute_energy(self):
         """
+        Computes the total energy for a multi-species system.
         """
 
         self._energy = 0.0
@@ -192,11 +211,15 @@ class SCF(object):
 
     def get(self, key, default=None):
         """
+        Returns the option ``key`` of the SCF object
         """
         return self.options.get(key, default)
 
     @property
     def pce(self):
+        """
+        The point charges energy
+        """
         return self._pce
 
     def __repr__(self):

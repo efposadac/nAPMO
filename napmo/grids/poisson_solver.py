@@ -10,15 +10,14 @@ from scipy.sparse.linalg import spsolve
 from scipy.sparse import csc_matrix
 
 import numpy as np
-import numpy.ctypeslib as npct
 from ctypes import *
-
 import napmo
 
 
 def poisson_solver(grid, dens, lmax):
     """
     Returns the spherically expanded potential :math:`U_{\ell m}(r)` obtained following Becke's procedure.
+    (finite elements).
 
     References:
         Becke, A. D. Dickson, R. M. Numerical solution of Poisson's equation in polyatomic molecules. J. Chem. Phys. 89(5), 1988.
@@ -92,16 +91,22 @@ def poisson_solver(grid, dens, lmax):
 
 
 def poisson_solver_finite_differences(grid, rho, lmax):
-    assert isinstance(grid, napmo.BeckeGrid)
+    """
+    Returns the spherically expanded potential :math:`U_{\ell m}(r)` obtained following Becke's procedure.
+    (finite differences).
 
-    napmo.cext.finite_difference_matrix.restype = None
-    napmo.cext.finite_difference_matrix.argtypes = [
-        POINTER(napmo.RadialGrid),
-        npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
-        npct.ndpointer(dtype=np.int32, ndim=1, flags='CONTIGUOUS'),
-        npct.ndpointer(dtype=np.int32, ndim=1, flags='CONTIGUOUS'),
-        c_int
-    ]
+    References:
+        Becke, A. D. Dickson, R. M. Numerical solution of Poisson's equation in polyatomic molecules. J. Chem. Phys. 89(5), 1988.
+
+    Args:
+        grid (BeckeGrid): Molecular grid.
+        rho (ndarray): Array with the source density calculated in each point of the grid.
+        lmax (int): Maximum :math:`\ell` order of the expansion.
+
+    Returns:
+        U (ndarray): Spherical expanded potential. Array with shape (nrad, lsize), where :math:`\ell_{size} = (\ell_{max} + 1)^2`
+    """
+    assert isinstance(grid, napmo.BeckeGrid)
 
     offset = 0
     result = []

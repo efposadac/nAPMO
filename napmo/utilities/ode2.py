@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # file: ode2.py
 # nAPMO package
 # Copyright (c) 2016, Edwin Fernando Posada
@@ -5,7 +6,6 @@
 # Version: 0.1
 # efposadac@unal.edu.co
 
-# -*- coding: utf-8 -*-
 # HORTON: Helpful Open-source Research TOol for N-fermion systems.
 # Copyright (C) 2011-2015 The HORTON Development Team
 #
@@ -34,34 +34,29 @@ from scipy.sparse.linalg import spsolve
 from scipy.sparse import csc_matrix
 
 import numpy as np
-import numpy.ctypeslib as npct
-
 from ctypes import *
 
 import napmo
 
 
 def solve_ode2(b, a, f, bcs, extrapolation=None):
-    '''Solve a second order ODE.
+    """
+    Solve a second order ODE.
 
-       **Arguments:**
+    Args:
 
-       b, a, f
-            Cubic splines for the given functions in the second order ODE. (See
+        b, a, f (CubicSpline) : Cubic splines for the given functions in the second order ODE. (See
             build_neumann for details.) These cubic splines must have identical
             RTransform objects.
 
-       bcs
-            The boundary conditions (See build_neumann for details.)
+        bcs : The boundary conditions (See build_neumann for details.)
 
-       **Optional arguments:**
+        extrapolation (Extrapolation, optional) : The extrapolation object for the returned cubic spline.
 
-       extrapolation
-            The extrapolation object for the returned cubic spline.
-
-       **Returns:** a cubic spline object with the solution that uses the same
-       RTransform object as the input functions a, b and f.
-    '''
+    Returns:
+        output (CubicSpline) : a cubic spline object with the solution that uses the same
+            RTransform object as the input functions a, b and f.
+    """
 
     def merge(y, d):
         '''Put y and d in one vector'''
@@ -120,21 +115,3 @@ def solve_ode2(b, a, f, bcs, extrapolation=None):
     ud_orig = ud_new / j1
 
     return napmo.CubicSpline(uy_orig, ud_orig, rtf, extrapolation)
-
-
-array_1d_double = npct.ndpointer(
-    dtype=np.double, ndim=1, flags='CONTIGUOUS')
-
-array_2d_double = npct.ndpointer(
-    dtype=np.double, ndim=2, flags='CONTIGUOUS')
-
-napmo.cext.build_ode2.restype = None
-napmo.cext.build_ode2.argtypes = [
-    array_1d_double,
-    array_1d_double,
-    array_1d_double,
-    array_1d_double,
-    array_2d_double,
-    array_1d_double,
-    c_long
-]

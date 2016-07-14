@@ -34,13 +34,9 @@ class AngularGrid(Structure):
         self.weights = np.empty(self.lorder, dtype=np.float64)
         self._weights = np.ctypeslib.as_ctypes(self.weights)
 
-        napmo.cext.angular_cartesian.restype = None
-        napmo.cext.angular_cartesian.argtypes = [POINTER(AngularGrid)]
         napmo.cext.angular_cartesian(byref(self))
 
         if spherical:
-            napmo.cext.angular_to_spherical.restype = None
-            napmo.cext.angular_to_spherical.argtypes = [POINTER(AngularGrid)]
             napmo.cext.angular_to_spherical(byref(self))
 
     def integrate(self, *args):
@@ -53,20 +49,19 @@ class AngularGrid(Structure):
         Returns:
             integral (double): Integral value.
         """
-
-        napmo.cext.angular_integrate.restype = c_double
-        napmo.cext.angular_integrate.argtypes = [
-            POINTER(AngularGrid), c_int, npct.ndpointer(
-                dtype=np.double, ndim=1, flags='CONTIGUOUS')
-        ]
-
         f = np.concatenate(args)
         return napmo.cext.angular_integrate(byref(self), len(args), f)
 
     @property
     def lorder(self):
+        """
+        Order of the Lebedev's quadrature
+        """
         return self._lorder
 
     @property
     def spherical(self):
+        """
+        Whether the points are in spherical coordinates or not
+        """
         return self._spherical

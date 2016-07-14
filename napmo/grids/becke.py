@@ -84,14 +84,9 @@ class BeckeGrid(Structure):
             Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
 
         Returns:
-            P (numpy.darray): The value of cell_function (eq. 13, Becke, 1988)
+            P (ndarray): The value of cell_function (eq. 13, Becke, 1988)
         """
         P = np.empty(self.size, dtype=np.float64)
-
-        napmo.cext.becke_weights.restype = None
-        napmo.cext.becke_weights.argtypes = [
-            POINTER(BeckeGrid),
-            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')]
 
         napmo.cext.becke_weights(byref(self), P)
         return P
@@ -113,14 +108,6 @@ class BeckeGrid(Structure):
 
         c_splines = [cubic_splines[i]._this for i in range(len(cubic_splines))]
         splines = np.array(c_splines, dtype=c_void_p)
-
-        napmo.cext.eval_decomposition_grid.restype = None
-        napmo.cext.eval_decomposition_grid.argtypes = [
-            npct.ndpointer(c_void_p, flags="C_CONTIGUOUS"),
-            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
-            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS'),
-            npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS'),
-            c_void_p, c_long, c_long]
 
         napmo.cext.eval_decomposition_grid(splines, self.origin[atom, :], output, self.points,
                                            cell._this, len(cubic_splines), self.size)
@@ -152,8 +139,14 @@ class BeckeGrid(Structure):
 
     @property
     def ncenter(self):
+        """
+        Number of particles of a given species in the molecular grid
+        """
         return self._ncenter
 
     @property
     def size(self):
+        """
+        Number of points in the grid
+        """
         return self._size

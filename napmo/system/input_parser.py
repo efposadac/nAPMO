@@ -12,7 +12,18 @@ import re
 
 
 def extract_keywork(data, beg=0):
+    """
+    Extract keywords from the input file starting in ``beg`` position
 
+    Example::
+
+        molecule {...} molecule is a keyword
+        basis = ... basis is a keyword
+
+    Args:
+        data (str) : the input as string
+        beg (int) : the starting position
+    """
     keyword = None
     group = False
     ingroup = False
@@ -47,6 +58,23 @@ def extract_keywork(data, beg=0):
 
 
 def fix_casting(item):
+    """
+    Converts a string in its corresponding data type.
+
+    Example:
+
+    .. doctest::
+
+        >>> from napmo.system.input_parser import fix_casting
+        >>> fix_casting('2')
+        2
+        >>> fix_casting('2.0')
+        2.0
+        >>> fix_casting('True')
+        True
+        >>> fix_casting('Test')
+        'Test'
+    """
     try:
         return int(item)
     except ValueError:
@@ -70,7 +98,7 @@ def raise_exception(e, error, message):
 
 class InputParser(object):
     """
-    Input parser
+    Input parser class
     """
 
     def __init__(self, data):
@@ -123,6 +151,11 @@ class InputParser(object):
     def load_molecule(self, data, group=True, options=None):
         """
         Load Molecule information from the input file (Only Cartesian coordinates for now)
+
+        Args:
+            data (str) : Relevant data from input corresponding to the keyword ``molecule``
+            group (bool) : Whether the data is a group ie. ``{...}`` or just a variable
+            options (str) : Additional options for the group ``[...]`` besides molecule
         """
         atomic_data = napmo.AtomicElementsDatabase()
         keys = ['charge', 'multiplicity']
@@ -170,6 +203,14 @@ class InputParser(object):
                 for aux in options.split(',')}
 
     def load_basis(self, data, group=True, options=None):
+        """
+        Loads the basis keyword
+
+        Args:
+            data (str) : Relevant data from input corresponding to the keyword ``basis``
+            group (bool) : Whether the data is a group ie. ``{...}`` or just a variable ``basis = ...``
+
+        """
         atomic_data = napmo.AtomicElementsDatabase()
         data = data.splitlines()
 
@@ -234,6 +275,13 @@ class InputParser(object):
                     particle['basis_file'] = basis_file
 
     def load_scf(self, data, group=True, options=None):
+        """
+        Loads the scf keyword
+
+        Args:
+            data (str) : Relevant data from input corresponding to the keyword ``scf``
+            group (bool) : Whether the data is a group ie. ``{...}`` or just a variable ``scf = ...``        
+        """
         options = {'uhf': {'method': 'uhf'},
                    'hf': {'method': 'rhf'},
                    'rhf': {'method': 'rhf'},
@@ -258,4 +306,10 @@ class InputParser(object):
         self.scf.update(aux)
 
     def load_code(self,  data, group=True, options=None):
+        """
+        Loads the code keyword
+
+        Args:
+            data (str) : Relevant data from input corresponding to the keyword ``code``
+        """
         self.code = data

@@ -120,8 +120,3 @@ class SimpsonIntegrator1D(Integrator1D):
         result[3] = 49.0 / 48.0
         result[-4] = 49.0 / 48.0
         return result
-
-array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
-
-napmo.cext.compute_cubic_spline_int_weights.restype = None
-napmo.cext.compute_cubic_spline_int_weights.argtypes = [array_1d_double, c_int]

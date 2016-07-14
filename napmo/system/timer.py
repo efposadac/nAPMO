@@ -23,6 +23,9 @@ class Timer(object):
 
     @contextmanager
     def timeblock(self, label):
+        """
+        Calculates execution time for a context
+        """
         self._blocks.setdefault(label, 0)
         start = time.clock()
         try:
@@ -32,11 +35,17 @@ class Timer(object):
             self._blocks[label] += (end - start) / napmo.threads
 
     def show_block(self, label):
+        """
+        Print information about certain context
+        """
         print('\nTotal time for {0:s} : {1:5.4f} s'.format(
             label,
             self._blocks.get(label)))
 
     def show_summary(self):
+        """
+        Prints all context
+        """
         print("""\n==================================================
 Object:   {0:9s}
 --------------------------------------------------

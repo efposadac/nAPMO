@@ -58,10 +58,16 @@ class PrimitiveGaussian(Structure):
 
     @property
     def origin(self):
+        """
+        The center of the function
+        """
         return np.array(self._origin[:3])
 
     @property
     def l(self):
+        """
+        The angular moment of the object
+        """
         return np.array(self._l[:3])
 
     def normalize(self):
@@ -83,7 +89,7 @@ class PrimitiveGaussian(Structure):
 
     def overlap(self, other):
         """
-        Calculates analytically the overlap integral between primitives.
+        Calculates analytically the overlap integral between two primitives.
 
         Args:
             other (PrimitiveGaussian) : function to perform :math:`<\phi_{self}
@@ -93,7 +99,7 @@ class PrimitiveGaussian(Structure):
 
     def _show_compact(self):
         """
-        Prints information about the object.
+        Prints information about the object in a compact way.
         """
         lvalue = {0: "s", 1: "p", 2: "d", 3: "f", 4: "g"}
         out = '  {0:3s} {1:10.5f} {2:10.5f} {2:10.5f}\n'.format(

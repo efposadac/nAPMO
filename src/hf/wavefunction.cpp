@@ -29,6 +29,7 @@ void wavefunction_guess_hcore(WaveFunction *psi) {
   // compute density, D = C(occ) . C(occ)T
   auto C_occ = C.leftCols(psi->occupation);
   D = C_occ * C_occ.transpose();
+  D *= psi->eta;
 
   // std::cout << "\n\tDensity Matrix:\n";
   // std::cout << D << std::endl;

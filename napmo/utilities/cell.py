@@ -10,8 +10,6 @@ from __future__ import print_function
 
 from ctypes import *
 import numpy as np
-import numpy.ctypeslib as npct
-
 import napmo
 
 
@@ -20,8 +18,8 @@ class Cell(object):
     """
     Representation of periodic boundary conditions.
 
-       0, 1, 2 and 3 dimensional systems are supported. The cell vectors don't
-       need to be orthogonal.
+    0, 1, 2 and 3 dimensional systems are supported. The cell vectors don't
+    need to be orthogonal.
     """
 
     def __init__(self, rvecs=None, initvoid=False):
@@ -36,9 +34,3 @@ class Cell(object):
 
     def __del__(self):
         napmo.cext.Cell_del(self._this)
-
-napmo.cext.Cell_new.restype = c_void_p
-napmo.cext.Cell_new.argtypes = [c_void_p, c_int]
-
-napmo.cext.Cell_del.restype = None
-napmo.cext.Cell_del.argtypes = [c_void_p]

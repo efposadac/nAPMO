@@ -15,7 +15,9 @@ import napmo
 class Extrapolation(object):
 
     """
-    docstring for Extrapolation
+    Python interface to the Extrapolation C++ class:
+
+    Given a set of points, can calculate the adjacent points by extrapolation.
     """
 
     def __init__(self):
@@ -43,7 +45,9 @@ class Extrapolation(object):
 
 class CuspExtrapolation(Extrapolation):
 
-    """docstring for CuspExtrapolation"""
+    """
+    Extrapolation of the form :math:`a \exp^x`
+    """
 
     def __init__(self):
         self._this = napmo.cext.CuspExtrapolation_new()
@@ -56,7 +60,7 @@ class CuspExtrapolation(Extrapolation):
 class PowerExtrapolation(Extrapolation):
 
     """
-    docstring for PowerExtrapolation
+    Extrapolation of the form :math:`a x^n`
     """
 
     def __init__(self, power):
@@ -73,34 +77,3 @@ class PowerExtrapolation(Extrapolation):
     @property
     def power(self):
         return self._power
-
-napmo.cext.Extrapolation_prepare.restype = None
-napmo.cext.Extrapolation_prepare.argtypes = [c_void_p, c_void_p]
-
-napmo.cext.Extrapolation_del.restype = None
-napmo.cext.Extrapolation_del.argtypes = [c_void_p]
-
-napmo.cext.Extrapolation_eval_left.restype = c_double
-napmo.cext.Extrapolation_eval_left.argtypes = [c_void_p, c_double]
-
-napmo.cext.Extrapolation_eval_right.restype = c_double
-napmo.cext.Extrapolation_eval_right.argtypes = [c_void_p, c_double]
-
-napmo.cext.Extrapolation_deriv_left.restype = c_double
-napmo.cext.Extrapolation_deriv_left.argtypes = [c_void_p, c_double]
-
-napmo.cext.Extrapolation_deriv_right.restype = c_double
-napmo.cext.Extrapolation_deriv_right.argtypes = [c_void_p, c_double]
-
-napmo.cext.Extrapolation_has_tail.restype = c_bool
-napmo.cext.Extrapolation_has_tail.argtypes = [c_void_p]
-
-napmo.cext.ZeroExtrapolation_new.restype = c_void_p
-
-napmo.cext.CuspExtrapolation_new.restype = c_void_p
-
-napmo.cext.PowerExtrapolation_new.restype = c_void_p
-napmo.cext.PowerExtrapolation_new.argtypes = [c_double]
-
-napmo.cext.PowerExtrapolation_get_power.restype = c_double
-napmo.cext.PowerExtrapolation_get_power.argtypes = [c_void_p]

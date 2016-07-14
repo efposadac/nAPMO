@@ -51,8 +51,7 @@ class ElementaryParticle(dict):
     @property
     def is_quantum(self):
         """
-        Returns:
-            bool: Whether the particle of the atomic element is being treated as punctual particle or not
+        Whether the particle of the atomic element is being treated as a quantum species or not
         """
         return self.get('is_quantum')
 

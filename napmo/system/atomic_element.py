@@ -9,7 +9,6 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
-
 import napmo
 
 
@@ -24,13 +23,8 @@ class AtomicElement(dict):
         symbol (str): Symbol of the atom.
         origin (ndarray, optional): Origin of the atom (cartesian).
             (Default [0.,0.,0.])
-        BOA (bool, optional): Whether the atom nuclei will be treated in the
-            BOA framework or not. (Default True)
-        mass_number (int, optional): Mass number of element ``symbol``
-            :math:`:= A = p^+ + n^o`. If 0 the system will choose the most
-            abundant isotope. (Default 0).
         units (str, optional): Units of the origin, valid values are
-            'ANGSTROMS' or 'BOHR'
+            'ANGSTROMS' or 'BOHR'. (Default ANGSTROMS)
     '''
 
     def __init__(self, symbol, origin=np.zeros(3, dtype=np.float64), units='ANGSTROMS'):
@@ -84,11 +78,10 @@ class AtomicElement(dict):
     @property
     def is_quantum(self):
         """
-        Returns:
-            bool: Whether the nuclei of the atomic element is being treated in
-                the BOA framework
+        Whether the nuclei of the atomic element is being treated as
+                quantum species or not
         """
-        return self.get('is_quantum')
+        return self.get('is_quantum', False)
 
     def __repr__(self):
 

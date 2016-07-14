@@ -39,6 +39,13 @@ def ElementaryParticlesDatabase():
     """
     This database contains all information related to quatum species, ie.
     electrons, muons, etc.
+
+    .. doctest::
+
+        >>> import napmo
+        >>> napmo.ElementaryParticlesDatabase()['e-'] # doctest: +SKIP
+        {'spin': 0.5, 'name': 'electron', 'category': 'lepton', 'is_quantum': True, \
+'mass': 1.0, 'electron': True, 'symbol': 'e-', 'charge': -1.0}
     """
     fp = os.path.join(os.path.dirname(__file__), 'elementary_particles.json')
 
@@ -50,6 +57,13 @@ def CouplingConstantsDatabase():
     """
     This database contains all coupling constants for quatum species, ie.
     electrons, muons, etc.
+
+    .. doctest::
+
+        >>> import napmo
+        >>> napmo.CouplingConstantsDatabase()['e-'] # doctest: +SKIP
+        {'name': 'electron', 'particlesfraction': 0.5, 'kappa': -1.0, \
+'eta': 2.0, 'symbol': 'e-', 'lambda': 2.0}
     """
     fp = os.path.join(os.path.dirname(__file__), 'coupling_constants.json')
 

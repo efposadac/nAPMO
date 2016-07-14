@@ -6,7 +6,6 @@
 # efposadac@unal.edu.co
 
 import numpy as np
-import numpy.ctypeslib as npct
 from ctypes import *
 
 import napmo
@@ -14,12 +13,14 @@ import napmo
 
 class RadialGrid(Structure):
 
-    '''
+    """
     An integration grid for the radial component of a spherical coordinate system
-    '''
+    """
 
     _fields_ = [
-        ("_size", c_int), ("_radii", c_double), ("_points", POINTER(c_double)),
+        ("_size", c_int),
+        ("_radii", c_double),
+        ("_points", POINTER(c_double)),
         ("_weights", POINTER(c_double))
     ]
 
@@ -60,11 +61,9 @@ class RadialGrid(Structure):
         self._size = self._rtransform.size
 
     def integrate(self, f, segments):
-        napmo.cext.radial_integrate.restype = c_double
-        napmo.cext.radial_integrate.argtypes = [
-            POINTER(napmo.RadialGrid),
-            c_int,
-            npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')]
+        """
+        Perform integration on the radial grid.
+        """
 
         return napmo.cext.radial_integrate(byref(self), segments, f)
 

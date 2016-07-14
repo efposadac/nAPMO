@@ -15,24 +15,25 @@ import napmo
 
 class WaveFunction(Structure):
     """
+    Defines the Fock operator for a Hartree-Fock Calculation.
     """
     _fields_ = [
-        ("_S", POINTER(c_double)),
-        ("_T", POINTER(c_double)),
-        ("_V", POINTER(c_double)),
-        ("_H", POINTER(c_double)),
-        ("_C", POINTER(c_double)),
-        ("_D", POINTER(c_double)),
-        ("_L", POINTER(c_double)),
-        ("_G", POINTER(c_double)),
-        ("_J", POINTER(c_double)),
-        ("_F", POINTER(c_double)),
+        ("_S", POINTER(c_double)),  # Overlap
+        ("_T", POINTER(c_double)),  # Kinetic
+        ("_V", POINTER(c_double)),  # Nuclear
+        ("_H", POINTER(c_double)),  # Hcore
+        ("_C", POINTER(c_double)),  # Coefficients
+        ("_D", POINTER(c_double)),  # Density
+        ("_L", POINTER(c_double)),  # Last Density
+        ("_G", POINTER(c_double)),  # 2 Body
+        ("_J", POINTER(c_double)),  # Coupling
+        ("_F", POINTER(c_double)),  # Fock
         ("_nbasis", c_int),
         ("_occupation", c_int),
         ("_eta", c_double),
         ("_kappa", c_double),
         ("_energy", c_double),
-        ("_rmsd", c_double)
+        ("_rmsd", c_double)  # Root medium square deviation, for D matrix
     ]
 
     def __init__(self, species, point_charges):
@@ -99,23 +100,38 @@ class WaveFunction(Structure):
             self._pce = self._compute_pce()
 
     def compute_overlap(self):
+        """
+        Computes the overlap matrix
+        """
         napmo.cext.LibintInterface_compute_1body_ints(self._libint, 1, self.S)
         # print("\n Overlap Matrix:")
         # print(self.S)
 
     def compute_kinetic(self):
+        """
+        Computes the Kinetic matrix
+        """
         napmo.cext.LibintInterface_compute_1body_ints(self._libint, 2, self.T)
         self.T /= self.species.get('mass')
         # print("\n Kinetic Matrix:")
         # print(self.T)
 
     def compute_nuclear(self):
+        """
+        Computes the nuclear-electron potential matrix
+        """
         napmo.cext.LibintInterface_compute_1body_ints(self._libint, 3, self.V)
         self.V *= -self.species.get('charge')
         # print("\n Attraction Matrix")
         # print(self.V)
 
     def compute_2body(self, direct=False):
+        """
+        Computes the two-body matrix
+
+        Args:
+            direct (bool) : Whether to calculate eris on-the-fly or not
+        """
         napmo.cext.LibintInterface_init_2body_ints(self._libint)
 
         if direct:
@@ -134,6 +150,13 @@ class WaveFunction(Structure):
         # print(self.G)
 
     def compute_couling(self, other_psi, direct=False):
+        """
+        Computes the two-body coupling matrix
+
+        Args:
+            other_psi (WaveFunction) : WaveFunction object for the other species.
+            direct (bool) : Whether to calculate eris on-the-fly or not
+        """
         aux = np.zeros([self.nbasis, self.nbasis])
         self.J[:] = 0.0
         for psi in other_psi:
@@ -148,14 +171,20 @@ class WaveFunction(Structure):
         # print("\n Coupling Matrix:")
         # print(self.J)
 
-    def compute_hamiltonian(self):
+    def compute_hcore(self):
+        """
+        Builds the Hcore matrix
+        """
         self.H[:] = self.T + self.V
-        # print("\n Hamiltonian Matrix")
+        # print("\n hcore Matrix")
         # print(self.H)
 
     def compute_guess(self):
+        """
+        Computes the density guess using the *HCORE* method:
+        :math:`H C = e S C`
+        """
         napmo.cext.wavefunction_guess_hcore(byref(self))
-        self.D *= self._eta
         # print("\n Coefficients Matrix")
         # print(self.C)
 
@@ -163,12 +192,18 @@ class WaveFunction(Structure):
         # print(self.D)
 
     def build_fock(self):
+        """
+        Builds the Fock matrix
+        """
+
         self.F[:] = self.H + self.G + self.J
         # print("\n Fock Matrix:")
         # print(self.F)
 
     def _compute_pce(self):
-
+        """
+        Calculates the total point charges energy for the system
+        """
         output = [pa.get('charge') * pb.get('charge') /
                   np.sqrt(((pa.get('origin') - pb.get('origin'))**2).sum())
                   for i, pa in enumerate(self.species.get('particles'))
@@ -180,16 +215,28 @@ class WaveFunction(Structure):
 
     @property
     def nbasis(self):
+        """
+        Length of the basis
+        """
         return self._nbasis
 
     @property
     def pce(self):
+        """
+        The potential charge energy
+        """
         return self._pce
 
     @property
     def symbol(self):
+        """
+        Symbol of the object owner's
+        """
         return self._symbol
 
     @property
     def sid(self):
+        """
+        Id of the object owner's
+        """
         return self._sid

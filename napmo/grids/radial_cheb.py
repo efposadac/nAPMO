@@ -6,9 +6,7 @@
 # efposadac@unal.edu.co
 
 import numpy as np
-import numpy.ctypeslib as npct
 from ctypes import *
-
 import napmo
 
 
@@ -29,7 +27,7 @@ class RadialGridCheb(Structure):
 
     Args:
         size (int): Number of radial points.
-        atomic_symbol (str): Atomic symbol for which the grid will be calculated.
+        atomic_symbol (str): Owner of the grid
     """
     _fields_ = [
         ("_size", c_int),
@@ -89,24 +87,21 @@ class RadialGridCheb(Structure):
 
     @property
     def size(self):
+        """
+        The number of points in the grid
+        """
         return self._size
 
     @property
     def symbol(self):
+        """
+        Particle owner of the grid
+        """
         return self._symbol
 
     @property
     def radii(self):
+        """
+        The grid points
+        """
         return self._radii
-
-napmo.cext.radial_init.restype = None
-napmo.cext.radial_init.argtypes = [POINTER(RadialGridCheb)]
-
-napmo.cext.radial_get_z.restype = None
-napmo.cext.radial_get_z.argtypes = [POINTER(RadialGridCheb)]
-
-napmo.cext.radial_deriv_z.restype = None
-napmo.cext.radial_deriv_z.argtypes = [POINTER(RadialGridCheb)]
-
-napmo.cext.radial_deriv2_z.restype = None
-napmo.cext.radial_deriv2_z.argtypes = [POINTER(RadialGridCheb)]
