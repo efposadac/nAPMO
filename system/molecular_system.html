@@ -88,19 +88,17 @@
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="contracted_slater.html">contracted_slater</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">molecular_system</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">molecular_system</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="primitive_slater.html">primitive_slater</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../grids/grids.html">Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
 </ul>
 <ul class="simple">
 </ul>
@@ -125,7 +123,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -156,18 +154,11 @@
 <dl class="class">
 <dt id="molecular_system.MolecularSystem">
 <em class="property">class </em><code class="descclassname">molecular_system.</code><code class="descname">MolecularSystem</code><a class="headerlink" href="#molecular_system.MolecularSystem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a molecular system, containing different kinds of quantum &#8216;species&#8217; i.e. atoms, muons, positrons, etc. (dict)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) &#8211; Name of the object.</td>
-</tr>
-</tbody>
-</table>
+<dd><p>Defines a molecular system, containing different kinds of quantum &#8216;species&#8217;
+i.e. atoms, muon, positrons, etc. (dict)</p>
 <dl class="method">
 <dt id="molecular_system.MolecularSystem.add_atom">
-<code class="descname">add_atom</code><span class="sig-paren">(</span><em>symbol</em>, <em>origin</em>, <em>BOA=True</em>, <em>mass_number=0</em>, <em>units='ANGSTROMS'</em>, <em>basis_kind='GTO'</em>, <em>basis_name=None</em>, <em>basis_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.add_atom" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_atom</code><span class="sig-paren">(</span><em>symbol</em>, <em>origin</em>, <em>units='ANGSTROMS'</em>, <em>quantum=False</em>, <em>basis_name=None</em>, <em>basis_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.add_atom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds an atom to the molecular system.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -176,10 +167,8 @@
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol of the atom.</li>
 <li><strong>origin</strong> (<em>ndarray</em>) &#8211; Origin of the atom (Cartesian coordinates)</li>
-<li><strong>BOA</strong> (<em>bool, optional</em>) &#8211; Whether the atom nuclei will be treated in the BOA approach or not. Default is True</li>
-<li><strong>mass_number</strong> (<em>int, optional</em>) &#8211; Mass number of element &#8216;symbol&#8217; <span class="math">\(:= A = p^+ + n^o\)</span>.
-If 0 the system will choose the most abundant one. Default is 0.</li>
-<li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are &#8216;ANGSTROMS&#8217; or &#8216;BOHR&#8217;</li>
+<li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are
+&#8216;ANGSTROMS&#8217; or &#8216;BOHR&#8217;</li>
 </ul>
 </td>
 </tr>
@@ -189,7 +178,7 @@ If 0 the system will choose the most abundant one. Default is 0.</li>
 
 <dl class="method">
 <dt id="molecular_system.MolecularSystem.add_elementary_particle">
-<code class="descname">add_elementary_particle</code><span class="sig-paren">(</span><em>symbol</em>, <em>origin=None</em>, <em>size=1</em>, <em>units='ANGSTROMS'</em>, <em>basis_kind='GTO'</em>, <em>basis_name=None</em>, <em>basis_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.add_elementary_particle" title="Permalink to this definition">¶</a></dt>
+<code class="descname">add_elementary_particle</code><span class="sig-paren">(</span><em>symbol</em>, <em>origin</em>, <em>units='ANGSTROMS'</em>, <em>size=1</em>, <em>basis_name=None</em>, <em>basis_file=None</em>, <em>basis_set=None</em>, <em>particle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.add_elementary_particle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds an elementary particle into the molecular system.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -197,9 +186,32 @@ If 0 the system will choose the most abundant one. Default is 0.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol of the elementary particle.</li>
-<li><strong>origin</strong> (<em>ndarray</em>) &#8211; Origin of the elementary particle (Cartesian coordinates)</li>
+<li><strong>origin</strong> (<em>ndarray</em>) &#8211; Origin of the elementary particle
+(Cartesian coordinates)</li>
+<li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are
+&#8216;ANGSTROMS&#8217; or &#8216;Bohr&#8217;</li>
 <li><strong>size</strong> (<em>int</em>) &#8211; Number of elementary particle to be added.</li>
-<li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are &#8216;ANGSTROMS&#8217; or &#8216;Bohr&#8217;</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="molecular_system.MolecularSystem.add_nucleus">
+<code class="descname">add_nucleus</code><span class="sig-paren">(</span><em>symbol</em>, <em>origin</em>, <em>units='ANGSTROMS'</em>, <em>size=1</em>, <em>basis_name=None</em>, <em>basis_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.add_nucleus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a nucleus to the molecular system.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol of the nucleus ie. H_2 (Deuterium).</li>
+<li><strong>origin</strong> (<em>ndarray</em>) &#8211; Origin of the nucleus (Cartesian coordinates)</li>
+<li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are
+&#8216;ANGSTROMS&#8217; or &#8216;BOHR&#8217;</li>
+<li><strong>size</strong> (<em>int</em>) &#8211; Number of particles to be added.</li>
 </ul>
 </td>
 </tr>
@@ -217,7 +229,7 @@ If 0 the system will choose the most abundant one. Default is 0.</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">basis set</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="basis_set.html#basis_set.BasisSet" title="basis_set.BasisSet">BasisSet</a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">napmo.BasisSet</td>
 </tr>
 </tbody>
 </table>
@@ -226,28 +238,72 @@ If 0 the system will choose the most abundant one. Default is 0.</li>
 <dl class="method">
 <dt id="molecular_system.MolecularSystem.get_basis_as_cstruct">
 <code class="descname">get_basis_as_cstruct</code><span class="sig-paren">(</span><em>symbol</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.get_basis_as_cstruct" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the basis set of the system of a given <code class="docutils literal"><span class="pre">symbol</span></code> particle as a CTYPES struct.</p>
+<dd><p>Returns the basis set of the system of a given <code class="docutils literal"><span class="pre">symbol</span></code> particle as a
+CTYPES structure.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">basis set CTYPES struct</td>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">basis set CTYPES structure</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="basis_set.html#basis_set.BasisSet_C" title="basis_set.BasisSet_C">BasisSet_C</a></td>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">napmo.BasisSet_C</td>
 </tr>
 </tbody>
 </table>
 </dd></dl>
 
 <dl class="method">
-<dt id="molecular_system.MolecularSystem.n_atoms">
-<code class="descname">n_atoms</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.n_atoms" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of atoms in the system</p>
+<dt id="molecular_system.MolecularSystem.get_species">
+<code class="descname">get_species</code><span class="sig-paren">(</span><em>sid</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.get_species" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with the species <code class="docutils literal"><span class="pre">symbol</span></code> or <cite>sid</cite></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Number of atoms in the object.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>symbol</strong> (<em>str</em>) &#8211; symbol of the species. ie. <code class="docutils literal"><span class="pre">e-</span></code>, <code class="docutils literal"><span class="pre">e+</span></code>, etc. Default <code class="docutils literal"><span class="pre">None</span></code></li>
+<li><strong>sid</strong> (<em>int</em>) &#8211; the species if. sid &gt; 0. Default <code class="docutils literal"><span class="pre">None</span></code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="molecular_system.MolecularSystem.point_charges">
+<code class="descname">point_charges</code><a class="headerlink" href="#molecular_system.MolecularSystem.point_charges" title="Permalink to this definition">¶</a></dt>
+<dd><p>List with the point charges in the molecule</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="molecular_system.MolecularSystem.set_charges">
+<code class="descname">set_charges</code><span class="sig-paren">(</span><em>data</em>, <em>open_shell=False</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.set_charges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds new particles to the existent species in the system. If electrons, split the species <code class="docutils literal"><span class="pre">e-</span></code>
+into <code class="docutils literal"><span class="pre">e-alpha</span></code> and <code class="docutils literal"><span class="pre">e-beta</span></code> electrons accordingly to the given charge and multiplicity.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>data</strong> (<em>dict</em>) &#8211; information with charge and multiplicity for each species</li>
+<li><strong>open_shell</strong> (<em>bool</em>) &#8211; whether the electrons should be split or not.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="molecular_system.MolecularSystem.size_particles">
+<code class="descname">size_particles</code><span class="sig-paren">(</span><em>symbol</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.size_particles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of particles of a given species <code class="docutils literal"><span class="pre">symbol</span></code> in the object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Number of particles of the species <code class="docutils literal"><span class="pre">symbol</span></code></td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
 </tr>
@@ -255,58 +311,10 @@ If 0 the system will choose the most abundant one. Default is 0.</li>
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="molecular_system.MolecularSystem.n_elementary_particles">
-<code class="descname">n_elementary_particles</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.n_elementary_particles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of elementary particles in the system.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Number of quantum species in the system.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="molecular_system.MolecularSystem.n_occupation">
-<code class="descname">n_occupation</code><span class="sig-paren">(</span><em>symbol</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.n_occupation" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the occupation number for particle <code class="docutils literal"><span class="pre">symbol</span></code>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Occupation of quantum species <code class="docutils literal"><span class="pre">symbol</span></code>.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="molecular_system.MolecularSystem.n_particles">
-<code class="descname">n_particles</code><span class="sig-paren">(</span><em>symbol</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.n_particles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of particles of a given <code class="docutils literal"><span class="pre">symbol</span></code> in the object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Number of particles of symbol <code class="docutils literal"><span class="pre">symbol</span></code></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="molecular_system.MolecularSystem.show">
-<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Shows information about particles</p>
+<dl class="attribute">
+<dt id="molecular_system.MolecularSystem.size_species">
+<code class="descname">size_species</code><a class="headerlink" href="#molecular_system.MolecularSystem.size_species" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of quantum species in the system.</p>
 </dd></dl>
 
 </dd></dl>

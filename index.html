@@ -82,7 +82,6 @@
             
                 <ul>
 <li class="toctree-l1"><a class="reference internal" href="API.html">API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="results.html">Results</a></li>
 </ul>
 <ul class="simple">
 </ul>
@@ -107,7 +106,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -131,51 +130,56 @@
             
   <div class="section" id="napmo-s-documentation">
 <h1>nAPMO&#8217;s documentation.<a class="headerlink" href="#napmo-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p><strong>Numerical Any particle Molecular Orbital (nAPMO) package.</strong></p>
+</div>
+<div class="section" id="numerical-any-particle-molecular-orbital-napmo">
+<h1>Numerical Any particle Molecular Orbital (NAPMO)<a class="headerlink" href="#numerical-any-particle-molecular-orbital-napmo" title="Permalink to this headline">¶</a></h1>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body">Fernando Posada Correa, MHPC, 2015</td>
+<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body">Fernando Posada Correa, MHPC, UNAL, 2015</td>
 </tr>
 </tbody>
 </table>
-<p>nAPMO is a numerical implementation of APMO - NEO - OMNE method.</p>
-<p>The basic idea is to implement the numerical tools required to perform a basis-set free Hartree-Fock calculation as a first step to implement the basis-set free OMNE approach.</p>
+<a class="reference external image-reference" href="https://travis-ci.com/efposadac/nAPMO"><img alt="https://travis-ci.com/efposadac/nAPMO.svg?token=HUrCr32Dap17ppyzhhdd&amp;branch=hf_dev" src="https://travis-ci.com/efposadac/nAPMO.svg?token=HUrCr32Dap17ppyzhhdd&amp;branch=hf_dev" /></a>
+<p>NAPMO is a numerical implementation of APMO - NEO - OMNE method.</p>
+<p>This program implements the  basis-set free  Hartree-Fock OMNE approach.</p>
 <ul class="simple">
 <li>Edwin Fernando Posada</li>
-<li><a class="reference external" href="mailto:eposada&#37;&#52;&#48;sissa&#46;it">eposada<span>&#64;</span>sissa<span>&#46;</span>it</a></li>
-<li>Version 0.1</li>
+<li><a class="reference external" href="mailto:eposada&#37;&#52;&#48;unal&#46;edu&#46;co">eposada<span>&#64;</span>unal<span>&#46;</span>edu<span>&#46;</span>co</a></li>
+<li>Version 0.8</li>
 </ul>
-</div>
-<div class="section" id="compilation">
-<h1>Compilation<a class="headerlink" href="#compilation" title="Permalink to this headline">¶</a></h1>
-<p>To compile and install the code use (it will install the package in $USER/.local):</p>
-<div class="highlight-python"><div class="highlight"><pre>make $(FLAVOR)
+<p><strong>Prerequisites:</strong></p>
+<ul class="simple">
+<li>Robust C++ compiler with C++11 support</li>
+<li>Recent <a class="reference external" href="https://github.com/evaleev/libint">Libint</a> library</li>
+<li>GSL library</li>
+<li>Scipy</li>
+<li>Python 2.7 or 3.x</li>
+</ul>
+<p><strong>Compilation:</strong></p>
+<p>To compile and install the code use (it will install the package in <code class="docutils literal"><span class="pre">$USER/.local</span></code>):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>make $(FLAVOR)
 </pre></div>
 </div>
-<p><code class="docutils literal"><span class="pre">$(FLAVOR)</span></code> available are: SERIAL, OMP and CUDA.</p>
+<p><code class="docutils literal"><span class="pre">$(FLAVOR)</span></code> could be one of <code class="docutils literal"><span class="pre">SERIAL</span></code>, <code class="docutils literal"><span class="pre">OMP</span></code> or <code class="docutils literal"><span class="pre">CUDA</span></code>. Default is <code class="docutils literal"><span class="pre">OMP</span></code></p>
 <p>To check the code run:</p>
-<div class="highlight-python"><div class="highlight"><pre>nosetests --with-coverage --with-doctest
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">nosetests</span> <span class="o">--</span><span class="k">with</span><span class="o">-</span><span class="n">coverage</span> <span class="o">--</span><span class="k">with</span><span class="o">-</span><span class="n">doctest</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="notes">
-<h1>Notes<a class="headerlink" href="#notes" title="Permalink to this headline">¶</a></h1>
+<p><strong>Notes:</strong></p>
 <p>This version contains:</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
 <li>Multicenter molecular integrator based on Becke&#8217;s paper</li>
 <li>Poisson solver based on Becke&#8217;s strategy</li>
-<li>Coulomb numerical integrals.</li>
-<li>Tools to manage a molecular system, basis-sets and others.</li>
-<li>All numerical methods use ctypes to accelerate the calculation.</li>
-<li>The C interface has been parallelized  with OMP and CUDA. That code can be enabled in compilation time.</li>
+<li>Analytical single or multi species Hartree-Fock solver</li>
+<li>Numerical single or multi species Hartree-Fock solver</li>
+<li>The C interface has been parallelized  with OMP and &#8220;some&#8221; CUDA. That code should be enabled in compilation time.</li>
 </ul>
-</div></blockquote>
+<p>For examples on how to use the code please refer to the test folders located in napmo folder.</p>
 <p>Any suggestion and help is more than welcome and appreciated.</p>
 <p>Code documentation can be found at <a class="reference external" href="http://efposadac.github.io/nAPMO/">http://efposadac.github.io/nAPMO/</a></p>
-<p><a class="reference external" href="mailto:eposada&#37;&#52;&#48;sissa&#46;it">eposada<span>&#64;</span>sissa<span>&#46;</span>it</a></p>
+<p><a class="reference external" href="mailto:efposadac&#37;&#52;&#48;unal&#46;edu&#46;co">efposadac<span>&#64;</span>unal<span>&#46;</span>edu<span>&#46;</span>co</a></p>
 </div>
 <div class="section" id="contents">
 <h1>Contents:<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
@@ -184,20 +188,20 @@
 <li class="toctree-l1"><a class="reference internal" href="API.html">API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="system/system.html">System</a></li>
 <li class="toctree-l2"><a class="reference internal" href="grids/grids.html">Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hf/hf.html">Hartree-Fock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="results.html">Results</a></li>
 </ul>
 </div>
 </div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
 <ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span>Index</span></a></li>
-<li><a class="reference internal" href="py-modindex.html"><span>Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span>Search Page</span></a></li>
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
 </ul>
 <div class="toctree-wrapper compound">
 </div>

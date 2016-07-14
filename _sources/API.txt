@@ -13,6 +13,12 @@ Grids:
 
    grids/grids
 
+Hartree-Fock:
+
+.. toctree::
+
+   hf/hf
+
 Data:
 
 .. toctree::

@@ -86,14 +86,15 @@
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../system/system.html">System</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../grids/grids.html">Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="data.html">Data</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="">databases</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">databases</a></li>
 <li class="toctree-l3"><a class="reference internal" href="constants.html">constants</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
 </ul>
 <ul class="simple">
 </ul>
@@ -118,7 +119,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -151,11 +152,24 @@
 <code class="descclassname">databases.</code><code class="descname">AtomicElementsDatabase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#databases.AtomicElementsDatabase" title="Permalink to this definition">¶</a></dt>
 <dd><p>This data base contains all information related to atomic elements.
 Database information taken from: <a class="reference external" href="http://physics.nist.gov/constants">http://physics.nist.gov/constants</a></p>
-<p>Atomic radii from J. C. Slater, J. Chem. Phys. 41, 3199 (1964).</p>
-<p class="rubric">Example</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">napmo.data.databases</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">napmo</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">AtomicElementsDatabase</span><span class="p">()[</span><span class="s">&#39;H&#39;</span><span class="p">]</span> 
-<span class="go">{&#39;vanderwaals_radius&#39;: 1.2, &#39;atomic_number&#39;: 1, &#39;symbol&#39;: &#39;H&#39;, &#39;covalent_radius&#39;: 0.3,     &#39;atomic_radii&#39;: 0.35, &#39;ionization_energy_1&#39;: 1312, &#39;melting_point&#39;: 13.81, &#39;electron_affinity&#39;: -73,     &#39;electronegativity&#39;: 2.1, &#39;name&#39;: &#39;Hydrogen&#39;, &#39;density&#39;: 0.084, &#39;boiling_point&#39;: 20.28, &#39;mass&#39;: 1.00794}</span>
+<p>Atomic radii taken from:
+Cordero, et. al. (2008).
+Covalent radii revisited. Dalton Transactions, (21), 2832. <a class="reference external" href="http://doi.org/10.1039/b801115j">http://doi.org/10.1039/b801115j</a></p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">napmo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">napmo</span><span class="o">.</span><span class="n">AtomicElementsDatabase</span><span class="p">()[</span><span class="s1">&#39;H&#39;</span><span class="p">]</span> 
+<span class="go">{&#39;atomic_number&#39;: 1, &#39;atomic_radii_2&#39;: 0.5858151015155881, &#39;electron_affinity&#39;: -73, &#39;atomic_radii&#39;: 0.5858151015155881, &#39;boiling_point&#39;: 20.28, &#39;charge&#39;: -1, &#39;symbol&#39;: &#39;H&#39;, &#39;density&#39;: 0.084, &#39;is_quantum&#39;: False, &#39;ionization_energy_1&#39;: 1312, &#39;melting_point&#39;: 13.81, &#39;electronegativity&#39;: 2.1, &#39;name&#39;: &#39;Hydrogen&#39;, &#39;mass&#39;: 1.00794}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="databases.CouplingConstantsDatabase">
+<code class="descclassname">databases.</code><code class="descname">CouplingConstantsDatabase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#databases.CouplingConstantsDatabase" title="Permalink to this definition">¶</a></dt>
+<dd><p>This database contains all coupling constants for quatum species, ie.
+electrons, muons, etc.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">napmo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">napmo</span><span class="o">.</span><span class="n">CouplingConstantsDatabase</span><span class="p">()[</span><span class="s1">&#39;e-&#39;</span><span class="p">]</span> 
+<span class="go">{&#39;name&#39;: &#39;electron&#39;, &#39;particlesfraction&#39;: 0.5, &#39;kappa&#39;: -1.0, &#39;eta&#39;: 2.0, &#39;symbol&#39;: &#39;e-&#39;, &#39;lambda&#39;: 2.0}</span>
 </pre></div>
 </div>
 </dd></dl>
@@ -163,11 +177,11 @@ Database information taken from: <a class="reference external" href="http://phys
 <dl class="function">
 <dt id="databases.ElementaryParticlesDatabase">
 <code class="descclassname">databases.</code><code class="descname">ElementaryParticlesDatabase</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#databases.ElementaryParticlesDatabase" title="Permalink to this definition">¶</a></dt>
-<dd><p>This database contains all information related to quatum species, ie. electrons, muons, etc.</p>
-<p class="rubric">Example</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">napmo.data.databases</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">napmo</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">databases</span><span class="o">.</span><span class="n">ElementaryParticlesDatabase</span><span class="p">()[</span><span class="s">&#39;e-&#39;</span><span class="p">]</span> 
-<span class="go">{&#39;category&#39;: &#39;lepton&#39;, &#39;name&#39;: &#39;electron&#39;, &#39;symbol&#39;: &#39;e-&#39;, &#39;charge&#39;: -1.0, &#39;mass&#39;: 1.0, &#39;spin&#39;: 0.5}</span>
+<dd><p>This database contains all information related to quatum species, ie.
+electrons, muons, etc.</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">napmo</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">napmo</span><span class="o">.</span><span class="n">ElementaryParticlesDatabase</span><span class="p">()[</span><span class="s1">&#39;e-&#39;</span><span class="p">]</span> 
+<span class="go">{&#39;spin&#39;: 0.5, &#39;name&#39;: &#39;electron&#39;, &#39;category&#39;: &#39;lepton&#39;, &#39;is_quantum&#39;: True, &#39;mass&#39;: 1.0, &#39;electron&#39;: True, &#39;symbol&#39;: &#39;e-&#39;, &#39;charge&#39;: -1.0}</span>
 </pre></div>
 </div>
 </dd></dl>

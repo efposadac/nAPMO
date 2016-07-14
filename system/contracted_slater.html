@@ -88,7 +88,7 @@
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">contracted_slater</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">contracted_slater</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="molecular_system.html">molecular_system</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
@@ -125,7 +125,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -151,70 +151,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-contracted_slater">
-<span id="contracted-slater"></span><h1>contracted_slater<a class="headerlink" href="#module-contracted_slater" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="contracted_slater.ContractedSlater">
-<em class="property">class </em><code class="descclassname">contracted_slater.</code><code class="descname">ContractedSlater</code><span class="sig-paren">(</span><em>exponents=array([ 0.5]), coefficients=array([ 1.]), origin=array([ 0.,  0.,  0.]), n=array([0], dtype=int32), l=0, m=0</em><span class="sig-paren">)</span><a class="headerlink" href="#contracted_slater.ContractedSlater" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a Slater Type Orbital (STO)  as a combination of PrimitiveSlater Functions (spherical coordinates). (dict)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>exponents</strong> (<em>ndarray</em>) &#8211; Slater exponent.</li>
-<li><strong>coefficient</strong> (<em>ndarray</em>) &#8211; Slater coefficients.</li>
-<li><strong>origin</strong> (<em>ndarray</em>) &#8211; coordinates (spherical)</li>
-<li><strong>n</strong> (<em>ndarray</em>) &#8211; Quantum number n = 1, 2, 3, etc. (one for each primitive)</li>
-<li><strong>l</strong> (<em>int</em>) &#8211; Quantum number l = S=0, P=1, D=2, etc.</li>
-<li><strong>m</strong> (<em>int</em>) &#8211; Quantum number m = order of the harmonic, m &lt;= l</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="contracted_slater.ContractedSlater.compute">
-<code class="descname">compute</code><span class="sig-paren">(</span><em>coord</em><span class="sig-paren">)</span><a class="headerlink" href="#contracted_slater.ContractedSlater.compute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the value of the contracted STO at <code class="docutils literal"><span class="pre">coord</span></code>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coord</strong> (<em>ndarray</em>) &#8211; array with the points where the function will be calculated.</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="contracted_slater.ContractedSlater.normalize">
-<code class="descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#contracted_slater.ContractedSlater.normalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Normalizes the contraction</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="contracted_slater.ContractedSlater.overlap">
-<code class="descname">overlap</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#contracted_slater.ContractedSlater.overlap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the overlap integral between two contractions.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<a class="reference internal" href="#contracted_slater.ContractedSlater" title="contracted_slater.ContractedSlater"><em>ContractedSlater</em></a>) &#8211; Contracted function to perform <span class="math">\(&lt;\phi_{self} | \phi_{other}&gt;\)</span></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="contracted_slater.ContractedSlater.show">
-<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#contracted_slater.ContractedSlater.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints the contents of the object.</p>
-</dd></dl>
-
-</dd></dl>
-
+  <div class="section" id="contracted-slater">
+<h1>contracted_slater<a class="headerlink" href="#contracted-slater" title="Permalink to this headline">¶</a></h1>
 </div>
 
 

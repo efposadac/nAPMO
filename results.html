@@ -31,7 +31,7 @@
 
   
     <link rel="top" title="nAPMO a1 documentation" href="index.html"/>
-        <link rel="prev" title="density" href="utilities/density.html"/> 
+        <link rel="prev" title="Utilitites" href="utilities/utilities.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -82,7 +82,7 @@
             
                 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="API.html">API</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">Results</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Results</a></li>
 </ul>
 <ul class="simple">
 </ul>
@@ -107,7 +107,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -131,209 +131,6 @@
             
   <div class="section" id="results">
 <h1>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h1>
-<p><strong>Numerical Any particle Molecular Orbital (nAPMO) package.</strong></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Author:</th><td class="field-body">Fernando Posada Correa, MHPC, 2015</td>
-</tr>
-</tbody>
-</table>
-<ol class="arabic simple">
-<li><strong>the ipython notebook.</strong></li>
-</ol>
-<p>This folder contains some experiments/results using the code. The first one is a ipython notebook called <code class="docutils literal"><span class="pre">nAPMO.ipynb</span></code> which contains information step by step on how the code works.</p>
-<p>Link:  <a class="reference download internal" href="_downloads/nAPMO.ipynb"><code class="xref download docutils literal"><span class="pre">nAPMO</span> <span class="pre">notebook</span> <span class="pre">example</span></code></a></p>
-<p>nbviewer: <a class="reference external" href="http://nbviewer.ipython.org/url/efposadac.github.io/nAPMO/_downloads/nAPMO.ipynb">http://nbviewer.ipython.org/url/efposadac.github.io/nAPMO/_downloads/nAPMO.ipynb</a></p>
-<ol class="arabic simple" start="2">
-<li><strong>Integration on diatomic Molecules</strong></li>
-</ol>
-<p>The second example can be found in the folder <code class="docutils literal"><span class="pre">Density</span></code>. This contains results for the calculation of <span class="math">\(\int \rho({\bf r})\)</span> for diatomic molecules for elements from Z = 1, up to Z = 8, with exception of Helium. The outcome of this test must be:</p>
-<div class="highlight-python"><div class="highlight"><pre>Grid Information:
------------------
-Radial Points:  100
-Angular Points:  194
-System Int C         Int Py        Error          Time Py       Time C
-H2   2.00010688    2.00010688    0.00010688     4.3246562     0.0331886
-Li2  6.00025286    6.00025286    0.00025286    10.3566766     0.1109531
-Be2  8.00023682    8.00023682    0.00023682    10.2098806     0.1123509
-B2  10.00049433   10.00049433    0.00049433    10.1175656     0.1098449
-C2  12.00127662   12.00127662    0.00127662    10.2129803     0.1131680
-N2  14.00085234   14.00085234    0.00085234    10.4540348     0.1119723
-O2  16.00068683   16.00068683    0.00068683    10.2155397     0.1107540
-</pre></div>
-</div>
-<p>The grid used for this calculation was 110-194 (rad.-ang.). It can be seen that the performance of Python code is really slow, taking in to account that for each molecule the code is calculating only one integral. On the other hand, the C code is two orders of magnitude faster.</p>
-<ol class="arabic simple" start="3">
-<li><strong>Performance (Serial)</strong></li>
-</ol>
-<p>An script to plot the comparison of the performance (scaling with respect to the grid points) and comparison between timings of C and Python codes is provided in the <code class="docutils literal"><span class="pre">Performance</span></code> folder.</p>
-<p>This script produces the following graphs to show the scaling with respect to the number of grid points (radial and angular):</p>
-<p><img alt="radial_perf" src="_images/radial_points_scaling.png" /></p>
-<p><img alt="angular_perf" src="_images/angular_points_scaling.png" /></p>
-<p>Timing for Python code <code class="docutils literal"><span class="pre">Py</span></code> is in centiseconds (cs). As shown in the plots, the algorithm is linear with respect with the number of angular or radial points, the important thing here is the prefactor in booth cases, in the case of C code, the prefactor is two orders of magnitude smaller than the Python&#8217;s code prefactor. For the integral of this test case <span class="math">\(\int \rho({\bf r})\)</span> for a  H2 molecule, a grid of 110-194 is enough to reach the exact value, this integral takes 2.6 s in the Python code and 0.01 s in the C one.</p>
-<p>As conclusion it can be said that the use of C code has improve the calculation time.</p>
-<ol class="arabic simple" start="4">
-<li><strong>OpenMP Implementation</strong></li>
-</ol>
-<p>The following graphs show the scaling of OpenMP implementation on the generation of the Gauss-Chebishev quadrature and in the overall Molecular Multicenter integrator (MMI) up to 20 threads in a Intel Xeon E5-2680V2 Ivy Bridge 10 cores 20 Threads.</p>
-<p><img alt="gauss_omp" src="_images/gauss_chebishev.png" /></p>
-<p><img alt="mmi_omp" src="_images/mmi.png" /></p>
-<p>The Scaling seems to be linear up to 18 threads for a 5810-1000 grid, which is the biggest grid used so far (in a real case scenario unnecessary). The time for one thread was  42.38 s and for 20, 3.30 s, supposing a speedup of approx. 12x.</p>
-<p>For a real case scenario, i.e. a 1202-100 grid (next plot), the speed up goes up to 4x because for such grid the serial part of the code becomes to be more relevant than the  parallel part. Times: one thread: 1.11 s and for 20 threads 0.28 s</p>
-<p><img alt="mmi_omp_small" src="_images/mmi_1202_100.png" /></p>
-<ol class="arabic simple" start="5">
-<li><strong>CUDA Implementation</strong></li>
-</ol>
-<p><img alt="gauss_cuda_single" src="_images/gcheb_gpu_omp_single.png" /></p>
-<p><img alt="gauss_cuda_double" src="_images/gcheb_gpu_omp_double.png" /></p>
-<p>Notes on CUDA implementation.</p>
-<p>The proposed parallelization strategy consists on copy all structures to the device (<code class="docutils literal"><span class="pre">System</span></code> and <code class="docutils literal"><span class="pre">Grid</span></code>), calculate Gauss-Chebyshev points on device, copy Lebedev pointer from host to device, run in two dimensional grids of threads and keep the same structure of calculation by calling <code class="docutils literal"><span class="pre">__device__</span></code> kernels for tasks such as the calculation of <code class="docutils literal"><span class="pre">Becke</span> <span class="pre">weights</span></code>, and the calculation of the <code class="docutils literal"><span class="pre">Functional</span></code>.</p>
-<p>We found that to optimize the occupancy of the device the optimum number of <code class="docutils literal"><span class="pre">THREADS_PER_BLOCK</span></code> is 8. it gives around 85% of occupancy (for a optimal number of registers), however the code can is, in some cases, slower than the serial version.</p>
-<p>The number of registers used for the kernel is too high?</p>
-<p>With the proposed strategy the kernel needs 71 registers against an optimal of 36. The use of such amount of registers generates many threads to be in idle state, because the amount of registers in the SMD is limited, if there are not enough registers to calculate all wraps the total execution time for a given block will increase.</p>
-<p>The next section contains notes on the solution a this problem in order to get the maximum possible performance.</p>
-<p>Test context:</p>
-<p>As reference we calculate molecular integration over two systems, one with 14 functions (H2) and another with 56 (O2). The grid used is a 1202 x 1000 grid points. The following table shows the execution time for each implementation. OMP 4 threads and CUDA 71 registers kernel.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="30%" />
-<col width="30%" />
-<col width="19%" />
-<col width="22%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">System</th>
-<th class="head">Serial</th>
-<th class="head">OMP</th>
-<th class="head">CUDA</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>H2</td>
-<td>1.8</td>
-<td>0.5</td>
-<td>2.3</td>
-</tr>
-<tr class="row-odd"><td>O2</td>
-<td>5.8</td>
-<td>1.6</td>
-<td>1.2</td>
-</tr>
-</tbody>
-</table>
-<p>Proposed solutions:</p>
-<ol class="arabic simple">
-<li>Force the use of less registers via compiler switch  <code class="docutils literal"><span class="pre">--maxrregcount</span> <span class="pre">36</span></code> in compilation time.</li>
-</ol>
-<p>Forcing the use of less registers increases the registers spilling which generates a excessive use of global device memory. As a consequence the time increases. See following table.</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="30%" />
-<col width="30%" />
-<col width="19%" />
-<col width="22%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">System</th>
-<th class="head">Serial</th>
-<th class="head">71R</th>
-<th class="head">36R</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>H2</td>
-<td>1.8</td>
-<td>2.3</td>
-<td>3.1</td>
-</tr>
-<tr class="row-odd"><td>O2</td>
-<td>5.8</td>
-<td>1.2</td>
-<td>1.6</td>
-</tr>
-</tbody>
-</table>
-<ol class="arabic simple" start="2">
-<li>Reduce the amount of operations in the kernel.</li>
-</ol>
-<p>After reducing some operations within the kernel such as conversion from spherical to cartesian and rescaling the interval of radial quadrature, the amount of registers was reduced to 69. The time after this change is:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="24%" />
-<col width="24%" />
-<col width="15%" />
-<col width="18%" />
-<col width="18%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">System</th>
-<th class="head">Serial</th>
-<th class="head">71R</th>
-<th class="head">36R</th>
-<th class="head">69R</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>H2</td>
-<td>1.8</td>
-<td>2.3</td>
-<td>3.1</td>
-<td>2.2</td>
-</tr>
-<tr class="row-odd"><td>O2</td>
-<td>5.8</td>
-<td>1.2</td>
-<td>1.6</td>
-<td>1.2</td>
-</tr>
-</tbody>
-</table>
-<p>As shown in the table there is no improvement in execution time.</p>
-<p>And Memory throughput?</p>
-<ol class="arabic simple" start="3">
-<li>So far the kernel have been programed over local memory only. Using shared memory could increase the performance. The integral value is the sum of several evaluations of the functional <code class="docutils literal"><span class="pre">F</span></code> at point <code class="docutils literal"><span class="pre">r</span></code>. Such reduction over the integral value has to be done as atomic operation to avoid race condition. So far the atomic addition was done in local memory. The optimization is to implement the atomic addition in shared memory per block and in local memory among blocks. The result is the following:</li>
-</ol>
-<p>71R is the kernel with optimization 2. 75R is the kernel without optimization. 36R is the kernel with optimization 1 and 2. OMP is using 4 threads:</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="18%" />
-<col width="18%" />
-<col width="11%" />
-<col width="18%" />
-<col width="18%" />
-<col width="18%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">System</th>
-<th class="head">Serial</th>
-<th class="head">OMP</th>
-<th class="head">75R</th>
-<th class="head">71R</th>
-<th class="head">36R</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td>H2</td>
-<td>1.8</td>
-<td>0.5</td>
-<td>0.16</td>
-<td>0.15</td>
-<td>0.15</td>
-</tr>
-<tr class="row-odd"><td>O2</td>
-<td>5.8</td>
-<td>1.6</td>
-<td>0.33</td>
-<td>0.32</td>
-<td>0.55</td>
-</tr>
-</tbody>
-</table>
-<p>As shown in the table, restrict the number of registers can lead to a poor performance, while the 71-75 registers kernel even though it allows only a occupancy of 40-47% provides the best performance, which is around 12x - 18x.</p>
-<p>Note:</p>
-<p>All <code class="docutils literal"><span class="pre">*.dens</span></code> files are density matrices to perform the integration.</p>
 </div>
 
 
@@ -344,7 +141,7 @@ O2  16.00068683   16.00068683    0.00068683    10.2155397     0.1107540
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="utilities/density.html" class="btn btn-neutral" title="density" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="utilities/utilities.html" class="btn btn-neutral" title="Utilitites" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>angular &mdash; nAPMO a1 documentation</title>
+  <title>Hartree-Fock &mdash; nAPMO a1 documentation</title>
   
 
   
@@ -31,9 +31,9 @@
 
   
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
-        <link rel="up" title="Grids" href="grids.html"/>
-        <link rel="next" title="atomic" href="atomic.html"/>
-        <link rel="prev" title="Grids" href="grids.html"/> 
+        <link rel="up" title="API" href="../API.html"/>
+        <link rel="next" title="SCF" href="scf.html"/>
+        <link rel="prev" title="radial" href="../grids/radial.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -85,16 +85,12 @@
                 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../system/system.html">System</a></li>
-<li class="toctree-l2 current"><a class="reference internal" href="grids.html">Grids</a><ul class="current">
-<li class="toctree-l3 current"><a class="current reference internal" href="#">angular</a></li>
-<li class="toctree-l3"><a class="reference internal" href="atomic.html">atomic</a></li>
-<li class="toctree-l3"><a class="reference internal" href="becke.html">becke</a></li>
-<li class="toctree-l3"><a class="reference internal" href="lebedev.html">lebedev</a></li>
-<li class="toctree-l3"><a class="reference internal" href="poisson_solver.html">poisson_solver</a></li>
-<li class="toctree-l3"><a class="reference internal" href="radial.html">radial</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grids/grids.html">Grids</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Hartree-Fock</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="scf.html">SCF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="wavefunction.html">wavefunction</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
@@ -133,13 +129,11 @@
       
           <li><a href="../API.html">API</a> &raquo;</li>
       
-          <li><a href="grids.html">Grids</a> &raquo;</li>
-      
-    <li>angular</li>
+    <li>Hartree-Fock</li>
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="../_sources/grids/angular.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/hf/hf.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -149,44 +143,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-angular">
-<span id="angular"></span><h1>angular<a class="headerlink" href="#module-angular" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="angular.AngularGrid">
-<em class="property">class </em><code class="descclassname">angular.</code><code class="descname">AngularGrid</code><span class="sig-paren">(</span><em>lorder</em>, <em>spherical=False</em><span class="sig-paren">)</span><a class="headerlink" href="#angular.AngularGrid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines an angular grid based on Lebedev&#8217;s quadratures.</p>
-<dl class="method">
-<dt id="angular.AngularGrid.integrate">
-<code class="descname">integrate</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#angular.AngularGrid.integrate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Performs integration over unit sphere by using Lebedev&#8217;s quadrature.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>*args</strong> (<em>ndarray</em>) &#8211; Arrays with the values of function <span class="math">\(F(x)\)</span> calculated in each point of the sphere.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>integral</strong> &#8211; Integral value.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">double</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="angular.AngularGrid.lorder">
-<code class="descname">lorder</code><a class="headerlink" href="#angular.AngularGrid.lorder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Order of the Lebedev&#8217;s quadrature</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="angular.AngularGrid.spherical">
-<code class="descname">spherical</code><a class="headerlink" href="#angular.AngularGrid.spherical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Whether the points are in spherical coordinates or not</p>
-</dd></dl>
-
-</dd></dl>
-
+  <div class="section" id="hartree-fock">
+<h1>Hartree-Fock<a class="headerlink" href="#hartree-fock" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="scf.html">SCF</a></li>
+<li class="toctree-l1"><a class="reference internal" href="wavefunction.html">wavefunction</a></li>
+</ul>
+</div>
 </div>
 
 
@@ -196,10 +160,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="atomic.html" class="btn btn-neutral float-right" title="atomic" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="scf.html" class="btn btn-neutral float-right" title="SCF" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="grids.html" class="btn btn-neutral" title="Grids" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="../grids/radial.html" class="btn btn-neutral" title="radial" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

@@ -3,5 +3,3 @@ Utilitites
 
 .. toctree::
 
-    lebedev
-    density

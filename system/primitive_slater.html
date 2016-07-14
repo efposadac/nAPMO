@@ -92,7 +92,7 @@
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="molecular_system.html">molecular_system</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">primitive_slater</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">primitive_slater</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../grids/grids.html">Grids</a></li>
@@ -125,7 +125,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -151,139 +151,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-primitive_slater">
-<span id="primitive-slater"></span><h1>primitive_slater<a class="headerlink" href="#module-primitive_slater" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="primitive_slater.PrimitiveSlater">
-<em class="property">class </em><code class="descclassname">primitive_slater.</code><code class="descname">PrimitiveSlater</code><span class="sig-paren">(</span><em>exponent</em>, <em>coefficient=1.0</em>, <em>n=1</em>, <em>l=0</em>, <em>m=0</em>, <em>origin=array([ 0.</em>, <em>0.</em>, <em>0.])</em><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater" title="Permalink to this definition">¶</a></dt>
-<dd><p>Slater-Type orbitals. (dict):</p>
-<p>The slater orbital function is:</p>
-<p><span class="math">\(\chi_{p \lambda \alpha}(r, \theta, \phi) = R_{ \lambda p}(r) Y_{ \lambda \alpha}( \theta, \phi)\)</span></p>
-<p>Where,</p>
-<p><span class="math">\(R_{\lambda p} =
-[(2n_{\lambda p})!]^{-1/2}(2\zeta_{\lambda p})^{n_{\lambda p}+1/2} r^{\lambda p -1} e^{-\zeta_{\lambda p} r}\)</span></p>
-<p>And,</p>
-<p><span class="math">\(Y_{\lambda \alpha}(\theta,\phi)\)</span> is an spherical harmonic.</p>
-<p class="rubric">References</p>
-<ol class="arabic simple">
-<li><ol class="first upperalpha" start="5">
-<li>Clementi, C. Roetti, Roothaan-Hartree-Fock atomic wavefunctions. At. Data Nucl. Data Tables. 14. (3)-(4), 177-478 (1974).</li>
-</ol>
-</li>
-</ol>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>zeta</strong> (<em>double</em>) &#8211; Slater exponent.</li>
-<li><strong>n</strong> (<em>int</em>) &#8211; Quantum number n = 1, 2, 3, etc.</li>
-<li><strong>l</strong> (<em>int</em>) &#8211; Quantum number l = S=0, P=1, D=2, etc.</li>
-<li><strong>m</strong> (<em>int</em>) &#8211; Quantum number m = order of the harmonic, m &lt;= l</li>
-<li><strong>origin</strong> (<em>ndarray</em>) &#8211; coordinates (spherical)</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
-<dt id="primitive_slater.PrimitiveSlater.compute">
-<code class="descname">compute</code><span class="sig-paren">(</span><em>coord</em><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.compute" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the value of PrimitiveSlater at given coordinates (spherical)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>coord</strong> (<em>ndarray</em>) &#8211; spherical coordinates (see description below)</li>
-<li><strong>theta</strong> (<em>double</em>) &#8211; [0, 2*pi]; the azimuthal (longitudinal) coordinate.</li>
-<li><strong>phi</strong> (<em>double</em>) &#8211; [0, pi]; the polar (co-latitudinal) coordinate.</li>
-<li><strong>r</strong> (<em>double</em>) &#8211; The r coordinate.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-<p>Returns:
-x (complex double): The value of <span class="math">\(\chi_{p \lambda \alpha}(r, \theta, \phi)\)</span> sampled at <code class="docutils literal"><span class="pre">r</span></code>, <code class="docutils literal"><span class="pre">theta</span></code> and <code class="docutils literal"><span class="pre">phi</span></code></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="primitive_slater.PrimitiveSlater.normalize">
-<code class="descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.normalize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the normalization constant given by:</p>
-<p><span class="math">\(N_{\lambda p} = [(2n_{\lambda p})!]^{-1/2}(2\zeta_{\lambda p})^{n_{\lambda p}+1/2}\)</span></p>
-</dd></dl>
-
-<dl class="method">
-<dt id="primitive_slater.PrimitiveSlater.overlap">
-<code class="descname">overlap</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.overlap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates analytically the overlap integral between two SlaterPrimitives.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<a class="reference internal" href="#primitive_slater.PrimitiveSlater" title="primitive_slater.PrimitiveSlater"><em>PrimitiveSlater</em></a>) &#8211; function to perform <span class="math">\(&lt;\phi_{self} | \phi_{other}&gt;\)</span></td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="primitive_slater.PrimitiveSlater.radial">
-<code class="descname">radial</code><span class="sig-paren">(</span><em>r</em><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.radial" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the radial part of the Slater orbital.</p>
-<p><span class="math">\(R_{\lambda p} = N_{\lambda p} r^{\lambda p -1} e^{-\zeta_{\lambda p} r}\)</span></p>
-<p>where, N is the Normalization given by:</p>
-<p><span class="math">\(N_{\lambda p} = [(2n_{\lambda p})!]^{-1/2}(2\zeta_{\lambda p})^{n_{\lambda p}+1/2}\)</span></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>r</strong> (<em>double</em>) &#8211; The r coordinate.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>R</strong> &#8211;
-The radial <span class="math">\(R_{\lambda p}\)</span> value sampled at <code class="docutils literal"><span class="pre">r</span></code>.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">double</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
-<dt id="primitive_slater.PrimitiveSlater.show">
-<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints information about the object.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="primitive_slater.PrimitiveSlater.spherical">
-<code class="descname">spherical</code><span class="sig-paren">(</span><em>theta</em>, <em>phi</em><span class="sig-paren">)</span><a class="headerlink" href="#primitive_slater.PrimitiveSlater.spherical" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the spherical harmonic part of the Slater orbital. Uses scipy.special.sph_harm</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>theta</strong> (<em>double</em>) &#8211; [0, 2*pi]; the azimuthal (longitudinal) coordinate.</li>
-<li><strong>phi</strong> (<em>double</em>) &#8211; [0, pi]; the polar (co-latitudinal) coordinate.</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>y</strong> &#8211;
-The harmonic <span class="math">\(Y^m_l\)</span> sampled at <code class="docutils literal"><span class="pre">theta</span></code> and <code class="docutils literal"><span class="pre">phi</span></code></p>
-</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">double</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</dd></dl>
-
+  <div class="section" id="primitive-slater">
+<h1>primitive_slater<a class="headerlink" href="#primitive-slater" title="Permalink to this headline">¶</a></h1>
 </div>
 
 

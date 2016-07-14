@@ -32,7 +32,7 @@
   
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
         <link rel="up" title="Grids" href="grids.html"/>
-        <link rel="next" title="poisson_solver" href="poisson_solver.html"/>
+        <link rel="next" title="lebedev" href="lebedev.html"/>
         <link rel="prev" title="atomic" href="atomic.html"/> 
 
   
@@ -88,16 +88,17 @@
 <li class="toctree-l2 current"><a class="reference internal" href="grids.html">Grids</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="angular.html">angular</a></li>
 <li class="toctree-l3"><a class="reference internal" href="atomic.html">atomic</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">becke</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">becke</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lebedev.html">lebedev</a></li>
 <li class="toctree-l3"><a class="reference internal" href="poisson_solver.html">poisson_solver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="radial.html">radial</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
 </ul>
 <ul class="simple">
 </ul>
@@ -122,7 +123,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -152,7 +153,7 @@
 <span id="becke"></span><h1>becke<a class="headerlink" href="#module-becke" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="becke.BeckeGrid">
-<em class="property">class </em><code class="descclassname">becke.</code><code class="descname">BeckeGrid</code><span class="sig-paren">(</span><em>molecule</em>, <em>n_radial=40</em>, <em>n_angular=110</em><span class="sig-paren">)</span><a class="headerlink" href="#becke.BeckeGrid" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">becke.</code><code class="descname">BeckeGrid</code><span class="sig-paren">(</span><em>species</em>, <em>n_radial=40</em>, <em>n_angular=110</em><span class="sig-paren">)</span><a class="headerlink" href="#becke.BeckeGrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class creates the Becke grid.</p>
 <p class="rubric">References</p>
 <p>Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).</p>
@@ -161,7 +162,7 @@
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>molecule</strong> (<a class="reference internal" href="../system/molecular_system.html#molecular_system.MolecularSystem" title="molecular_system.MolecularSystem"><em>MolecularSystem</em></a>) &#8211; Molecular system to be calculated.</li>
+<li><strong>species</strong> (<em>dict</em>) &#8211; Species to be calculated. see MolecularSystem</li>
 <li><strong>n_radial</strong> (<em>int, optional</em>) &#8211; Number of radial points. Default is 40</li>
 <li><strong>n_angular</strong> (<em>int, optional</em>) &#8211; Number of angular points. Default is 110</li>
 </ul>
@@ -169,6 +170,26 @@
 </tr>
 </tbody>
 </table>
+<dl class="method">
+<dt id="becke.BeckeGrid.evaluate_decomposition">
+<code class="descname">evaluate_decomposition</code><span class="sig-paren">(</span><em>atom</em>, <em>cubic_splines</em>, <em>output</em>, <em>cell=None</em><span class="sig-paren">)</span><a class="headerlink" href="#becke.BeckeGrid.evaluate_decomposition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluate the spherical decomposition for a given atom in the molecular grid:</p>
+<p><span class="math">\(f(\theta, \varphi) = \sum_{\ell=0}^{\ell_{max}} \sum_{m=-\ell}^\ell f_{\ell m} \, Y_{\ell m}(\theta, \varphi)\)</span></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>atom</strong> (<em>int</em>) &#8211; Index of the atom.</li>
+<li><strong>cubic_splines</strong> (<em>list</em>) &#8211; List of CubicSpline objects with the spherical expansion.</li>
+<li><strong>output</strong> (<em>ndarray</em>) &#8211; array with the values of the approximated <span class="math">\(f(x)\)</span>.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="becke.BeckeGrid.integrate">
 <code class="descname">integrate</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="headerlink" href="#becke.BeckeGrid.integrate" title="Permalink to this definition">¶</a></dt>
@@ -183,10 +204,22 @@
 </table>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="becke.BeckeGrid.ncenter">
+<code class="descname">ncenter</code><a class="headerlink" href="#becke.BeckeGrid.ncenter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of particles of a given species in the molecular grid</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="becke.BeckeGrid.show">
 <code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#becke.BeckeGrid.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints information of the object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="becke.BeckeGrid.size">
+<code class="descname">size</code><a class="headerlink" href="#becke.BeckeGrid.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of points in the grid</p>
 </dd></dl>
 
 </dd></dl>
@@ -200,7 +233,7 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="poisson_solver.html" class="btn btn-neutral float-right" title="poisson_solver" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="lebedev.html" class="btn btn-neutral float-right" title="lebedev" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="atomic.html" class="btn btn-neutral" title="atomic" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

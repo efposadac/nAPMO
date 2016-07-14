@@ -32,7 +32,7 @@
   
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
         <link rel="up" title="System" href="system.html"/>
-        <link rel="next" title="contracted_slater" href="contracted_slater.html"/>
+        <link rel="next" title="elementary_particle" href="elementary_particle.html"/>
         <link rel="prev" title="basis_set" href="basis_set.html"/> 
 
   
@@ -87,20 +87,18 @@
 <li class="toctree-l2 current"><a class="reference internal" href="system.html">System</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">contracted_gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="contracted_slater.html">contracted_slater</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="molecular_system.html">molecular_system</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="primitive_slater.html">primitive_slater</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../grids/grids.html">Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
 </ul>
 <ul class="simple">
 </ul>
@@ -125,7 +123,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -156,16 +154,20 @@
 <dl class="class">
 <dt id="contracted_gaussian.ContractedGaussian">
 <em class="property">class </em><code class="descclassname">contracted_gaussian.</code><code class="descname">ContractedGaussian</code><span class="sig-paren">(</span><em>exponents=array([ 0.5]), coefficients=array([ 1.]), origin=array([ 0.,  0.,  0.]), l=array([0, 0, 0], dtype=int32)</em><span class="sig-paren">)</span><a class="headerlink" href="#contracted_gaussian.ContractedGaussian" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a linear combination of Cartesian Gaussian type orbitals GTO (dict).</p>
-<p>A contracted Gaussian function is just a linear combination of primitive Gaussians (also termed primitives)
-centered at the same center <span class="math">\({\bf A}\)</span> and with the same momentum indices  <span class="math">\({\bf n}\)</span>
+<dd><p>Defines a linear combination of Cartesian Gaussian type orbitals GTO.</p>
+<p>A contracted Gaussian function is just a linear combination of primitive
+Gaussians (also termed primitives) centered at the same center
+<span class="math">\({\bf A}\)</span> and with the same momentum indices  <span class="math">\({\bf n}\)</span>
 but with different exponents <span class="math">\(\zeta_i\)</span>:</p>
-<p><span class="math">\(\phi ({\bf r}; {\bf \zeta}, {\bf C}, {\bf n}, {\bf A}) = (x - A_x)^{n_x} (y - A_y)^{n_y} (z - A_z)^{n_z} \times
-\sum_{i=1}^M C_i \exp[-\zeta_i ({\bf r}-{\bf A})^2]\)</span></p>
-<p>Contracted Gaussians form shells the same way as primitives. The contraction coefficients <span class="math">\(\bf C\)</span>
-already include normalization constants so that the resulting combination is properly normalized.
-Published contraction coefficients <span class="math">\(\bf c\)</span> are linear coefficients for normalized primitives,
-hence the normalization-including contraction coefficients <span class="math">\(\bf C\)</span> have to be computed from them as</p>
+<p><span class="math">\(\phi ({\bf r}; {\bf \zeta}, {\bf C}, {\bf n}, {\bf A}) =
+(x - A_x)^{n_x} (y - A_y)^{n_y} (z - A_z)^{n_z} \times \sum_{i=1}^M C_i
+\exp[-\zeta_i ({\bf r}-{\bf A})^2]\)</span></p>
+<p>Contracted Gaussians form shells the same way as primitives. The
+contraction coefficients <span class="math">\(\bf C\)</span> already include normalization
+constants so that the resulting combination is properly normalized.
+Published contraction coefficients <span class="math">\(\bf c\)</span> are linear coefficients
+for normalized primitives, hence the normalization-including contraction
+coefficients <span class="math">\(\bf C\)</span> have to be computed from them as;</p>
 <p><span class="math">\(C_i = c_i N(\zeta_i,{\bf n})\)</span></p>
 <p>where <span class="math">\(N\)</span> is:</p>
 <p><span class="math">\(N = \dfrac{1}{\sqrt{&lt;\phi | \phi&gt;}}\)</span></p>
@@ -191,7 +193,11 @@ hence the normalization-including contraction coefficients <span class="math">\(
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>coord</strong> (<em>ndarray</em>) &#8211; array with the points where the function will be calculated.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>coord</strong> (<em>ndarray</em>) &#8211; array with the points where the function will be</li>
+<li><strong>calculated.</strong> &#8211; </li>
+</ul>
+</td>
 </tr>
 </tbody>
 </table>
@@ -217,12 +223,6 @@ hence the normalization-including contraction coefficients <span class="math">\(
 </table>
 </dd></dl>
 
-<dl class="method">
-<dt id="contracted_gaussian.ContractedGaussian.show">
-<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#contracted_gaussian.ContractedGaussian.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints the contents of the object.</p>
-</dd></dl>
-
 </dd></dl>
 
 </div>
@@ -234,7 +234,7 @@ hence the normalization-including contraction coefficients <span class="math">\(
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="contracted_slater.html" class="btn btn-neutral float-right" title="contracted_slater" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="elementary_particle.html" class="btn btn-neutral float-right" title="elementary_particle" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="basis_set.html" class="btn btn-neutral" title="basis_set" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

@@ -87,17 +87,18 @@
 <li class="toctree-l2"><a class="reference internal" href="../system/system.html">System</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="grids.html">Grids</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="angular.html">angular</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">atomic</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">atomic</a></li>
 <li class="toctree-l3"><a class="reference internal" href="becke.html">becke</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lebedev.html">lebedev</a></li>
 <li class="toctree-l3"><a class="reference internal" href="poisson_solver.html">poisson_solver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="radial.html">radial</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
 </ul>
 <ul class="simple">
 </ul>
@@ -122,7 +123,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -157,7 +158,7 @@
 <dl class="method">
 <dt id="atomic.AtomicGrid.evaluate_expansion">
 <code class="descname">evaluate_expansion</code><span class="sig-paren">(</span><em>lmax</em>, <em>expansion</em><span class="sig-paren">)</span><a class="headerlink" href="#atomic.AtomicGrid.evaluate_expansion" title="Permalink to this definition">¶</a></dt>
-<dd><p>Evaluate the spherical expansion:</p>
+<dd><p>Evaluate the spherical expansion for one atom (do not use with molecules):</p>
 <p><span class="math">\(f(\theta, \varphi) = \sum_{\ell=0}^{\ell_{max}} \sum_{m=-\ell}^\ell f_{\ell m} \, Y_{\ell m}(\theta, \varphi)\)</span></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -169,8 +170,7 @@
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>output</strong> &#8211;
-array with the values of the approximated <span class="math">\(f(x)\)</span>.</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>output</strong> &#8211; array with the values of the approximated <span class="math">\(f(x)\)</span>.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">ndarray</p>
@@ -182,13 +182,45 @@ array with the values of the approximated <span class="math">\(f(x)\)</span>.</p
 
 <dl class="method">
 <dt id="atomic.AtomicGrid.integrate">
-<code class="descname">integrate</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#atomic.AtomicGrid.integrate" title="Permalink to this definition">¶</a></dt>
+<code class="descname">integrate</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#atomic.AtomicGrid.integrate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Perform an integration of function <span class="math">\(f\)</span> using AtomicGrid.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> (<em>ndarray</em>) &#8211; array of <span class="math">\(f\)</span> computed in all grid points.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>f</strong> (<em>ndarray</em>) &#8211; array of <span class="math">\(f\)</span> computed in all grid points.</li>
+<li><strong>segmented</strong> (<em>logical</em>) &#8211; whether to calculate the integral in a segmented way along the number of radial points.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">float or array in the segmented case.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">integral</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="atomic.AtomicGrid.size">
+<code class="descname">size</code><a class="headerlink" href="#atomic.AtomicGrid.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of points in the grid</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="atomic.AtomicGrid.spherical_average">
+<code class="descname">spherical_average</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#atomic.AtomicGrid.spherical_average" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the spherical average of the product of given functions</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>output</strong> &#8211; the spherical average</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">array</td>
 </tr>
 </tbody>
 </table>
@@ -209,8 +241,7 @@ array with the values of the approximated <span class="math">\(f(x)\)</span>.</p
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>integral</strong> &#8211;
-Spherical expansion array with shape (nrad, lsize), where <span class="math">\(\ell_{size} = (\ell_{max} + 1)^2\)</span></p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>integral</strong> &#8211; Spherical expansion array with shape (nrad, lsize), where <span class="math">\(\ell_{size} = (\ell_{max} + 1)^2\)</span></p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">ndarray</p>
@@ -218,6 +249,12 @@ Spherical expansion array with shape (nrad, lsize), where <span class="math">\(\
 </tr>
 </tbody>
 </table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="atomic.AtomicGrid.symbol">
+<code class="descname">symbol</code><a class="headerlink" href="#atomic.AtomicGrid.symbol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Owner of the grid</p>
 </dd></dl>
 
 </dd></dl>

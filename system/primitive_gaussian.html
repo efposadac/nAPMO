@@ -32,7 +32,7 @@
   
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
         <link rel="up" title="System" href="system.html"/>
-        <link rel="next" title="primitive_slater" href="primitive_slater.html"/>
+        <link rel="next" title="Grids" href="../grids/grids.html"/>
         <link rel="prev" title="molecular_system" href="molecular_system.html"/> 
 
   
@@ -88,19 +88,17 @@
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="contracted_slater.html">contracted_slater</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="molecular_system.html">molecular_system</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">primitive_gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="primitive_slater.html">primitive_slater</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">primitive_gaussian</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../grids/grids.html">Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
 </ul>
 <ul class="simple">
 </ul>
@@ -125,7 +123,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -157,12 +155,15 @@
 <dt id="primitive_gaussian.PrimitiveGaussian">
 <em class="property">class </em><code class="descclassname">primitive_gaussian.</code><code class="descname">PrimitiveGaussian</code><span class="sig-paren">(</span><em>exponent=0.0, coefficient=1.0, l=array([0, 0, 0], dtype=int32), origin=array([ 0.,  0.,  0.])</em><span class="sig-paren">)</span><a class="headerlink" href="#primitive_gaussian.PrimitiveGaussian" title="Permalink to this definition">¶</a></dt>
 <dd><p>Defines a Cartesian primitive Gaussian type orbital (GTO). (dict)</p>
-<p>Following Obara and Saika (1986) we write an unnormalized primitive Cartesian Gaussian function centered at <span class="math">\(\bf A\)</span> as</p>
-<p><span class="math">\(\phi ({\bf r}; \zeta, {\bf n}, {\bf A}) = (x - A_x)^{n_x} (y - A_y)^{n_y} (z - A_z)^{n_z}
-\times \exp[-\zeta({\bf r}-{\bf A})^2]\)</span></p>
-<p>where <span class="math">\({\bf r}\)</span> is the coordinate vector of the electron, <span class="math">\(\zeta\)</span> is the orbital exponent, and <span class="math">\(\bf n\)</span>
-is a set of non-negative integers. The sum of <span class="math">\(n_x\)</span>, <span class="math">\(n_y\)</span>, and <span class="math">\(n_z\)</span> is denoted as <span class="math">\(\bf n\)</span>
-and be referred to as the angular momentum or orbital quantum number of the Gaussian function.</p>
+<p>Following Obara and Saika (1986) we write an unnormalized primitive
+Cartesian Gaussian function centered at <span class="math">\(\bf A\)</span> as</p>
+<p><span class="math">\(\phi ({\bf r}; \zeta, {\bf n}, {\bf A}) = (x - A_x)^{n_x}
+(y - A_y)^{n_y} (z - A_z)^{n_z} \times \exp[-\zeta({\bf r}-{\bf A})^2]\)</span></p>
+<p>where <span class="math">\({\bf r}\)</span> is the coordinate vector of the electron,
+<span class="math">\(\zeta\)</span> is the orbital exponent, and <span class="math">\(\bf n\)</span> is a set of
+non-negative integers. The sum of <span class="math">\(n_x\)</span>, <span class="math">\(n_y\)</span>, and <span class="math">\(n_z\)</span>
+is denoted as <span class="math">\(\bf n\)</span> and be referred to as the angular momentum or
+orbital quantum number of the Gaussian function.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -183,30 +184,37 @@ and be referred to as the angular momentum or orbital quantum number of the Gaus
 <dd><p>Computes the value of the object at <code class="docutils literal"><span class="pre">coord</span></code>.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="primitive_gaussian.PrimitiveGaussian.l">
+<code class="descname">l</code><a class="headerlink" href="#primitive_gaussian.PrimitiveGaussian.l" title="Permalink to this definition">¶</a></dt>
+<dd><p>The angular moment of the object</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="primitive_gaussian.PrimitiveGaussian.normalize">
 <code class="descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primitive_gaussian.PrimitiveGaussian.normalize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the normalization constant of this primitive.</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="primitive_gaussian.PrimitiveGaussian.origin">
+<code class="descname">origin</code><a class="headerlink" href="#primitive_gaussian.PrimitiveGaussian.origin" title="Permalink to this definition">¶</a></dt>
+<dd><p>The center of the function</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="primitive_gaussian.PrimitiveGaussian.overlap">
 <code class="descname">overlap</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#primitive_gaussian.PrimitiveGaussian.overlap" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates analytically the overlap integral between primitives.</p>
+<dd><p>Calculates analytically the overlap integral between two primitives.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<a class="reference internal" href="#primitive_gaussian.PrimitiveGaussian" title="primitive_gaussian.PrimitiveGaussian"><em>PrimitiveGaussian</em></a>) &#8211; function to perform <span class="math">\(&lt;\phi_{self} | \phi_{other}&gt;\)</span></td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>other</strong> (<a class="reference internal" href="#primitive_gaussian.PrimitiveGaussian" title="primitive_gaussian.PrimitiveGaussian"><em>PrimitiveGaussian</em></a>) &#8211; function to perform <span class="math">\(&lt;\phi_{self}
+| \phi_{other}&gt;\)</span></td>
 </tr>
 </tbody>
 </table>
-</dd></dl>
-
-<dl class="method">
-<dt id="primitive_gaussian.PrimitiveGaussian.show">
-<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#primitive_gaussian.PrimitiveGaussian.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Prints information about the object.</p>
 </dd></dl>
 
 </dd></dl>
@@ -220,7 +228,7 @@ and be referred to as the angular momentum or orbital quantum number of the Gaus
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="primitive_slater.html" class="btn btn-neutral float-right" title="primitive_slater" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../grids/grids.html" class="btn btn-neutral float-right" title="Grids" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="molecular_system.html" class="btn btn-neutral" title="molecular_system" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

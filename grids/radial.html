@@ -32,7 +32,7 @@
   
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
         <link rel="up" title="Grids" href="grids.html"/>
-        <link rel="next" title="Data" href="../data/data.html"/>
+        <link rel="next" title="Hartree-Fock" href="../hf/hf.html"/>
         <link rel="prev" title="poisson_solver" href="poisson_solver.html"/> 
 
   
@@ -89,15 +89,16 @@
 <li class="toctree-l3"><a class="reference internal" href="angular.html">angular</a></li>
 <li class="toctree-l3"><a class="reference internal" href="atomic.html">atomic</a></li>
 <li class="toctree-l3"><a class="reference internal" href="becke.html">becke</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lebedev.html">lebedev</a></li>
 <li class="toctree-l3"><a class="reference internal" href="poisson_solver.html">poisson_solver</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">radial</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">radial</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
 </ul>
 <ul class="simple">
 </ul>
@@ -122,7 +123,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -152,26 +153,14 @@
 <span id="radial"></span><h1>radial<a class="headerlink" href="#module-radial" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="radial.RadialGrid">
-<em class="property">class </em><code class="descclassname">radial.</code><code class="descname">RadialGrid</code><span class="sig-paren">(</span><em>size</em>, <em>atomic_symbol</em><span class="sig-paren">)</span><a class="headerlink" href="#radial.RadialGrid" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a radial grid for multi-center molecular integration.</p>
-<p>This grid is based on Becke&#8217;s paper, the transformation requires the covalent radius <code class="docutils literal"><span class="pre">rm</span></code> of a given atom, such that;</p>
-<p><span class="math">\(r = rm \dfrac{1+x}{1-x}\)</span></p>
-<p>When the object is instanced calculates the mapped uniform grid <code class="docutils literal"><span class="pre">z</span></code> and its first and second derivatives needed to calculate
-coulomb potentials.</p>
-<p class="rubric">References</p>
-<p>Becke, A. D. A multi-center numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>size</strong> (<em>int</em>) &#8211; Number of radial points.</li>
-<li><strong>atomic_symbol</strong> (<em>str</em>) &#8211; Atomic symbol for which the grid will be calculated.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
+<em class="property">class </em><code class="descclassname">radial.</code><code class="descname">RadialGrid</code><span class="sig-paren">(</span><em>size=None</em>, <em>atomic_symbol=None</em>, <em>rtransform=None</em>, <em>int1d=None</em><span class="sig-paren">)</span><a class="headerlink" href="#radial.RadialGrid" title="Permalink to this definition">¶</a></dt>
+<dd><p>An integration grid for the radial component of a spherical coordinate system</p>
+<dl class="method">
+<dt id="radial.RadialGrid.integrate">
+<code class="descname">integrate</code><span class="sig-paren">(</span><em>f</em>, <em>segments</em><span class="sig-paren">)</span><a class="headerlink" href="#radial.RadialGrid.integrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform integration on the radial grid.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -183,7 +172,7 @@ coulomb potentials.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../data/data.html" class="btn btn-neutral float-right" title="Data" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../hf/hf.html" class="btn btn-neutral float-right" title="Hartree-Fock" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
         <a href="poisson_solver.html" class="btn btn-neutral" title="poisson_solver" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>

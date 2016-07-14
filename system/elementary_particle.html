@@ -33,7 +33,7 @@
     <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
         <link rel="up" title="System" href="system.html"/>
         <link rel="next" title="molecular_system" href="molecular_system.html"/>
-        <link rel="prev" title="contracted_slater" href="contracted_slater.html"/> 
+        <link rel="prev" title="contracted_gaussian" href="contracted_gaussian.html"/> 
 
   
   <script src="../_static/js/modernizr.min.js"></script>
@@ -88,19 +88,17 @@
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
 <li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
 <li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="contracted_slater.html">contracted_slater</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="">elementary_particle</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">elementary_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="molecular_system.html">molecular_system</a></li>
 <li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
-<li class="toctree-l3"><a class="reference internal" href="primitive_slater.html">primitive_slater</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../grids/grids.html">Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../results.html">Results</a></li>
 </ul>
 <ul class="simple">
 </ul>
@@ -125,7 +123,7 @@
         <div class="rst-content">
           
 
-
+ 
 
 
 
@@ -155,7 +153,7 @@
 <span id="elementary-particle"></span><h1>elementary_particle<a class="headerlink" href="#module-elementary_particle" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="elementary_particle.ElementaryParticle">
-<em class="property">class </em><code class="descclassname">elementary_particle.</code><code class="descname">ElementaryParticle</code><span class="sig-paren">(</span><em>symbol='null'</em><span class="sig-paren">)</span><a class="headerlink" href="#elementary_particle.ElementaryParticle" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">elementary_particle.</code><code class="descname">ElementaryParticle</code><span class="sig-paren">(</span><em>symbol</em>, <em>origin=array([ 0.</em>, <em>0.</em>, <em>0.])</em>, <em>units='ANGSTROMS'</em><span class="sig-paren">)</span><a class="headerlink" href="#elementary_particle.ElementaryParticle" title="Permalink to this definition">¶</a></dt>
 <dd><p>An abstract python interface to create an elementary quantum particle
 i.e Leptons as electron, muon, etc. (dict)</p>
 <p>Database information from:</p>
@@ -167,15 +165,17 @@ i.e Leptons as electron, muon, etc. (dict)</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol for the particle.</li>
 <li><strong>origin</strong> (<em>ndarray</em>) &#8211; Origin for the particle (atomic units.)</li>
+<li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are
+&#8216;ANGSTROMS&#8217; or &#8216;BOHR&#8217;</li>
 </ul>
 </td>
 </tr>
 </tbody>
 </table>
-<dl class="method">
-<dt id="elementary_particle.ElementaryParticle.show">
-<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#elementary_particle.ElementaryParticle.show" title="Permalink to this definition">¶</a></dt>
-<dd><p>Shows the information of the objects</p>
+<dl class="attribute">
+<dt id="elementary_particle.ElementaryParticle.is_quantum">
+<code class="descname">is_quantum</code><a class="headerlink" href="#elementary_particle.ElementaryParticle.is_quantum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Whether the particle of the atomic element is being treated as a quantum species or not</p>
 </dd></dl>
 
 </dd></dl>
@@ -192,7 +192,7 @@ i.e Leptons as electron, muon, etc. (dict)</p>
         <a href="molecular_system.html" class="btn btn-neutral float-right" title="molecular_system" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="contracted_slater.html" class="btn btn-neutral" title="contracted_slater" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="contracted_gaussian.html" class="btn btn-neutral" title="contracted_gaussian" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
