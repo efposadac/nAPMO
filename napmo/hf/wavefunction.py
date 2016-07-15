@@ -42,6 +42,7 @@ class WaveFunction(Structure):
 
         # Initialize Libint object to calculate integrals
         self._libint = napmo.cext.LibintInterface_new(species.get('id'))
+        self._diis = napmo.cext.LibintInterface_diis_new(2)
 
         for particle in species.get('particles'):
             napmo.cext.LibintInterface_add_basis(
@@ -132,22 +133,24 @@ class WaveFunction(Structure):
         Args:
             direct (bool) : Whether to calculate eris on-the-fly or not
         """
-        napmo.cext.LibintInterface_init_2body_ints(self._libint)
+        if self.species.get('size') > 1:
 
-        if direct:
-            napmo.cext.LibintInterface_compute_2body_direct(
-                self._libint, self.D, self.G)
-        else:
-            if not self._ints:
-                self._ints = napmo.cext.LibintInterface_compute_2body_ints(
-                    self._libint, self.D)
-            napmo.cext.wavefunction_compute_2body_matrix(
-                byref(self), self._ints)
+            napmo.cext.LibintInterface_init_2body_ints(self._libint)
 
-        self.G *= self.species.get('charge')**2
+            if direct:
+                napmo.cext.LibintInterface_compute_2body_direct(
+                    self._libint, self.D, self.G)
+            else:
+                if not self._ints:
+                    self._ints = napmo.cext.LibintInterface_compute_2body_ints(
+                        self._libint, self.D)
+                napmo.cext.wavefunction_compute_2body_matrix(
+                    byref(self), self._ints)
 
-        # print("\n G Matrix:")
-        # print(self.G)
+            self.G *= self.species.get('charge')**2
+
+            # print("\n G Matrix:")
+            # print(self.G)
 
     def compute_couling(self, other_psi, direct=False):
         """

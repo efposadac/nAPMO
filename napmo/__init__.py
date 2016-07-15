@@ -104,20 +104,30 @@ cext.LibintInterface_compute_coupling_direct.restype = None
 cext.LibintInterface_compute_coupling_direct.argtypes = [
     c_void_p, c_void_p, a2df, a2df]
 
+cext.LibintInterface_diis_new.restype = c_void_p
+cext.LibintInterface_diis_new.argtypes = [c_int]
+
+cext.LibintInterface_diis.restype = None
+cext.LibintInterface_diis.argtypes = [c_void_p, POINTER(WaveFunction)]
+
 # Wavefunction
 cext.wavefunction_guess_hcore.restype = None
 cext.wavefunction_guess_hcore.argtypes = [POINTER(WaveFunction)]
 
-cext.wavefunction_iterate.restype = None
-cext.wavefunction_iterate.argtypes = [
+cext.wavefunction_compute_coefficients.restype = None
+cext.wavefunction_compute_coefficients.argtypes = [
+    POINTER(WaveFunction)]
+
+cext.wavefunction_compute_density.restype = None
+cext.wavefunction_compute_density.argtypes = [
     POINTER(WaveFunction)]
 
 cext.wavefunction_compute_energy.restype = None
 cext.wavefunction_compute_energy.argtypes = [
     POINTER(WaveFunction)]
 
-cext.wavefunction_compute_density.restype = None
-cext.wavefunction_compute_density.argtypes = [
+cext.wavefunction_iterate.restype = None
+cext.wavefunction_iterate.argtypes = [
     POINTER(WaveFunction)]
 
 cext.wavefunction_compute_2body_matrix.restype = None

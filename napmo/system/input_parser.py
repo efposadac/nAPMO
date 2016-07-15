@@ -280,7 +280,7 @@ class InputParser(object):
 
         Args:
             data (str) : Relevant data from input corresponding to the keyword ``scf``
-            group (bool) : Whether the data is a group ie. ``{...}`` or just a variable ``scf = ...``        
+            group (bool) : Whether the data is a group ie. ``{...}`` or just a variable ``scf = ...``
         """
         options = {'uhf': {'method': 'uhf'},
                    'hf': {'method': 'rhf'},

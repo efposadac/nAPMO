@@ -61,6 +61,8 @@ class SCF(object):
             with napmo.runtime.timeblock('SCF Single'):
                 self.iterate_single(self.PSI[-1], pprint=pprint)
 
+        self.show_results()
+
         return self._energy
 
     def compute_1body_ints(self):
@@ -122,6 +124,9 @@ class SCF(object):
 
             psi.build_fock()
 
+            with napmo.runtime.timeblock('DIIS'):
+                napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
+
             # solve F C = e S C
             with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
                 napmo.cext.wavefunction_iterate(byref(psi))
@@ -154,6 +159,7 @@ class SCF(object):
             e_last = self._energy
 
             for psi in self.PSI:
+
                 # Calculate 2 body Matrix
                 with napmo.runtime.timeblock('2 body ints'):
                     psi.compute_2body(self.get('direct'))
@@ -167,11 +173,8 @@ class SCF(object):
                 with napmo.runtime.timeblock('Coupling ints'):
                     psi.compute_couling(self.PSI, direct=self.get('direct'))
 
-                psi.build_fock()
-
-                # solve F C = e S C
-                with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
-                    napmo.cext.wavefunction_iterate(byref(psi))
+                with napmo.runtime.timeblock('DIIS'):
+                    napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
 
             self.compute_energy()
 
@@ -190,14 +193,10 @@ class SCF(object):
 
         for psi in self.PSI:
             # Add independient particle energies
-            self._energy += psi._energy
+            self._energy += (psi.D * (psi.H + (0.5 * psi.G))).sum()
 
             # Calculate coupling energy
             self._coupling_energy += 0.5 * (psi.D * psi.J).sum()
-
-        # print("Energy species: ", self._energy)
-        # print("Coupling Energy: ", self._coupling_energy)
-        # print("Point charges: ", self.pce)
 
         # Add point charges energy
         self._energy += self.pce
@@ -205,9 +204,37 @@ class SCF(object):
         # Add coupling Energy
         self._energy += self._coupling_energy
 
-        # print("Total: ", self._energy)
-        # Add electronic repulsion energy (open-shell case)
-        # Not implemented
+    def compute_energy_components(self):
+        """
+        Computes the total energy for a multi-species system.
+        """
+        self._kinetic_energy = 0.0
+        self._coupling_energy = 0.0
+        self._2body_energy = 0.0
+        self._1body_energy = 0.0
+        self._pcqui_energy = 0.0
+
+        for psi in self.PSI:
+            # Calculate kinetic energy
+            self._kinetic_energy += (psi.D * psi.T).sum()
+
+            # Calculate kinetic energy
+            self._1body_energy += (psi.D * psi.H).sum()
+
+            # Calculate point charges - quantum interaction energy
+            self._pcqui_energy += (psi.D * psi.H).sum() - (psi.D * psi.T).sum()
+
+            # Calculate repulsion energy
+            self._2body_energy += 0.5 * (psi.D * psi.G).sum()
+
+            # Calculate coupling energy
+            self._coupling_energy += 0.5 * (psi.D * psi.J).sum()
+
+        # Calculate potential energy
+        self._potential_energy = (self.pce +
+                                  self._2body_energy +
+                                  self._pcqui_energy +
+                                  self._coupling_energy)
 
     def get(self, key, default=None):
         """
@@ -221,6 +248,45 @@ class SCF(object):
         The point charges energy
         """
         return self._pce
+
+    def show_results(self):
+        """
+        Prints detailed results of the calculation
+        """
+        self.compute_energy_components()
+
+        print("""\n
+End SCF calculation
+--------------------------------------------------
+
+Hartree-Fock Results:
+---------------------
+
+  Total potential energy   {0:>16.11f}
+  Total kinetic energy     {1:>16.11f}
+                          -----------------
+  Total Energy             {2:>16.11f}
+
+  Virial ratio (V/T)       {3:>16.11f}
+
+  Potential energy components:
+
+  Point charges energy     {4:>16.11f}
+  Quantum-Point energy     {5:>16.11f}
+  Repulsion energy         {6:>16.11f}
+  Coupling energy          {7:>16.11f}
+                          -----------------
+  Potential energy         {8:>16.11f}
+
+""".format(self._potential_energy,
+           self._kinetic_energy,
+           self._potential_energy + self._kinetic_energy,
+           self._potential_energy / self._kinetic_energy,
+           self.pce,
+           self._pcqui_energy,
+           self._2body_energy,
+           self._coupling_energy,
+           self._potential_energy))
 
     def __repr__(self):
         out = ("""\nSCF setup:

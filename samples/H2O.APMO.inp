@@ -34,8 +34,8 @@ scf {
 # and plot some graphics:
 
 code {
-result = lambda x: print("PASS!") if x < 1e-7  else print("FAILED!")
-ref_energy = -75.96979697894
+result = lambda x: print("PASS!") if abs(x) < 1e-7  else print("FAILED!")
+ref_energy = -75.969794592884
 diff_energy = ref_energy - Energy
 result(diff_energy)
 plt.matshow(D[0])

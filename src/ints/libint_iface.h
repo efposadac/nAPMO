@@ -14,18 +14,11 @@ efposadac@unal.edu.co
 #include "../system/basis_set.h"
 #include "ints.h"
 #include "iterators.h"
+#include "../hf/wavefunction.h"
 #include <libint2.hpp>
+#include <libint2/diis.h>
 
 #define STACK_SIZE 30000
-
-/*
-Type definitions
-*/
-typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
-    Matrix;
-// import dense, dynamically sized Matrix type from Eigen
-// this is a matrix with row - major storage
-// (http: // en.wikipedia.org / wiki / Row - major_order)
 
 using shellpair_list_t = std::unordered_map<size_t, std::vector<size_t>>;
 
@@ -177,6 +170,10 @@ void LibintInterface_compute_coupling_disk(LibintInterface *lint,
                                            LibintInterface *olint,
                                            const char *filename);
 int LibintInterface_get_nbasis(LibintInterface *lint);
+
+libint2::DIIS<Matrix> * LibintInterface_diis_new(int iter);
+
+void LibintInterface_diis(libint2::DIIS<Matrix> * diis, WaveFunction * psi);
 
 #ifdef __cplusplus
 }

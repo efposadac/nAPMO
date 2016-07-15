@@ -1446,3 +1446,25 @@ void LibintInterface_compute_coupling_disk(LibintInterface *lint,
                                            const char *filename) {
   lint->compute_coupling_disk(*olint, filename);
 }
+
+libint2::DIIS<Matrix> * LibintInterface_diis_new(int iter){
+  return new libint2::DIIS<Matrix> (iter);
+}
+
+void LibintInterface_diis(libint2::DIIS<Matrix> * diis, WaveFunction * psi){
+  int nbasis = psi->nbasis;
+
+  Map S(psi->S, nbasis, nbasis);
+  Map D(psi->D, nbasis, nbasis);
+  Map F(psi->F, nbasis, nbasis);
+
+  // compute SCF error
+  Matrix FD_comm = F * D * S - S * D * F;
+  Matrix F_diis = F; 
+
+  diis->extrapolate(F_diis, FD_comm);
+
+  for (int i = 0; i < F_diis.size(); ++i) {
+    psi->F[i] = F_diis.array()(i);
+  }
+}
