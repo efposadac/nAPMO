@@ -3,29 +3,31 @@
 # Copyright (c) 2015, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 from __future__ import division
 from __future__ import print_function
 
-import numpy as np
-import numpy.ctypeslib as npct
 from ctypes import *
-
-from napmo.system.cext import napmo_library
+import numpy as np
+import napmo
 
 
 class PrimitiveGaussian(Structure):
+
     """
     Defines a Cartesian primitive Gaussian type orbital (GTO). (dict)
 
-    Following Obara and Saika (1986) we write an unnormalized primitive Cartesian Gaussian function centered at :math:`\\bf A` as
+    Following Obara and Saika (1986) we write an unnormalized primitive
+    Cartesian Gaussian function centered at :math:`\\bf A` as
 
-    :math:`\phi ({\\bf r}; \zeta, {\\bf n}, {\\bf A}) = (x - A_x)^{n_x} (y - A_y)^{n_y} (z - A_z)^{n_z}
-    \\times \exp[-\zeta({\\bf r}-{\\bf A})^2]`
+    :math:`\phi ({\\bf r}; \zeta, {\\bf n}, {\\bf A}) = (x - A_x)^{n_x}
+    (y - A_y)^{n_y} (z - A_z)^{n_z} \\times \exp[-\zeta({\\bf r}-{\\bf A})^2]`
 
-    where :math:`{\\bf r}` is the coordinate vector of the electron, :math:`\zeta` is the orbital exponent, and :math:`\\bf n`
-    is a set of non-negative integers. The sum of :math:`n_x`, :math:`n_y`, and :math:`n_z` is denoted as :math:`\\bf n`
-    and be referred to as the angular momentum or orbital quantum number of the Gaussian function.
+    where :math:`{\\bf r}` is the coordinate vector of the electron,
+    :math:`\zeta` is the orbital exponent, and :math:`\\bf n` is a set of
+    non-negative integers. The sum of :math:`n_x`, :math:`n_y`, and :math:`n_z`
+    is denoted as :math:`\\bf n` and be referred to as the angular momentum or
+    orbital quantum number of the Gaussian function.
 
     Args:
         exponent (double): GTO exponent.
@@ -56,17 +58,23 @@ class PrimitiveGaussian(Structure):
 
     @property
     def origin(self):
+        """
+        The center of the function
+        """
         return np.array(self._origin[:3])
 
     @property
     def l(self):
+        """
+        The angular moment of the object
+        """
         return np.array(self._l[:3])
 
     def normalize(self):
         """
         Calculates the normalization constant of this primitive.
         """
-        return napmo_library.gto_normalize_primitive(byref(self))
+        return napmo.cext.gto_normalize_primitive(byref(self))
 
     def compute(self, coord):
         """
@@ -74,48 +82,56 @@ class PrimitiveGaussian(Structure):
         """
         n_coord = coord.shape[0]
         output = np.empty(n_coord)
-        napmo_library.gto_compute_primitive(
+        napmo.cext.gto_compute_primitive(
             byref(self), coord, output, n_coord)
 
         return output
 
     def overlap(self, other):
         """
-        Calculates analytically the overlap integral between primitives.
+        Calculates analytically the overlap integral between two primitives.
 
         Args:
-            other (PrimitiveGaussian) : function to perform :math:`<\phi_{self} | \phi_{other}>`
+            other (PrimitiveGaussian) : function to perform :math:`<\phi_{self}
+             | \phi_{other}>`
         """
-        return napmo_library.gto_overlap_primitive(byref(self), byref(other))
+        return napmo.cext.gto_overlap_primitive(byref(self), byref(other))
 
-    def show(self):
+    def _show_compact(self):
         """
-        Prints information about the object.
+        Prints information about the object in a compact way.
         """
-        print("    origin: ", self.origin)
-        print("    exponent: ", self.exponent)
-        print("    coefficient: ", self.coefficient)
-        print("    angular moment: ", self.l)
-        print("    normalization: ", self.normalization)
+        lvalue = {0: "s", 1: "p", 2: "d", 3: "f", 4: "g"}
+        out = '  {0:3s} {1:10.5f} {2:10.5f} {2:10.5f}\n'.format(
+            lvalue[sum(self.l)],
+            self.exponent,
+            self.coefficient,
+            self.normalization
+        )
+        return out
 
+    def __repr__(self):
 
-array_1d_double = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
-array_2d_double = npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
+        out = """
+==================================================
+Object: {0:9s}
+--------------------------------------------------
+Origin: {1:<10.5f} {2:<10.5f} {3:<10.5f}
+l:      {4:<3d} {5:<3d} {6:<3d}
+zeta:   {7:<10.5f}
+coeff:  {8:<10.5f}
+norma:  {9:<10.5f}
+--------------------------------------------------""".format(
+            type(self).__name__,
+            self.origin[0],
+            self.origin[1],
+            self.origin[2],
+            self.l[0],
+            self.l[1],
+            self.l[2],
+            self.exponent,
+            self.coefficient,
+            self.normalization,
+        )
 
-napmo_library.gto_normalize_primitive.restype = c_double
-napmo_library.gto_normalize_primitive.argtypes = [
-    POINTER(PrimitiveGaussian)
-]
-
-napmo_library.gto_compute_primitive.restype = None
-napmo_library.gto_compute_primitive.argtypes = [
-    POINTER(PrimitiveGaussian),
-    array_2d_double, array_1d_double,
-    c_int
-]
-
-napmo_library.gto_overlap_primitive.restype = c_double
-napmo_library.gto_overlap_primitive.argtypes = [
-    POINTER(PrimitiveGaussian),
-    POINTER(PrimitiveGaussian)
-]
+        return out

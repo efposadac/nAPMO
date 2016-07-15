@@ -22,6 +22,7 @@ import sphinx_rtd_theme
 sys.path.insert(0, os.path.abspath('../'))
 sys.path.insert(0, '../napmo/data')
 sys.path.insert(0, '../napmo/grids')
+sys.path.insert(0, '../napmo/hf')
 sys.path.insert(0, '../napmo/system')
 sys.path.insert(0, '../napmo/utilities')
 
@@ -39,6 +40,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.mathjax',
+    'sphinx.ext.doctest'
 ]
 
 mathjax_path = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"

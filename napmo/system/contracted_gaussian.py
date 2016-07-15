@@ -3,31 +3,36 @@
 # Copyright (c) 2015, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 from __future__ import division
 from __future__ import print_function
 
 import numpy as np
 import scipy.misc
 
-from napmo.system.primitive_gaussian import PrimitiveGaussian
+import napmo
 
 
 class ContractedGaussian(dict):
-    """
-    Defines a linear combination of Cartesian Gaussian type orbitals GTO (dict).
 
-    A contracted Gaussian function is just a linear combination of primitive Gaussians (also termed primitives)
-    centered at the same center :math:`{\\bf A}` and with the same momentum indices  :math:`{\\bf n}`
+    """
+    Defines a linear combination of Cartesian Gaussian type orbitals GTO.
+
+    A contracted Gaussian function is just a linear combination of primitive
+    Gaussians (also termed primitives) centered at the same center
+    :math:`{\\bf A}` and with the same momentum indices  :math:`{\\bf n}`
     but with different exponents :math:`\zeta_i`:
 
-    :math:`\phi ({\\bf r}; {\\bf \zeta}, {\\bf C}, {\\bf n}, {\\bf A}) = (x - A_x)^{n_x} (y - A_y)^{n_y} (z - A_z)^{n_z} \\times
-    \sum_{i=1}^M C_i \exp[-\zeta_i ({\\bf r}-{\\bf A})^2]`
+    :math:`\phi ({\\bf r}; {\\bf \zeta}, {\\bf C}, {\\bf n}, {\\bf A}) =
+    (x - A_x)^{n_x} (y - A_y)^{n_y} (z - A_z)^{n_z} \\times \sum_{i=1}^M C_i
+    \exp[-\zeta_i ({\\bf r}-{\\bf A})^2]`
 
-    Contracted Gaussians form shells the same way as primitives. The contraction coefficients :math:`\\bf C`
-    already include normalization constants so that the resulting combination is properly normalized.
-    Published contraction coefficients :math:`\\bf c` are linear coefficients for normalized primitives,
-    hence the normalization-including contraction coefficients :math:`\\bf C` have to be computed from them as
+    Contracted Gaussians form shells the same way as primitives. The
+    contraction coefficients :math:`\\bf C` already include normalization
+    constants so that the resulting combination is properly normalized.
+    Published contraction coefficients :math:`\\bf c` are linear coefficients
+    for normalized primitives, hence the normalization-including contraction
+    coefficients :math:`\\bf C` have to be computed from them as;
 
     :math:`C_i = c_i N(\zeta_i,{\\bf n})`
 
@@ -50,15 +55,15 @@ class ContractedGaussian(dict):
 
         super(ContractedGaussian, self).__init__()
 
+        assert isinstance(exponents, np.ndarray) or isinstance(exponents, list)
+
         self["length"] = len(exponents)
         self["l"] = l
         self["origin"] = origin
-        self["primitive"] = []
+        self["primitive"] = [
+            napmo.PrimitiveGaussian(exponent, coefficient, l, origin)
+            for (exponent, coefficient) in zip(exponents, coefficients)]
 
-        for (exponent, coefficient) in zip(exponents, coefficients):
-            self.get("primitive").append(PrimitiveGaussian(
-                exponent, coefficient, l, origin
-            ))
         self["normalization"] = 1.0
         aux = self.normalize()
         self["normalization"] = aux
@@ -75,13 +80,13 @@ class ContractedGaussian(dict):
 
         Args:
             other (ContractedGaussian) : Contracted function to perform :math:`<\phi_{self} | \phi_{other}>`
-        """
-        output = 0.0
-        for pa in self.get('primitive'):
-            for pb in other.get('primitive'):
-                output += pa.overlap(pb)
 
-        output *= self.get('normalization') * other.get('normalization')
+        """
+        output = (
+            sum([pa.overlap(pb)
+                 for pa in self.get('primitive')
+                 for pb in other.get('primitive')]) *
+            self.get('normalization') * other.get('normalization'))
 
         return output
 
@@ -90,24 +95,71 @@ class ContractedGaussian(dict):
         Computes the value of the contracted Gaussian at ``coord``.
 
         Args:
-            coord (ndarray) : array with the points where the function will be calculated.
+            coord (ndarray) : array with the points where the function will be
+            calculated.
         """
-        output = 0.0
-        for primitive in self.get('primitive'):
-            output += primitive.compute(coord) * self.get('normalization')
+        return sum([primitive.compute(coord) * self.get('normalization')
+                    for primitive in self.get('primitive')])
 
-        return output
+    @property
+    def l(self):
+        return self.get('l')
 
-    def show(self):
+    @property
+    def origin(self):
+        return self.get('origin')
+
+    @property
+    def length(self):
+        return self.get('length')
+
+    @property
+    def norma(self):
+        return self.get('normalization')
+
+    def _show_compact(self):
         """
-        Prints the contents of the object.
+        contractions information of the object in a "compact" way
         """
-        print("  origin: ", self.get('origin'))
-        print("  length: ", self.get('length'))
-        print("  normalization: ", self.get('normalization'))
-        print("  *** Primitives info: ")
-        i = 1
-        for primitive in self.get('primitive'):
-            print(i)
-            primitive.show()
-            i += 1
+
+        out = ''
+        out += "".join([p._show_compact()
+                        for p in self.get('primitive') if p.l[0] == sum(p.l)])
+
+        return out
+
+    def __repr__(self):
+
+        out = """
+==================================================
+Object: {0:9s}
+--------------------------------------------------
+Origin: {1:<10.5f} {2:<10.5f} {3:<10.5f}
+l:      {4:<3d} {5:<3d} {6:<3d}
+length: {7:<10d}
+norma:  {8:<10.5f}
+--------------------------------------------------
+""".format(
+            type(self).__name__,
+            self.origin[0],
+            self.origin[1],
+            self.origin[2],
+            self.l[0],
+            self.l[1],
+            self.l[2],
+            self.length,
+            self.norma)
+
+        out += """
+  {0:<3s} {1:>10s} {2:>10s} {3:>10s}
+  ------------------------------------
+""".format(
+            "l",
+            "zeta",
+            "Coeff",
+            "Norma")
+
+        out += "".join([p._show_compact()
+                        for p in self.get('primitive')])
+
+        return out

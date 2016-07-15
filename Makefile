@@ -3,19 +3,19 @@
 # Copyright (c) 2015, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 
 TOPDIR=.
 include $(TOPDIR)/config.make
 
 SUBDIRS = napmo src
 
-default: SERIAL
+default: OMP
 
 $(BUILD):
 	cd src && $(MAKE) $@
-	# python2 setup.py install --record files.txt --user
 	python setup.py install --record files.txt --user
+	python2 setup.py install --record files.txt --user
 
 clean:
 	for dir in $(SUBDIRS); \

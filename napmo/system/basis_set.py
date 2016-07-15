@@ -3,148 +3,197 @@
 # Copyright (c) 2015, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 
 from __future__ import division
 from __future__ import print_function
-
-import numpy as np
-import json
 from ctypes import *
 
-from napmo.system.contracted_slater import ContractedSlater
-from napmo.system.contracted_gaussian import ContractedGaussian
+import numpy as np
+import napmo
+import re
+import os
 
 
 class BasisSet(dict):
+
     """
     Basis-set interface. (dict)
-
-    This class allows the management of STO and GTO basis-sets.
     """
 
-    def __init__(self, name='user'):
+    def __init__(self, basis_name, particle, origin=None, basis_file=None):
         super(BasisSet, self).__init__()
-        self['name'] = name
+        self['name'] = basis_name
+        self['symbol'] = particle
         self['function'] = []
-        self['kind'] = None
         self['length'] = 0
         self['t_length'] = 0
 
-    def load_gaussian(self, particle, data, origin=np.zeros(3, dtype=np.float64)):
+        if origin is not None:
+            if not basis_file:
+                basis_file = os.path.join(napmo.basis_dir, basis_name)
+
+            basis_data = self.load_file(particle, basis_file)
+            self.load_gaussian(particle, basis_data, origin)
+
+    def update(self, other):
+        self['function'] += other.get('function', [])
+        self['length'] += other.get('length', 0)
+        self['t_length'] += other.get('t_length', 0)
+
+    def load_file(self, particle, basis_file):
+        """
+        Load basis information from file with deMon2k basis-set format. See https://bse.pnl.gov/bse/portal
+        for further information.
+
+        Args:
+            particle (str): Symbol of the particle.
+            basis_file (str): Path to the basis file.
+
+        Return:
+            basis_data(list): List of dicts with the basis-set data
+
+            Example::
+
+                [{'angular': 's', 'cont': [0.15432897, 0.15432897, 0.15432897],
+                'prim': [3.42525091, 3.42525091, 3.42525091]}]
+
+        """
+
+        basis_data = []
+
+        with open(basis_file, 'r') as f:
+            data = f.read()
+
+        # Clean commentaries and blank lines
+        data = re.sub('#.*\n?', '', data)
+        data = re.sub('(?imu)^\s*\n', '', data)
+
+        # Find atom
+        particle = particle.replace('+', '\+')
+        particle = particle.replace('-', '\-')
+        pos = re.search('O-.*\s' + particle + '\s', data)
+
+        if pos is None:
+            try:
+                raise ValueError('Basis for particle ' +
+                                 particle + ' not found!')
+            except:
+                print('Check you basis file: ', basis_file)
+                raise
+
+        data = data[pos.start():].splitlines()
+
+        line_index = 2
+        for cont in range(int(data[1].strip())):
+            aux = {}
+            line = data[line_index].strip().split()
+
+            aux['angular'] = int(line[1].strip())
+            aux['cont'] = []
+            aux['prim'] = []
+
+            line_index += 1
+
+            for prim in range(int(line[2].strip())):
+                line = data[line_index].strip().split()
+
+                aux['prim'].append(float(line[0].strip()))
+                aux['cont'].append(float(line[1].strip()))
+
+                line_index += 1
+
+            basis_data.append(aux)
+
+        return basis_data
+
+    def load_gaussian(self, particle, basis_data, origin):
         """
         Load a Gaussian Type Orbital (GTO) basis-set.
 
         Args:
             particle (str): Symbol of the particle.
-            data (json): json formatted data to be loaded.
+            basis_data (list): Information of the basis.
+            origin (ndarray) : Center of the functions
         """
-        self['kind'] = 'GTO'
-        data = json.loads(data)[particle]
 
-        lvalue = {'s': 0, 'p': 1, 'd': 2, 'f': 3, 'g': 4}
+        func = [napmo.ContractedGaussian(
+            np.array(cont['prim'], dtype=np.float64),
+            np.array(cont['cont'], dtype=np.float64),
+            np.array(origin, dtype=np.float64),
+            np.array([i, k - j, j], dtype=np.int32))
+            for cont in basis_data
+            for k, i in enumerate(reversed(
+                range(cont['angular'] + 1)))
+            for j in range(k + 1)]
 
-        for k in range(len(data)):
-            l = lvalue[data[k]['angular']]
-            for i in range(l + 1):
-                x = l - i
-                for j in range(i + 1):
-                    y = i - j
-                    z = j
-                    self['function'].append(ContractedGaussian(
-                        np.array(data[k]['prim'], dtype=np.float64),
-                        np.array(data[k]['cont'], dtype=np.float64),
-                        np.array(origin, dtype=np.float64),
-                        np.array([x, y, z], dtype=np.int32)
-                    ))
-
+        self['function'] += func
         self['length'] = len(self.get('function'))
         self['t_length'] = 0
 
-        for function in self.get('function'):
-            self['t_length'] += function.get('length')
-
-    def load_slater(self, particle, data, origin=np.zeros(3, dtype=np.float64)):
-        """
-        Load a Slater Type Orbital (STO) basis-set.
-
-        Args:
-            particle (str): Symbol of the particle.
-            data (json): json formatted data to be loaded.
-        """
-        self["kind"] = 'STO'
-        data = json.loads(data)[particle]
-
-        lvalue = {"s": 0, "p": 1, "d": 2, "f": 3, "g": 4}
-
-        for k in range(len(data)):
-            l = lvalue[data[k]["angular"]]
-            for m in range(-l, l + 1):
-                self["function"].append(ContractedSlater(
-                    np.array(data[k]["prim"], dtype=np.float64),
-                    np.array(data[k]["cont"], dtype=np.float64),
-                    np.array(origin, dtype=np.float64),
-                    np.array(data[k]["n"], dtype=np.int32),
-                    l,
-                    m
-                ))
-        self['length'] = len(self.get('function'))
-        self['t_length'] = 0
-
-        for function in self.get('function'):
-            self['t_length'] += function.get('length')
+        self['t_length'] = sum([function.get('length')
+                                for function in self.get('function')])
 
     def compute(self, coord=np.zeros([1, 3], dtype=np.float64)):
         """
         Compute all the basis-set functions at given ``coord``.
 
         Args:
-            coord (ndarray): coordinates in which the basis set will be evaluated. Array shape should be (n, 3)
+            coord (ndarray): coordinates in which the basis set will be
+                evaluated. Array shape should be (n, 3)
 
         """
-        output = []
-        for i in range(self.get('length')):
-            output.append(self.get('function')[i].compute(coord))
+        output = (func.compute(coord) for func in self.get('function'))
+        return np.column_stack(output)
 
-        return output
+    def __repr__(self):
 
-    def show(self):
-        """
-        Prints extended information of the basis-set object.
-        """
-        print("================")
-        print("Basis set info")
-        print("================")
-        print("Name: ", self.get('name'))
-        print("Kind: ", self.get('kind'))
-        print("Length: ", self.get('length'))
-        print("****************")
-        print("Functions info: ")
-        print("****************")
-        i = 1
-        for function in self.get('function'):
-            print("")
-            print("*** Function: ", i)
-            print("")
-            function.show()
-            i += 1
+        out = """
+==================================================
+Object: {0:9s}       Particle: {1:9s}
+--------------------------------------------------
+
+Name: {2:9s} Length: {3:5d}
+
+  {4:<3s} {5:>10s} {6:>10s} {7:>10s}
+  ------------------------------------
+""".format(
+            type(self).__name__,
+            self.get('symbol', '--'),
+            self.get('name', '--'),
+            self.get('length', 0),
+            "l",
+            "zeta",
+            "Coeff",
+            "Norma"
+        )
+
+        out += "\n".join([p._show_compact()
+                          for p in self.get('function', []) if p.l[0] == sum(p.l)])
+
+        out += '--------------------------------------------------'
+
+        return out
 
 
 class BasisSet_C(Structure):
+
     """
     C interface to the BasisSet class.
 
     Args:
-        basis (BasisSet) : Basis set of the system.
+        basis(BasisSet): Basis set of the system.
     """
     _fields_ = [
         ("n_cont", c_int),
         ("n_prim_cont", POINTER(c_int)),
+        ("prim_index", POINTER(c_int)),
         ("l_index", POINTER(c_int)),
-        ("exponent", POINTER(c_double)),
-        ("coefficient", POINTER(c_double)),  # normalized
+        ("origin", POINTER(c_double)),
         ("normalization", POINTER(c_double)),
-        ("origin", POINTER(c_double))
+        ("exponent", POINTER(c_double)),
+        ("coefficient", POINTER(c_double)),
+        ("p_normalization", POINTER(c_double)),
     ]
 
     def __init__(self, basis):
@@ -152,23 +201,29 @@ class BasisSet_C(Structure):
 
         self.n_cont = basis.get('length')
 
-        size = (c_double * self.n_cont)()
-        self.normalization = cast(size, POINTER(c_double))
+        size = (c_int * self.n_cont)()
+        self.n_prim_cont = cast(size, POINTER(c_int))
+
+        size = (c_int * self.n_cont)()
+        self.prim_index = cast(size, POINTER(c_int))
+
+        size = (c_int * self.n_cont * 3)()
+        self.l_index = cast(size, POINTER(c_int))
 
         size = (c_double * self.n_cont * 3)()
         self.origin = cast(size, POINTER(c_double))
 
-        size = (c_int * self.n_cont)()
-        self.n_prim_cont = cast(size, POINTER(c_int))
-
-        size = (c_int * self.n_cont * 3)()
-        self.l_index = cast(size, POINTER(c_int))
+        size = (c_double * self.n_cont)()
+        self.normalization = cast(size, POINTER(c_double))
 
         size = (c_double * basis.get('t_length'))()
         self.exponent = cast(size, POINTER(c_double))
 
         size = (c_double * basis.get('t_length'))()
         self.coefficient = cast(size, POINTER(c_double))
+
+        size = (c_double * basis.get('t_length'))()
+        self.p_normalization = cast(size, POINTER(c_double))
 
         counter = 0
         for i in range(self.n_cont):
@@ -180,8 +235,11 @@ class BasisSet_C(Structure):
                 self.origin[i * 3 + j] = F.get('origin')[j]
 
             self.n_prim_cont[i] = F.get('length')
+            self.prim_index[i] = counter
+
             for j in range(self.n_prim_cont[i]):
                 P = F.get('primitive')[j]
                 self.exponent[counter] = P.exponent
-                self.coefficient[counter] = P.coefficient * P.normalization
+                self.coefficient[counter] = P.coefficient
+                self.p_normalization[counter] = P.normalization
                 counter += 1

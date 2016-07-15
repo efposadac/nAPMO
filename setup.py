@@ -4,7 +4,7 @@
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 """
 Script for installation of the python module.
 
@@ -29,7 +29,7 @@ if __name__ == '__main__':
         author_email="eposada@sissa.it",
         url="http://efposadac.github.io/nAPMO/",
         packages=find_packages(),
-        package_data={'': ['*.json', '*.dat', '*.so']},
+        package_data={'': ['*.json', '*.dat', '*.so', 'data/basis/*']},
         long_description=read('README.rst')
     )
 

@@ -3,256 +3,367 @@
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 
 from __future__ import division
 from __future__ import print_function
 
-from copy import deepcopy
-
 import numpy as np
-from math import ceil
+import copy
 
-from napmo.system.atomic_element import AtomicElement
-from napmo.system.elementary_particle import ElementaryParticle
-from napmo.system.basis_set import BasisSet, BasisSet_C
-from napmo.data.constants import ANGSTROM_TO_BOHR
+import napmo
 
 
 class MolecularSystem(dict):
-    """
-    Defines a molecular system, containing different kinds of quantum 'species' i.e. atoms, muons, positrons, etc. (dict)
 
-    Args:
-        name (str): Name of the object.
+    """
+    Defines a molecular system, containing different kinds of quantum 'species'
+    i.e. atoms, muon, positrons, etc. (dict)
+
     """
 
     def __init__(self):
         super(MolecularSystem, self).__init__()
+        self._point_charges = []
 
-    def add_atom(self, symbol, origin, BOA=True, mass_number=0, units='ANGSTROMS',
-                 basis_kind='GTO', basis_name=None, basis_file=None):
+    def add_atom(self, symbol, origin, units='ANGSTROMS', quantum=False,
+                 basis_name=None, basis_file=None):
         """
         Adds an atom to the molecular system.
 
         Args:
             symbol (str): Symbol of the atom.
             origin (ndarray): Origin of the atom (Cartesian coordinates)
-            BOA (bool, optional): Whether the atom nuclei will be treated in the BOA approach or not. Default is True
-            mass_number (int, optional): Mass number of element 'symbol' :math:`:= A = p^+ + n^o`.
-                If 0 the system will choose the most abundant one. Default is 0.
-            units (str, optional): Units of the origin, valid values are 'ANGSTROMS' or 'BOHR'
+            units (str, optional): Units of the origin, valid values are
+                'ANGSTROMS' or 'BOHR'
         """
         assert isinstance(symbol, str)
         assert len(origin) == 3
-        assert isinstance(BOA, bool)
-        assert isinstance(mass_number, int)
         assert isinstance(units, str)
-
-        if 'atoms' not in self:
-            self['atoms'] = []
 
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
-        if units == 'ANGSTROMS':
-            origin *= ANGSTROM_TO_BOHR
+        if units is 'ANGSTROMS':
+            origin *= napmo.ANGSTROM_TO_BOHR
 
-        atom = AtomicElement(symbol, origin=origin, BOA=BOA,
-                             mass_number=mass_number, units='Bohr')
-
-        if basis_name is None:
-            basis_name = basis_file
-
-        self.add_elementary_particle(
-            'e-', size=atom.get('atomic_number'), units='BOHR', basis_name=basis_name)
+        # Fetching atom database
+        atom = napmo.AtomicElement(symbol, origin, 'BOHR')
 
         # load basis-set
-        atom['basis'] = BasisSet(basis_name)
+        basis = None
+        if basis_name:
+            basis = napmo.BasisSet(
+                basis_name, symbol, origin=origin, basis_file=basis_file)
 
-        if basis_file is not None:
-            file = open(basis_file)
-            basis_data = file.read().replace('\n', '')
-            file.close()
+            atom['basis'] = basis
 
-            if basis_kind == 'GTO':
-                atom.get('basis').load_gaussian(
-                    symbol, basis_data, origin)
-                self.get('e-')['basis'].load_gaussian(symbol,
-                                                      basis_data, origin)
+        atom['is_quantum'] = quantum
 
-            elif basis_kind == 'STO':
-                atom.get('basis').load_slater(
-                    symbol, basis_data, origin)
-                self.get('e-')['basis'].load_slater(
-                    symbol, basis_data, origin)
+        self.add_elementary_particle('e-', origin, units='BOHR', size=atom.get('atomic_number'),
+                                     basis_name=basis_name, basis_file=basis_file,
+                                     basis_set=basis, particle=atom)
 
-        self.get('atoms').append(atom)
-
-    def add_elementary_particle(self, symbol,
-                                origin=None, size=1, units='ANGSTROMS',
-                                basis_kind='GTO', basis_name=None, basis_file=None):
+    def add_elementary_particle(self, symbol, origin, units='ANGSTROMS', size=1,
+                                basis_name=None, basis_file=None, basis_set=None,
+                                particle=None):
         """
         Adds an elementary particle into the molecular system.
 
         Args:
             symbol (str): Symbol of the elementary particle.
-            origin (ndarray): Origin of the elementary particle (Cartesian coordinates)
+            origin (ndarray): Origin of the elementary particle
+                (Cartesian coordinates)
+            units (str, optional): Units of the origin, valid values are
+                'ANGSTROMS' or 'Bohr'
             size (int): Number of elementary particle to be added.
-            units (str, optional): Units of the origin, valid values are 'ANGSTROMS' or 'Bohr'
         """
         assert isinstance(symbol, str)
+        assert len(origin) == 3
         assert isinstance(size, int)
         assert isinstance(units, str)
 
-        if symbol not in self:
-            self[symbol] = ElementaryParticle(symbol)
-            self[symbol]['size'] = 0
-            self[symbol]['basis'] = BasisSet(basis_name)
-            self[symbol]['origin'] = []
-
         # Converting to Bohr
-        if origin is not None:
-            assert len(origin) == 3
-            origin = np.array(origin, dtype=np.float64)
+        origin = np.array(origin, dtype=np.float64)
+        if units is 'ANGSTROMS':
+            origin *= napmo.ANGSTROM_TO_BOHR
 
-            if units == 'ANGSTROMS':
-                origin *= ANGSTROM_TO_BOHR
+        # Fetching information from data
+        eparticle = napmo.ElementaryParticle(symbol, origin, 'BOHR')
 
-            self[symbol]['origin'].append(origin)
+        # setting defaults for species
+        self.setdefault(symbol, eparticle)
 
-        self[symbol]['size'] += size
+        self[symbol].setdefault('id', self.size_species - 1)
+        self[symbol].setdefault('size', 0)
+        self[symbol].setdefault('particles', [])
+        self[symbol].setdefault('origin', [])
+        self[symbol].pop('origin')
 
         # load basis-set
-        if basis_file is not None:
-            file = open(basis_file)
-            basis_data = file.read().replace('\n', '')
-            file.close()
+        basis = None
+        if basis_name and not basis_set:
+            basis = napmo.BasisSet(basis_name, symbol, origin=origin,
+                                   basis_file=basis_file)
+        if basis_set:
+            basis = basis_set
 
-            if basis_kind == 'GTO':
-                self[symbol].get('basis').load_gaussian(
-                    symbol, basis_data, origin)
-            elif basis_kind == 'STO':
-                self[symbol].get('basis').load_slater(
-                    symbol, basis_data, origin)
+        if 'basis' not in self[symbol] and basis:
+            self.get(symbol)['basis'] = napmo.BasisSet(basis_name, symbol)
 
-    def n_occupation(self, symbol):
+        if basis:
+            self.get(symbol)['basis'].update(basis)
+        else:
+            eparticle['is_quantum'] = False
+
+        self.get(symbol)['size'] += size
+        self.get(symbol)['occupation'] = int(
+            self.get(symbol)['size'] * self.get(symbol)['particlesfraction'])
+
+        if particle:
+            self.get(symbol)['particles'].append(particle)
+        else:
+            self.get(symbol)['particles'].append(eparticle)
+
+        if not self.get(symbol).get('particles')[-1].is_quantum:
+            self._point_charges.append(self.get(symbol).get('particles')[-1])
+
+    def add_nucleus(self, symbol, origin, units='ANGSTROMS', size=1,
+                    basis_name=None, basis_file=None):
         """
-        Returns the occupation number for particle ``symbol``.
+        Adds a nucleus to the molecular system.
+
+        Args:
+            symbol (str): Symbol of the nucleus ie. H_2 (Deuterium).
+            origin (ndarray): Origin of the nucleus (Cartesian coordinates)
+            units (str, optional): Units of the origin, valid values are
+                'ANGSTROMS' or 'BOHR'
+            size (int): Number of particles to be added.
+        """
+        assert isinstance(symbol, str)
+        assert len(origin) == 3
+        assert isinstance(units, str)
+
+        # Being sure this is a nucleus specification, otherwise, add an atom
+        if symbol.find("_") < 0:
+            self.add_atom(symbol, origin, units=units, quantum=False,
+                          basis_name=basis_name, basis_file=basis_file)
+            return
+
+        # Converting to Bohr
+        origin = np.array(origin, dtype=np.float64)
+        if units is 'ANGSTROMS':
+            origin *= napmo.ANGSTROM_TO_BOHR
+
+        # Fetching atom object
+        nucleus = napmo.AtomicElement(symbol, origin, 'BOHR')
+
+        # setting defaults for species
+        self.setdefault(symbol, {})
+
+        self[symbol].setdefault('id', self.size_species - 1)
+        self[symbol].setdefault('size', 0)
+        self[symbol].setdefault('particles', [])
+        self[symbol].setdefault('origin', [])
+        self[symbol].pop('origin')
+
+        # load basis-set
+        basis = None
+        if basis_name:
+            basis = napmo.BasisSet(basis_name, symbol, origin, basis_file)
+
+        if 'basis' not in self[symbol] and basis:
+            self.get(symbol)['basis'] = napmo.BasisSet(basis_name, symbol)
+
+        if basis:
+            self.get(symbol)['basis'].update(basis)
+            nucleus['basis'] = basis
+        else:
+            nucleus['is_quantum'] = False
+
+        # Adding coupling constants
+        self.get(symbol).update(
+            napmo.CouplingConstantsDatabase()[symbol.lower()])
+
+        # Add to the molecular system
+        self.get(symbol)['size'] += size
+        self.get(symbol)['occupation'] = int(
+            self.get(symbol)['size'] * self.get(symbol)['particlesfraction'])
+        self.get(symbol)['charge'] = nucleus.get('atomic_number', 1)
+        self.get(symbol)['spin'] = nucleus.get('spin', 1)
+        self.get(symbol)['mass'] = nucleus.get('mass', 1)
+        self.get(symbol)['particles'].append(nucleus)
+
+        if not self.get(symbol).get('particles')[-1].is_quantum:
+            self._point_charges.append(self.get(symbol).get('particles')[-1])
+
+    def set_charges(self, data, open_shell=False):
+        """
+        Adds new particles to the existent species in the system. If electrons, split the species ``e-``
+        into ``e-alpha`` and ``e-beta`` electrons accordingly to the given charge and multiplicity.
+
+        Args:
+            data(dict) : information with charge and multiplicity for each species
+            open_shell (bool) : whether the electrons should be split or not.
+        """
+        assert isinstance(data, dict)
+
+        for key in data:
+            if key not in self:
+                print("Imposible to set " + key +
+                      " charges: Particle does not exist!")
+                return
+
+            multi = data.get(key, {}).get('multiplicity', None)
+            charge = data.get(key, {}).get('charge', 0)
+
+            np = self.size_particles(key) + charge
+
+            # electronic case
+            if key == 'e-':
+                if not multi:
+                    multi = 2 * ((np % 2) * 0.5) + 1
+
+                spin = (multi - 1) * 0.5
+
+                nereq = spin * 2
+                eleft = np - nereq
+
+                if eleft % 2 != 0:
+                    print("Bad charge / multiplicity")
+                    raise ValueError
+
+                alpha = (np - np % 2) * 0.5
+                alpha += spin / napmo.SPIN_ELECTRON
+                beta = np - alpha
+                keys = {'e-alpha': alpha, 'e-beta': beta}
+
+                if alpha != beta or open_shell:
+                    for k in keys:
+                        eparticle = napmo.ElementaryParticle(k)
+                        eparticle.pop('origin')
+
+                        self[k] = copy.deepcopy(self.get('e-'))
+
+                        self.get(k).update(eparticle)
+                        self.get(k)['size'] = keys.get(k)
+
+                        self.get(k)['occupation'] = int(
+                            self.get(k)['size'] * self.get(k)['particlesfraction'])
+
+                    self.pop('e-')
+
+                    for i, k in enumerate(self):
+                        self.get(k)['id'] = i
+
+                else:
+                    self.get('e-')['size'] += charge
+                    self.get('e-')['occupation'] = int(
+                        self.get('e-')['size'] * self.get('e-')['particlesfraction'])
+            else:
+                self.get(key, {})['size'] += charge
+                self.get(key, {})['occupation'] = int(
+                    self.get(key, {})['size'] * self.get(key, {})['particlesfraction'])
+
+    def size_particles(self, symbol):
+        """
+        Returns the number of particles of a given species ``symbol`` in the object.
 
         Returns:
-            int: Occupation of quantum species ``symbol``.
+            int: Number of particles of the species ``symbol``
         """
-        return ceil(self.n_particles(symbol) * self[symbol]['spin'])
-
-    def n_elementary_particles(self):
-        """
-        Returns the number of elementary particles in the system.
-
-        Returns:
-            int: Number of quantum species in the system.
-        """
-        output = len(self)
-        if 'atoms' in self:
-            output -= 1
-
-        return output
-
-    def n_atoms(self):
-        """
-        Returns the number of atoms in the system
-
-        Returns:
-            int: Number of atoms in the object.
-        """
-        output = 0
-        if 'atoms' in self:
-            output = len(self['atoms'])
-
-        return output
-
-    def n_particles(self, symbol):
-        """
-        Returns the number of particles of a given ``symbol`` in the object.
-
-        Returns:
-            int: Number of particles of symbol ``symbol``
-        """
-        output = 0
-        if symbol in self:
-            if symbol != 'atoms':
-                output = self[symbol].get('size')
-
-        return output
+        return self.get(symbol, {}).get('size', 0)
 
     def get_basis(self, symbol):
         """
         Returns the basis set of the system of a given ``symbol`` particle.
 
         Returns:
-            BasisSet: basis set
+            napmo.BasisSet: basis set
         """
-        if symbol in self:
-            basis = self[symbol].get('basis')
-        else:
-            for atom in self.get('atoms'):
-                if atom.get('symbol') == symbol:
-                    basis = atom.get('basis')
+        out = self.get(symbol, {}).get('basis', None)
 
-        if isinstance(basis, BasisSet):
-            return basis
-        else:
-            raise KeyError
+        if not out:
+            for species in self:
+                for particle in self.get(species, {}).get('particles', []):
+                    if particle.get('symbol') is symbol:
+                        out = particle.get('basis', None)
+        return out
+
+    def get_species(self, sid):
+        """
+        Return a list with the species ``symbol`` or `sid`
+
+        Args:
+            symbol(str): symbol of the species. ie. ``e-``, ``e+``, etc. Default ``None``
+            sid(int): the species if. sid > 0. Default ``None``
+        """
+        for species in self:
+            if self.get(species, {}).get('id', -100) is sid:
+                return self.get(species)
 
     def get_basis_as_cstruct(self, symbol):
         """
-        Returns the basis set of the system of a given ``symbol`` particle as a CTYPES struct.
+        Returns the basis set of the system of a given ``symbol`` particle as a
+        CTYPES structure.
 
         Returns:
-            BasisSet_C: basis set CTYPES struct
+            napmo.BasisSet_C: basis set CTYPES structure
         """
+        out = None
         basis = self.get_basis(symbol)
-        return BasisSet_C(basis)
+        if basis:
+            out = napmo.BasisSet_C(basis)
+        return out
 
-    def show(self):
+    @property
+    def size_species(self):
         """
-        Shows information about particles
+        Returns the number of quantum species in the system.
         """
-        print('==================================================================')
-        print('Object: ' + type(self).__name__)
-        print('------------------------------------------------------------------')
-        for symbol in self.keys():
-            particles = self.get(symbol)
-            if symbol is 'atoms':
-                print(type(particles[-1]).__name__, ': ', symbol, end=" ")
-                print(' number of e-: ', self.n_particles('e-'))
-                print(
-                    '{0:7}'.format("Symbol"),
-                    '{0:5}'.format("Z"),
-                    '{0:40}'.format("origin (Bohr)"),
-                    '{0:10}'.format("Basis-set")
-                )
-                for particle in particles:
-                    print(
-                        '{0:7}'.format(str(particle.get('symbol'))),
-                        '{0:5}'.format(str(particle.get('atomic_number'))),
-                        '{0:40}'.format(str(particle.get('origin'))),
-                        '{0:10}'.format(str(particle.get('basis')['name']))
-                    )
-            else:
-                if len(particles.get('origin')) > 1:
-                    print(type(particles).__name__, ': ', symbol, end=" ")
-                    print(' number of particles: ', self.n_particles(symbol))
-                    print(
-                        '{0:7}'.format("Symbol"),
-                        '{0:5}'.format("N"),
-                        '{0:40}'.format("origin (Bohr)"),
-                        '{0:10}'.format("Basis-set")
-                    )
-                for i in range(len(particles.get('origin'))):
-                    print(
-                        '{0:7}'.format(str(particles.get('symbol'))),
-                        '{0:5}'.format(str(particles.get('size'))),
-                        '{0:40}'.format(str(particles.get('origin')[i])),
-                        '{0:10}'.format(str(particles.get('basis')['name']))
-                    )
-        print('------------------------------------------------------------------')
+        return len(self)
+
+    @property
+    def point_charges(self):
+        """
+        List with the point charges in the molecule
+        """
+        return self._point_charges
+
+    def __repr__(self):
+
+        out = """
+==================================================
+Object: {0:9s}
+--------------------------------------------------
+
+{1:7s} {2:4s} {3:^29s} {4:9s}
+--------------------------------------------------
+""".format(
+            type(self).__name__,
+            "Symbol",
+            "N",
+            "origin(BOHR)",
+            "Basis"
+        )
+
+        basis = set()
+
+        for species in self.keys():
+            if species == 'e-beta':
+                continue
+            particles = self.get(species)
+            for particle in particles.get('particles', []):
+
+                out += '{0:3s} {1:5d} {2:10.6f} {3:10.6f} {4:10.6f} {5:10s} \n'.format(
+                    particle.get('symbol', '--'),
+                    particle.get('atomic_number', particle.get('size', 0)),
+                    particle.get('origin', [0.0, 0.0, 0.0])[0],
+                    particle.get('origin', [0.0, 0.0, 0.0])[1],
+                    particle.get('origin', [0.0, 0.0, 0.0])[2],
+                    particle.get('basis', {}).get('name', '--'))
+
+                basis.add(str(particle.get('basis', '--')))
+
+        out += ('--------------------------------------------------')
+
+        return out + ''.join(s for s in basis)

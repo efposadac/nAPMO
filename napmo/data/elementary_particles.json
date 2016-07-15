@@ -1,6 +1,37 @@
 {
+    "e-": {
+        "name": "electron",
+        "is_quantum": true,
+        "mass": 1.0,
+        "category": "lepton",
+        "charge": -1.0,
+        "spin": 0.5,
+        "symbol": "e-",
+        "electron": true
+    },
+    "e-alpha": {
+        "name": "electron",
+        "is_quantum": true,
+        "mass": 1.0,
+        "category": "lepton",
+        "charge": -1.0,
+        "spin": 0.5,
+        "symbol": "e-",
+        "electron": true
+    },
+    "e-beta": {
+        "name": "electron",
+        "is_quantum": true,
+        "mass": 1.0,
+        "category": "lepton",
+        "charge": -1.0,
+        "spin": 0.5,
+        "symbol": "e-",
+        "electron": true
+    },
     "p": {
         "name": "proton",
+        "is_quantum": true,
         "mass": 1836.15267247,
         "category": "baryon",
         "charge": 1.0,
@@ -9,50 +40,56 @@
     },
     "n": {
         "name": "neutron",
+        "is_quantum": true,
         "mass": 1838.6836605,
         "category": "baryon",
         "charge": 0.0,
         "spin": 0.5,
         "symbol": "n"
     },
-    "user": {
-        "name": "user",
-        "mass": 0.0,
-        "category": " ",
-        "charge": 0.0,
-        "spin": 1.0,
-        "symbol": " "
-    },
     "e+": {
         "name": "positron",
+        "is_quantum": true,
         "mass": 1.0,
         "category": "lepton",
         "charge": 1.0,
         "spin": 0.5,
         "symbol": "e+"
     },
-    "e-": {
-        "name": "electron",
-        "mass": 1.0,
-        "category": "lepton",
-        "charge": -1.0,
-        "spin": 0.5,
-        "symbol": "e-"
-    },
     "u-": {
         "name": "muon",
+        "is_quantum": true,
         "mass": 206.76828235,
         "category": "lepton",
         "charge": -1.0,
         "spin": 0.5,
         "symbol": "u-"
     },
+    "u+": {
+        "name": "muon",
+        "is_quantum": true,
+        "mass": 206.76828235,
+        "category": "lepton",
+        "charge": 1.0,
+        "spin": 0.5,
+        "symbol": "u+"
+    },
     "t-": {
         "name": "tau",
+        "is_quantum": true,
         "mass": 3477.48,
         "category": "lepton",
         "charge": -1.0,
         "spin": 0.5,
         "symbol": "t-"
+    },
+    "user": {
+        "name": "user",
+        "is_quantum": true,
+        "mass": 0.0,
+        "category": " ",
+        "charge": 0.0,
+        "spin": 1.0,
+        "symbol": " "
     }
 }

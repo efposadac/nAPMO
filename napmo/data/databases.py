@@ -3,7 +3,7 @@
 # Copyright (c) 2014,  Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 
 import json
 import sys
@@ -15,38 +15,57 @@ def AtomicElementsDatabase():
     This data base contains all information related to atomic elements.
     Database information taken from: http://physics.nist.gov/constants
 
-    Atomic radii from J. C. Slater, J. Chem. Phys. 41, 3199 (1964).
+    Atomic radii taken from:
+    Cordero, et. al. (2008).
+    Covalent radii revisited. Dalton Transactions, (21), 2832. http://doi.org/10.1039/b801115j
 
-    Example:
+    .. doctest::
 
-        >>> import napmo.data.databases
-        >>> napmo.data.databases.AtomicElementsDatabase()['H'] # doctest: +SKIP
-        {'vanderwaals_radius': 1.2, 'atomic_number': 1, 'symbol': 'H', 'covalent_radius': 0.3, \
-    'atomic_radii': 0.35, 'ionization_energy_1': 1312, 'melting_point': 13.81, 'electron_affinity': -73, \
-    'electronegativity': 2.1, 'name': 'Hydrogen', 'density': 0.084, 'boiling_point': 20.28, 'mass': 1.00794}
-
+        >>> import napmo
+        >>> napmo.AtomicElementsDatabase()['H'] # doctest: +SKIP
+        {'atomic_number': 1, 'atomic_radii_2': 0.5858151015155881, \
+'electron_affinity': -73, 'atomic_radii': 0.5858151015155881, \
+'boiling_point': 20.28, 'charge': -1, 'symbol': 'H', 'density': 0.084, \
+'is_quantum': False, 'ionization_energy_1': 1312, 'melting_point': 13.81, \
+'electronegativity': 2.1, 'name': 'Hydrogen', 'mass': 1.00794}
     """
     fp = os.path.join(os.path.dirname(__file__), 'atomic_elements.json')
-    file = open(fp)
-    data = file.read().replace('\n', '')
-    file.close()
 
-    return json.loads(data)
+    with open(fp) as f:
+        return json.loads(f.read().replace('\n', ''))
 
 
 def ElementaryParticlesDatabase():
     """
-    This database contains all information related to quatum species, ie. electrons, muons, etc.
+    This database contains all information related to quatum species, ie.
+    electrons, muons, etc.
 
-    Example:
+    .. doctest::
 
-        >>> import napmo.data.databases
-        >>> napmo.data.databases.ElementaryParticlesDatabase()['e-'] # doctest: +SKIP
-        {'category': 'lepton', 'name': 'electron', 'symbol': 'e-', 'charge': -1.0, 'mass': 1.0, 'spin': 0.5}
+        >>> import napmo
+        >>> napmo.ElementaryParticlesDatabase()['e-'] # doctest: +SKIP
+        {'spin': 0.5, 'name': 'electron', 'category': 'lepton', 'is_quantum': True, \
+'mass': 1.0, 'electron': True, 'symbol': 'e-', 'charge': -1.0}
     """
     fp = os.path.join(os.path.dirname(__file__), 'elementary_particles.json')
-    file = open(fp)
-    data = file.read().replace('\n', '')
-    file.close()
 
-    return json.loads(data)
+    with open(fp) as f:
+        return json.loads(f.read().replace('\n', ''))
+
+
+def CouplingConstantsDatabase():
+    """
+    This database contains all coupling constants for quatum species, ie.
+    electrons, muons, etc.
+
+    .. doctest::
+
+        >>> import napmo
+        >>> napmo.CouplingConstantsDatabase()['e-'] # doctest: +SKIP
+        {'name': 'electron', 'particlesfraction': 0.5, 'kappa': -1.0, \
+'eta': 2.0, 'symbol': 'e-', 'lambda': 2.0}
+    """
+    fp = os.path.join(os.path.dirname(__file__), 'coupling_constants.json')
+
+    with open(fp) as f:
+        return json.loads(f.read().replace('\n', ''))

@@ -3,56 +3,55 @@
 # Copyright (c) 2015, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 
 # Comment and uncomment different options depending on the desired compilation.
 
 # Kind of builds supported (list)
 BUILD = SERIAL CUDA OMP
 
-#------------------
-# Libraries needed
-#------------------
-
-LDLIBS := -lgsl -lgslcblas -lm -lgomp 
-
 #-----------------------
-# C flags and compilers
+# Compiler
 #-----------------------
 
-#------------------------
-# Intel compiler support
-#------------------------
-# CC := icc
-# CFLAGS := -Wall -O0 -fPIC -g -pg
-# LDFLAGS := -shared -fPIC
-
-# CFLAGS := -g -O2 -w2 -parallel -debug parallel -qopenmp -Werror -Wcheck -qopt-report=5 -qopenmp-report2 -par_report3 -vec-report6 -diag-enable sc3 -diag-enable sc-include -diag-enable sc-single-file -diag-enable sc-enums -guide:4 -fpic -traceback -check-uninit -check=stack -check=conversions
-# LDFLAGS := -qopenmp -diag-enable sc3 -diag-enable sc-include -diag-enable sc-single-file -diag-enable sc-enums -parallel -debug parallel -shared 
-
-#----------------------
-# gcc compiler support
-#----------------------
+ifeq ($(strip $(CC)),)
 CC := gcc
-CFLAGS := -Wall -O2 -ffast-math -fPIC -g -pg 
-LDFLAGS := -shared -fPIC
+endif
+
+ifeq ($(strip $(CXX)),)
+CXX := g++
+endif
+
+# CC := icc
+
+#-----------------------
+# Initial configuration
+#-----------------------
+CFLAGS := -Wall -O2 -fPIC -g -pg  
+# LDLIBS := -lgsl -lgslcblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lblas -lm -lint2
+LDLIBS := -lgsl -lgslcblas -lm -lint2 -lstdc++
+# LDLIBS := /opt/local/lib/libgsl.19.dylib /opt/local/lib/libgslcblas.0.dylib -lm
+LDFLAGS := -shared
+
+#-----------------------
+# OpenMP support
+#-----------------------
+
+# INTEL
+#-------
+
+# OMP: CFLAGS += -D_OMP -DMKL_ILP64 -openmp -mkl=parallel
+# OMP: LDLIBS += -liomp5
+# OMP: LDFLAGS += -lpthread
+
+# GCC
+#-------
+OMP: CFLAGS +=  -fopenmp -D_OMP
+OMP: LDLIBS += -lgomp 
 
 #----------------
 # Nvidia support 
 #----------------
-
-# same as C as initialization
-NVCC := $(CC)
-NVCFLAGS := $(CFLAGS)
-NVLDFLAGS := $(LDFLAGS)
-
-#--------------------------
-# Build specific variables
-#--------------------------
-
-OMP: CFLAGS += -fopenmp -D_OMP
-
-CUDA: CFLAGS += -fopenmp -D_OMP -D_CUDA
-CUDA: NVCC := nvcc
-CUDA: NVCFLAGS := -Xcompiler '$(CFLAGS)' -use_fast_math -arch=sm_50 -lineinfo -Xptxas="-v" 
-CUDA: NVLDFLAGS := -Xcompiler '$(LDFLAGS)' -arch=sm_50 -lineinfo 
+CUDA: CC := nvcc
+CUDA: CFLAGS := -Xcompiler '$(CFLAGS) -fopenmp -D_OMP -D_CUDA' -use_fast_math -arch=sm_50 -lineinfo -Xptxas="-v" 
+CUDA: LDFLAGS := -Xcompiler '$(LDFLAGS) -lgomp' -arch=sm_50 -lineinfo 

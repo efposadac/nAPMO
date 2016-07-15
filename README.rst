@@ -1,25 +1,38 @@
-**Numerical Any particle Molecular Orbital (nAPMO) package.**
+Numerical Any particle Molecular Orbital (NAPMO)
+================================================
 
-:Author: Fernando Posada Correa, MHPC, 2015
+:Author: Fernando Posada Correa, MHPC, UNAL, 2015
 
-nAPMO is a numerical implementation of APMO - NEO - OMNE method.
+.. image:: https://travis-ci.com/efposadac/nAPMO.svg?token=HUrCr32Dap17ppyzhhdd&branch=hf_dev
+    :target: https://travis-ci.com/efposadac/nAPMO
 
-The basic idea is to implement the numerical tools required to perform a basis-set free Hartree-Fock calculation as a first step to implement the basis-set free OMNE approach.
+
+NAPMO is a numerical implementation of APMO - NEO - OMNE method.
+
+This program implements the  basis-set free  Hartree-Fock OMNE approach.
 
 * Edwin Fernando Posada
-* eposada@sissa.it
-* Version 0.1
+* eposada@unal.edu.co
+* Version 0.8
 
-Compilation
-===========
+**Prerequisites:**
 
-To compile and install the code use (it will install the package in $USER/.local):
+* Robust C++ compiler with C++11 support
+* Recent Libint_ library
+* GSL library
+* Scipy
+* Python 2.7 or 3.x
+
+**Compilation:**
+
+
+To compile and install the code use (it will install the package in ``$USER/.local``):
 
 ::
 
 	make $(FLAVOR)
 
-``$(FLAVOR)`` available are: SERIAL, OMP and CUDA.
+``$(FLAVOR)`` could be one of ``SERIAL``, ``OMP`` or ``CUDA``. Default is ``OMP``
 
 To check the code run:
 
@@ -27,22 +40,23 @@ To check the code run:
 
 	nosetests --with-coverage --with-doctest
 
-Notes
-======
+**Notes:**
 
 This version contains:
 
 * Multicenter molecular integrator based on Becke's paper
 * Poisson solver based on Becke's strategy
-* Coulomb numerical integrals.
-* Tools to manage a molecular system, basis-sets and others.
-* All numerical methods use ctypes to accelerate the calculation.
-* The C interface has been parallelized  with OMP and CUDA. That code can be enabled in compilation time.
+* Analytical single or multi species Hartree-Fock solver
+* Numerical single or multi species Hartree-Fock solver
+* The C interface has been parallelized  with OMP and "some" CUDA. That code should be enabled in compilation time.
+
+For examples on how to use the code please refer to the test folders located in napmo folder.
 
 Any suggestion and help is more than welcome and appreciated. 
 
 Code documentation can be found at http://efposadac.github.io/nAPMO/
 
-eposada@sissa.it
+efposadac@unal.edu.co
 
-.. _examples: examples
+
+.. _libint: https://github.com/evaleev/libint

@@ -3,15 +3,17 @@
 # Copyright (c) 2015, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 
 TOPDIR=..
 include $(TOPDIR)/config.make
 
 LIBRARY = libnapmo.so
 
-OBJ = $(patsubst %.c,%.o,$(wildcard *.c))
-NVOBJ = $(patsubst %.cu,%.cuda.o,$(wildcard *.cu))
+VPATH = grid horton ints system utils hf
+OBJ = $(foreach file, $(VPATH), $(patsubst %.c,%.o,$(wildcard $(file)/*.c)))
+OBJ += $(foreach file, $(VPATH), $(patsubst %.cpp,%.o,$(wildcard $(file)/*.cpp)))
+NVOBJ = $(foreach file, $(VPATH), $(patsubst %.cu,%.cuda.o,$(wildcard $(file)/*.cu)))
 
 CUDA: OBJ += $(NVOBJ)
 
@@ -20,23 +22,24 @@ CUDA: OBJ += $(NVOBJ)
 default: SERIAL
 
 $(BUILD): $$(OBJ)
-	$(NVCC) -o $(LIBRARY) $(NVLDFLAGS) $^ $(LDLIBS)
+	$(CXX) -o $(LIBRARY) $(LDFLAGS) $^ $(LDLIBS) -lint2
 	cp $(LIBRARY) $(TOPDIR)/napmo/utilities
+
+%.o: %.cpp
+	$(CXX) -c $(CFLAGS) -std=c++11 $< -o $@
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@
 
-%.c: %.h
+%.c: include/%.h
 
 %.cuda.o: %.cu
-	$(NVCC) -c $(NVCFLAGS) $< -o $@
+	$(CC) -c $(CFLAGS) $< -o $@
 
-%.cu: %.cuh
+%.cu: include/%.cuh
 
 clean:
 	rm -rf $(LIBRARY)
-	rm -rf *.o
-	rm -rf *.optrpt
-	rm -rf r00*
+	find . -name "*.o" -exec rm {} \;
 
 .PHONY: default clean

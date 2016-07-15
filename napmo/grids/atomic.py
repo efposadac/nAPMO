@@ -3,18 +3,17 @@
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 
 import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.grids.radial import RadialGrid
-from napmo.grids.angular import AngularGrid
-from napmo.system.cext import napmo_library
+import napmo
 
 
 class AtomicGrid(Structure):
+
     """
     Defines a spherical grid for each center in the system.
     """
@@ -33,8 +32,8 @@ class AtomicGrid(Structure):
         self.origin = np.array([origin], dtype=np.float64)
         self._origin = np.ctypeslib.as_ctypes(self.origin)
 
-        self.radial_grid = RadialGrid(nrad, atomic_symbol)
-        self.angular_grid = AngularGrid(nang)
+        self.radial_grid = napmo.RadialGrid(nrad, atomic_symbol)
+        self.angular_grid = napmo.AngularGrid(nang)
 
         self._radii = self.radial_grid.radii
 
@@ -46,18 +45,8 @@ class AtomicGrid(Structure):
 
         self._symbol = atomic_symbol
 
-        offset = 0
-        for i in range(nrad):
-            self.points[offset:offset + nang] = (
-                self.radial_grid.points[i] * self.angular_grid.points
-            )
-            self.weights[offset:offset + nang] = (
-                self.radial_grid.weights[i] * self.angular_grid.weights *
-                self.radial_grid.points[i] * self.radial_grid.points[i]
-            )
-            offset += nang
-
-        self.points += origin
+        napmo.cext.atomic_grid_init(
+            byref(self), byref(self.angular_grid), byref(self.radial_grid))
 
     def spherical_expansion(self, lmax, f):
         """
@@ -74,13 +63,15 @@ class AtomicGrid(Structure):
         """
         lsize = (lmax + 1) * (lmax + 1)
         output = np.empty([self.radial_grid.size, lsize], dtype=np.float64)
-        napmo_library.angular_spherical_expansion(
+
+        napmo.cext.angular_spherical_expansion(
             byref(self.angular_grid), lmax, self.radial_grid.size, f, output)
+
         return output
 
     def evaluate_expansion(self, lmax, expansion):
         """
-        Evaluate the spherical expansion:
+        Evaluate the spherical expansion for one atom (do not use with molecules):
 
         :math:`f(\\theta, \\varphi) = \sum_{\ell=0}^{\ell_{max}} \sum_{m=-\ell}^\ell f_{\ell m} \, Y_{\ell m}(\\theta, \\varphi)`
 
@@ -92,58 +83,70 @@ class AtomicGrid(Structure):
             output (ndarray): array with the values of the approximated :math:`f(x)`.
         """
         output = np.empty(self.size, dtype=np.float64)
-        napmo_library.angular_eval_expansion(
-            byref(self.angular_grid), lmax, self.radial_grid.size, expansion, output)
+
+        napmo.cext.angular_eval_expansion(
+            byref(self.angular_grid), lmax, self.radial_grid.size, expansion,
+            output)
+
         return output
 
-    def integrate(self, *args):
+    def spherical_average(self, *args):
+        """
+        Computes the spherical average of the product of given functions
+
+        Returns:
+            output (array) : the spherical average
+        """
+
+        f = np.concatenate(args)
+        s = self.integrate(segmented=True)
+        output = self.integrate(f, segmented=True)
+        output /= s
+
+        return output
+
+    def integrate(self, *args, **kwargs):
         """
         Perform an integration of function :math:`f` using AtomicGrid.
 
         Args:
             f (ndarray): array of :math:`f` computed in all grid points.
+            segmented (logical): whether to calculate the integral in a segmented way along the number of radial points.
+
+        Returns:
+            integral: float or array in the segmented case.
         """
+        segmented = kwargs.pop('segmented', False)
+
+        args += (self.weights,)
+        nfunc = len(args)
+
+        if segmented:
+            nseg = self.radial_grid.size
+            sseg = self.angular_grid.lorder
+            integral = np.zeros(nseg)
+        else:
+            nseg = 1
+            sseg = self.size
+            integral = np.zeros(1)
+
         f = np.concatenate(args)
-        integral = napmo_library.atomic_grid_integrate(
-            byref(self), len(args), f)
+
+        napmo.cext.atomic_grid_integrate(
+            byref(self), nfunc, nseg, sseg, f, integral)
+
         return integral
 
     @property
     def size(self):
+        """
+        Number of points in the grid
+        """
         return self._size
 
     @property
     def symbol(self):
+        """
+        Owner of the grid
+        """
         return self._symbol
-
-
-array_1d_double = npct.ndpointer(
-    dtype=np.double, ndim=1, flags='CONTIGUOUS')
-
-array_2d_double = npct.ndpointer(
-    dtype=np.double, ndim=2, flags='CONTIGUOUS')
-
-napmo_library.angular_spherical_expansion.restype = None
-napmo_library.angular_spherical_expansion.argtypes = [
-    POINTER(AngularGrid),
-    c_int,
-    c_int,
-    array_1d_double,
-    array_2d_double
-]
-
-napmo_library.angular_eval_expansion.restype = None
-napmo_library.angular_eval_expansion.argtypes = [
-    POINTER(AngularGrid),
-    c_int,
-    c_int,
-    array_2d_double,
-    array_1d_double
-]
-
-napmo_library.atomic_grid_integrate.restype = c_double
-napmo_library.atomic_grid_integrate.argtypes = [
-    POINTER(AtomicGrid),
-    c_int,
-    array_1d_double
-]

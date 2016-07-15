@@ -3,7 +3,7 @@
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
 # Version: 0.1
-# efposadac@sissa.it
+# efposadac@unal.edu.co
 
 from __future__ import division
 from __future__ import print_function
@@ -12,12 +12,11 @@ import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
 
-from napmo.system.cext import napmo_library
-from napmo.system.molecular_system import MolecularSystem
-from napmo.grids.atomic import AtomicGrid
+import napmo
 
 
 class BeckeGrid(Structure):
+
     """
     This class creates the Becke grid.
 
@@ -25,25 +24,22 @@ class BeckeGrid(Structure):
         Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
 
     Args:
-        molecule (MolecularSystem): Molecular system to be calculated.
+        species (dict): Species to be calculated. see MolecularSystem
         n_radial (int, optional): Number of radial points. Default is 40
         n_angular (int, optional): Number of angular points. Default is 110
     """
     _fields_ = [
-        ("_ncenter", c_int),
-        ("_size", c_int),
-        ("_radii", POINTER(c_double)),
-        ("_origin", POINTER(c_double * 3)),
-        ("_points", POINTER(c_double * 3)),
+        ("_ncenter", c_int), ("_size", c_int), ("_radii", POINTER(c_double)),
+        ("_origin", POINTER(c_double * 3)), ("_points", POINTER(c_double * 3)),
         ("_weights", POINTER(c_double))
     ]
 
-    def __init__(self, molecule, n_radial=40, n_angular=110):
+    def __init__(self, species, n_radial=40, n_angular=110):
         super(BeckeGrid, self).__init__()
 
-        assert isinstance(molecule, MolecularSystem)
+        assert isinstance(species, dict)
 
-        centers = molecule.get('atoms')
+        centers = species.get('particles')
 
         self._ncenter = len(centers)
         self._size = n_radial * n_angular * self.ncenter
@@ -64,18 +60,18 @@ class BeckeGrid(Structure):
 
         offset = 0
         for i in range(self.ncenter):
-            self.atgrids.append(
-                AtomicGrid(n_radial, n_angular, centers[i].get('origin'), centers[i].get('symbol')))
+            self.atgrids.append(napmo.AtomicGrid(n_radial, n_angular, centers[i].get(
+                'origin'), centers[i].get('symbol')))
 
             self.origin[i] = self.atgrids[-1].origin
 
             self.radii[i] = self.atgrids[-1].radial_grid.radii
 
-            self.points[offset:offset +
-                        self.atgrids[-1].size] = self.atgrids[-1].points
+            self.points[offset:offset + self.atgrids[-1].size] = self.atgrids[
+                -1].points
 
-            self.weights[offset:offset +
-                         self.atgrids[-1].size] = self.atgrids[-1].weights
+            self.weights[offset:offset + self.atgrids[-1].size] = self.atgrids[
+                -1].weights
 
             offset += self.atgrids[-1].size
 
@@ -88,11 +84,33 @@ class BeckeGrid(Structure):
             Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
 
         Returns:
-            P (numpy.darray): The value of cell_function (eq. 13, Becke, 1988)
+            P (ndarray): The value of cell_function (eq. 13, Becke, 1988)
         """
         P = np.empty(self.size, dtype=np.float64)
-        napmo_library.becke_weights(byref(self), P)
+
+        napmo.cext.becke_weights(byref(self), P)
         return P
+
+    def evaluate_decomposition(self, atom, cubic_splines, output, cell=None):
+        """
+        Evaluate the spherical decomposition for a given atom in the molecular grid:
+
+        :math:`f(\\theta, \\varphi) = \sum_{\ell=0}^{\ell_{max}} \sum_{m=-\ell}^\ell f_{\ell m} \, Y_{\ell m}(\\theta, \\varphi)`
+
+        Args:
+            atom (int): Index of the atom.
+            cubic_splines (list): List of CubicSpline objects with the spherical expansion.
+            output (ndarray): array with the values of the approximated :math:`f(x)`.
+
+        """
+        if cell is None:
+            cell = napmo.Cell(None)
+
+        c_splines = [cubic_splines[i]._this for i in range(len(cubic_splines))]
+        splines = np.array(c_splines, dtype=c_void_p)
+
+        napmo.cext.eval_decomposition_grid(splines, self.origin[atom, :], output, self.points,
+                                           cell._this, len(cubic_splines), self.size)
 
     def integrate(self, f):
         """
@@ -105,7 +123,8 @@ class BeckeGrid(Structure):
         integral = 0.0
         for i in range(self.ncenter):
             integral += self.atgrids[i].integrate(
-                f[offset:offset + self.atgrids[i].size], self.becke_weights[offset:offset + self.atgrids[i].size])
+                f[offset:offset + self.atgrids[i].size],
+                self.becke_weights[offset:offset + self.atgrids[i].size])
             offset += self.atgrids[i].size
         return integral
 
@@ -120,18 +139,14 @@ class BeckeGrid(Structure):
 
     @property
     def ncenter(self):
+        """
+        Number of particles of a given species in the molecular grid
+        """
         return self._ncenter
 
     @property
     def size(self):
+        """
+        Number of points in the grid
+        """
         return self._size
-
-
-array_1d_double = npct.ndpointer(
-    dtype=np.double, ndim=1, flags='CONTIGUOUS')
-
-napmo_library.becke_weights.restype = None
-napmo_library.becke_weights.argtypes = [
-    POINTER(BeckeGrid),
-    array_1d_double
-]
