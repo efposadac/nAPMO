@@ -22,11 +22,21 @@ class SCF(object):
         super(SCF, self).__init__()
         print('\nStarting SCF Calculation...')
 
-        self.options = {'maxiter': 100, 'eps_e': 1e-7,  'eps_d': 1e-7,
-                        'method': 'hf', 'kind': 'analytic', 'direct': False}
+        self.options = {'maxiter': 100,
+                        'eps_e': 1e-7,
+                        'eps_d': 1e-7,
+                        'method': 'hf',
+                        'kind': 'analytic',
+                        'direct': False,
+                        'print': True,
+                        'nrad': 10,
+                        'nang': 110}
 
         if options:
             self.options.update(options)
+
+        if self.get('kind') is 'numeric':
+            self.options['print'] = False
 
         print(self)
 
@@ -56,12 +66,20 @@ class SCF(object):
 
         if len(self.PSI) > 1:
             with napmo.runtime.timeblock('SCF Multi'):
-                self.iterate_multi()
+                self.iterate_multi(pprint=pprint and self.get('print'))
         else:
             with napmo.runtime.timeblock('SCF Single'):
-                self.iterate_single(self.PSI[-1], pprint=pprint)
+                self.iterate_single(
+                    self.PSI[-1], pprint=pprint and self.get('print'))
 
-        self.show_results()
+        if pprint and self.get('print'):
+            self.show_results()
+
+        if self.get('kind') is 'numeric':
+
+            # Initialize numeric wavefunction
+            self.NPSI = [napmo.NWaveFunction(psi, self.get('nrad'), self.get('nang'))
+                         for psi in self.PSI]
 
         return self._energy
 
@@ -140,13 +158,14 @@ class SCF(object):
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12.7f}'.
                       format(iterations, psi._energy, self._energy, e_diff, psi._rmsd))
 
-    def iterate_multi(self):
+    def iterate_multi(self, pprint=True):
         """
         Perform SCF iteration for all species in this object.
         """
 
-        print('{0:5s}  {1:^10s} {2:>12s} {3:>12s}'
-              .format("\nIter", "Energy", "Total E", "Delta(E)"))
+        if pprint:
+            print('{0:5s}  {1:^10s} {2:>12s} {3:>12s}'
+                  .format("\nIter", "Energy", "Total E", "Delta(E)"))
 
         iterations = 0
         e_diff = 1
@@ -180,8 +199,9 @@ class SCF(object):
 
             e_diff = self._energy - e_last
 
-            print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f}'.
-                  format(iterations, self._energy - self.pce, self._energy, e_diff))
+            if pprint:
+                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f}'.
+                      format(iterations, self._energy - self.pce, self._energy, e_diff))
 
     def compute_energy(self):
         """

@@ -46,8 +46,7 @@ class WaveFunction(Structure):
 
         for particle in species.get('particles'):
             napmo.cext.LibintInterface_add_basis(
-                self._libint,
-                byref(napmo.BasisSet_C(particle.get('basis'))))
+                self._libint, particle.get('basis')._this)
 
         for point in point_charges:
             napmo.cext.LibintInterface_add_pointcharges(
@@ -213,7 +212,6 @@ class WaveFunction(Structure):
                   for j, pb in enumerate(self.species.get('particles'))
                   if j > i and not pa.is_quantum and not pb.is_quantum
                   ]
-
         return sum(output)
 
     @property

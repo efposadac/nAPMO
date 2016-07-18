@@ -11,12 +11,9 @@ efposadac@unal.edu.co*/
 #include <math.h>
 #include <string.h>
 
-#define max(a, b)                                                              \
-  ({                                                                           \
-    __typeof__(a) _a = (a);                                                    \
-    __typeof__(b) _b = (b);                                                    \
-    _a > _b ? _a : _b;                                                         \
-  })
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 int utils_factorial2(const int n);
 
@@ -27,5 +24,9 @@ void utils_multiply_segmented_array(const int size, const int segments,
 Compute the Euclidian distance between two points.
 */
 double utils_distance(double a[3], double b[3]);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

@@ -9,58 +9,199 @@ efposadac@unal.edu.co*/
 #define GTO_H
 
 #include <math.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <vector>
 
+#include "../ints/overlap.h"
 #include "../utils/utils.h"
 
-struct _primitive {
+/*
+PrimitiveGaussian Class
+*/
+struct PrimitiveGaussian {
+
+private:
   int l[3];
   double origin[3];
-  double exponent;
-  double coefficient;
-  double normalization;
+  double zeta;
+  double coeff;
+  double norma;
+
+  /*
+  Calculates the normalization constant of this primitive.
+  */
+  void normalize();
+
+public:
+  PrimitiveGaussian() = default;
+
+  PrimitiveGaussian(const PrimitiveGaussian &) = default;
+
+  PrimitiveGaussian(PrimitiveGaussian &&other)
+      : zeta(std::move(other.zeta)), coeff(std::move(other.coeff)),
+        norma(std::move(other.norma)) {
+    l[0] = std::move(other.l[0]);
+    l[1] = std::move(other.l[1]);
+    l[2] = std::move(other.l[2]);
+    origin[0] = std::move(other.origin[0]);
+    origin[1] = std::move(other.origin[1]);
+    origin[2] = std::move(other.origin[2]);
+  };
+
+  PrimitiveGaussian &operator=(const PrimitiveGaussian &) = default;
+
+  PrimitiveGaussian &operator=(PrimitiveGaussian &&other) {
+    zeta = std::move(other.zeta);
+    coeff = std::move(other.coeff);
+    norma = std::move(other.norma);
+    l[0] = std::move(other.l[0]);
+    l[1] = std::move(other.l[1]);
+    l[2] = std::move(other.l[2]);
+    origin[0] = std::move(other.origin[0]);
+    origin[1] = std::move(other.origin[1]);
+    origin[2] = std::move(other.origin[2]);
+    return *this;
+  }
+
+  PrimitiveGaussian(int *ll, double *A, double z, double c);
+
+  ~PrimitiveGaussian(){};
+
+  /*
+  Computes the value of the function at point ``r``.
+  */
+  double compute(double *r);
+
+  /*
+  Calculate the overlap integral between two primitives
+  */
+
+  double overlap(PrimitiveGaussian *other);
+
+  /*
+  Getters
+  */
+  int *get_l() { return l; };
+
+  double *get_origin() { return origin; };
+
+  double get_zeta() { return zeta; };
+
+  double get_coeff() { return coeff; };
+
+  double get_norma() { return norma; };
 };
-typedef struct _primitive PrimitiveGaussian;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
-Calculates the normalization constant of this primitive.
+PrimitiveGaussian wrapper to python
 */
-double gto_normalize_primitive(PrimitiveGaussian *f);
+
+PrimitiveGaussian *PrimitiveGaussian_new(int *ll, double *A, double z,
+                                         double c);
+
+void PrimitiveGaussian_get_l(PrimitiveGaussian *p, int *ll);
+
+void PrimitiveGaussian_get_origin(PrimitiveGaussian *p, double *A);
+
+void PrimitiveGaussian_compute(PrimitiveGaussian *p, double *r, double *output,
+                               int size);
+
+double PrimitiveGaussian_overlap(PrimitiveGaussian *p, PrimitiveGaussian *op);
+
+double PrimitiveGaussian_get_zeta(PrimitiveGaussian *p);
+
+double PrimitiveGaussian_get_coeff(PrimitiveGaussian *p);
+
+double PrimitiveGaussian_get_norma(PrimitiveGaussian *p);
+
+#ifdef __cplusplus
+}
+#endif
 
 /*
-Computes the value of the function at ``coord``.
+ContractedGaussian Class
 */
-void gto_compute_primitive(PrimitiveGaussian *f, double *coord, double *output,
-                           const int n_coord);
 
-/*
-Perform the Obara-Saika (1988) recursion to calculate the overlap integral:
-
-:math:`<\phi_A|\phi_B>`
-
-Where each :math:`\phi` corresponds to a GTO PrimitiveGaussian
-
-Args:
-    PA : Origin of :math:`\phi_A`
-    PB : Origin of :math:`\phi_B`
-    gamma : Reduced exponent (see: Gaussian product theorem)
-    l_a : Angular moment index of :math:`\phi_A` + 2
-    l_b : Angular moment index of :math:`\phi_B` + 2
-
-Returns:
-    x, y, z : x, y, and z components of the recursion.
-*/
-void gto_obaraSaika_recursion(double *x, double *y, double *z, double PA[3],
-                              double PB[3], const double gamma, const int l_a,
-                              const int l_b, const int max_l);
-
-struct _contracted {
+struct ContractedGaussian {
+private:
+  int l[3];
   int nprim;
-  double normalization;
-  double *origin;
-  PrimitiveGaussian *prim;
+  double norma;
+  double origin[3];
+  std::vector<PrimitiveGaussian> prim;
+
+  /*
+  Calculates the normalization constant of this contraction.
+  */
+  void normalize();
+
+public:
+  
+
+  ContractedGaussian() = default;
+
+  ContractedGaussian(const ContractedGaussian &) = default;
+
+  ContractedGaussian(PrimitiveGaussian **primitives, int n);
+
+  ~ContractedGaussian(){};
+
+  /*
+  Computes the value of the function at point ``r``.
+  */
+  double compute(double *r);
+
+  /*
+  Calculate the overlap integral between two contractions
+  */
+  double overlap(ContractedGaussian *other);
+
+  /*
+  Getters
+  */
+  int get_nprim() { return nprim; };
+
+  int *get_l() { return l; };
+
+  double *get_origin() { return origin; };
+
+  double get_norma() { return norma; };
+
+  std::vector<PrimitiveGaussian> & get_prim() { return prim; };
 };
-typedef struct _primitive ContractedGaussian;
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+ContractedGaussian wrapper to python
+*/
+
+ContractedGaussian *ContractedGaussian_new(PrimitiveGaussian **primitives,
+                                           int n);
+
+int ContractedGaussian_get_nprim(ContractedGaussian *c);
+
+void ContractedGaussian_get_l(ContractedGaussian *c, int *ll);
+
+void ContractedGaussian_get_origin(ContractedGaussian *c, double *A);
+
+void ContractedGaussian_compute(ContractedGaussian *c, double *r,
+                                double *output, int size);
+
+double ContractedGaussian_overlap(ContractedGaussian *c,
+                                  ContractedGaussian *oc);
+
+double ContractedGaussian_get_norma(ContractedGaussian *c);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

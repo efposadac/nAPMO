@@ -73,45 +73,33 @@ void LibintInterface::add_pointcharges(const int z, const double *center) {
 void LibintInterface::add_basis(BasisSet *basis) {
 
   // add basis-set
+
+  nbasis += basis->get_nbasis();
+  max_nprim = std::max(max_nprim, basis->get_max_nprim());
+  max_l = std::max(max_l, basis->get_max_l());
+
   libint2::Shell::do_enforce_unit_normalization(false);
 
-  for (int i = 0; i < basis->n_cont; ++i) {
-    int l = 0;
-    for (int j = 0; j < 3; ++j) {
-      l += basis->basis_l[i * 3 + j];
-    }
+  for (auto cont : basis->get_cont()) {
 
-    if (basis->basis_l[i * 3] != l)
+    if ((cont.get_l()[0] + cont.get_l()[1] + cont.get_l()[2]) !=
+        cont.get_l()[0])
       continue;
 
-    int nprim = basis->n_prim_cont[i];
-    std::vector<double> exponents(nprim);
-    std::vector<double> coefficients(nprim);
+    std::vector<double> exponents;
+    std::vector<double> coefficients;
 
-    for (int j = 0; j < nprim; ++j) {
-      int index = basis->prim_index[i];
-      exponents[j] = basis->exponent[index + j];
-      coefficients[j] = basis->coefficient[index + j];
+    for (auto prim : cont.get_prim()) {
+      exponents.push_back(prim.get_zeta());
+      coefficients.push_back(prim.get_coeff());
     }
 
-    shells.push_back({{exponents},
-                      {
-                          {l, false, {coefficients}},
-                      },
-                      {{basis->origin[i * 3 + 0], 
-                        basis->origin[i * 3 + 1],
-                        basis->origin[i * 3 + 2]}}});
-
-    // nbasis, max_nprim and max_l
-    nbasis = 0;
-    max_nprim = 0;
-    max_l = 0;
-    for (const auto &shell : shells) {
-      nbasis += shell.size();
-      max_nprim = std::max(shell.nprim(), max_nprim);
-      for (auto c : shell.contr)
-        max_l = std::max(c.l, max_l);
-    }
+    shells.push_back(
+        {{exponents},
+         {
+             {cont.get_l()[0], false, {coefficients}},
+         },
+         {{cont.get_origin()[0], cont.get_origin()[1], cont.get_origin()[2]}}});
 
     // Renormalize
     const auto &shell = shells.back();
@@ -1326,11 +1314,11 @@ LibintInterface *LibintInterface_new(int id) { return new LibintInterface(id); }
 void LibintInterface_del(LibintInterface *lint) { lint->~LibintInterface(); }
 
 void LibintInterface_add_pointcharges(LibintInterface *lint, const int z,
-                                      const double *center){
+                                      const double *center) {
   lint->add_pointcharges(z, center);
 }
 
-void LibintInterface_add_basis(LibintInterface *lint, BasisSet *basis){
+void LibintInterface_add_basis(LibintInterface *lint, BasisSet *basis) {
   lint->add_basis(basis);
 }
 
@@ -1447,11 +1435,11 @@ void LibintInterface_compute_coupling_disk(LibintInterface *lint,
   lint->compute_coupling_disk(*olint, filename);
 }
 
-libint2::DIIS<Matrix> * LibintInterface_diis_new(int iter){
-  return new libint2::DIIS<Matrix> (iter);
+libint2::DIIS<Matrix> *LibintInterface_diis_new(int iter) {
+  return new libint2::DIIS<Matrix>(iter);
 }
 
-void LibintInterface_diis(libint2::DIIS<Matrix> * diis, WaveFunction * psi){
+void LibintInterface_diis(libint2::DIIS<Matrix> *diis, WaveFunction *psi) {
   int nbasis = psi->nbasis;
 
   Map S(psi->S, nbasis, nbasis);
@@ -1460,7 +1448,7 @@ void LibintInterface_diis(libint2::DIIS<Matrix> * diis, WaveFunction * psi){
 
   // compute SCF error
   Matrix FD_comm = F * D * S - S * D * F;
-  Matrix F_diis = F; 
+  Matrix F_diis = F;
 
   diis->extrapolate(F_diis, FD_comm);
 

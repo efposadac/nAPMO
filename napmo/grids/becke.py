@@ -34,7 +34,7 @@ class BeckeGrid(Structure):
         ("_weights", POINTER(c_double))
     ]
 
-    def __init__(self, species, n_radial=40, n_angular=110):
+    def __init__(self, species, n_radial=40, n_angular=110, rtransform=None):
         super(BeckeGrid, self).__init__()
 
         assert isinstance(species, dict)
@@ -61,7 +61,7 @@ class BeckeGrid(Structure):
         offset = 0
         for i in range(self.ncenter):
             self.atgrids.append(napmo.AtomicGrid(n_radial, n_angular, centers[i].get(
-                'origin'), centers[i].get('symbol')))
+                'origin'), centers[i].get('symbol'), rtransform=rtransform))
 
             self.origin[i] = self.atgrids[-1].origin
 
@@ -132,7 +132,7 @@ class BeckeGrid(Structure):
         """
         Prints information of the object.
         """
-        print("Grid Information:")
+        print("\nGrid Information:")
         print("-----------------")
         print("Centers: ", self.ncenter)
         print("Size: ", self.size)

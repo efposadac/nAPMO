@@ -37,8 +37,8 @@ def test_decomposition_grid():
 
         # Basis and functional
         basis = molecule.get_basis('He')
-        a = basis.get('function')[0]
-        b = basis.get('function')[0]
+        a = basis.get('cont')[0]
+        b = basis.get('cont')[0]
 
         def p_ab(coord):
             return a.compute(coord) * b.compute(coord)
@@ -85,8 +85,8 @@ def test_decomposition_atomic_grid():
 
         # Basis and functional
         basis = molecule.get_basis('He')
-        a = basis.get('function')[0]
-        b = basis.get('function')[0]
+        a = basis.get('cont')[0]
+        b = basis.get('cont')[0]
 
         def p_ab(coord):
             return a.compute(coord) * b.compute(coord)

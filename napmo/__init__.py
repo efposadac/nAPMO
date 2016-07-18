@@ -11,7 +11,7 @@ from napmo.system.atomic_element import AtomicElement
 from napmo.system.elementary_particle import ElementaryParticle
 from napmo.system.primitive_gaussian import PrimitiveGaussian
 from napmo.system.contracted_gaussian import ContractedGaussian
-from napmo.system.basis_set import BasisSet, BasisSet_C
+from napmo.system.basis_set import BasisSet
 from napmo.system.molecular_system import MolecularSystem
 from napmo.system.napmo import NAPMO
 
@@ -46,6 +46,7 @@ from napmo.data.constants import NEUTRON_MASS
 from napmo.data.constants import SPIN_ELECTRON
 
 from napmo.hf.wavefunction import WaveFunction
+from napmo.hf.nwavefunction import NWaveFunction
 from napmo.hf.scf import SCF
 
 # OMP Threads
@@ -73,7 +74,7 @@ cext.LibintInterface_del.restype = None
 
 cext.LibintInterface_add_basis.restype = None
 cext.LibintInterface_add_basis.argtypes = [
-    c_void_p, POINTER(BasisSet_C)]
+    c_void_p, c_void_p]
 
 cext.LibintInterface_add_pointcharges.restype = None
 cext.LibintInterface_add_pointcharges.argtypes = [
@@ -134,20 +135,80 @@ cext.wavefunction_compute_2body_matrix.restype = None
 cext.wavefunction_compute_2body_matrix.argtypes = [
     POINTER(WaveFunction), c_void_p]
 
-# Primitive Gaussian
-cext.gto_normalize_primitive.restype = c_double
-cext.gto_normalize_primitive.argtypes = [
-    POINTER(PrimitiveGaussian)]
+# PrimitiveGaussian
+cext.PrimitiveGaussian_new.restype = c_void_p
+cext.PrimitiveGaussian_new.argtypes = [
+    a1di, a1df, c_double, c_double]
 
-cext.gto_compute_primitive.restype = None
-cext.gto_compute_primitive.argtypes = [
-    POINTER(PrimitiveGaussian),
-    a2df, a1df, c_int]
+cext.PrimitiveGaussian_compute.restype = c_double
+cext.PrimitiveGaussian_compute.argtypes = [
+    c_void_p, a2df, a1df, c_int]
 
-cext.gto_overlap_primitive.restype = c_double
-cext.gto_overlap_primitive.argtypes = [
-    POINTER(PrimitiveGaussian),
-    POINTER(PrimitiveGaussian)]
+cext.PrimitiveGaussian_overlap.restype = c_double
+cext.PrimitiveGaussian_overlap.argtypes = [c_void_p, c_void_p]
+
+cext.PrimitiveGaussian_get_l.restype = None
+cext.PrimitiveGaussian_get_l.argtypes = [c_void_p, a1di]
+
+cext.PrimitiveGaussian_get_origin.restype = None
+cext.PrimitiveGaussian_get_origin.argtypes = [c_void_p, a1df]
+
+cext.PrimitiveGaussian_get_zeta.restype = c_double
+cext.PrimitiveGaussian_get_zeta.argtypes = [c_void_p]
+
+cext.PrimitiveGaussian_get_coeff.restype = c_double
+cext.PrimitiveGaussian_get_coeff.argtypes = [c_void_p]
+
+cext.PrimitiveGaussian_get_norma.restype = c_double
+cext.PrimitiveGaussian_get_norma.argtypes = [c_void_p]
+
+# ContractedGaussian
+cext.ContractedGaussian_new.restype = c_void_p
+cext.ContractedGaussian_new.argtypes = [aptr, c_int]
+
+cext.ContractedGaussian_get_nprim.restype = c_int
+cext.ContractedGaussian_get_nprim.argtypes = [c_void_p]
+
+cext.ContractedGaussian_get_l.restype = None
+cext.ContractedGaussian_get_l.argtypes = [c_void_p, a1di]
+
+cext.ContractedGaussian_get_origin.restype = None
+cext.ContractedGaussian_get_origin.argtypes = [c_void_p, a1df]
+
+cext.ContractedGaussian_compute.restype = None
+cext.ContractedGaussian_compute.argtypes = [
+    c_void_p, a2df, a1df, c_int]
+
+cext.ContractedGaussian_overlap.restype = c_double
+cext.ContractedGaussian_overlap.argtypes = [c_void_p, c_void_p]
+
+cext.ContractedGaussian_get_norma.restype = c_double
+cext.ContractedGaussian_get_norma.argtypes = [c_void_p]
+
+
+# BasisSet
+cext.BasisSet_new_empty.restype = c_void_p
+
+cext.BasisSet_new.restype = c_void_p
+cext.BasisSet_new.argtypes = [aptr, c_int]
+
+cext.BasisSet_compute.restype = None
+cext.BasisSet_compute.argtypes = [
+    c_void_p, a2df, a2df, c_int]
+
+cext.BasisSet_update.restype = None
+cext.BasisSet_update.argtypes = [
+    c_void_p, c_void_p]
+
+cext.BasisSet_get_nbasis.restype = c_int
+cext.BasisSet_get_nbasis.argtypes = [c_void_p]
+
+cext.BasisSet_get_max_l.restype = c_int
+cext.BasisSet_get_max_l.argtypes = [c_void_p]
+
+cext.BasisSet_get_max_nprim.restype = c_int
+cext.BasisSet_get_max_nprim.argtypes = [c_void_p]
+
 
 # Angular grid
 cext.angular_cartesian.restype = None

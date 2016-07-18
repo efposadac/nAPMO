@@ -30,4 +30,4 @@ def test_timer():
 
     napmo.runtime.show_summary()
 
-test_timer()
+# test_timer()

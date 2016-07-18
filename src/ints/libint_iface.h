@@ -12,9 +12,9 @@ efposadac@unal.edu.co
 #define LIBINT_IFACE_H
 
 #include "../system/basis_set.h"
+#include "../hf/wavefunction.h"
 #include "ints.h"
 #include "iterators.h"
-#include "../hf/wavefunction.h"
 #include <libint2.hpp>
 #include <libint2/diis.h>
 
@@ -80,8 +80,8 @@ Class definition
 class LibintInterface {
 
 private:
-  size_t max_nprim;
-  size_t nbasis;
+  int max_nprim;
+  int nbasis;
   int max_l;
   int sID;
   shellpair_list_t obs_shellpair_list;

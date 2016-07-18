@@ -12,10 +12,10 @@ import numpy as np
 import napmo
 
 
-class PrimitiveGaussian(Structure):
+class PrimitiveGaussian(object):
 
     """
-    Defines a Cartesian primitive Gaussian type orbital (GTO). (dict)
+    Defines a Cartesian primitive Gaussian type orbital (GTO).
 
     Following Obara and Saika (1986) we write an unnormalized primitive
     Cartesian Gaussian function centered at :math:`\\bf A` as
@@ -35,13 +35,6 @@ class PrimitiveGaussian(Structure):
         origin (ndarray) : coordinates (cartesian)
         l (ndarray) : :math:`\\bf n`. Angular moment (x, y, and z components)
     """
-    _fields_ = [
-        ("_l", c_int * 3),
-        ("_origin", c_double * 3),
-        ("exponent", c_double),
-        ("coefficient", c_double),
-        ("normalization", c_double)
-    ]
 
     def __init__(self,
                  exponent=0.0,
@@ -50,31 +43,8 @@ class PrimitiveGaussian(Structure):
                  origin=np.zeros(3, dtype=np.float64)):
 
         super(PrimitiveGaussian, self).__init__()
-        self.exponent = c_double(exponent)
-        self.coefficient = c_double(coefficient)
-        self._origin[:3] = origin[:]
-        self._l[:3] = l[:]
-        self.normalization = self.normalize()
-
-    @property
-    def origin(self):
-        """
-        The center of the function
-        """
-        return np.array(self._origin[:3])
-
-    @property
-    def l(self):
-        """
-        The angular moment of the object
-        """
-        return np.array(self._l[:3])
-
-    def normalize(self):
-        """
-        Calculates the normalization constant of this primitive.
-        """
-        return napmo.cext.gto_normalize_primitive(byref(self))
+        self._this = napmo.cext.PrimitiveGaussian_new(
+            l, origin, exponent, coefficient)
 
     def compute(self, coord):
         """
@@ -82,8 +52,8 @@ class PrimitiveGaussian(Structure):
         """
         n_coord = coord.shape[0]
         output = np.empty(n_coord)
-        napmo.cext.gto_compute_primitive(
-            byref(self), coord, output, n_coord)
+        napmo.cext.PrimitiveGaussian_compute(
+            self._this, coord, output, n_coord)
 
         return output
 
@@ -95,7 +65,37 @@ class PrimitiveGaussian(Structure):
             other (PrimitiveGaussian) : function to perform :math:`<\phi_{self}
              | \phi_{other}>`
         """
-        return napmo.cext.gto_overlap_primitive(byref(self), byref(other))
+        return napmo.cext.PrimitiveGaussian_overlap(self._this, other._this)
+
+    @property
+    def origin(self):
+        """
+        The center of the function
+        """
+        output = np.zeros(3)
+        napmo.cext.PrimitiveGaussian_get_origin(self._this, output)
+        return output
+
+    @property
+    def l(self):
+        """
+        The angular moment of the object
+        """
+        output = np.zeros(3, dtype=np.int32)
+        napmo.cext.PrimitiveGaussian_get_l(self._this, output)
+        return output
+
+    @property
+    def coefficient(self):
+        return napmo.cext.PrimitiveGaussian_get_coeff(self._this)
+
+    @property
+    def exponent(self):
+        return napmo.cext.PrimitiveGaussian_get_zeta(self._this)
+
+    @property
+    def normalization(self):
+        return napmo.cext.PrimitiveGaussian_get_norma(self._this)
 
     def _show_compact(self):
         """

@@ -7,7 +7,7 @@
 # efposadac@unal.edu.co
 
 import numpy as np
-from napmo.system.basis_set import BasisSet, BasisSet_C
+from napmo.system.basis_set import BasisSet
 
 
 def tests_basis_set_interface():
@@ -21,18 +21,13 @@ def tests_basis_set_interface():
     test = BasisSet('STO-3G', 'H')
     assert test.get('name') == 'STO-3G'
     assert test.get('particle') is None
-    assert test.get('kind') is None
-    assert test.get('length') == 0
-    assert test.get('t_length') == 0
+    assert test.get('nbasis') == 0
 
     test = BasisSet('STO-3G', 'H', origin=[0.0, 0.0, 0.0])
-    assert test.get('length') == 1
-    assert test.get('t_length') == 3
+    assert test.get('nbasis') == 1
 
     value = np.array([[0.62824688]])
     np.testing.assert_allclose(test.compute(), value)
-
-    test_c = BasisSet_C(test)
 
     try:
         print(test)

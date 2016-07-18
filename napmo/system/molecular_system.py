@@ -301,20 +301,6 @@ class MolecularSystem(dict):
             if self.get(species, {}).get('id', -100) is sid:
                 return self.get(species)
 
-    def get_basis_as_cstruct(self, symbol):
-        """
-        Returns the basis set of the system of a given ``symbol`` particle as a
-        CTYPES structure.
-
-        Returns:
-            napmo.BasisSet_C: basis set CTYPES structure
-        """
-        out = None
-        basis = self.get_basis(symbol)
-        if basis:
-            out = napmo.BasisSet_C(basis)
-        return out
-
     @property
     def size_species(self):
         """

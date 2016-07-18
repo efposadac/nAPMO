@@ -10,6 +10,8 @@ efposadac@unal.edu.co
 #ifndef ITERATORS_H
 #define ITERATORS_H
 
+#include <algorithm>
+
 class IntraIntsIt {
  private:
   struct Integral {

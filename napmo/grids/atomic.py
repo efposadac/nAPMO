@@ -25,14 +25,16 @@ class AtomicGrid(Structure):
         ("_weights", POINTER(c_double)),
     ]
 
-    def __init__(self, nrad, nang, origin, atomic_symbol):
+    def __init__(self, nrad, nang, origin, atomic_symbol, rtransform=None):
         super(AtomicGrid, self).__init__()
         self._size = nrad * nang
 
-        self.origin = np.array([origin], dtype=np.float64)
-        self._origin = np.ctypeslib.as_ctypes(self.origin)
+        self.origin = np.array(origin, dtype=np.float64)
+        self._origin = self.origin.ctypes.data_as(POINTER(c_double * 3))
 
-        self.radial_grid = napmo.RadialGrid(nrad, atomic_symbol)
+        self.radial_grid = napmo.RadialGrid(
+            nrad, atomic_symbol, rtransform=rtransform)
+
         self.angular_grid = napmo.AngularGrid(nang)
 
         self._radii = self.radial_grid.radii
