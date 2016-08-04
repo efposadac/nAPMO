@@ -147,6 +147,10 @@ cext.nwavefunction_compute_density_from_dm.restype = None
 cext.nwavefunction_compute_density_from_dm.argtypes = [
     c_void_p, c_void_p, a2df, a1df, c_double, a1df]
 
+cext.nwavefunction_compute_2body_matrix.restype = None
+cext.nwavefunction_compute_2body_matrix.argtypes = [
+    c_void_p, c_void_p, a2df, a1df, a2df]
+
 # PrimitiveGaussian
 cext.PrimitiveGaussian_new.restype = c_void_p
 cext.PrimitiveGaussian_new.argtypes = [

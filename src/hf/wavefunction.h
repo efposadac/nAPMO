@@ -63,6 +63,9 @@ void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
                                            double *dm, double *output,
                                            double epsilon, double *dmmaxrow);
 
+void nwavefunction_compute_2body_matrix(WaveFunction *psi, BeckeGrid *grid,
+                                        double *phi, double *J, double *K);
+
 #ifdef __cplusplus
 }
 #endif

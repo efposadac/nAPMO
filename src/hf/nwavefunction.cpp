@@ -9,35 +9,70 @@ efposadac@unal.edu.co
 
 #include "wavefunction.h"
 
-void nwavefunction_compute_2body_matrix(WaveFunction *psi, double *func,
-                                        int size) {
-  auto nbasis = psi->nbasis;
+#define INDEX(i, j)                                                            \
+  ((i > j) ? (((i) * ((i) + 1) / 2) + (j)) : (((j) * ((j) + 1) / 2) + (i)))
 
-  Matrix coulomb(nbasis, nbasis);
-  MMap F(func, nbasis, size);
+void nwavefunction_compute_2body_matrix(WaveFunction *psi, BeckeGrid *grid,
+                                        double *phi, double *J, double *K) {
 
-  for (int i = 0; i < nbasis; ++i) {
-    for (int j = 0; j < nbasis; ++j) {
-      // coulomb[i, j] += self._grid.integrate(
-      //         self.psi[i, :] * self.psi[j, :] * self.JO)
+  unsigned int nbasis = psi->nbasis;
+  unsigned int size = nbasis * (nbasis + 1) / 2;
+
+  // Precompute Psi
+  MMap F(phi, nbasis, grid->get_size());
+  Matrix Psi(size, grid->get_size());
+
+  for (unsigned int i = 0; i < nbasis; ++i) {
+    for (unsigned int j = i; j < nbasis; ++j) {
+      Psi.row(INDEX(i, j)) = F.row(i).array() * F.row(j).array();
     }
   }
 
-  // factor = self._kappa / self._eta
-  // exchange = np.zeros([self.nbasis, self.nbasis])
+  // Compute coulomb
+  A1DMap C(J, grid->get_size());
+  Matrix coulomb(nbasis, nbasis);
+  coulomb.setZero();
 
-  // for s in range(self.nbasis):
-  //   for v in range(self.nbasis):
-  //       for u in range(self.nbasis):
-  //           for l in range(self.nbasis):
-  //               exchange[
-  //                   u, v] += self._grid.integrate(
-  //                   self.psi[u, :] * self.psi[l, :] *
-  //                   self.KO[index2(s, v)]) * self.D[l, s]
+  for (unsigned int i = 0; i < nbasis; ++i) {
+    for (unsigned int j = i; j < nbasis; ++j) {
 
-  // exchange *= factor
+      Array1D buff = Psi.row(INDEX(i, j));
+      buff *= C;
 
-  // self.G[:] = coulomb + exchange
+      coulomb(i, j) += grid->integrate(buff);
+    }
+  }
+
+  coulomb += coulomb.triangularView<Eigen::StrictlyUpper>().transpose();
+
+  // Compute exchange
+  MMap D(psi->D, nbasis, nbasis);
+  MMap E(K, size, grid->get_size());
+  Matrix exchange(nbasis, nbasis);
+  exchange.setZero();
+
+  double factor = psi->kappa / psi->eta;
+
+  for (unsigned int u = 0; u < nbasis; ++u) {
+    for (unsigned int v = u; v < nbasis; ++v) {
+      for (unsigned int l = 0; l < nbasis; ++l) {
+        for (unsigned int s = 0; s < nbasis; ++s) {
+
+          Array1D buff =
+              Psi.row(INDEX(u, l)).array() * E.row(INDEX(s, v)).array();
+
+          exchange(u, v) += grid->integrate(buff) * D(l, s);
+        }
+      }
+    }
+  }
+
+  exchange += exchange.triangularView<Eigen::StrictlyUpper>().transpose();
+  exchange *= factor;
+
+  MMap G(psi->G, nbasis, nbasis);
+
+  G = coulomb + exchange;
 }
 
 void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
@@ -76,7 +111,8 @@ void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
     double rho = 0.0;
     for (int i = 0; i < nbasis; i++) {
 
-      // if the contribution of this loop is smaller than epsilon/nbasis, skipt
+      // if the contribution of this loop is smaller than
+      // epsilon/nbasis, skipt
       // it.
       if (epsilon > 0) {
         if (fabs(aux[i]) * dmmaxrow[i] < epsilon)

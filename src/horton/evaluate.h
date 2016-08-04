@@ -34,6 +34,9 @@ efposadac@unal.edu.co
 #include "cell.h"
 #include "cubic_spline.h"
 #include "uniform.h"
+#include "../utils/omp_helper.h"
+
+#include <vector>
 
 void eval_spline_cube(CubicSpline *spline, double *center, double *output,
                       UniformGrid *ugrid);

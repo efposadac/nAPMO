@@ -22,9 +22,9 @@ void AngularGrid::cartesian() {
 
   ld_by_order(lorder, x, y, z, weights);
 
-#ifdef _OPENMP
-#pragma omp parallel for default(shared)
-#endif
+// #ifdef _OPENMP
+// #pragma omp parallel for default(shared)
+// #endif
 
   for (unsigned int i = 0; i < lorder; ++i) {
     int idx = i * 3;
@@ -41,9 +41,9 @@ void AngularGrid::cartesian() {
 void AngularGrid::spherical() {
   double t, p;
 
-#ifdef _OPENMP
-#pragma omp parallel for default(shared) private(t, p)
-#endif
+// #ifdef _OPENMP
+// #pragma omp parallel for default(shared) private(t, p)
+// #endif
 
   for (unsigned int i = 0; i < lorder; ++i) {
     int idx = i * 3;
@@ -62,9 +62,9 @@ void AngularGrid::spherical_expansion(const int lmax, const unsigned int size_f,
   double *t = new double[lorder];
   double *p = new double[lorder];
 
-#ifdef _OPENMP
-#pragma omp parallel for default(shared)
-#endif
+// #ifdef _OPENMP
+// #pragma omp parallel for default(shared)
+// #endif
   for (unsigned int i = 0; i < lorder; ++i) {
     unsigned int idx = i * 3;
     xyz_to_tp(points[idx + 0], points[idx + 1], points[idx + 2], &t[i], &p[i]);
@@ -84,14 +84,14 @@ void AngularGrid::spherical_expansion(const int lmax, const unsigned int size_f,
   }
 
 // Calculate expansion
-#ifdef _OPENMP
-#pragma omp parallel default(shared)
-#endif
+// #ifdef _OPENMP
+// #pragma omp parallel default(shared)
+// #endif
   {
     double *s = new double[lorder];
-#ifdef _OPENMP
-#pragma omp for
-#endif
+// #ifdef _OPENMP
+// #pragma omp for
+// #endif
     for (unsigned int i = 0; i < lsize; ++i) {
       spherical_harmonics_real(lindex[i], lindex[lsize + i], t, p, s, lorder);
       for (unsigned int j = 0; j < size_f; ++j) {
@@ -112,9 +112,9 @@ void AngularGrid::eval_expansion(const int lmax, const unsigned int size_f,
   double *t = new double[lorder];
   double *p = new double[lorder];
 
-#ifdef _OPENMP
-#pragma omp parallel for default(shared)
-#endif
+// #ifdef _OPENMP
+// #pragma omp parallel for default(shared)
+// #endif
   for (unsigned int i = 0; i < lorder; ++i) {
     unsigned int idx = i * 3;
     xyz_to_tp(points[idx + 0], points[idx + 1], points[idx + 2], &t[i], &p[i]);
@@ -135,18 +135,18 @@ void AngularGrid::eval_expansion(const int lmax, const unsigned int size_f,
   // Calculate spherical harmonics
   double *s = new double[lorder * lsize];
 
-#ifdef _OPENMP
-#pragma omp parallel for default(shared)
-#endif
+// #ifdef _OPENMP
+// #pragma omp parallel for default(shared)
+// #endif
   for (unsigned int i = 0; i < lsize; ++i) {
     spherical_harmonics_real(lindex[i], lindex[lsize + i], t, p, &s[i * lorder],
                              lorder);
   }
 
 // Evaluate expansion
-#ifdef _OPENMP
-#pragma omp parallel for default(shared) collapse(2)
-#endif
+// #ifdef _OPENMP
+// #pragma omp parallel for default(shared) collapse(2)
+// #endif
   for (unsigned int i = 0; i < size_f; ++i) {
     for (unsigned int j = 0; j < lorder; ++j) {
       double aux = 0.0;

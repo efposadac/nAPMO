@@ -174,8 +174,8 @@ class SCF(object):
             iterations += 1
             e_last = psi._energy
 
-            with napmo.runtime.timeblock('Numerical 2 body'):
-                psi.compute_2body(self.get('direct'))
+            # with napmo.runtime.timeblock('Numerical 2 body'):
+            psi.compute_2body(self.get('direct'))
 
             psi.build_fock()
 

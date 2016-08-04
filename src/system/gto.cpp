@@ -78,9 +78,9 @@ void PrimitiveGaussian_get_origin(PrimitiveGaussian *p, double *A) {
 
 void PrimitiveGaussian_compute(PrimitiveGaussian *p, double *r, double *output,
                                int size) {
-#ifdef _OMP
-#pragma omp parallel for default(shared)
-#endif
+// #ifdef _OMP
+// #pragma omp parallel for default(shared)
+// #endif
   for (int i = 0; i < size; ++i) {
     output[i] = p->compute(&r[i * 3]);
   }
@@ -180,9 +180,9 @@ void ContractedGaussian_get_origin(ContractedGaussian *c, double *A) {
 
 void ContractedGaussian_compute(ContractedGaussian *c, double *r,
                                 double *output, int size) {
-#ifdef _OMP
-#pragma omp parallel for default(shared)
-#endif
+// #ifdef _OMP
+// #pragma omp parallel for default(shared)
+// #endif
   for (int i = 0; i < size; ++i) {
     output[i] = c->compute(&r[i * 3]);
   }

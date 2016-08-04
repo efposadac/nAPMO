@@ -22,9 +22,9 @@ AtomicGrid::AtomicGrid(AngularGrid *angular, RadialGrid *radial, double *R) {
 
   double p[3];
 
-#ifdef _OPENMP
-#pragma omp parallel for default(shared) private(p)
-#endif
+// #ifdef _OPENMP
+// #pragma omp parallel for default(shared) private(p)
+// #endif
   for (unsigned int i = 0; i < radial->get_size(); ++i) {
     double rp = radial->get_points()[i];
     double rw = radial->get_weights()[i];

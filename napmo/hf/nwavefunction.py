@@ -97,7 +97,8 @@ class NWaveFunction(Structure):
         self._lmax = int(napmo.lebedev_get_order(self._grid.nang) / 2)
 
         # Calculating initial numerical wavefunction (From basis)
-        self.psi = self.species.get('basis').compute(self._grid.points).T
+        aux = self.species.get('basis').compute(self._grid.points).T
+        self.psi = aux.copy()
         self._nbasis = self.psi.shape[0]
 
         self.S = np.zeros([self.nbasis, self.nbasis])
@@ -148,16 +149,16 @@ class NWaveFunction(Structure):
             self.compute_hcore()
 
         # Calculate initial density
-        with napmo.runtime.timeblock('Numerical Density'):
-            self.compute_guess()
+        self.compute_guess()
 
         # Calculate initial V_el(J)
-        self.KO = np.zeros(self._grid.size)
+        self.KO = np.zeros(
+            [int(self.nbasis * (self.nbasis + 1) / 2), self._grid.size])
+
         self.JO = np.zeros(self._grid.size)
 
-        with napmo.runtime.timeblock('Numerical 2 body'):
-            if self.species.get('size') > 1:
-                self.KO = self._compute_2body_exchange()
+        if self.species.get('size') > 1:
+            self.KO = self._compute_2body_exchange()
 
         # # First residual
         # self.R = self._compute_residual()
@@ -228,7 +229,8 @@ class NWaveFunction(Structure):
         """
         Computes the density in the grid for each orbital from density matrix
         """
-        DG = np.array([phi * self.D.dot(phi) for phi in self.psi.T]).T
+        with napmo.runtime.timeblock('Numerical Density'):
+            DG = np.array([phi * self.D.dot(phi) for phi in self.psi.T]).T
 
         # Debug  information (Suppose to be the # of e-)
         # print('Number of -e: ', self._grid.integrate(DG.sum(axis=0)))
@@ -244,7 +246,7 @@ class NWaveFunction(Structure):
         # 0.0 -> epsilon
         napmo.cext.nwavefunction_compute_density_from_dm(
             self.species.get('basis')._this,
-            byref(self._grid),
+            self._grid._this,
             self.D, DG, 0.0, np.abs(self.D).max(axis=0))
 
         # Debug  information (Suppose to be the # of e-)
@@ -260,11 +262,12 @@ class NWaveFunction(Structure):
         Physical Review A - Atomic, Molecular, and Optical Physics, 76(4), 040503.
         http://doi.org/10.1103/PhysRevA.76.040503
         """
-        KO = np.array([napmo.compute_coulomb(
-            self._grid, self.psi[s, :] * self.psi[v, :], self.lmax)
-            for s in range(self.nbasis)
-            for v in range(self.nbasis)
-            if s >= v])
+        with napmo.runtime.timeblock('Numerical exchange'):
+            KO = np.array([napmo.compute_coulomb(
+                self._grid, self.psi[s, :] * self.psi[v, :], self.lmax)
+                for s in range(self.nbasis)
+                for v in range(self.nbasis)
+                if s >= v])
 
         return KO
 
@@ -273,7 +276,9 @@ class NWaveFunction(Structure):
         Computes coulomb potential solving Poisson's equation
         following Becke procedure using the current density
         """
-        JO = napmo.compute_coulomb(self._grid, self.DG.sum(axis=0), self.lmax)
+        with napmo.runtime.timeblock('Numerical coulomb'):
+            JO = napmo.compute_coulomb(
+                self._grid, self.DG.sum(axis=0), self.lmax)
 
         # Debug information
         # print("Coulomb energy: ", 0.5 *
@@ -369,58 +374,18 @@ class NWaveFunction(Structure):
         """
 
         if self.species.get('size') > 1:
+
             self.DG = self._compute_dens_i_from_dm()
             self.JO = self._compute_2body_coulomb()
 
-            coulomb = np.zeros([self.nbasis, self.nbasis])
-
-            for i in range(self.nbasis):
-                for j in range(self.nbasis):
-                    coulomb[i, j] += self._grid.integrate(
-                        self.psi[i, :] * self.psi[j, :] * self.JO)
-
-            factor = self._kappa / self._eta
-            exchange = np.zeros([self.nbasis, self.nbasis])
-
-            for s in range(self.nbasis):
-                for v in range(self.nbasis):
-                    for u in range(self.nbasis):
-                        for l in range(self.nbasis):
-                            exchange[
-                                u, v] += self._grid.integrate(
-                                self.psi[u, :] * self.psi[l, :] *
-                                self.KO[index2(s, v)]) * self.D[l, s]
-
-            exchange *= factor
-
-            self.G[:] = coulomb + exchange
+            with napmo.runtime.timeblock('Numerical G matrix'):
+                napmo.cext.nwavefunction_compute_2body_matrix(
+                    byref(self), self._grid._this, self.psi, self.JO, self.KO)
 
             self.G *= self.species.get('charge')**2
 
-            # print("\n G Matrix:")
-            # print(self.G)
-
-    # def compute_coupling(self, other_psi, direct=False):
-    #     """
-    #     Computes the two-body coupling matrix
-
-    #     Args:
-    #         other_psi (WaveFunction) : WaveFunction object for the other species.
-    #         direct (bool) : Whether to calculate eris on-the-fly or not
-    #     """
-    #     aux = np.zeros([self.nbasis, self.nbasis])
-    #     self.J[:] = 0.0
-    #     for psi in other_psi:
-    #         if self.sid != psi.sid:
-    #             napmo.cext.LibintInterface_compute_coupling_direct(
-    #                 self._libint, psi._libint, psi.D, aux)
-    #             aux *= self.species.get('charge') * psi.species.get('charge')
-    #             self.J += aux
-
-    #     self.J += np.tril(self.J, -1).T
-
-    #     # print("\n Coupling Matrix:")
-    #     # print(self.J)
+        # print("\n Coupling Matrix:")
+        # print(self.J)
 
     def compute_hcore(self):
         """

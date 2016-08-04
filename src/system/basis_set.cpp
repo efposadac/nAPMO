@@ -57,9 +57,9 @@ void BasisSet_compute(BasisSet *basis, double *r, double *output, int size) {
 
   int nbasis = basis->get_nbasis();
 
-#ifdef _OMP
-#pragma omp parallel for default(shared)
-#endif
+// #ifdef _OMP
+// #pragma omp parallel for default(shared)
+// #endif
   for (int i = 0; i < size; ++i) {
     auto aux = basis->compute(&r[i * 3]);
     for (int j = 0; j < nbasis; ++j) {

@@ -31,10 +31,24 @@ dynamically sized Vector type
 typedef Eigen::Matrix<double, Eigen::Dynamic, 1> Vector;
 
 /*
+Array 2D
+*/
+typedef Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> Array2D;
+
+/*
+Array 1D
+*/
+typedef Eigen::Array<double, Eigen::Dynamic, 1> Array1D;
+
+/*
 Types to work with raw buffers, for vectors and matrices
 */
 typedef Eigen::Map<Matrix> MMap;
 
 typedef Eigen::Map<Vector> VMap;
+
+typedef Eigen::Map<Array2D> A2DMap;
+
+typedef Eigen::Map<Array1D> A1DMap;
 
 #endif

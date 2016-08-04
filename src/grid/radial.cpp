@@ -18,9 +18,9 @@ RadialGrid::RadialGrid(RTransform *rt, double rad) {
   // Set the points
   double PI_4 = M_PI * 4.0;
 
-#ifdef _OPENMP
-#pragma omp parallel for default(shared)
-#endif
+// #ifdef _OPENMP
+// #pragma omp parallel for default(shared)
+// #endif
   for (unsigned int i = 0; i < size; ++i) {
     double x = i;
     points[i] = rt->radius(x);

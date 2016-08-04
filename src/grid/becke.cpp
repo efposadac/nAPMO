@@ -94,10 +94,9 @@ void BeckeGrid::compute_weights() {
 
   for (unsigned int atom = 0; atom < ncenter; ++atom) {
 
-#ifdef _OPENMP
-#pragma omp parallel for default(shared) firstprivate(atom,                    \
-                                                      npoint) private(offset)
-#endif
+// #ifdef _OPENMP
+// #pragma omp parallel for default(shared) firstprivate(atom, npoint) private(offset)
+// #endif
     for (unsigned int point = 0; point < npoint; ++point) {
 
       double sum = 0.0;
@@ -154,31 +153,20 @@ void BeckeGrid::compute_weights() {
 
 double BeckeGrid::integrate(double *f) {
 
-  using napmo::nthreads;
-  set_nthreads();
+  A1DMap BW(becke_weights, size);
+  A1DMap W(weights, size);
+  A1DMap F(f, size);
 
-  std::vector<double> buffer(nthreads);
+  return (F * BW * W).sum();
+}
 
-  auto lambda = [&](unsigned int thread_id) {
+double BeckeGrid::integrate(Array1D &f) {
 
-    double &buff = buffer[thread_id];
-    buff = 0.0;
+  A1DMap BW(becke_weights, size);
+  A1DMap W(weights, size);
 
-    for (unsigned int i = 0; i < size; ++i) {
-      if (i % nthreads != thread_id)
-        continue;
-      buff += f[i] * becke_weights[i] * weights[i];
-    }
-  };
+  return (f * BW * W).sum();
 
-  napmo::parallel_do(lambda);
-
-  double output = 0.0;
-  for (unsigned int i = 0; i < nthreads; ++i) {
-    output += buffer[i];
-  }
-
-  return output;
 }
 
 /*

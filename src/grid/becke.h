@@ -12,6 +12,7 @@ efposadac@unal.edu.co*/
 #include <stdlib.h>
 
 #include "../utils/utils.h"
+#include "../utils/eigen_helper.h"
 #include "atomic_grid.h"
 
 struct BeckeGrid {
@@ -55,6 +56,8 @@ public:
 
 
   double integrate(double *f);
+
+  double integrate(Array1D &f);
 
   int get_ncenter() { return ncenter; };
 

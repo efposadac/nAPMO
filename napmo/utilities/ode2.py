@@ -97,19 +97,20 @@ def solve_ode2(b, a, f, bcs, extrapolation=None):
     f = merge(fy_new, fd_new)
 
     # parse boundary conditions argument
-    c_bcs = np.empty(4, dtype=np.float64)
-
-    for i in range(4):
-        c_bcs[i] = np.NaN if new_bcs[i] is None else new_bcs[i]
+    c_bcs = np.array([np.NaN if bcs is None else bcs
+                      for bcs in new_bcs], dtype=np.float64)
 
     # prepare output
     coeffs = np.zeros((2 * npoint, 2 * npoint), dtype=np.float64)
     rhs = np.zeros(2 * npoint, dtype=np.float64)
 
     # call c routine
-    napmo.cext.build_ode2(b, a, f, c_bcs, coeffs, rhs, npoint)
+    with napmo.runtime.timeblock('Prepare ODE'):
+        napmo.cext.build_ode2(b, a, f, c_bcs, coeffs, rhs, npoint)
 
-    solution = spsolve(csc_matrix(coeffs), rhs)
+    with napmo.runtime.timeblock('Solve ODE'):
+        solution = spsolve(csc_matrix(coeffs), rhs)
+
     uy_new = solution[::2]
     ud_new = solution[1::2]
 
