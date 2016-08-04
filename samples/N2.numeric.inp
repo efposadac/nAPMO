@@ -13,8 +13,8 @@ basis {
 scf {
     hf
     numeric
-    nrad = 100
-    nang = 110
+    nrad = 500
+    nang = 590
 }
 
 #code {

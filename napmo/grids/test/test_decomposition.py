@@ -20,8 +20,10 @@ from napmo.grids.cubic_spline import CubicSpline
 
 def test_decomposition_grid():
     molecule = MolecularSystem()
-    molecule.add_atom("He", [0.0, 0.0, 0.0], basis_name='STO-3G')
+    molecule.add_atom("O", [0.0, 0.0, -1.0], basis_name='6-311G')
     print(molecule)
+
+    basis = molecule.get_basis('e-')
 
     # Grid definition
     angularPoints = 110
@@ -35,16 +37,8 @@ def test_decomposition_grid():
         grid = BeckeGrid(molecule.get('e-'), radialPoints, angularPoints)
         atgrid = grid.atgrids[-1]
 
-        # Basis and functional
-        basis = molecule.get_basis('He')
-        a = basis.get('cont')[0]
-        b = basis.get('cont')[0]
-
-        def p_ab(coord):
-            return a.compute(coord) * b.compute(coord)
-
-        rho = np.empty(grid.size)
-        rho = p_ab(grid.points)
+        rho = basis.compute(atgrid.points)
+        rho = np.array([aux.dot(aux) for aux in rho])
 
         p_lm = atgrid.spherical_expansion(lmax, rho)
 
@@ -68,8 +62,10 @@ def test_decomposition_grid():
 
 def test_decomposition_atomic_grid():
     molecule = MolecularSystem()
-    molecule.add_atom("He", [0.0, 0.0, 0.0], basis_name='STO-3G')
+    molecule.add_atom("O", [0.0, 0.0, -1.0], basis_name='6-311G')
     print(molecule)
+
+    basis = molecule.get_basis('e-')
 
     # Grid definition
     angularPoints = 110
@@ -83,16 +79,8 @@ def test_decomposition_atomic_grid():
         grid = BeckeGrid(molecule.get('e-'), radialPoints, angularPoints)
         atgrid = grid.atgrids[-1]
 
-        # Basis and functional
-        basis = molecule.get_basis('He')
-        a = basis.get('cont')[0]
-        b = basis.get('cont')[0]
-
-        def p_ab(coord):
-            return a.compute(coord) * b.compute(coord)
-
-        rho = np.empty(grid.size)
-        rho = p_ab(grid.points)
+        rho = basis.compute(atgrid.points)
+        rho = np.array([aux.dot(aux) for aux in rho])
 
         p_lm = atgrid.spherical_expansion(lmax, rho)
 
@@ -100,5 +88,5 @@ def test_decomposition_atomic_grid():
         rho_n = grid.atgrids[-1].evaluate_expansion(lmax, p_lm)
         assert np.allclose(rho_n, rho)
 
-# test_decomposition_grid()
-# test_decomposition_atomic_grid()
+test_decomposition_grid()
+test_decomposition_atomic_grid()

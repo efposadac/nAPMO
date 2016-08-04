@@ -15,22 +15,22 @@ import napmo
 
 class SCF(object):
     """
-    Hartree-Fock Implementation
+    SCF Implementation
+
+    Args:
+        options (dict): Options to handle the SCF calculation
+        pce (double) : Point charges energy
     """
 
-    def __init__(self, system, options=None):
+    def __init__(self, options=None, pce=0.0):
         super(SCF, self).__init__()
-        print('\nStarting SCF Calculation...')
-
         self.options = {'maxiter': 100,
-                        'eps_e': 1e-7,
-                        'eps_d': 1e-7,
+                        'eps_e': 1e-9,
+                        'eps_d': 1e-9,
                         'method': 'hf',
                         'kind': 'analytic',
                         'direct': False,
-                        'print': True,
-                        'nrad': 10,
-                        'nang': 110}
+                        'print': True}
 
         if options:
             self.options.update(options)
@@ -40,81 +40,26 @@ class SCF(object):
 
         print(self)
 
-        self.system = system
-
-        # Initialize WaveFunction:
-        self.PSI = [
-            napmo.WaveFunction(self.system.get_species(i),
-                               self.system.point_charges)
-            for i in range(self.system.size_species)]
-
         self._energy = 0.0
-        self._pce = sum([psi.pce for psi in self.PSI])
+        self._pce = pce
 
         print("Point charges energy: {0:<12.8f}".format(self._pce))
 
-    def compute(self, pprint=True):
-        """
-        Computes APMO-HF or HF depending on the number of quantum species
+    def iteration(self, psi):
 
-        Args:
-            pprint (bool): Whether to print or not the progress of the calculation.
-        """
-        self.compute_1body_ints()
-        self.compute_hcore()
-        self.compute_guess()
+        with napmo.runtime.timeblock('2 body ints'):
+            psi.compute_2body(self.get('direct'))
 
-        if len(self.PSI) > 1:
-            with napmo.runtime.timeblock('SCF Multi'):
-                self.iterate_multi(pprint=pprint and self.get('print'))
-        else:
-            with napmo.runtime.timeblock('SCF Single'):
-                self.iterate_single(
-                    self.PSI[-1], pprint=pprint and self.get('print'))
+        psi.build_fock()
 
-        if pprint and self.get('print'):
-            self.show_results()
+        with napmo.runtime.timeblock('DIIS'):
+            napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
 
-        if self.get('kind') is 'numeric':
+        # solve F C = e S C
+        with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
+            napmo.cext.wavefunction_iterate(byref(psi))
 
-            # Initialize numeric wavefunction
-            self.NPSI = [napmo.NWaveFunction(psi, self.get('nrad'), self.get('nang'))
-                         for psi in self.PSI]
-
-        return self._energy
-
-    def compute_1body_ints(self):
-        """
-        Computes one boy molecular integrals for all quantum species in the system, including:
-
-        * Overlap
-        * Kinetic
-        * Nuclear potential
-        """
-        # Calculate Integrals
-        with napmo.runtime.timeblock('1 body ints'):
-            for psi in self.PSI:
-                psi.compute_overlap()
-                psi.compute_kinetic()
-                psi.compute_nuclear()
-
-    def compute_hcore(self):
-        """
-        Builds the one particle hcore.
-        """
-        for psi in self.PSI:
-            psi.compute_hcore()
-
-    def compute_guess(self):
-        """
-        Computes the density guess using the *HCORE* method:
-        :math:`H C = e S C`
-        """
-        # Compute guess Density (HCORE)
-        for psi in self.PSI:
-            psi.compute_guess()
-
-    def iterate_single(self, psi, pprint=False):
+    def single(self, psi, pprint=False):
         """
         Perform SCF procedure for one species.
 
@@ -124,6 +69,7 @@ class SCF(object):
         """
 
         if pprint:
+            print('\nStarting Single SCF Calculation...')
             print('{0:5s}  {1:^10s} {2:>12s} {3:>12s} {4:>12s}'
                   .format("\nIter", "E (" + psi.symbol + ")", "Total E", "Delta(E)", "RMS(D)"))
 
@@ -142,8 +88,8 @@ class SCF(object):
 
             psi.build_fock()
 
-            with napmo.runtime.timeblock('DIIS'):
-                napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
+            # with napmo.runtime.timeblock('DIIS'):
+            #     napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
 
             # solve F C = e S C
             with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
@@ -158,12 +104,13 @@ class SCF(object):
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12.7f}'.
                       format(iterations, psi._energy, self._energy, e_diff, psi._rmsd))
 
-    def iterate_multi(self, pprint=True):
+    def multi(self, PSI, pprint=True):
         """
         Perform SCF iteration for all species in this object.
         """
 
         if pprint:
+            print('\nStarting Multi SCF Calculation...')
             print('{0:5s}  {1:^10s} {2:>12s} {3:>12s}'
                   .format("\nIter", "Energy", "Total E", "Delta(E)"))
 
@@ -177,7 +124,7 @@ class SCF(object):
 
             e_last = self._energy
 
-            for psi in self.PSI:
+            for psi in PSI:
 
                 # Calculate 2 body Matrix
                 with napmo.runtime.timeblock('2 body ints'):
@@ -190,12 +137,12 @@ class SCF(object):
                     napmo.cext.wavefunction_iterate(byref(psi))
 
                 with napmo.runtime.timeblock('Coupling ints'):
-                    psi.compute_couling(self.PSI, direct=self.get('direct'))
+                    psi.compute_coupling(PSI, direct=self.get('direct'))
 
                 with napmo.runtime.timeblock('DIIS'):
                     napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
 
-            self.compute_energy()
+            self.compute_energy(PSI)
 
             e_diff = self._energy - e_last
 
@@ -203,7 +150,52 @@ class SCF(object):
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f}'.
                       format(iterations, self._energy - self.pce, self._energy, e_diff))
 
-    def compute_energy(self):
+    def nsingle(self, psi, pprint=False):
+        """
+        Perform Numerical SCF procedure for one species.
+
+        Args:
+            psi (WaveFunction) : WaveFunction object for one species.
+            pprint (bool): Whether to print or not the progress of the calculation.
+        """
+
+        if pprint:
+            print('\nStarting Single NSCF Calculation...')
+            print('{0:5s}  {1:^10s} {2:>12s} {3:>12s} {4:>12s}'
+                  .format("\nIter", "E (" + psi.symbol + ")", "Total E", "Delta(E)", "RMS(D)"))
+
+        iterations = 0
+        e_diff = 1.0
+
+        while (iterations < self.get('maxiter') and
+               np.abs(e_diff) > self.get('eps_e') and
+               np.abs(psi._rmsd) > self.get('eps_d')):
+
+            iterations += 1
+            e_last = psi._energy
+
+            with napmo.runtime.timeblock('Numerical 2 body'):
+                psi.compute_2body(self.get('direct'))
+
+            psi.build_fock()
+
+            # with napmo.runtime.timeblock('DIIS'):
+            #     napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
+
+            # solve F C = e S C
+            with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
+                napmo.cext.wavefunction_iterate(byref(psi))
+
+            e_diff = psi._energy - e_last
+
+            self._energy = psi._energy + psi.pce
+
+            # print results
+            if pprint:
+                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12.7f}'.
+                      format(iterations, psi._energy, self._energy, e_diff, psi._rmsd))
+
+    def compute_energy(self, PSI):
         """
         Computes the total energy for a multi-species system.
         """
@@ -211,7 +203,7 @@ class SCF(object):
         self._energy = 0.0
         self._coupling_energy = 0.0
 
-        for psi in self.PSI:
+        for psi in PSI:
             # Add independient particle energies
             self._energy += (psi.D * (psi.H + (0.5 * psi.G))).sum()
 
@@ -224,25 +216,25 @@ class SCF(object):
         # Add coupling Energy
         self._energy += self._coupling_energy
 
-    def compute_energy_components(self):
+    def compute_energy_components(self, PSI):
         """
         Computes the total energy for a multi-species system.
         """
         self._kinetic_energy = 0.0
-        self._coupling_energy = 0.0
-        self._2body_energy = 0.0
         self._1body_energy = 0.0
         self._pcqui_energy = 0.0
+        self._2body_energy = 0.0
+        self._coupling_energy = 0.0
 
-        for psi in self.PSI:
+        for psi in PSI:
             # Calculate kinetic energy
             self._kinetic_energy += (psi.D * psi.T).sum()
 
-            # Calculate kinetic energy
+            # Calculate one body energy
             self._1body_energy += (psi.D * psi.H).sum()
 
             # Calculate point charges - quantum interaction energy
-            self._pcqui_energy += (psi.D * psi.H).sum() - (psi.D * psi.T).sum()
+            self._pcqui_energy += (psi.D * psi.V).sum()
 
             # Calculate repulsion energy
             self._2body_energy += 0.5 * (psi.D * psi.G).sum()
@@ -269,11 +261,18 @@ class SCF(object):
         """
         return self._pce
 
-    def show_results(self):
+    @property
+    def energy(self):
+        """
+        The total energy
+        """
+        return self._energy
+
+    def show_results(self, PSI):
         """
         Prints detailed results of the calculation
         """
-        self.compute_energy_components()
+        self.compute_energy_components(PSI)
 
         print("""\n
 End SCF calculation
@@ -301,7 +300,7 @@ Hartree-Fock Results:
 """.format(self._potential_energy,
            self._kinetic_energy,
            self._potential_energy + self._kinetic_energy,
-           self._potential_energy / self._kinetic_energy,
+           np.abs(self._potential_energy / self._kinetic_energy),
            self.pce,
            self._pcqui_energy,
            self._2body_energy,

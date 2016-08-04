@@ -75,16 +75,31 @@ def fix_casting(item):
         >>> fix_casting('Test')
         'Test'
     """
+
+    if not isinstance(item, str):
+        return item
+
     try:
         return int(item)
     except ValueError:
         try:
             return float(item)
         except ValueError:
+            # Boolean
             if item == "True":
                 return True
             if item == "False":
                 return False
+            # List
+            if item.startswith('['):
+                item = item.replace('[', '').replace(']', '').split(',')
+                item = [fix_casting(val.strip()) for val in item]
+                return item
+            # Dictionary
+            if item.find(':') >= 0:
+                item = item.split(':')
+                item = {item[0].strip(): fix_casting(item[1].strip())}
+                return item
             return item
 
 

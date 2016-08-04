@@ -28,6 +28,7 @@ class WaveFunction(Structure):
         ("_G", POINTER(c_double)),  # 2 Body
         ("_J", POINTER(c_double)),  # Coupling
         ("_F", POINTER(c_double)),  # Fock
+        ("_O", POINTER(c_double)),  # Orbitals
         ("_nbasis", c_int),
         ("_occupation", c_int),
         ("_eta", c_double),
@@ -43,6 +44,7 @@ class WaveFunction(Structure):
         # Initialize Libint object to calculate integrals
         self._libint = napmo.cext.LibintInterface_new(species.get('id'))
         self._diis = napmo.cext.LibintInterface_diis_new(2)
+        self._pc = point_charges
 
         for particle in species.get('particles'):
             napmo.cext.LibintInterface_add_basis(
@@ -96,8 +98,18 @@ class WaveFunction(Structure):
         self.F = np.zeros([self.nbasis, self.nbasis])
         self._F = self.F.ctypes.data_as(POINTER(c_double))
 
+        self.O = np.zeros(self.nbasis)
+        self._O = self.O.ctypes.data_as(POINTER(c_double))
+
         if self.symbol != 'e-beta':
             self._pce = self._compute_pce()
+
+        # Initialize all
+        self.compute_overlap()
+        self.compute_kinetic()
+        self.compute_nuclear()
+        self.compute_hcore()
+        self.compute_guess()
 
     def compute_overlap(self):
         """
@@ -151,7 +163,7 @@ class WaveFunction(Structure):
             # print("\n G Matrix:")
             # print(self.G)
 
-    def compute_couling(self, other_psi, direct=False):
+    def compute_coupling(self, other_psi, direct=False):
         """
         Computes the two-body coupling matrix
 

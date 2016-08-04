@@ -9,9 +9,6 @@ efposadac@unal.edu.co
 #ifndef INTS_H
 #define INTS_H
 
-// Eigen matrix algebra library
-#include <Eigen/Dense>
-#include <Eigen/Eigenvalues>
 #include <atomic>
 #include <fstream>
 #include <iomanip>

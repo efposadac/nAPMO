@@ -18,7 +18,7 @@ extern "C" {
 int utils_factorial2(const int n);
 
 void utils_multiply_segmented_array(const int size, const int segments,
-                                           double *array, double *output);
+                                    double *array, double *output);
 
 /*
 Compute the Euclidian distance between two points.

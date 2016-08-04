@@ -78,6 +78,8 @@ void LibintInterface::add_basis(BasisSet *basis) {
   max_nprim = std::max(max_nprim, basis->get_max_nprim());
   max_l = std::max(max_l, basis->get_max_l());
 
+  // std::cout<<nbasis<<' '<<max_nprim<<' '<<max_l<<std::endl;
+
   libint2::Shell::do_enforce_unit_normalization(false);
 
   for (auto cont : basis->get_cont()) {
@@ -1442,9 +1444,9 @@ libint2::DIIS<Matrix> *LibintInterface_diis_new(int iter) {
 void LibintInterface_diis(libint2::DIIS<Matrix> *diis, WaveFunction *psi) {
   int nbasis = psi->nbasis;
 
-  Map S(psi->S, nbasis, nbasis);
-  Map D(psi->D, nbasis, nbasis);
-  Map F(psi->F, nbasis, nbasis);
+  MMap S(psi->S, nbasis, nbasis);
+  MMap D(psi->D, nbasis, nbasis);
+  MMap F(psi->F, nbasis, nbasis);
 
   // compute SCF error
   Matrix FD_comm = F * D * S - S * D * F;

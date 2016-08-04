@@ -7,37 +7,97 @@ efposadac@unal.edu.co*/
 #ifndef BECKE_H
 #define BECKE_H
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "../utils/utils.h"
+#include "atomic_grid.h"
 
-#ifdef _OMP
-#include <omp.h>
+struct BeckeGrid {
+
+private:
+  unsigned int ncenter; // Number of atoms.
+  unsigned int size;    // Number of points.
+
+  double *radii;         // covalent radius for each center
+  double *origin;        // origin for each center
+  double *points;        // points of the grid
+  double *weights;       // weights of the grid
+  double *becke_weights; // Becke weights
+
+  std::vector<AtomicGrid> atgrid;
+
+  /*
+  Calculates the becke weights for a given ``BeckeGrid`` grid
+  as described in eq. 22 Becke, 1988.
+
+  References:
+      Becke, A. D. A multicenter numerical integration scheme for polyatomic
+  molecules. J. Chem. Phys. 88, 2547 (1988).
+  */
+  void compute_weights();
+
+public:
+  BeckeGrid(AtomicGrid **grids, const int n);
+
+  BeckeGrid(const BeckeGrid &) = default;
+
+  BeckeGrid();
+
+  ~BeckeGrid() {
+    delete[] radii;
+    delete[] origin;
+    delete[] points;
+    delete[] weights;
+    delete[] becke_weights;
+  };
+
+
+  double integrate(double *f);
+
+  int get_ncenter() { return ncenter; };
+
+  int get_size() { return size; };
+
+  double *get_radii() { return radii; };
+
+  double *get_points() { return points; };
+
+  double *get_weights() { return weights; };
+
+  double *get_origin() { return origin; };
+
+  double *get_becke_weights() { return becke_weights; };
+};
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-struct _becke {
-  int ncenter;     // Number of atoms.
-  int size;        // Number of points.
-  double *radii;   // covalent radius for each center
-  double *origin;  // origin for each center
-  double *points;  // points of the grid
-  double *weights; // weights of the grid
-};
-typedef struct _becke BeckeGrid;
+BeckeGrid *BeckeGrid_new(AtomicGrid **grids, int n);
 
-/*
-Calculates the becke weights for a given ``BeckeGrid`` grid
-as described in eq. 22 Becke, 1988.
+void BeckeGrid_del(BeckeGrid *grid);
 
-References:
-    Becke, A. D. A multicenter numerical integration scheme for polyatomic
-molecules. J. Chem. Phys. 88, 2547 (1988).
+double BeckeGrid_integrate(BeckeGrid *grid, double *f);
 
-*/
-void becke_weights(BeckeGrid *grid, double *weights);
+int BeckeGrid_get_ncenter(BeckeGrid *grid);
 
+int BeckeGrid_get_size(BeckeGrid *grid);
+
+double *BeckeGrid_get_radii(BeckeGrid *grid);
+
+double *BeckeGrid_get_points(BeckeGrid *grid);
+
+double *BeckeGrid_get_weights(BeckeGrid *grid);
+
+double *BeckeGrid_get_origin(BeckeGrid *grid);
+
+double *BeckeGrid_get_becke_weights(BeckeGrid *grid);
+
+#ifdef __cplusplus
+}
+#endif
 /*
 CUDA functions
 */

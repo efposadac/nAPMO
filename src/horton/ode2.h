@@ -25,13 +25,15 @@ efposadac@unal.edu.co*/
 //
 //--
 
-// UPDATELIBDOCTITLE: Second-order finite-element ODE solver using Hermite polynomials
+// UPDATELIBDOCTITLE: Second-order finite-element ODE solver using Hermite
+// polynomials
 
 #ifndef ODE2_H
 #define ODE2_H
 
 double hermite_overlap2(long xmax, long i0, bool deriv0, long i1, bool deriv1);
-double hermite_overlap3(long xmax, long i0, bool deriv0, long i1, bool deriv1, long i2, bool deriv2);
+double hermite_overlap3(long xmax, long i0, bool deriv0, long i1, bool deriv1,
+                        long i2, bool deriv2);
 double hermite_node(long x, long center, bool kind, bool deriv);
 double hermite_product2(long x, long i0, bool deriv0, long i1, bool deriv1);
 
@@ -39,8 +41,8 @@ double hermite_product2(long x, long i0, bool deriv0, long i1, bool deriv1);
 extern "C" {
 #endif
 
-void build_ode2(double* b, double* a, double *f, double* bcs, double* coeffs,
-                double* rhs, long npoint);
+void build_ode2(double *b, double *a, double *f, double *bcs, double *coeffs,
+                double *rhs, long npoint);
 
 #ifdef __cplusplus
 }

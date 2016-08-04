@@ -5,7 +5,7 @@ All rights reserved.
 Version: 0.1
 efposadac@unal.edu.co*/
 
-//TODO: Update with the changes on the serial code....
+// TODO: Update with the changes on the serial code....
 
 extern "C" {
 #include "include/atomic_grid.h"

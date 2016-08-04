@@ -10,7 +10,11 @@ efposadac@unal.edu.co
 #ifndef WAVEFUNCTION_H
 #define WAVEFUNCTION_H
 
+#include "../grid/becke.h"
 #include "../ints/ints.h"
+#include "../system/basis_set.h"
+#include "../utils/eigen_helper.h"
+#include "../utils/omp_helper.h"
 
 struct wf {
   double *S; // Overlap matrix
@@ -23,6 +27,7 @@ struct wf {
   double *G; // two-particle matrix
   double *J; // Coupling matrix
   double *F; // Fock matrix
+  double *O; // Orbitals energy
   // Convenience Variables
   int nbasis; // order of matrices
   int occupation;
@@ -32,66 +37,6 @@ struct wf {
   double rmsd;   // Density root-mean-square deviation
 };
 typedef struct wf WaveFunction;
-
-namespace napmo {
-
-static unsigned int nthreads;
-
-// / fires off \c nthreads instances of lambda in parallel
-template <typename Lambda> void parallel_do(Lambda &lambda) {
-#ifdef _OPENMP
-#pragma omp parallel
-  {
-    auto thread_id = omp_get_thread_num();
-    lambda(thread_id);
-  }
-#else // use C++11 threads
-  std::vector<std::thread> threads;
-  for (unsigned int thread_id = 0; thread_id != napmo::nthreads; ++thread_id) {
-    if (thread_id != nthreads - 1)
-      threads.push_back(std::thread(lambda, thread_id));
-    else
-      lambda(thread_id);
-  } // threads_id
-  for (unsigned int thread_id = 0; thread_id < nthreads - 1; ++thread_id)
-    threads[thread_id].join();
-#endif
-}
-} // end namespace
-
-__inline void set_nthreads() {
-  {
-    using napmo::nthreads;
-    auto nthreads_cstr = getenv("OMP_NUM_THREADS");
-    nthreads = 1;
-    if (nthreads_cstr && strcmp(nthreads_cstr, "")) {
-      std::istringstream iss(nthreads_cstr);
-      iss >> nthreads;
-      if (nthreads > 1 << 16 || nthreads <= 0)
-        nthreads = 1;
-    }
-
-#if defined(_OPENMP)
-    omp_set_num_threads(nthreads);
-#endif
-    //     std::cout << "Will scale over " << nthreads
-    // #if defined(_OPENMP)
-    //               << " OpenMP"
-    // #else
-    //               << " C++11"
-    // #endif
-    //               << " threads" << std::endl;
-  }
-}
-
-/*
-Type definitions
-*/
-typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
-    Matrix; // import dense, dynamically sized Matrix type from Eigen;
-            // this is a matrix with row-major storage
-            // (http://en.wikipedia.org/wiki/Row-major_order)
-typedef Eigen::Map<Matrix> Map;
 
 #ifdef __cplusplus
 extern "C" {
@@ -111,6 +56,12 @@ void wavefunction_compute_energy(WaveFunction *psi);
 
 void wavefunction_compute_2body_matrix(WaveFunction *psi,
                                        std::vector<QuartetBuffer> *ints);
+
+// nwavefunction
+
+void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
+                                           double *dm, double *output,
+                                           double epsilon, double *dmmaxrow);
 
 #ifdef __cplusplus
 }

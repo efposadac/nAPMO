@@ -74,10 +74,13 @@ def solve_ode2(b, a, f, bcs, extrapolation=None):
     j2 = rtf.deriv2_all()
     j3 = rtf.deriv3_all()
     j1sq = j1 * j1
+
     by_new = j1 * b.y - j2 / j1
     bd_new = j2 * b.y + j1sq * b.dx + (j2 * j2 - j1 * j3) / j1sq
+
     ay_new = a.y * j1sq
     ad_new = (a.dx * j1sq + 2 * a.y * j2) * j1
+
     fy_new = f.y * j1sq
     fd_new = (f.dx * j1sq + 2 * f.y * j2) * j1
 

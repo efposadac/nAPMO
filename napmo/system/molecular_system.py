@@ -25,6 +25,8 @@ class MolecularSystem(dict):
     def __init__(self):
         super(MolecularSystem, self).__init__()
         self._point_charges = []
+        self._buff = ''
+        self._abe = ''
 
     def add_atom(self, symbol, origin, units='ANGSTROMS', quantum=False,
                  basis_name=None, basis_file=None):
@@ -207,13 +209,28 @@ class MolecularSystem(dict):
         """
         assert isinstance(data, dict)
 
+        defaults = {key: {'charge': 0, 'multiplicity': 0}
+                    for key in self}
+
+        defaults.update(data)
+        data = defaults
+
+        self._buff += ("""
+
+Charges description:
+
+{0:<7s} {1:<7s} {2:<6s}
+-----------------------
+""".format(
+            "Symbol", "Charge", "Multi"))
+
         for key in data:
             if key not in self:
-                print("Imposible to set " + key +
+                print("Impossible to set " + key +
                       " charges: Particle does not exist!")
                 return
 
-            multi = data.get(key, {}).get('multiplicity', None)
+            multi = data.get(key, {}).get('multiplicity', 0)
             charge = data.get(key, {}).get('charge', 0)
 
             np = self.size_particles(key) + charge
@@ -221,7 +238,10 @@ class MolecularSystem(dict):
             # electronic case
             if key == 'e-':
                 if not multi:
-                    multi = 2 * ((np % 2) * 0.5) + 1
+                    multi = int(2 * ((np % 2) * 0.5) + 1)
+
+                self._buff += ('{0:<7s} {1:<7d} {2:<6d}\n'.format(
+                    key, charge, multi))
 
                 spin = (multi - 1) * 0.5
 
@@ -232,12 +252,18 @@ class MolecularSystem(dict):
                     print("Bad charge / multiplicity")
                     raise ValueError
 
-                alpha = (np - np % 2) * 0.5
-                alpha += spin / napmo.SPIN_ELECTRON
-                beta = np - alpha
+                alpha = int((eleft * 0.5) + nereq)
+                beta = int(eleft * 0.5)
                 keys = {'e-alpha': alpha, 'e-beta': beta}
 
+                self._abe = (
+                    """
+e-alpha: {0:<3d} e-beta: {1:<3d}
+
+--------------------------------------------------""".format(alpha, beta))
+
                 if alpha != beta or open_shell:
+
                     for k in keys:
                         eparticle = napmo.ElementaryParticle(k)
                         eparticle.pop('origin')
@@ -260,9 +286,16 @@ class MolecularSystem(dict):
                     self.get('e-')['occupation'] = int(
                         self.get('e-')['size'] * self.get('e-')['particlesfraction'])
             else:
+                # TODO: Implement multiplicity for other species
+
+                self._buff += ('{0:<7s} {1:<7d} {2:<6d}\n'.format(
+                    key, charge, multi))
+
                 self.get(key, {})['size'] += charge
                 self.get(key, {})['occupation'] = int(
                     self.get(key, {})['size'] * self.get(key, {})['particlesfraction'])
+
+        self._buff += "-----------------------"
 
     def size_particles(self, symbol):
         """
@@ -352,4 +385,10 @@ Object: {0:9s}
 
         out += ('--------------------------------------------------')
 
-        return out + ''.join(s for s in basis)
+        out += ''.join(s for s in basis)
+
+        out += self._buff
+
+        out += self._abe
+
+        return out

@@ -11,8 +11,8 @@ efposadac@unal.edu.co
 #ifndef LIBINT_IFACE_H
 #define LIBINT_IFACE_H
 
-#include "../system/basis_set.h"
 #include "../hf/wavefunction.h"
+#include "../system/basis_set.h"
 #include "ints.h"
 #include "iterators.h"
 #include <libint2.hpp>
@@ -171,9 +171,9 @@ void LibintInterface_compute_coupling_disk(LibintInterface *lint,
                                            const char *filename);
 int LibintInterface_get_nbasis(LibintInterface *lint);
 
-libint2::DIIS<Matrix> * LibintInterface_diis_new(int iter);
+libint2::DIIS<Matrix> *LibintInterface_diis_new(int iter);
 
-void LibintInterface_diis(libint2::DIIS<Matrix> * diis, WaveFunction * psi);
+void LibintInterface_diis(libint2::DIIS<Matrix> *diis, WaveFunction *psi);
 
 #ifdef __cplusplus
 }

@@ -1,27 +1,25 @@
 # Molecule definition
-molecule {
-    O  0.000   0.000   0.111
-    H  0.000   0.758   -0.444
-    H  0.000   -0.758  -0.444
+molecule [e-:-1:1]{
+H  0.000   0.487   0.000
+H  0.422   -0.244  0.000
+H  -0.422  -0.244  0.000
 }
 
 # basis-set specification
 basis {
-    e- STO-3G
+    e- 6-31G
 }
 
 # scf options
 scf {
-    # direct # for eris calculation on-the-fly (slower)
     hf
+    grid = [100, 110]
     numeric
-    nrad = 100
-    nang = 110
 }
 
 code {
 result = lambda x: print("PASS!") if abs(x) < 1e-7  else print("FAILED!")
-ref_energy = -76.032776981798
+ref_energy = -1.274294
 diff_energy = ref_energy - Energy
 result(diff_energy)    
 }

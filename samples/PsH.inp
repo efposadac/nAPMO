@@ -27,7 +27,8 @@ basis {
 scf {
     maxiter = 1000
     hf
-    analytic
+    grid = [100, 110]
+    hybrid = [e-:A, e+:N]
 }
 
 # You can add some operations in python syntax. 

@@ -74,7 +74,7 @@ class NAPMO(object):
         Executes the tasks to be performed
         """
         # TODO: Parse method and others (class solver maybe?)
-        self.solver = napmo.SCF(self.system, options=self.data.scf)
+        self.solver = napmo.HF(self.system, options=self.data.scf)
         self._energy = self.solver.compute()
 
     def exec_code(self):

@@ -7,6 +7,7 @@
 
 from contextlib import contextmanager
 import time
+import operator
 import napmo
 
 
@@ -55,10 +56,10 @@ Object:   {0:9s}
             "Process",
             "Time (s)"))
 
-        for label in self._blocks:
+        for item in sorted(self._blocks.items(), key=operator.itemgetter(1), reverse=True):
             print('{0:<36s} {1:<12.4f}'.format(
-                label,
-                self._blocks.get(label)))
+                item[0],
+                item[1]))
 
         self._end = time.clock()
 

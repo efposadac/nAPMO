@@ -7,16 +7,14 @@ efposadac@unal.edu.co*/
 
 #include "spherical_harmonics.h"
 
-void spherical_harmonics_real(int l, int m, double *theta, double *phi, double *output,
-                    int size) {
+void spherical_harmonics_real(int l, int m, double *theta, double *phi,
+                              double *output, int size) {
 
-  int i;
-  double x;
-  double p;
+  // printf("spherical_harmonics: l: %d m: %d\n", l, m);
 
-  for (i = 0; i < size; ++i) {
-    x = cos(theta[i]);
-    p = gsl_sf_legendre_sphPlm(l, abs(m), x);
+  for (int i = 0; i < size; ++i) {
+    double x = cos(theta[i]);
+    double p = gsl_sf_legendre_sphPlm(l, abs(m), x);
     if (m > 0) {
       output[i] = sqrt(2.0) * p * cos(m * phi[i]);
     } else if (m < 0) {

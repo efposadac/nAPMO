@@ -8,9 +8,9 @@ efposadac@unal.edu.co*/
 #ifndef SPHERE_LEBEDEV_RULE_H
 #define SPHERE_LEBEDEV_RULE_H
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 int available_table(int rule);

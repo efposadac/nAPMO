@@ -29,6 +29,9 @@ efposadac@unal.edu.co
 #ifndef EXTRAPOLATION_H
 #define EXTRAPOLATION_H
 
+#include <cstdint>
+#include <stdexcept>
+
 class CubicSpline;
 
 class Extrapolation {
@@ -117,12 +120,59 @@ public:
   double get_power() { return power; };
 };
 
+/** @brief
+        An extrapolation suitable for solutions of the Poisson equation.
+
+    The prefactor of the left and right polynomial are such that the function
+   remains
+    continuous at the last grid point of the spline. The power of R on the left
+   and right
+    side is consistent with the boundary conditions of the solutions of the
+   Poisson
+    equation.
+  */
+class PotentialExtrapolation : public Extrapolation {
+private:
+  int64_t l; //!< The angular momentum for which the potential is computed.
+  double amp_left;  //!< The prefactor for the polynomial for low x.
+  double amp_right; //!< The prefactor for the polynomial for high x.
+
+public:
+  /** @brief
+          Construct a PotentialExtrapolation.
+
+      @param l
+          The angular momentum for which the Coulomb potential is generated.
+    */
+  explicit PotentialExtrapolation(int64_t l);
+  virtual void prepare(CubicSpline *cs); //!< Derive parameters from spline.
+  virtual double eval_left(double x);    //!< Compute extrapolation for low x.
+  virtual double
+  eval_right(double x); //!< Derivative of extrapolation for low x.
+  virtual double deriv_left(double x); //!< Compute extrapolation for high x.
+  virtual double
+  deriv_right(double x); //!< Derivative of extrapolation for high x.
+  virtual bool has_tail() {
+    return true;
+  } //!< Returns true because if 1/R**(l+1) tail.
+
+  //! The angular momentum of the Coulomb potential spline.
+  int64_t get_l() { return l; }
+
+  //! The prefactor for the polynomial for low x.
+  double get_amp_left() { return amp_left; }
+  //! The prefactor for the polynomial for high x.
+  double get_amp_right() { return amp_right; }
+};
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 PowerExtrapolation *PowerExtrapolation_new(double power);
 double PowerExtrapolation_get_power(PowerExtrapolation *extrapolation);
+
+PotentialExtrapolation *PotentialExtrapolation_new(int l);
 
 #ifdef __cplusplus
 }

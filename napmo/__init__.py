@@ -13,10 +13,9 @@ from napmo.system.primitive_gaussian import PrimitiveGaussian
 from napmo.system.contracted_gaussian import ContractedGaussian
 from napmo.system.basis_set import BasisSet
 from napmo.system.molecular_system import MolecularSystem
-from napmo.system.napmo import NAPMO
+from napmo.system.napmo_system import NAPMO
 
 from napmo.grids.radial import RadialGrid
-from napmo.grids.radial_cheb import RadialGridCheb
 from napmo.grids.radial_transform import RadialTransform
 from napmo.grids.radial_transform import IndentityRadialTransform
 from napmo.grids.radial_transform import PowerRadialTransform
@@ -28,6 +27,9 @@ from napmo.grids.cubic_spline import CubicSpline
 from napmo.grids.extrapolation import Extrapolation
 from napmo.grids.extrapolation import CuspExtrapolation
 from napmo.grids.extrapolation import PowerExtrapolation
+from napmo.grids.extrapolation import PotentialExtrapolation
+from napmo.grids.lebedev import lebedev_get_order
+from napmo.grids.poisson_solver import poisson_solver
 
 from napmo.utilities.cell import Cell
 from napmo.utilities.ode2 import solve_ode2
@@ -47,6 +49,11 @@ from napmo.data.constants import SPIN_ELECTRON
 
 from napmo.hf.wavefunction import WaveFunction
 from napmo.hf.nwavefunction import NWaveFunction
+from napmo.hf.nkinetic import compute_kinetic
+from napmo.hf.nnuclear import compute_nuclear
+from napmo.hf.ntwobody import compute_coulomb
+from napmo.hf.ndpsi import compute_dpsi
+from napmo.hf.hf_solver import HF
 from napmo.hf.scf import SCF
 
 # OMP Threads
@@ -109,31 +116,36 @@ cext.LibintInterface_diis_new.restype = c_void_p
 cext.LibintInterface_diis_new.argtypes = [c_int]
 
 cext.LibintInterface_diis.restype = None
-cext.LibintInterface_diis.argtypes = [c_void_p, POINTER(WaveFunction)]
+cext.LibintInterface_diis.argtypes = [c_void_p, c_void_p]
 
 # Wavefunction
 cext.wavefunction_guess_hcore.restype = None
-cext.wavefunction_guess_hcore.argtypes = [POINTER(WaveFunction)]
+cext.wavefunction_guess_hcore.argtypes = [c_void_p]
 
 cext.wavefunction_compute_coefficients.restype = None
 cext.wavefunction_compute_coefficients.argtypes = [
-    POINTER(WaveFunction)]
+    c_void_p]
 
 cext.wavefunction_compute_density.restype = None
 cext.wavefunction_compute_density.argtypes = [
-    POINTER(WaveFunction)]
+    c_void_p]
 
 cext.wavefunction_compute_energy.restype = None
 cext.wavefunction_compute_energy.argtypes = [
-    POINTER(WaveFunction)]
+    c_void_p]
 
 cext.wavefunction_iterate.restype = None
 cext.wavefunction_iterate.argtypes = [
-    POINTER(WaveFunction)]
+    c_void_p]
 
 cext.wavefunction_compute_2body_matrix.restype = None
 cext.wavefunction_compute_2body_matrix.argtypes = [
-    POINTER(WaveFunction), c_void_p]
+    c_void_p, c_void_p]
+
+# NWavefunction
+cext.nwavefunction_compute_density_from_dm.restype = None
+cext.nwavefunction_compute_density_from_dm.argtypes = [
+    c_void_p, c_void_p, a2df, a1df, c_double, a1df]
 
 # PrimitiveGaussian
 cext.PrimitiveGaussian_new.restype = c_void_p
@@ -211,37 +223,113 @@ cext.BasisSet_get_max_nprim.argtypes = [c_void_p]
 
 
 # Angular grid
-cext.angular_cartesian.restype = None
-cext.angular_cartesian.argtypes = [POINTER(AngularGrid)]
+cext.AngularGrid_new.restype = c_void_p
+cext.AngularGrid_new.argtypes = [c_int]
 
-cext.angular_to_spherical.restype = None
-cext.angular_to_spherical.argtypes = [POINTER(AngularGrid)]
+cext.AngularGrid_del.restype = None
+cext.AngularGrid_del.argtypes = [c_void_p]
 
-cext.angular_integrate.restype = c_double
-cext.angular_integrate.argtypes = [
-    POINTER(AngularGrid), c_int, a1df]
+cext.AngularGrid_spherical.restype = None
+cext.AngularGrid_spherical.argtypes = [c_void_p]
+
+cext.AngularGrid_spherical_expansion.restype = None
+cext.AngularGrid_spherical_expansion.argtypes = [
+    c_void_p, c_int, c_int, a1df, a2df]
+
+cext.AngularGrid_eval_expansion.restype = None
+cext.AngularGrid_eval_expansion.argtypes = [
+    c_void_p, c_int, c_int, a2df, a1df]
+
+cext.AngularGrid_integrate.restype = c_double
+cext.AngularGrid_integrate.argtypes = [c_void_p, c_int, a1df]
+
+cext.AngularGrid_get_lorder.restype = c_int
+cext.AngularGrid_get_lorder.argtypes = [c_void_p]
+
+cext.AngularGrid_get_points.restype = POINTER(c_double)
+cext.AngularGrid_get_points.argtypes = [c_void_p]
+
+cext.AngularGrid_get_weights.restype = POINTER(c_double)
+cext.AngularGrid_get_weights.argtypes = [c_void_p]
+
+# Radial grid
+cext.RadialGrid_new.restype = c_void_p
+cext.RadialGrid_new.argtypes = [c_void_p, c_double]
+
+cext.RadialGrid_del.restype = None
+cext.RadialGrid_del.argtypes = [c_void_p]
+
+cext.RadialGrid_integrate.restype = c_double
+cext.RadialGrid_integrate.argtypes = [c_void_p, c_int, a1df]
+
+cext.RadialGrid_get_size.restype = c_int
+cext.RadialGrid_get_size.argtypes = [c_void_p]
+
+cext.RadialGrid_get_radii.restype = c_double
+cext.RadialGrid_get_radii.argtypes = [c_void_p]
+
+cext.RadialGrid_get_points.restype = POINTER(c_double)
+cext.RadialGrid_get_points.argtypes = [c_void_p]
+
+cext.RadialGrid_get_weights.restype = POINTER(c_double)
+cext.RadialGrid_get_weights.argtypes = [c_void_p]
+
 
 # Atomic grid
-cext.atomic_grid_init.restype = None
-cext.atomic_grid_init.argtypes = [
-    POINTER(AtomicGrid), POINTER(AngularGrid),
-    POINTER(RadialGrid)]
+cext.AtomicGrid_new.restype = c_void_p
+cext.AtomicGrid_new.argtypes = [c_void_p, c_void_p, a1df]
 
-cext.angular_spherical_expansion.restype = None
-cext.angular_spherical_expansion.argtypes = [
-    POINTER(AngularGrid), c_int, c_int, a1df, a2df]
+cext.AtomicGrid_del.restype = None
+cext.AtomicGrid_del.argtypes = [c_void_p]
 
-cext.angular_eval_expansion.restype = None
-cext.angular_eval_expansion.argtypes = [
-    POINTER(AngularGrid), c_int, c_int, a2df, a1df]
+cext.AtomicGrid_integrate.restype = POINTER(c_double)
+cext.AtomicGrid_integrate.argtypes = [c_void_p, c_int, c_int, c_int, a1df]
 
-cext.atomic_grid_integrate.restype = None
-cext.atomic_grid_integrate.argtypes = [
-    POINTER(AtomicGrid), c_int, c_int, c_int, a1df, a1df]
+cext.AtomicGrid_get_size.restype = c_int
+cext.AtomicGrid_get_size.argtypes = [c_void_p]
+
+cext.AtomicGrid_get_radii.restype = c_double
+cext.AtomicGrid_get_radii.argtypes = [c_void_p]
+
+cext.AtomicGrid_get_origin.restype = POINTER(c_double)
+cext.AtomicGrid_get_origin.argtypes = [c_void_p]
+
+cext.AtomicGrid_get_points.restype = POINTER(c_double)
+cext.AtomicGrid_get_points.argtypes = [c_void_p]
+
+cext.AtomicGrid_get_weights.restype = POINTER(c_double)
+cext.AtomicGrid_get_weights.argtypes = [c_void_p]
 
 # Becke grid
-cext.becke_weights.restype = None
-cext.becke_weights.argtypes = [POINTER(BeckeGrid), a1df]
+cext.BeckeGrid_new.restype = c_void_p
+cext.BeckeGrid_new.argtypes = [aptr]
+
+cext.BeckeGrid_del.restype = None
+cext.BeckeGrid_del.argtypes = [c_void_p]
+
+cext.BeckeGrid_integrate.restype = c_double
+cext.BeckeGrid_integrate.argtypes = [c_void_p, a1df]
+
+cext.BeckeGrid_get_ncenter.restype = c_int
+cext.BeckeGrid_get_ncenter.argtypes = [c_void_p]
+
+cext.BeckeGrid_get_size.restype = c_int
+cext.BeckeGrid_get_size.argtypes = [c_void_p]
+
+cext.BeckeGrid_get_radii.restype = POINTER(c_double)
+cext.BeckeGrid_get_radii.argtypes = [c_void_p]
+
+cext.BeckeGrid_get_points.restype = POINTER(c_double)
+cext.BeckeGrid_get_points.argtypes = [c_void_p]
+
+cext.BeckeGrid_get_weights.restype = POINTER(c_double)
+cext.BeckeGrid_get_weights.argtypes = [c_void_p]
+
+cext.BeckeGrid_get_origin.restype = POINTER(c_double)
+cext.BeckeGrid_get_origin.argtypes = [c_void_p]
+
+cext.BeckeGrid_get_becke_weights.restype = POINTER(c_double)
+cext.BeckeGrid_get_becke_weights.argtypes = [c_void_p]
 
 cext.eval_decomposition_grid.restype = None
 cext.eval_decomposition_grid.argtypes = [
@@ -312,23 +400,9 @@ cext.PowerExtrapolation_new.argtypes = [c_double]
 cext.PowerExtrapolation_get_power.restype = c_double
 cext.PowerExtrapolation_get_power.argtypes = [c_void_p]
 
-# Radial grid
-cext.radial_integrate.restype = c_double
-cext.radial_integrate.argtypes = [
-    POINTER(RadialGrid), c_int, a1df]
+cext.PotentialExtrapolation_new.restype = c_void_p
+cext.PotentialExtrapolation_new.argtypes = [c_int]
 
-# RadialCheb
-cext.radial_init.restype = None
-cext.radial_init.argtypes = [POINTER(RadialGridCheb)]
-
-cext.radial_get_z.restype = None
-cext.radial_get_z.argtypes = [POINTER(RadialGridCheb)]
-
-cext.radial_deriv_z.restype = None
-cext.radial_deriv_z.argtypes = [POINTER(RadialGridCheb)]
-
-cext.radial_deriv2_z.restype = None
-cext.radial_deriv2_z.argtypes = [POINTER(RadialGridCheb)]
 
 # Radial Transform
 cext.RTransform_get_npoint.restype = c_int

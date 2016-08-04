@@ -141,8 +141,6 @@ private:
   void normalize();
 
 public:
-  
-
   ContractedGaussian() = default;
 
   ContractedGaussian(const ContractedGaussian &) = default;
@@ -172,7 +170,7 @@ public:
 
   double get_norma() { return norma; };
 
-  std::vector<PrimitiveGaussian> & get_prim() { return prim; };
+  std::vector<PrimitiveGaussian> &get_prim() { return prim; };
 };
 
 #ifdef __cplusplus

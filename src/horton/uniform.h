@@ -34,95 +34,94 @@ efposadac@unal.edu.co
 #include "cell.h"
 #include "cubic_spline.h"
 
-
 class UniformGrid {
-    public:
-        double origin[3];
-        double grid_rvecs[9];
-        long shape[3];
-        long pbc[3];
+public:
+  double origin[3];
+  double grid_rvecs[9];
+  long shape[3];
+  long pbc[3];
 
-        UniformGrid(double* _origin, double* _grid_rvecs, long* _shape, long* _pbc);
+  UniformGrid(double *_origin, double *_grid_rvecs, long *_shape, long *_pbc);
 
-        Cell* get_cell();
-        Cell* get_grid_cell();
+  Cell *get_cell();
+  Cell *get_grid_cell();
 
-        void set_ranges_rcut(double* center, double rcut, long* ranges_begin, long* ranges_end);
-        double dist_grid_point(double* center, long* i);
-        void delta_grid_point(double* center, long* i);
-        double* get_pointer(double* array, long* i);
+  void set_ranges_rcut(double *center, double rcut, long *ranges_begin,
+                       long *ranges_end);
+  double dist_grid_point(double *center, long *i);
+  void delta_grid_point(double *center, long *i);
+  double *get_pointer(double *array, long *i);
 };
-
 
 class UniformGridWindow {
-    private:
-        UniformGrid* ugrid;
-    public:
-        long begin[3];
-        long end[3];
+private:
+  UniformGrid *ugrid;
 
-        UniformGridWindow(UniformGrid* ugrid, long* _begin, long* _end);
+public:
+  long begin[3];
+  long end[3];
 
-        double* get_pointer(double* array, long* j);
+  UniformGridWindow(UniformGrid *ugrid, long *_begin, long *_end);
 
-        void extend(double* cell, double* local);
-        void wrap(double* local, double* cell);
+  double *get_pointer(double *array, long *j);
+
+  void extend(double *cell, double *local);
+  void wrap(double *local, double *cell);
 };
-
 
 long index_wrap(long i, long high);
 
-
 class Range3Iterator {
-    private:
-        const long* ranges_begin;
-        const long* ranges_end;
-        const long* shape;
-        long loop_shape[3];
-        long npoint;
-    public:
-        Range3Iterator(const long* ranges_begin, const long* ranges_end, const long* shape);
+private:
+  const long *ranges_begin;
+  const long *ranges_end;
+  const long *shape;
+  long loop_shape[3];
+  long npoint;
 
-        long get_npoint() const { return npoint; };
-        void set_point(long ipoint, long* i, long* iwrap);
+public:
+  Range3Iterator(const long *ranges_begin, const long *ranges_end,
+                 const long *shape);
+
+  long get_npoint() const { return npoint; };
+  void set_point(long ipoint, long *i, long *iwrap);
 };
-
 
 class Block3Iterator {
-    private:
-        const long* begin;
-        const long* end;
-        const long* shape;
-        long block_begin[3];
-        long block_end[3];
-        long block_shape[3];
-        long nblock;
-    public:
-        Block3Iterator(const long* begin, const long* end, const long* shape);
+private:
+  const long *begin;
+  const long *end;
+  const long *shape;
+  long block_begin[3];
+  long block_end[3];
+  long block_shape[3];
+  long nblock;
 
-        long get_nblock() const { return nblock; };
+public:
+  Block3Iterator(const long *begin, const long *end, const long *shape);
 
-        void copy_block_begin(long* output);
-        void copy_block_end(long* output);
+  long get_nblock() const { return nblock; };
 
-        void set_block(long iblock, long* b);
-        void set_cube_ranges(long* b, long* cube_begin, long* cube_end);
-        void translate(long* b, long* jwrap, long* j);
+  void copy_block_begin(long *output);
+  void copy_block_end(long *output);
+
+  void set_block(long iblock, long *b);
+  void set_cube_ranges(long *b, long *cube_begin, long *cube_end);
+  void translate(long *b, long *jwrap, long *j);
 };
-
 
 class Cube3Iterator {
-    private:
-        const long* begin;
-        const long* end;
-        long shape[3];
-        long npoint;
-    public:
-        Cube3Iterator(const long* begin, const long* end);
+private:
+  const long *begin;
+  const long *end;
+  long shape[3];
+  long npoint;
 
-        long get_npoint() const { return npoint; };
-        void set_point(long ipoint, long* j);
+public:
+  Cube3Iterator(const long *begin, const long *end);
+
+  long get_npoint() const { return npoint; };
+  void set_point(long ipoint, long *j);
 };
-
 
 #endif

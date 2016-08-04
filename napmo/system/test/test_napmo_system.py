@@ -6,7 +6,7 @@
 # efposadac@unal.edu.co
 
 from napmo.system.input_parser import InputParser
-from napmo.system.napmo import NAPMO
+from napmo.system.napmo_system import NAPMO
 import numpy as np
 
 

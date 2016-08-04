@@ -23,8 +23,10 @@ double overlap_primitive(PrimitiveGaussian *f_a, PrimitiveGaussian *f_b) {
 
   for (i = 0; i < 3; ++i) {
     double AB = f_a->get_origin()[i] - f_b->get_origin()[i];
-    double P0 = (f_a->get_zeta() * f_a->get_origin()[i] + f_b->get_zeta() * f_b->get_origin()[i]) *
-         gammaInv;
+    double P0 = (f_a->get_zeta() * f_a->get_origin()[i] +
+                 f_b->get_zeta() * f_b->get_origin()[i]) *
+                gammaInv;
+
     PA[i] = P0 - f_a->get_origin()[i];
     PB[i] = P0 - f_b->get_origin()[i];
     AB2 += AB * AB;
@@ -60,8 +62,8 @@ double overlap_primitive(PrimitiveGaussian *f_a, PrimitiveGaussian *f_b) {
 }
 
 void obaraSaika_recursion(double *x, double *y, double *z, double PA[3],
-                              double PB[3], const double gamma, const int l_a,
-                              const int l_b, const int max_l) {
+                          double PB[3], const double gamma, const int l_a,
+                          const int l_b, const int max_l) {
 
   int i, j, idx;
 

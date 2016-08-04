@@ -12,43 +12,24 @@ from ctypes import *
 import napmo
 
 
-class AtomicGrid(Structure):
+class AtomicGrid(object):
 
     """
     Defines a spherical grid for each center in the system.
     """
-    _fields_ = [
-        ("_size", c_int),
-        ("_radii", c_double),
-        ("_origin", POINTER(c_double * 3)),
-        ("_points", POINTER(c_double * 3)),
-        ("_weights", POINTER(c_double)),
-    ]
 
     def __init__(self, nrad, nang, origin, atomic_symbol, rtransform=None):
         super(AtomicGrid, self).__init__()
-        self._size = nrad * nang
-
-        self.origin = np.array(origin, dtype=np.float64)
-        self._origin = self.origin.ctypes.data_as(POINTER(c_double * 3))
 
         self.radial_grid = napmo.RadialGrid(
             nrad, atomic_symbol, rtransform=rtransform)
 
         self.angular_grid = napmo.AngularGrid(nang)
 
-        self._radii = self.radial_grid.radii
-
-        self.points = np.empty([self.size, 3], dtype=np.float64)
-        self._points = np.ctypeslib.as_ctypes(self.points)
-
-        self.weights = np.empty(self.size, dtype=np.float64)
-        self._weights = np.ctypeslib.as_ctypes(self.weights)
-
         self._symbol = atomic_symbol
 
-        napmo.cext.atomic_grid_init(
-            byref(self), byref(self.angular_grid), byref(self.radial_grid))
+        self._this = napmo.cext.AtomicGrid_new(
+            self.angular_grid._this, self.radial_grid._this, origin)
 
     def spherical_expansion(self, lmax, f):
         """
@@ -66,8 +47,8 @@ class AtomicGrid(Structure):
         lsize = (lmax + 1) * (lmax + 1)
         output = np.empty([self.radial_grid.size, lsize], dtype=np.float64)
 
-        napmo.cext.angular_spherical_expansion(
-            byref(self.angular_grid), lmax, self.radial_grid.size, f, output)
+        napmo.cext.AngularGrid_spherical_expansion(
+            self.angular_grid._this, lmax, self.radial_grid.size, f, output)
 
         return output
 
@@ -86,9 +67,8 @@ class AtomicGrid(Structure):
         """
         output = np.empty(self.size, dtype=np.float64)
 
-        napmo.cext.angular_eval_expansion(
-            byref(self.angular_grid), lmax, self.radial_grid.size, expansion,
-            output)
+        napmo.cext.AngularGrid_eval_expansion(
+            self.angular_grid._this, lmax, self.radial_grid.size, expansion, output)
 
         return output
 
@@ -126,25 +106,39 @@ class AtomicGrid(Structure):
         if segmented:
             nseg = self.radial_grid.size
             sseg = self.angular_grid.lorder
-            integral = np.zeros(nseg)
         else:
             nseg = 1
             sseg = self.size
-            integral = np.zeros(1)
 
         f = np.concatenate(args)
 
-        napmo.cext.atomic_grid_integrate(
-            byref(self), nfunc, nseg, sseg, f, integral)
+        ptr = napmo.cext.AtomicGrid_integrate(
+            self._this, nfunc, nseg, sseg, f)
 
-        return integral
+        return np.ctypeslib.as_array(ptr, shape=(nseg,))
+
+    @property
+    def points(self):
+        ptr = napmo.cext.AtomicGrid_get_points(self._this)
+        return np.ctypeslib.as_array(ptr, shape=(self.size, 3))
+
+    @property
+    def weights(self):
+        ptr = napmo.cext.AtomicGrid_get_weights(self._this)
+        return np.ctypeslib.as_array(ptr, shape=(self.size,))
+
+    @property
+    def origin(self):
+        ptr = napmo.cext.AtomicGrid_get_origin(self._this)
+        return np.ctypeslib.as_array(ptr, shape=(3,))
 
     @property
     def size(self):
-        """
-        Number of points in the grid
-        """
-        return self._size
+        return napmo.cext.AtomicGrid_get_size(self._this)
+
+    @property
+    def radii(self):
+        return napmo.cext.AtomicGrid_get_radii(self._this)
 
     @property
     def symbol(self):

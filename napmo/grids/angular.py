@@ -12,32 +12,21 @@ from ctypes import *
 import napmo
 
 
-class AngularGrid(Structure):
+class AngularGrid(object):
 
     """
     Defines an angular grid based on Lebedev's quadratures.
     """
-    _fields_ = [
-        ("_lorder", c_int),
-        ("_points", POINTER(c_double * 3)),
-        ("_weights", POINTER(c_double)),
-    ]
 
     def __init__(self, lorder, spherical=False):
         super(AngularGrid, self).__init__()
-        self._lorder = lorder
+
+        self._this = napmo.cext.AngularGrid_new(lorder)
+
         self._spherical = spherical
 
-        self.points = np.empty([self.lorder, 3], dtype=np.float64)
-        self._points = np.ctypeslib.as_ctypes(self.points)
-
-        self.weights = np.empty(self.lorder, dtype=np.float64)
-        self._weights = np.ctypeslib.as_ctypes(self.weights)
-
-        napmo.cext.angular_cartesian(byref(self))
-
         if spherical:
-            napmo.cext.angular_to_spherical(byref(self))
+            napmo.cext.AngularGrid_spherical(self._this)
 
     def integrate(self, *args):
         """
@@ -50,14 +39,24 @@ class AngularGrid(Structure):
             integral (double): Integral value.
         """
         f = np.concatenate(args)
-        return napmo.cext.angular_integrate(byref(self), len(args), f)
+        return napmo.cext.AngularGrid_integrate(self._this, len(args), f)
 
     @property
     def lorder(self):
         """
         Order of the Lebedev's quadrature
         """
-        return self._lorder
+        return napmo.cext.AngularGrid_get_lorder(self._this)
+
+    @property
+    def points(self):
+        ptr = napmo.cext.AngularGrid_get_points(self._this)
+        return np.ctypeslib.as_array(ptr, shape=(self.lorder, 3))
+
+    @property
+    def weights(self):
+        ptr = napmo.cext.AngularGrid_get_weights(self._this)
+        return np.ctypeslib.as_array(ptr, shape=(self.lorder,))
 
     @property
     def spherical(self):

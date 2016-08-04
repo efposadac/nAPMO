@@ -124,10 +124,7 @@ ContractedGaussian::ContractedGaussian(PrimitiveGaussian **primitives, int n)
   normalize();
 }
 
-void ContractedGaussian::normalize() { 
-
-  norma = 1.0 / sqrt(overlap(this)); 
-}
+void ContractedGaussian::normalize() { norma = 1.0 / sqrt(overlap(this)); }
 
 double ContractedGaussian::compute(double *r) {
 
@@ -146,7 +143,7 @@ double ContractedGaussian::overlap(ContractedGaussian *other) {
   double output = 0.0;
 
   for (PrimitiveGaussian &pa : prim) {
-    for (PrimitiveGaussian &pb : other->get_prim()){
+    for (PrimitiveGaussian &pb : other->get_prim()) {
       output += pa.overlap(&pb);
     }
   }

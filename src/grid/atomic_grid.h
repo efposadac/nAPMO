@@ -11,36 +11,74 @@ efposadac@unal.edu.co*/
 #include "angular.h"
 #include "radial.h"
 
-#ifdef _OMP
-#include <omp.h>
+#include "../utils/omp_helper.h"
+
+struct AtomicGrid {
+
+private:
+  unsigned int size; // Number of points.
+  double radii;      // covalent radius for center
+  double *origin;    // origin for each center
+  double *points;    // points of the grid
+  double *weights;   // weights of the grid
+
+public:
+  AtomicGrid() = default;
+
+  AtomicGrid(const AtomicGrid &) = default;
+
+  AtomicGrid(AngularGrid *angular, RadialGrid *radial, double *R);
+
+  ~AtomicGrid() {
+    delete[] origin;
+    delete[] points;
+    delete[] weights;
+  };
+  /*
+  Calculates the integral over an atomic grid.
+
+  Args:
+      segments (int): Number of array of size ``grid.size`` in the array ``f``
+      f (double *): array with the value of the function ``F`` calculated in
+                    each point of the grid.
+
+  Return:
+      integral (double): value of the integral.
+  */
+  double *integrate(const unsigned int nfunc, const unsigned int segments,
+                    const unsigned int size, double *f);
+
+  unsigned int get_size() { return size; };
+  double get_radii() { return radii; };
+  double *get_origin() { return origin; };
+  double *get_points() { return points; };
+  double *get_weights() { return weights; };
+};
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
-struct _atomic_grid {
-  int size;        // Number of points.
-  double radii;    // covalent radius for each center
-  double *origin;  // origin for each center
-  double *points;  // points of the grid
-  double *weights; // weights of the grid
-};
-typedef struct _atomic_grid AtomicGrid;
+AtomicGrid *AtomicGrid_new(AngularGrid *angular, RadialGrid *radial, double *R);
 
-void atomic_grid_init(AtomicGrid *grid, AngularGrid *angular,
-                      RadialGrid *radial);
+void AtomicGrid_del(AtomicGrid *grid);
 
-/*
-Calculates the integral over an atomic grid.
+double *AtomicGrid_integrate(AtomicGrid *grid, int nfunc, int segments,
+                             int size, double *f);
 
-Args:
-    segments (int): Number of array of size ``grid.size`` in the array ``f``
-    f (double *): array with the value of the function ``F`` calculated in each
-point of the grid.
+int AtomicGrid_get_size(AtomicGrid *grid);
 
-Return:
-    integral (double): value of the integral.
-*/
-void atomic_grid_integrate(AtomicGrid *grid, const int functions,
-                           const int segments, const int size, double *f,
-                           double *output);
+double AtomicGrid_get_radii(AtomicGrid *grid);
+
+double *AtomicGrid_get_origin(AtomicGrid *grid);
+
+double *AtomicGrid_get_points(AtomicGrid *grid);
+
+double *AtomicGrid_get_weights(AtomicGrid *grid);
+
+#ifdef __cplusplus
+}
+#endif
 
 #ifdef _CUDA
 
