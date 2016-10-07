@@ -1,4 +1,4 @@
-# file: wavefunction.py
+# file: psi_analytic.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
@@ -13,33 +13,13 @@ import numpy as np
 import napmo
 
 
-class WaveFunction(Structure):
+class PSIA(napmo.PSIB):
     """
-    Defines the Fock operator for a Hartree-Fock Calculation.
+    Defines the Fock operator for a Hartree-Fock Calculation with analytic calculation of integrals.
     """
-    _fields_ = [
-        ("_S", POINTER(c_double)),  # Overlap
-        ("_T", POINTER(c_double)),  # Kinetic
-        ("_V", POINTER(c_double)),  # Nuclear
-        ("_H", POINTER(c_double)),  # Hcore
-        ("_C", POINTER(c_double)),  # Coefficients
-        ("_D", POINTER(c_double)),  # Density
-        ("_L", POINTER(c_double)),  # Last Density
-        ("_G", POINTER(c_double)),  # 2 Body
-        ("_J", POINTER(c_double)),  # Coupling
-        ("_F", POINTER(c_double)),  # Fock
-        ("_O", POINTER(c_double)),  # Orbitals
-        ("_nbasis", c_int),
-        ("_occupation", c_int),
-        ("_eta", c_double),
-        ("_kappa", c_double),
-        ("_energy", c_double),
-        ("_rmsd", c_double)  # Root medium square deviation, for D matrix
-    ]
 
     def __init__(self, species, point_charges):
-        super(WaveFunction, self).__init__()
-        self.species = species
+        super(PSIA, self).__init__(species)
 
         # Initialize Libint object to calculate integrals
         self._libint = napmo.cext.LibintInterface_new(species.get('id'))
@@ -55,54 +35,6 @@ class WaveFunction(Structure):
                 self._libint,
                 point.get('atomic_number', point.get('charge')),
                 point.get('origin'))
-
-        # Initialize defaults
-        self._nbasis = napmo.cext.LibintInterface_get_nbasis(self._libint)
-        self._occupation = species.get('occupation')
-        self._eta = species.get('eta')
-        self._kappa = species.get('kappa')
-        self._ints = None
-        self._symbol = species.get('symbol')
-        self._sid = species.get('id')
-        self._energy = 0.0
-        self._rmsd = 1.0
-        self._pce = 0.0
-
-        self.S = np.zeros([self.nbasis, self.nbasis])
-        self._S = self.S.ctypes.data_as(POINTER(c_double))
-
-        self.T = np.zeros([self.nbasis, self.nbasis])
-        self._T = self.T.ctypes.data_as(POINTER(c_double))
-
-        self.V = np.zeros([self.nbasis, self.nbasis])
-        self._V = self.V.ctypes.data_as(POINTER(c_double))
-
-        self.H = np.zeros([self.nbasis, self.nbasis])
-        self._H = self.H.ctypes.data_as(POINTER(c_double))
-
-        self.C = np.zeros([self.nbasis, self.nbasis])
-        self._C = self.C.ctypes.data_as(POINTER(c_double))
-
-        self.D = np.zeros([self.nbasis, self.nbasis])
-        self._D = self.D.ctypes.data_as(POINTER(c_double))
-
-        self.L = np.zeros([self.nbasis, self.nbasis])
-        self._L = self.L.ctypes.data_as(POINTER(c_double))
-
-        self.G = np.zeros([self.nbasis, self.nbasis])
-        self._G = self.G.ctypes.data_as(POINTER(c_double))
-
-        self.J = np.zeros([self.nbasis, self.nbasis])
-        self._J = self.J.ctypes.data_as(POINTER(c_double))
-
-        self.F = np.zeros([self.nbasis, self.nbasis])
-        self._F = self.F.ctypes.data_as(POINTER(c_double))
-
-        self.O = np.zeros(self.nbasis)
-        self._O = self.O.ctypes.data_as(POINTER(c_double))
-
-        if self.symbol != 'e-beta':
-            self._pce = self._compute_pce()
 
         # Initialize all
         self.compute_overlap()
@@ -213,43 +145,3 @@ class WaveFunction(Structure):
         self.F[:] = self.H + self.G + self.J
         # print("\n Fock Matrix:")
         # print(self.F)
-
-    def _compute_pce(self):
-        """
-        Calculates the total point charges energy for the system
-        """
-        output = [pa.get('charge') * pb.get('charge') /
-                  np.sqrt(((pa.get('origin') - pb.get('origin'))**2).sum())
-                  for i, pa in enumerate(self.species.get('particles'))
-                  for j, pb in enumerate(self.species.get('particles'))
-                  if j > i and not pa.is_quantum and not pb.is_quantum
-                  ]
-        return sum(output)
-
-    @property
-    def nbasis(self):
-        """
-        Length of the basis
-        """
-        return self._nbasis
-
-    @property
-    def pce(self):
-        """
-        The potential charge energy
-        """
-        return self._pce
-
-    @property
-    def symbol(self):
-        """
-        Symbol of the object owner's
-        """
-        return self._symbol
-
-    @property
-    def sid(self):
-        """
-        Id of the object owner's
-        """
-        return self._sid

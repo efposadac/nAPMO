@@ -148,16 +148,14 @@ void eval_decomposition_grid(CubicSpline **splines, double *center,
   set_nthreads();
 
   double rcut = splines[0]->get_last_x();
-  
+
   auto lambda = [&](unsigned int thread_id) {
     double work[nspline - 1];
 
     for (unsigned int i = 0; i < npoint; i++) {
 
-        if (i % nthreads != thread_id)
-          continue;
-
-      double &buff = output[i];
+      if (i % nthreads != thread_id)
+        continue;
 
       // Find the ranges for the triple loop
       double delta[3];
@@ -194,27 +192,29 @@ void eval_decomposition_grid(CubicSpline **splines, double *center,
             // Evaluate splines if needed
             if ((d < rcut) || splines[0]->get_extrapolation()->has_tail()) {
               // l == 0
-              double s;
+              double s = 0.0;
               splines[0]->eval(&d, &s, 1);
 
-              buff += s * INV_SQRT_4_PI;
+              output[i] += s * INV_SQRT_4_PI;
 
               if (lmax > 0) {
                 // l > 0
                 work[0] = z;
                 work[1] = x;
                 work[2] = y;
+
                 if (lmax > 1)
                   fill_pure_polynomials(work, lmax);
 
                 long counter = 0;
                 double dpowl = 1.0;
                 for (long l = 1; l <= lmax; l++) {
-                  dpowl /= d;
+                  dpowl = dpowl / d;
                   double factor = sqrt(2 * l + 1);
                   for (long m = -l; m <= l; m++) {
+
                     splines[counter + 1]->eval(&d, &s, 1);
-                    buff +=
+                    output[i] +=
                         s * factor * INV_SQRT_4_PI * dpowl * work[counter];
                     counter++;
                   }
@@ -228,5 +228,4 @@ void eval_decomposition_grid(CubicSpline **splines, double *center,
   };
 
   napmo::parallel_do(lambda);
-  
 }

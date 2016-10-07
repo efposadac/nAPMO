@@ -17,7 +17,7 @@ def compute_coulomb(grid, dens, lmax):
     Calculates the Coulomb potential ``V`` for any density source by solving Poisson's equation
     following Becke procedure.
 
-    This function takes into account the multi-center nature of the potential, so it decomposes 
+    This function takes into account the multi-center nature of the potential, so it decomposes
     the potential in spherical harmonics and build the potential using cubic spline interpolation
     see Becke's paper for details.
 

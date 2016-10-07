@@ -9,12 +9,15 @@ efposadac@unal.edu.co*/
 #define OMP_HELPER
 
 #include <atomic>
-#include <omp.h>
 #include <sstream>
 #include <stdlib.h>
 #include <string.h>
 #include <thread>
 #include <vector>
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 namespace napmo {
 
@@ -54,7 +57,7 @@ __inline void set_nthreads() {
         nthreads = 1;
     }
 
-#if defined(_OPENMP)
+#ifdef _OPENMP
     omp_set_num_threads(nthreads);
 #endif
     //     std::cout << "Will scale over " << nthreads

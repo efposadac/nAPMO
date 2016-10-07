@@ -13,33 +13,14 @@ LibintInterface
 */
 LibintInterface::LibintInterface(const int id)
     : max_nprim(0), nbasis(0), max_l(0), sID(id) {
-  // set up thread pool
-  {
-    using libint2::nthreads;
-    auto nthreads_cstr = getenv("OMP_NUM_THREADS");
-    nthreads = 1;
-    if (nthreads_cstr && strcmp(nthreads_cstr, "")) {
-      std::istringstream iss(nthreads_cstr);
-      iss >> nthreads;
-      if (nthreads > 1 << 16 || nthreads <= 0)
-        nthreads = 1;
-    }
 
-#if defined(_OPENMP)
-    omp_set_num_threads(nthreads);
-#endif
-    //     std::cout << "Will scale over " << nthreads
-    // #if defined(_OPENMP)
-    //               << " OpenMP"
-    // #else
-    //               << " C++11"
-    // #endif
-    //               << " threads" << std::endl;
-  }
+  // set up thread pool
+  using napmo::nthreads;
+  set_nthreads();
 
   // initializes the Libint integrals library ... now ready to compute
   libint2::initialize();
-};
+}
 
 void LibintInterface::init_2body_ints() {
 
@@ -211,7 +192,7 @@ std::vector<QuartetBuffer> *
 LibintInterface::compute_2body_ints(const Matrix &D, const Matrix &Schwartz,
                                     double precision) {
 
-  using libint2::nthreads;
+  using napmo::nthreads;
   using libint2::Engine;
 
   const auto nshells = shells.size();
@@ -219,6 +200,8 @@ LibintInterface::compute_2body_ints(const Matrix &D, const Matrix &Schwartz,
   auto n = (nbasis * (nbasis + 1)) / 2;
   n = (n * (n + 1)) / 2;
   n = ceil(n / nthreads) + 1;
+
+  // std::cout<<"Size per buffer: "<<n<<std::endl;
 
   const auto do_schwartz_screen = Schwartz.cols() != 0 && Schwartz.rows() != 0;
   Matrix D_shblk_norm; // matrix of infty-norms of shell blocks
@@ -373,7 +356,7 @@ LibintInterface::compute_2body_ints(const Matrix &D, const Matrix &Schwartz,
 
   }; // end of lambda
 
-  libint2::parallel_do(lambda);
+  napmo::parallel_do(lambda);
 
 #if defined(REPORT_INTEGRAL_TIMINGS)
   double time_for_ints = 0.0;
@@ -397,7 +380,7 @@ void LibintInterface::compute_2body_disk(const char *filename, const Matrix &D,
                                          double precision) {
   const auto nshells = shells.size();
 
-  using libint2::nthreads;
+  using napmo::nthreads;
 
   const auto do_schwartz_screen = Schwartz.cols() != 0 && Schwartz.rows() != 0;
   Matrix D_shblk_norm; // matrix of infty-norms of shell blocks
@@ -558,7 +541,7 @@ void LibintInterface::compute_2body_disk(const char *filename, const Matrix &D,
 
   }; // end of lambda
 
-  libint2::parallel_do(lambda);
+  napmo::parallel_do(lambda);
 
 #if defined(REPORT_INTEGRAL_TIMINGS)
   double time_for_ints = 0.0;
@@ -581,7 +564,7 @@ Matrix LibintInterface::compute_2body_direct(const Matrix &D,
   const auto n = nbasis;
   const auto nshells = shells.size();
 
-  using libint2::nthreads;
+  using napmo::nthreads;
 
   std::vector<Matrix> G(nthreads, Matrix::Zero(n, n));
 
@@ -738,7 +721,7 @@ Matrix LibintInterface::compute_2body_direct(const Matrix &D,
 
   }; // end of lambda
 
-  libint2::parallel_do(lambda);
+  napmo::parallel_do(lambda);
 
   // accumulate contributions from all threads
   for (size_t i = 1; i != nthreads; ++i) {
@@ -773,7 +756,7 @@ void LibintInterface::compute_coupling_disk(LibintInterface &other,
   const auto oshells = other.get_shells();
   const auto onshells = oshells.size();
 
-  using libint2::nthreads;
+  using napmo::nthreads;
 
   auto fock_precision = precision;
 
@@ -924,7 +907,7 @@ void LibintInterface::compute_coupling_disk(LibintInterface &other,
 
   }; // end of lambda
 
-  libint2::parallel_do(lambda);
+  napmo::parallel_do(lambda);
 
 #if defined(REPORT_INTEGRAL_TIMINGS)
   double time_for_ints = 0.0;
@@ -951,7 +934,7 @@ Matrix LibintInterface::compute_coupling_direct(LibintInterface &other,
   const auto oshells = other.get_shells();
   const auto onshells = oshells.size();
 
-  using libint2::nthreads;
+  using napmo::nthreads;
 
   std::vector<Matrix> B(nthreads, Matrix::Zero(n, n));
 
@@ -1101,7 +1084,7 @@ Matrix LibintInterface::compute_coupling_direct(LibintInterface &other,
 
   }; // end of lambda
 
-  libint2::parallel_do(lambda);
+  napmo::parallel_do(lambda);
 
   // accumulate contributions from all threads
   for (size_t i = 1; i != nthreads; ++i) {
@@ -1138,7 +1121,7 @@ shellpair_list_t compute_shellpair_list(const std::vector<libint2::Shell> &bs1,
   const auto nsh2 = bs2.size();
   const auto bs1_equiv_bs2 = (&bs1 == &bs2);
 
-  using libint2::nthreads;
+  using napmo::nthreads;
 
   // construct the 2-electron repulsion integrals engine
   using libint2::Engine;
@@ -1201,7 +1184,7 @@ shellpair_list_t compute_shellpair_list(const std::vector<libint2::Shell> &bs1,
     }
   }; // end of compute
 
-  libint2::parallel_do(compute);
+  napmo::parallel_do(compute);
 
   // resort shell list in increasing order, i.e. result[s][s1] < result[s][s2]
   // if s1 < s2
@@ -1214,7 +1197,7 @@ shellpair_list_t compute_shellpair_list(const std::vector<libint2::Shell> &bs1,
     }
   }; // end of sort
 
-  libint2::parallel_do(sort);
+  napmo::parallel_do(sort);
 
   timer.stop(0);
   // std::cout << "done (" << timer.read(0) << " s)" << std::endl;
@@ -1236,7 +1219,7 @@ Matrix compute_schwartz_ints(
 
   // construct the 2-electron repulsion integrals engine
   using libint2::Engine;
-  using libint2::nthreads;
+  using napmo::nthreads;
   std::vector<Engine> engines(nthreads);
 
   // !!! very important: cannot screen primitives in Schwartz computation !!!
@@ -1285,7 +1268,7 @@ Matrix compute_schwartz_ints(
     }
   }; // thread lambda
 
-  libint2::parallel_do(lambda);
+  napmo::parallel_do(lambda);
 
   timer.stop(0);
   // std::cout << "done (" << timer.read(0) << " s)" << std::endl;

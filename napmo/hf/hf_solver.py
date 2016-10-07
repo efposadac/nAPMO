@@ -29,8 +29,8 @@ class HF(object):
                                       for k, v in d.items()}
 
         # Analytic initialization
-        self.PSI = [napmo.WaveFunction(self.system.get_species(i),
-                                       self.system.point_charges)
+        self.PSI = [napmo.PSIA(self.system.get_species(i),
+                               self.system.point_charges)
                     for i in range(self.system.size_species)]
 
         self._pce = sum([psi.pce for psi in self.PSI])
@@ -38,12 +38,12 @@ class HF(object):
         # SCF solver
         self.scf = napmo.SCF(options=self.options, pce=self._pce)
 
-        # Perform a single iteration (needed for numerical initialization)
-        for psi in self.PSI:
-            self.scf.iteration(psi)
-
         # Numerical initialization
         if self.get('kind') is 'numeric':
+
+            # Perform a single iteration (needed for numerical initialization)
+            for psi in self.PSI:
+                self.scf.iteration(psi)
 
             # Grid definition (Only atoms for now)
             self._mgrid = napmo.BeckeGrid(system.get(
@@ -51,7 +51,7 @@ class HF(object):
 
             self._mgrid.show()
 
-            self.NPSI = [napmo.NWaveFunction(psi, self._mgrid)
+            self.NPSI = [napmo.PSIN(psi, self._mgrid)
                          for psi in self.PSI
                          if self.get('hybrid', {}).get(psi.symbol, 'N') == 'N']
 
@@ -91,7 +91,7 @@ class HF(object):
                 self.scf.single(
                     self.PSI[-1], pprint=pprint)
 
-        self._energy = self.scf.energy
+        self._energy = self.scf._energy
 
         self.scf.show_results(self.PSI)
 

@@ -18,7 +18,7 @@ efposadac@unal.edu.co*/
 extern "C" {
 #endif
 
-class PrimitiveGaussian;
+struct PrimitiveGaussian;
 
 /*
 Computes the overlap integral between two primitive Gaussian functions.

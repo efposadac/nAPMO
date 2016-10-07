@@ -39,12 +39,12 @@ def compute_kinetic(grid, psi, lmax):
         rinv = 1.0 / r
         r2inv = 1.0 / r2
 
-        _psi = psi[start:end].copy()
-        sph_exp = ag.spherical_expansion(
-            lmax, _psi)
+        _psi = psi[start:end].copy() * grid.becke_weights[start:end]
+        sph_exp = ag.spherical_expansion(lmax, _psi)
 
         idx = 0
-        res = np.zeros([rtf.size, (lmax + 1)**2])
+        res = []
+
         for l in range(lmax + 1):
 
             num = l * (l + 1)
@@ -53,7 +53,7 @@ def compute_kinetic(grid, psi, lmax):
             for m in range(-l, l + 1):
 
                 # calculate Laplacian
-                aux = np.array(sph_exp[:, idx])
+                aux = np.array(sph_exp[:, idx]).copy()
 
                 # phi'
                 phi = napmo.CubicSpline(
@@ -70,9 +70,17 @@ def compute_kinetic(grid, psi, lmax):
                 d2phi = dphi.deriv(r)
 
                 # Build equation
-                res[:, idx] = ((-rinv * d2phi) + (pref * aux))
+                res.append(napmo.CubicSpline(
+                    ((rinv * d2phi) - (pref * aux)), rtransform=rtf,
+                    extrapolation=napmo.PowerExtrapolation(-l - 1)))
+
                 idx += 1
 
-        T.append(ag.evaluate_expansion(lmax, res))
+        T.append(res)
 
-    return 0.5 * np.concatenate(T)
+    with napmo.runtime.timeblock('Interpolation'):
+        U = np.zeros(grid.size, dtype=np.float64)
+        for i in range(grid.ncenter):
+            grid.evaluate_decomposition(i, T[i][:], U)
+
+    return -0.5 * U

@@ -81,7 +81,7 @@ def test_spherical_decomposition_hydrogen_1pz():
     sa_check = np.exp(-grid.radial_grid.points) / (32.0 * np.pi) * \
         (2.0 / 15.0) * grid.radial_grid.points**2 * np.sqrt(5 * 4 * np.pi)
 
-    assert abs(sa_fns[:, 6] - sa_check).max() < 1e-10  # 6 or 4???
+    assert abs(sa_fns[:, 4] - sa_check).max() < 1e-10  # 6 or 4???
 
 # test_spherical_average_H1s()
 # test_spherical_decomposition_hydrogen_1s()

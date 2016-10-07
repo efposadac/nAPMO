@@ -47,8 +47,10 @@ from napmo.data.constants import PROTON_MASS
 from napmo.data.constants import NEUTRON_MASS
 from napmo.data.constants import SPIN_ELECTRON
 
-from napmo.hf.wavefunction import WaveFunction
-from napmo.hf.nwavefunction import NWaveFunction
+from napmo.hf.psi_base import PSIB
+from napmo.hf.psi_analytic import PSIA
+from napmo.hf.psi_numeric import PSIN
+from napmo.hf.psi_optimization import PSIO
 from napmo.hf.nkinetic import compute_kinetic
 from napmo.hf.nnuclear import compute_nuclear
 from napmo.hf.ntwobody import compute_coulomb
@@ -69,8 +71,9 @@ basis_dir = os.path.join(os.path.dirname(__file__), 'data/basis')
 a1df = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
 a2df = npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
 a1di = npct.ndpointer(dtype=np.int32, ndim=1, flags='CONTIGUOUS')
+a1dli = npct.ndpointer(dtype=np.int64, ndim=1, flags='CONTIGUOUS')
 aptr = npct.ndpointer(c_void_p, flags="C_CONTIGUOUS")
-
+d1pp = npct.ndpointer(dtype=np.uintp, ndim=1, flags='C')
 # C functions
 
 # Libint
@@ -150,6 +153,10 @@ cext.nwavefunction_compute_density_from_dm.argtypes = [
 cext.nwavefunction_compute_2body_matrix.restype = None
 cext.nwavefunction_compute_2body_matrix.argtypes = [
     c_void_p, c_void_p, a2df, a1df, a2df]
+
+cext.nwavefunction_optimize.restype = None
+cext.nwavefunction_optimize.argtypes = [
+    a2df, a2df, a1df, a1df, c_int]
 
 # PrimitiveGaussian
 cext.PrimitiveGaussian_new.restype = c_void_p
@@ -486,3 +493,8 @@ cext.compute_cubic_spline_int_weights.argtypes = [a1df, c_int]
 cext.build_ode2.restype = None
 cext.build_ode2.argtypes = [
     a1df, a1df, a1df, a1df, a2df, a1df, c_long]
+
+# Multipolar expansion
+cext.dot_multi_moments.restype = None
+cext.dot_multi_moments.argtypes = [
+    c_long, c_long, d1pp, a2df, a1df, c_long, c_long, a1dli, a2df, c_long]

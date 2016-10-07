@@ -53,6 +53,7 @@ def test_coulomb_H():
             i, U[i][:], v)
 
     integral = grid.integrate(rho * v)
+    # print(integral)
     assert np.allclose(integral, 0.77461)
 
 # test_coulomb_H()

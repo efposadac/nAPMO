@@ -29,7 +29,8 @@ struct wf {
   double *F; // Fock matrix
   double *O; // Orbitals energy
   // Convenience Variables
-  int nbasis; // order of matrices
+  int nbasis; // number of basis
+  int ndim;   // Size of the matrix
   int occupation;
   double eta;    // Constant of coupling
   double kappa;  // Constant of coupling
@@ -65,6 +66,9 @@ void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
 
 void nwavefunction_compute_2body_matrix(WaveFunction *psi, BeckeGrid *grid,
                                         double *phi, double *J, double *K);
+
+void nwavefunction_optimize(double *H, double *S, double *G, double *res,
+                            int ndim);
 
 #ifdef __cplusplus
 }

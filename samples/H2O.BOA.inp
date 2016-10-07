@@ -1,8 +1,8 @@
 # Molecule definition
 molecule {
-    O  0.000   0.000   0.111
-    H  0.000   0.758   -0.444
-    H  0.000   -0.758  -0.444
+    O	0.000	0.000	0.127
+    H	0.000	0.758	-0.508
+    H	0.000	-0.758	-0.508
 }
 
 # basis-set specification
@@ -14,9 +14,8 @@ basis {
 scf {
     # direct # for eris calculation on-the-fly (slower)
     hf
-    numeric
-    nrad = 100
-    nang = 110
+    #numeric
+    grid = [500, 110]
 }
 
 code {
@@ -25,3 +24,4 @@ ref_energy = -76.032776981798
 diff_energy = ref_energy - Energy
 result(diff_energy)    
 }
+

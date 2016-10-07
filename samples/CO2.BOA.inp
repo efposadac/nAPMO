@@ -13,8 +13,7 @@ basis {
 # scf options
 scf {
     hf
-    numeric
-    nrad = 100
-    nang = 110
+    #numeric
+    grid = [100, 110]
 }
 

@@ -14,7 +14,7 @@ from ctypes import *
 import napmo
 
 
-def poisson_solver(grid, dens, lmax, sph_exp=None):
+def poisson_solver(grid, _dens, lmax, sph_exp=None):
     """
     Returns the spherically expanded potential :math:`U_{\ell m}(r)` obtained following Becke's procedure.
     (finite elements).
@@ -33,13 +33,13 @@ def poisson_solver(grid, dens, lmax, sph_exp=None):
 
     assert isinstance(grid, napmo.BeckeGrid)
 
-    dens *= grid.becke_weights
+    dens = _dens * grid.becke_weights
 
     offset = 0
     U = []
     for i in range(grid.ncenter):
         atgrid = grid.atgrids[i]
-        p = dens[offset:offset + atgrid.size]
+        p = dens[offset:offset + atgrid.size].copy()
 
         # Spherical expansion
         if not sph_exp:

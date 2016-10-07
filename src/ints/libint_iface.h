@@ -22,36 +22,6 @@ efposadac@unal.edu.co
 
 using shellpair_list_t = std::unordered_map<size_t, std::vector<size_t>>;
 
-/*
-Namespace extension for threads
-*/
-namespace libint2 {
-
-unsigned int nthreads;
-
-// / fires off \c nthreads instances of lambda in parallel
-template <typename Lambda> void parallel_do(Lambda &lambda) {
-#ifdef _OPENMP
-#pragma omp parallel
-  {
-    auto thread_id = omp_get_thread_num();
-    lambda(thread_id);
-  }
-#else // use C++11 threads
-  std::vector<std::thread> threads;
-  for (unsigned int thread_id = 0; thread_id != libint2::nthreads;
-       ++thread_id) {
-    if (thread_id != nthreads - 1)
-      threads.push_back(std::thread(lambda, thread_id));
-    else
-      lambda(thread_id);
-  } // threads_id
-  for (unsigned int thread_id = 0; thread_id < nthreads - 1; ++thread_id)
-    threads[thread_id].join();
-#endif
-}
-
-} // end libint2 namespace
 
 /*
 Auxiliary functions

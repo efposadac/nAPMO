@@ -94,9 +94,10 @@ void BeckeGrid::compute_weights() {
 
   for (unsigned int atom = 0; atom < ncenter; ++atom) {
 
-// #ifdef _OPENMP
-// #pragma omp parallel for default(shared) firstprivate(atom, npoint) private(offset)
-// #endif
+#ifdef _OPENMP
+#pragma omp parallel for default(shared) firstprivate(atom,                    \
+                                                      npoint) private(offset)
+#endif
     for (unsigned int point = 0; point < npoint; ++point) {
 
       double sum = 0.0;
@@ -138,9 +139,9 @@ void BeckeGrid::compute_weights() {
           p *= s;
         }
 
-        sum += p;
         if (iatom == atom)
           aux = p;
+        sum += p;
       }
       // eq. 22
       becke_weights[atom * npoint + point] = aux / sum;
@@ -166,7 +167,6 @@ double BeckeGrid::integrate(Array1D &f) {
   A1DMap W(weights, size);
 
   return (f * BW * W).sum();
-
 }
 
 /*

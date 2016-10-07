@@ -22,9 +22,6 @@ AtomicGrid::AtomicGrid(AngularGrid *angular, RadialGrid *radial, double *R) {
 
   double p[3];
 
-// #ifdef _OPENMP
-// #pragma omp parallel for default(shared) private(p)
-// #endif
   for (unsigned int i = 0; i < radial->get_size(); ++i) {
     double rp = radial->get_points()[i];
     double rw = radial->get_weights()[i];
@@ -64,28 +61,11 @@ double *AtomicGrid::integrate(const unsigned int functions,
     work = &f[0];
   }
 
-  using napmo::nthreads;
-  set_nthreads();
-  std::vector<double> buffer(nthreads);
-
   // Perform reduction
   double *output = new double[segments]();
-  unsigned int i;
-
-  auto lambda = [&](unsigned int thread_id) {
-    double &buff = buffer[thread_id];
-    buff = 0.0;
+  for (unsigned int i = 0; i < segments; ++i) {
     for (unsigned int j = 0; j < size; ++j) {
-      if (j % nthreads != thread_id)
-        continue;
-      buff += work[i * size + j];
-    }
-  };
-
-  for (i = 0; i < segments; ++i) {
-    napmo::parallel_do(lambda);
-    for (unsigned int j = 0; j < nthreads; ++j) {
-      output[i] += buffer[j];
+      output[i] += work[i * size + j];
     }
   }
 

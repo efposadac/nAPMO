@@ -5,6 +5,8 @@
 # Version: 0.1
 # efposadac@unal.edu.co
 
+from __future__ import print_function
+
 import napmo
 import matplotlib.pylab as plt
 
@@ -83,11 +85,12 @@ class NAPMO(object):
         """
         print('\n--------------------------------------------------')
 
-        g = {'plt': plt}
+        g = {'plt': plt, 'print:': print}
 
         l = {"Energy": self._energy,
              "D": [psi.D for psi in self.solver.PSI],
-             "C": [psi.C for psi in self.solver.PSI]}
+             "C": [psi.C for psi in self.solver.PSI],
+             "E": [psi.O for psi in self.solver.PSI]}
 
         if self.data.code != '':
             print('Code results:')

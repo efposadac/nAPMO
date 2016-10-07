@@ -20,7 +20,7 @@ def compute_nuclear(grid, point_charges):
 
     Args:
         grid (BeckeGrid) : The Molecular grid
-        point_charges (list) : List of dict with the information of the point charges. 
+        point_charges (list) : List of dict with the information of the point charges.
                                It should have the keys ``atomic_number`` or ``charge`` and ``origin``.
 
     Return:

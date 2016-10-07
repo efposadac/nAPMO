@@ -11,15 +11,15 @@ efposadac@unal.edu.co
 
 void wavefunction_guess_hcore(WaveFunction *psi) {
 
-  int nbasis = psi->nbasis;
+  int ndim = psi->ndim;
 
-  MMap S(psi->S, nbasis, nbasis);
-  MMap H(psi->H, nbasis, nbasis);
-  MMap C(psi->C, nbasis, nbasis);
-  MMap D(psi->D, nbasis, nbasis);
-  VMap O(psi->O, nbasis);
+  MMap S(psi->S, ndim, ndim);
+  MMap H(psi->H, ndim, ndim);
+  MMap C(psi->C, ndim, ndim);
+  MMap D(psi->D, ndim, ndim);
+  VMap O(psi->O, ndim);
 
-  // std::cout<<nbasis<<psi->occupation<<"\n";
+  // std::cout<<ndim<<psi->occupation<<"\n";
 
   Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(H, S);
 
@@ -40,15 +40,15 @@ void wavefunction_guess_hcore(WaveFunction *psi) {
 
 void wavefunction_iterate(WaveFunction *psi) {
 
-  int nbasis = psi->nbasis;
-  MMap S(psi->S, nbasis, nbasis);
-  MMap C(psi->C, nbasis, nbasis);
-  MMap H(psi->H, nbasis, nbasis);
-  MMap D(psi->D, nbasis, nbasis);
-  MMap L(psi->L, nbasis, nbasis);
-  MMap G(psi->G, nbasis, nbasis);
-  MMap F(psi->F, nbasis, nbasis);
-  VMap O(psi->O, nbasis);
+  int ndim = psi->ndim;
+  MMap S(psi->S, ndim, ndim);
+  MMap C(psi->C, ndim, ndim);
+  MMap H(psi->H, ndim, ndim);
+  MMap D(psi->D, ndim, ndim);
+  MMap L(psi->L, ndim, ndim);
+  MMap G(psi->G, ndim, ndim);
+  MMap F(psi->F, ndim, ndim);
+  VMap O(psi->O, ndim);
 
   L = D;
 
@@ -79,10 +79,10 @@ void wavefunction_iterate(WaveFunction *psi) {
 
 void wavefunction_compute_coefficients(WaveFunction *psi) {
 
-  int nbasis = psi->nbasis;
-  MMap S(psi->S, nbasis, nbasis);
-  MMap C(psi->C, nbasis, nbasis);
-  MMap F(psi->F, nbasis, nbasis);
+  int ndim = psi->ndim;
+  MMap S(psi->S, ndim, ndim);
+  MMap C(psi->C, ndim, ndim);
+  MMap F(psi->F, ndim, ndim);
 
   Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(F, S);
   auto eps = gen_eig_solver.eigenvalues();
@@ -94,10 +94,10 @@ void wavefunction_compute_coefficients(WaveFunction *psi) {
 
 void wavefunction_compute_density(WaveFunction *psi) {
 
-  int nbasis = psi->nbasis;
-  MMap C(psi->C, nbasis, nbasis);
-  MMap D(psi->D, nbasis, nbasis);
-  MMap L(psi->L, nbasis, nbasis);
+  int ndim = psi->ndim;
+  MMap C(psi->C, ndim, ndim);
+  MMap D(psi->D, ndim, ndim);
+  MMap L(psi->L, ndim, ndim);
 
   L = D;
 
@@ -114,11 +114,11 @@ void wavefunction_compute_density(WaveFunction *psi) {
 
 void wavefunction_compute_energy(WaveFunction *psi) {
 
-  int nbasis = psi->nbasis;
-  MMap H(psi->H, nbasis, nbasis);
-  MMap D(psi->D, nbasis, nbasis);
-  MMap G(psi->G, nbasis, nbasis);
-  MMap J(psi->J, nbasis, nbasis);
+  int ndim = psi->ndim;
+  MMap H(psi->H, ndim, ndim);
+  MMap D(psi->D, ndim, ndim);
+  MMap G(psi->G, ndim, ndim);
+  MMap J(psi->J, ndim, ndim);
 
   // compute HF energy
   auto ehf = D.cwiseProduct(H + (0.5 * G) + J).sum();
@@ -132,23 +132,20 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
 
   set_nthreads();
 
-  int nbasis = psi->nbasis;
-  MMap D(psi->D, nbasis, nbasis);
-  MMap G(psi->G, nbasis, nbasis);
+  int ndim = psi->ndim;
+  MMap D(psi->D, ndim, ndim);
+  MMap G(psi->G, ndim, ndim);
 
   G.setZero();
 
   auto factor = psi->kappa / psi->eta;
 
-  std::vector<Matrix> GB(nthreads, Matrix::Zero(nbasis, nbasis));
-  std::vector<Matrix> TEST(nthreads, Matrix::Zero(nbasis, nbasis));
+  std::vector<Matrix> GB(nthreads, Matrix::Zero(ndim, ndim));
+  std::vector<Matrix> TEST(nthreads, Matrix::Zero(ndim, ndim));
 
   auto lambda = [&](unsigned int thread_id) {
 
     auto &g = GB[thread_id];
-    auto &t = TEST[thread_id];
-
-    t.setZero();
 
     for (unsigned int i = 0; i < ints->at(thread_id).p.size(); i++) {
 
@@ -158,7 +155,7 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
       auto s = ints->at(thread_id).p[i];
       auto val = ints->at(thread_id).val[i];
 
-      // cout << p << " " << q << " " << r << " " << s << " " << val << endl;
+      // std::cout << p << " " << q << " " << r << " " << s << " " << val << std::endl;
 
       auto coulomb = D(r, s) * val;
 
@@ -233,4 +230,5 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
   GB[0] += GB[0].triangularView<Eigen::StrictlyLower>().transpose();
   G = GB[0].triangularView<Eigen::Upper>();
   G += G.triangularView<Eigen::StrictlyUpper>().transpose();
+
 }

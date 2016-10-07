@@ -44,11 +44,34 @@ class AtomicGrid(object):
         Returns:
             integral (ndarray): Spherical expansion array with shape (nrad, lsize), where :math:`\ell_{size} = (\ell_{max} + 1)^2`
         """
-        lsize = (lmax + 1) * (lmax + 1)
-        output = np.empty([self.radial_grid.size, lsize], dtype=np.float64)
 
-        napmo.cext.AngularGrid_spherical_expansion(
-            self.angular_grid._this, lmax, self.radial_grid.size, f, output)
+        if lmax < 0:
+            raise ValueError('lmax can not be negative.')
+
+        lsize = (lmax + 1) * (lmax + 1)
+        output = np.zeros([self.radial_grid.size, lsize], dtype=np.float64)
+
+        segments = np.zeros(self.radial_grid.size, dtype=np.int64)
+        segments[:] = self.angular_grid.lorder
+
+        f *= self.weights
+        f = f.reshape([1, f.size])
+
+        fpp = (f.__array_interface__['data'][
+               0] + np.arange(f.shape[0]) * f.strides[0]).astype(np.uintp)
+
+        napmo.cext.dot_multi_moments(f.size, 1, fpp, self.points,
+                                     self.origin, lmax, 4, segments, output, lsize)
+
+        output /= self.integrate(segmented=True).reshape(-1, 1)
+
+        counter = 0
+
+        for l in range(0, lmax + 1):
+            for m in range(-l, l + 1):
+                # proper norm for spherical harmonics
+                output[:, counter] *= np.sqrt(4 * np.pi * (2 * l + 1))
+                counter += 1
 
         return output
 

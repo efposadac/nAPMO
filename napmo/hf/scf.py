@@ -26,7 +26,9 @@ class SCF(object):
         super(SCF, self).__init__()
         self.options = {'maxiter': 100,
                         'eps_e': 1e-9,
+                        'eps_n': 1e-6,
                         'eps_d': 1e-9,
+                        'eps_r': 1e-5,
                         'method': 'hf',
                         'kind': 'analytic',
                         'direct': False,
@@ -52,12 +54,17 @@ class SCF(object):
 
         psi.build_fock()
 
-        with napmo.runtime.timeblock('DIIS'):
-            napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
+        # with napmo.runtime.timeblock('DIIS'):
+        #     napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
 
         # solve F C = e S C
         with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
             napmo.cext.wavefunction_iterate(byref(psi))
+
+        self._energy = psi._energy + psi.pce
+
+        # print('Single iteration: {0:>12.7f} {1:>12.7f} {2:>12.7f}'.
+        #       format(psi._energy, self._energy, psi._rmsd))
 
     def single(self, psi, pprint=False):
         """
@@ -88,8 +95,8 @@ class SCF(object):
 
             psi.build_fock()
 
-            # with napmo.runtime.timeblock('DIIS'):
-            #     napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
+            with napmo.runtime.timeblock('DIIS'):
+                napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
 
             # solve F C = e S C
             with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
@@ -150,7 +157,7 @@ class SCF(object):
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f}'.
                       format(iterations, self._energy - self.pce, self._energy, e_diff))
 
-    def nsingle(self, psi, pprint=False):
+    def nsingle(self, psi, pprint=True):
         """
         Perform Numerical SCF procedure for one species.
 
@@ -161,26 +168,22 @@ class SCF(object):
 
         if pprint:
             print('\nStarting Single NSCF Calculation...')
-            print('{0:5s}  {1:^10s} {2:>12s} {3:>12s} {4:>12s}'
-                  .format("\nIter", "E (" + psi.symbol + ")", "Total E", "Delta(E)", "RMS(D)"))
+            print('{0:5s}  {1:^10s} {2:>12s} {3:>12s}'
+                  .format("\nIter", "E (" + psi.symbol + ")", "Total E", "Delta(E)"))
 
         iterations = 0
         e_diff = 1.0
 
         while (iterations < self.get('maxiter') and
-               np.abs(e_diff) > self.get('eps_e') and
-               np.abs(psi._rmsd) > self.get('eps_d')):
+               np.abs(e_diff) > self.get('eps_n')):
 
             iterations += 1
             e_last = psi._energy
 
-            # with napmo.runtime.timeblock('Numerical 2 body'):
-            psi.compute_2body(self.get('direct'))
+            with napmo.runtime.timeblock('Numerical 2 body'):
+                psi.compute_2body(self.get('direct'))
 
             psi.build_fock()
-
-            # with napmo.runtime.timeblock('DIIS'):
-            #     napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
 
             # solve F C = e S C
             with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
@@ -192,8 +195,12 @@ class SCF(object):
 
             # print results
             if pprint:
-                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12.7f}'.
-                      format(iterations, psi._energy, self._energy, e_diff, psi._rmsd))
+                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f}'.
+                      format(iterations, psi._energy, self._energy, e_diff))
+
+            # Compute \Psi (eq. 14) through conventional SCF for
+            # \psi = a \phi + b \Delta \phi
+            psi.optimize_psi(self)
 
     def compute_energy(self, PSI):
         """

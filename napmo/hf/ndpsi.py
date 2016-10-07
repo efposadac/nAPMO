@@ -12,7 +12,7 @@ import numpy as np
 import napmo
 
 
-def compute_dpsi(grid, lmax, phi, doi, oi, ri, V):
+def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_nuc, J):
     offset = 0
 
     dp_s = []
@@ -28,9 +28,9 @@ def compute_dpsi(grid, lmax, phi, doi, oi, ri, V):
         # Spherical expansion
         sph_expansion = atgrid.spherical_expansion(lmax, psi)
 
-        # Spherical Average of V (V = V_{nuc} + V_{ele})
         V_sph = atgrid.spherical_average(
-            V[offset:offset + atgrid.size])
+            (V_nuc[offset:offset + atgrid.size] +
+             J[offset:offset + atgrid.size]) * grid.becke_weights[offset:offset + atgrid.size])
 
         res = []
         idx = 0
