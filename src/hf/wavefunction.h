@@ -64,11 +64,14 @@ void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
                                            double *dm, double *output,
                                            double epsilon, double *dmmaxrow);
 
-void nwavefunction_compute_2body_matrix(WaveFunction *psi, BeckeGrid *grid,
-                                        double *phi, double *J, double *K);
+void nwavefunction_compute_2body_matrix_atm(WaveFunction *psi, BeckeGrid *grid,
+                                            double *phi, double *J, double *K);
 
-void nwavefunction_optimize(double *H, double *S, double *G, double *res,
-                            int ndim);
+void nwavefunction_compute_2body_matrix_mol(WaveFunction *psi, BeckeGrid *grid,
+                                            double *phi, double *J, double *K);
+
+void nwavefunction_compute_coupling(WaveFunction *psi, BeckeGrid *grid,
+                                    double *phi, double *other_J, double *res);
 
 #ifdef __cplusplus
 }

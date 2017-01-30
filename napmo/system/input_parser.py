@@ -123,13 +123,15 @@ class InputParser(object):
             'molecule': self.load_molecule,
             'basis': self.load_basis,
             'scf': self.load_scf,
-            'code': self.load_code
+            'code': self.load_code,
+            'grid': self.load_grid
         }
 
         self.code = ''  # code to execute at the end of the calculation
         self.data = {}  # data of the molecule
         self.charges = {}  # options for charges and multiplicity
         self.scf = {}  # options for SCF engine
+        self.grid = {}  # data for grids
 
         # remove all comments from data and blank lines
         data = re.sub('""".*\n?', '', data)
@@ -320,7 +322,49 @@ class InputParser(object):
 
         self.scf.update(aux)
 
-    def load_code(self,  data, group=True, options=None):
+    def load_grid(self, data, group=True, options=None):
+
+        aux = {}
+
+        data = data.splitlines()
+        for line in data:
+            line = line.strip().split(' ')
+            symbol = line[0].strip()
+
+            if symbol not in self.data and symbol != 'e-':
+                raise_exception(
+                    ValueError,
+                    "Particle not found!",
+                    'Check the "grid" block in your input file ' + symbol + ' is undefined in "molecular" block')
+
+            grid_spec = fix_casting(' '.join(line[1:]))
+
+            if len(grid_spec) == 4:
+                rtransform = napmo.PowerRadialTransform(
+                    grid_spec[0], grid_spec[1], grid_spec[2])
+
+                nrad = grid_spec[2]
+                nang = grid_spec[3]
+
+            elif len(grid_spec) == 3:
+                rtransform = napmo.ChebyshevRadialTransform(
+                    grid_spec[0], grid_spec[1])
+
+                nrad = grid_spec[1]
+                nang = grid_spec[2]
+
+            else:
+                rtransform = None
+                nrad = grid_spec[0]
+                nang = grid_spec[1]
+
+            aux[symbol] = {'nrad': nrad,
+                           'nang': nang,
+                           'rtransform': rtransform}
+
+        self.scf['grid'] = aux
+
+    def load_code(self, data, group=True, options=None):
         """
         Loads the code keyword
 

@@ -16,7 +16,7 @@ molecule [e-:1] {
 # basis = STO-3G
 
 basis {
-   e- STO-3G
+   e- CC-PVTZ
    E+ E+-H-7SP-AUG-CC-PVTZ
 }
 
@@ -27,6 +27,8 @@ basis {
 scf {
     maxiter = 1000
     hf
+    grid = [100, 110]
+    hybrid = [e-:A, e+:N]
 }
 
 # You can add some operations in python syntax. 
@@ -36,5 +38,6 @@ code {
 result = lambda x: print("PASS!") if abs(x) < 1e-6  else print("FAILED!")
 ref_energy = -0.662179920158
 diff_energy = ref_energy - Energy
+print(diff_energy)
 result(diff_energy)
 }

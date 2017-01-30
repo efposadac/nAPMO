@@ -47,6 +47,7 @@ void wavefunction_iterate(WaveFunction *psi) {
   MMap D(psi->D, ndim, ndim);
   MMap L(psi->L, ndim, ndim);
   MMap G(psi->G, ndim, ndim);
+  MMap J(psi->J, ndim, ndim);
   MMap F(psi->F, ndim, ndim);
   VMap O(psi->O, ndim);
 
@@ -72,7 +73,7 @@ void wavefunction_iterate(WaveFunction *psi) {
   // std::cout << D << std::endl;
 
   // compute HF energy
-  auto ehf = D.cwiseProduct(H + (0.5 * G)).sum();
+  auto ehf = D.cwiseProduct(H + (0.5 * G) + J).sum();
   psi->energy = ehf;
   psi->rmsd = (D - L).norm();
 }

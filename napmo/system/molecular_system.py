@@ -99,7 +99,11 @@ class MolecularSystem(dict):
         self[symbol].setdefault('size', 0)
         self[symbol].setdefault('particles', [])
         self[symbol].setdefault('origin', [])
-        self[symbol].pop('origin')
+        self[symbol].setdefault('is_electron', False)
+
+        if symbol == 'e-':
+            self[symbol].pop('origin')
+            self[symbol]['is_electron'] = True
 
         # load basis-set
         basis = None
@@ -208,7 +212,6 @@ class MolecularSystem(dict):
             open_shell (bool) : whether the electrons should be split or not.
         """
         assert isinstance(data, dict)
-
         defaults = {key: {'charge': 0, 'multiplicity': 0}
                     for key in self}
 
@@ -263,8 +266,11 @@ e-alpha: {0:<3d} e-beta: {1:<3d}
 --------------------------------------------------""".format(alpha, beta))
 
                 if alpha != beta or open_shell:
-
                     for k in keys:
+
+                        if keys[k] == 0:
+                            continue
+
                         eparticle = napmo.ElementaryParticle(k)
                         eparticle.pop('origin')
 

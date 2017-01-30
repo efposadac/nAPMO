@@ -39,21 +39,41 @@ class HF(object):
         self.scf = napmo.SCF(options=self.options, pce=self._pce)
 
         # Numerical initialization
+        self._mgrid = []
+        self.NPSI = []
+
         if self.get('kind') is 'numeric':
 
             # Perform a single iteration (needed for numerical initialization)
-            for psi in self.PSI:
-                self.scf.iteration(psi)
+            if len(self.PSI) > 1:
+                self.scf.multi(self.PSI, pprint=True)
+            else:
+                self.scf.single(self.PSI[-1], pprint=True)
 
-            # Grid definition (Only atoms for now)
-            self._mgrid = napmo.BeckeGrid(system.get(
-                'e-'), self.get('grid')[0], self.get('grid')[1])
+            # Build grids and numerical wavefunctions
+            for p, key in enumerate(system.keys()):
 
-            self._mgrid.show()
+                particle = system.get(key, {})
+                if particle.get('is_electron'):
+                    key = 'e-'
 
-            self.NPSI = [napmo.PSIN(psi, self._mgrid)
-                         for psi in self.PSI
-                         if self.get('hybrid', {}).get(psi.symbol, 'N') == 'N']
+                aux = self.get('grid').get(key, None)
+
+                if aux is None:
+                    napmo.raise_exception(
+                        ValueError,
+                        "Grid specification not found!",
+                        'Check the "grid" block in your input file ' + key + ' has not grid specifications')
+
+                self._mgrid.append(napmo.BeckeGrid(particle,
+                                                   aux.get('nrad', 100),
+                                                   aux.get('nang', 110),
+                                                   rtransform=aux.get('rtransform', None)))
+
+                self._mgrid[-1].show()
+
+                if self.get('hybrid', {}).get(self.PSI[p].symbol, 'N') == 'N':
+                    self.NPSI.append(napmo.PSIN(self.PSI[p], self._mgrid[-1]))
 
         self._energy = 0.0
 
@@ -96,9 +116,21 @@ class HF(object):
         self.scf.show_results(self.PSI)
 
     def compute_numeric(self, pprint=True):
-        with napmo.runtime.timeblock('SCF Numeric'):
-            self.scf.nsingle(
-                self.NPSI[-1], pprint=pprint)
+        """
+        Numerical HF
+        """
+
+        # Multi-species
+        if len(self.PSI) > 1:
+            with napmo.runtime.timeblock('SCF Multi'):
+                self.scf.nmulti(
+                    self.NPSI, pprint=pprint)
+
+        # Single-species
+        else:
+            with napmo.runtime.timeblock('SCF Numeric'):
+                self.scf.nsingle(
+                    self.NPSI[-1], pprint=pprint)
 
         self._energy = self.scf.energy
 

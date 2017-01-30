@@ -4,7 +4,7 @@
 # H- implies charge=1 because you are adding 1 e-
 
 molecule {
-    O   0.000000      0.000000     -0.066575
+#    O   0.000000      0.000000     -0.066575
     H   0.000000      0.754175      0.528381
     H_1   0.000000     -0.754174      0.528382
 }
@@ -15,8 +15,8 @@ molecule {
 # basis = STO-3G
 
 basis {
-    e- 6-311G
-   H_1 NAKAI-5-SP
+    e- STO-3G
+   H_1 DZSNB
 }
 
 # SCF engine options the keyword means True even though you can

@@ -10,9 +10,7 @@ basis {
 
 # scf options
 scf {
-    hf
-    grid = [100, 110]
-    numeric
+    uhf
 }
 
 code {

@@ -11,7 +11,12 @@ efposadac@unal.edu.co*/
 BeckeGrid::BeckeGrid(AtomicGrid **grids, const int n) {
 
   ncenter = n;
-  size = grids[0]->get_size() * ncenter;
+
+  size = 0;
+  for (unsigned int i = 0; i < ncenter; ++i)
+  {
+    size += grids[i]->get_size();
+  }
 
   radii = new double[ncenter];
   origin = new double[ncenter * 3];

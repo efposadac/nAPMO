@@ -11,7 +11,6 @@ from __future__ import print_function
 from ctypes import *
 import numpy as np
 import napmo
-import matplotlib.pyplot as plt
 
 
 class PSIN(napmo.PSIB):
@@ -27,39 +26,45 @@ class PSIN(napmo.PSIB):
         psi_grid (ndarray) : Wavefunction expanded on the grid
     """
 
-    def __init__(self, psix, grid):
+    def __init__(self, psix, grid, ndim=None):
 
         # Initialize base class
+        if ndim:
+            self._aux_ndim = ndim
+        elif psix.species.get('occupation') == 0:
+            self._aux_ndim = 1
+        else:
+            self._aux_ndim = psix.species.get('occupation')
+
         super(PSIN, self).__init__(psix.species,
-                                   ndim=psix.species.get('occupation'))
+                                   ndim=self._aux_ndim)
 
         self._diis = napmo.cext.LibintInterface_diis_new(2)
         self._pc = psix._pc
         self.species = psix.species
+        self._e = psix.O[:self.ndim].copy()
+
         self._grid = grid
-
-        aux = int(self.ndim * (self.ndim + 1) / 2)
-        self.Kgrid = np.zeros([aux, self._grid.size])
-
-        self.Jgrid = np.zeros(self._grid.size)
-        self.Vgrid = np.zeros([self.ndim, self._grid.size])
-
         self._lmax = int(napmo.lebedev_get_order(self._grid.nang) / 2)
-        self._e = psix.O[:self.ndim]
-        self.Vnuc = napmo.compute_nuclear(self._grid, self._pc)
-        self.Vnuc *= self.species.get('charge')
-
-        self._optimize = napmo.PSIO(self)
 
         # Calculate the wavefunction on the grid for occupied orbitals only
-        gbasis = self.species.get('basis').compute(self._grid.points)
-        self.psi = self._compute_psi_from_cm(psix.C, gbasis.T)
+        gbasis = self.species.get('basis').compute(self._grid.points).T.copy()
+        self.psi = self._compute_psi_from_cm(psix.C, gbasis)
 
         # Initialize integrals
+        aux = int(self.ndim * (self.ndim + 1) / 2)
+        self.Kgrid = np.zeros([aux, self._grid.size])
+        self.Jgrid = np.zeros(self._grid.size)
+        self.Vnuc = napmo.compute_nuclear(self._grid, self._pc)
+        self._exchange = False
+
+        # Compute integrals
         self.normalize()
         self.compute_1body()
         self.compute_guess()
-        self._exchange = False
+
+        # Initialize optimizer
+        self._optimize = napmo.PSIO(self)
 
     def normalize(self):
         """
@@ -85,7 +90,7 @@ class PSIN(napmo.PSIB):
         """
         self.S[:] = self._get_operator_matrix(self.psi)
 
-        # print("\n Overlap Matrix:")
+        # print("\n Overlap Matrix:", self.symbol)
         # print(self.S)
 
     def compute_kinetic(self):
@@ -95,17 +100,18 @@ class PSIN(napmo.PSIB):
         self._compute_kinetic_operator()
         self.T[:] = self._get_operator_matrix(self.Tgrid)
 
-        # print("\n Kinetic Matrix:")
+        # print("\n Kinetic Matrix:", self.symbol)
         # print(self.T)
 
     def compute_nuclear(self):
         """
         Computes the nuclear-electron potential matrix
         """
+
         self._compute_nuclear_operator()
         self.V[:] = self._get_operator_matrix(self.Vgrid)
 
-        # print("\n Attraction Matrix")
+        # print("\n Attraction Matrix", self.symbol)
         # print(self.V)
 
     def compute_2body(self, direct=False):
@@ -118,13 +124,40 @@ class PSIN(napmo.PSIB):
         self._compute_2body_exchange()
 
         with napmo.runtime.timeblock('Numerical 2 body'):
-            napmo.cext.nwavefunction_compute_2body_matrix(
+            napmo.cext.nwavefunction_compute_2body_matrix_atm(
                 byref(self), self._grid._this, self.psi, self.Jgrid, self.Kgrid)
 
             self.G *= self.species.get('charge')**2
 
-        # print("\n G Matrix:")
+        # print("\n G Matrix:", self.symbol)
         # print(self.G)
+
+    def compute_coupling(self, other_psi, direct=False):
+        """
+        Computes the two-body coupling matrix
+
+        Args:
+            other_psi (WaveFunction) : WaveFunction object for the other species.
+            direct (bool) : Whether to calculate eris on-the-fly or not
+        """
+        aux = np.zeros([self._aux_ndim, self._aux_ndim])
+        self.J[:] = 0.0
+        for psi in other_psi:
+            if self.sid != psi.sid:
+
+                psi.Cgrid = napmo.compute_coulomb(
+                    psi._grid, psi.Dgrid.sum(axis=0), psi.lmax)
+
+                psi.Cgrid *= self.species.get('charge') * \
+                    psi.species.get('charge')
+
+                napmo.cext.nwavefunction_compute_coupling(
+                    byref(self), self._grid._this, self.psi, psi.Cgrid, aux)
+
+                self.J += aux
+
+        # print("\n Coupling Matrix: ", self.symbol)
+        # print(self.J)
 
     def compute_hcore(self):
         """
@@ -132,7 +165,7 @@ class PSIN(napmo.PSIB):
         """
         self.H[:] = self.T + self.V
 
-        # print("\n hcore Matrix")
+        # print("\n hcore Matrix", self.symbol)
         # print(self.H)
 
     def compute_guess(self):
@@ -140,52 +173,55 @@ class PSIN(napmo.PSIB):
         Computes the density guess using analytical density.
         """
         napmo.cext.wavefunction_guess_hcore(byref(self))
+        self.Dgrid = self._compute_density_from_dm(self.D, self.psi)
 
-        # print("\n Guess Matrix")
+        # print("\n Guess Matrix", self.symbol)
         # print(self.D)
 
     def build_fock(self):
         """
         Builds the Fock matrix
         """
-
         self.F[:] = self.H + self.G + self.J
 
-        # print("\n Fock Matrix:")
+        # print("\n Fock Matrix:", self.symbol)
         # print(self.F)
 
     def _compute_density(self):
         """
         Compute the density on the grid
         """
-
         self.Dgrid = self.psi**2 * self._eta
 
         # Debug information (Suppose to be the # of e-)
-        print('0Number of -e: ', self._grid.integrate(self.Dgrid.sum(axis=0)))
+        # print('\nDENS on numeric. Number of ' + self.symbol +
+        #       ': ', self._grid.integrate(self.Dgrid.sum(axis=0)))
 
     def _compute_density_from_dm(self, dm, psi):
         """
-        Computes the density in the grid for each orbital from density matrix. 
+        Computes the density in the grid for each orbital from density matrix.
         Includes virtual orbitals.
         """
         with napmo.runtime.timeblock('Numerical Density'):
-            dens = np.array([phi * dm.dot(phi)
-                             for phi in psi.T]).T
+            dens = np.array([phi * dm.dot(phi) for phi in psi.T]).T
+
+        # Debug information (Suppose to be the # of particles)
+        # print('\nDENS Init: ' + self.symbol +
+        #       ': ', self._grid.integrate(dens.sum(axis=0)))
 
         return dens
 
     def _compute_psi_from_cm(self, cm, psi):
         res = np.zeros([self.ndim, self._grid.size])
 
-        with napmo.runtime.timeblock('Numerical Density'):
+        with napmo.runtime.timeblock('Numerical PSI'):
             for i in range(self.ndim):
                 for j in range(cm.shape[0]):
                     res[i] += cm[j, i] * psi[j]
 
-        # Debug information (Suppose to be the # of e-)
-        print('PSI Number of -e: ', self._grid.integrate(
-            res.sum(axis=0) * res.sum(axis=0)) * self._eta)
+        # Debug information(Suppose to be the  # of e-)
+        # print('\nPSI on numeric. Number of ' + self.symbol + ': ', self._grid.integrate(
+        #     res.sum(axis=0) * res.sum(axis=0)) * self._eta)
 
         return res
 
@@ -199,6 +235,8 @@ class PSIN(napmo.PSIB):
         self.Tgrid = np.array([napmo.compute_kinetic(self._grid, phi, self.lmax)
                                for phi in self.psi])
 
+        self.Tgrid /= self.species.get('mass')
+
     def _compute_nuclear_operator(self):
         """
         Computes the action of the Nuclear attraction repulsion
@@ -208,12 +246,9 @@ class PSIN(napmo.PSIB):
 
         """
 
-        self.Vgrid[:] = np.array([phi * self.Vnuc for phi in self.psi])
+        self.Vgrid = np.array([phi * self.Vnuc for phi in self.psi])
 
-        # if self.Vgrid.sum() != 0.0:
-        #     self.Vgrid[:] = (1.0 / 3.0 * Vgrid) + (2.0 / 3.0 * self.Vgrid)
-        # else:
-        #     self.Vgrid[:] = Vgrid
+        self.Vgrid *= self.species.get('charge')
 
     def _compute_2body_coulomb(self):
         """
@@ -228,8 +263,8 @@ class PSIN(napmo.PSIB):
                     self._grid, self.Dgrid.sum(axis=0), self.lmax)
 
         # Debug information
-        # print("Coulomb energy: ", 0.5 *
-        #       self._grid.integrate(Jgrid * self.Dgrid.sum(axis=0)))
+        # print("Coulomb energy " + self.symbol + ": ", 0.5 *
+        #       self._grid.integrate(self.Jgrid * self.Dgrid.sum(axis=0)))
 
     def _compute_2body_exchange(self):
         """
@@ -273,19 +308,18 @@ class PSIN(napmo.PSIB):
 
         return M
 
-    def _compute_residual(self):
+    def _compute_residual(self, coupling):
         """
         Build R (Eq. 10) :math:`R = (T + V - e) \phi`
         """
 
-        # self.Rgrid = np.array(
-        #     [T + (self.Vnuc * psi) + (self.Jgrid * psi) - K - (e * psi)
+        # self.Rgrid = np.array([T + (self.Vnuc * psi) + (self.Jgrid * psi) - K - (e * psi)
         # for T, K, e, psi in zip(self.Tgrid, self.Kgrid, self._e, self.psi)])
 
         # TODO: K missing!
         self.Rgrid = np.array(
-            [T + (self.Vnuc * psi) + (0.5 * (self.Jgrid * psi)) - (e * psi)
-             for T, e, psi in zip(self.Tgrid, self._e, self.psi)])
+            [T + (self.Vnuc * phi) + (0.5 * self.Jgrid * phi) + (coupling * phi) - (e * phi)
+             for T, phi, e in zip(self.Tgrid, self.psi, self._e)])
 
     def _compute_energy_correction(self):
         """
@@ -295,18 +329,20 @@ class PSIN(napmo.PSIB):
         self.delta_e = np.array([self._grid.integrate(r * phi)
                                  for r, phi in zip(self.Rgrid, self.psi)])
 
-        print("Delta Energy: ", self.delta_e)
+        print("Delta Energy " + self.symbol + ": ", self.delta_e)
 
-    def _compute_delta_psi(self):
+    def _compute_delta_psi(self, coupling):
         """
         Computes \Delta \psi. Eq. 13
         """
 
         # TODO: K missing!
-        self.delta_psi = np.array([napmo.compute_dpsi(
-            self._grid, self.lmax, phi, doi, oi, ri, self.Vnuc, self.Jgrid)
-            for phi, doi, oi, ri in zip(self.psi, self.delta_e, self._e,
-                                        self.Rgrid)])
+        self.delta_psi = np.array([
+            napmo.compute_dpsi(self._grid, self.lmax, phi,
+                               doi, oi, ri,
+                               (self.Vnuc) + coupling,
+                               self.Jgrid, self.species.get('mass'))
+            for phi, doi, oi, ri in zip(self.psi, self.delta_e, self._e, self.Rgrid)])
 
     def _compute_delta_orb(self):
         """
@@ -315,19 +351,27 @@ class PSIN(napmo.PSIB):
         self._res = np.array([self._grid.integrate(psi * psi)**0.5
                               for psi in self.delta_psi])
 
-        print("Delta Orbital: ", self._res)
+        print("Delta Orbital " + self.symbol + ": ", self._res)
 
-    def optimize_psi(self, scf):
+    def optimize_psi(self, scf, other_psi=None):
         """
         Calculates \Delta \phi as Eq. 14 Becke's paper.
         """
-        self._compute_residual()
+
+        aux = np.zeros(self.Jgrid.shape)
+        if other_psi is not None:
+            aux[:] = np.array([psi.Cgrid
+                               for psi in other_psi
+                               if psi.sid != self.sid]).sum(axis=0)
+
+        self._compute_residual(aux)
         self._compute_energy_correction()
-        self._compute_delta_psi()
+        self._compute_delta_psi(aux)
         self._compute_delta_orb()
 
-        self.psi, self._e = self._optimize.optimize(self, scf)
+        self.psi, self._e = self._optimize.optimize(self, scf, other_psi)
 
+        self.normalize()
         self.compute_1body()
         self._exchange = False
 

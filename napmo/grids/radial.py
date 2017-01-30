@@ -22,10 +22,11 @@ class RadialGrid(object):
         self._symbol = '--'
         radii = 1.0
 
-        if atomic_symbol:
+        if atomic_symbol in napmo.AtomicElementsDatabase():
+
             self._symbol = atomic_symbol
-            radii = napmo.AtomicElementsDatabase()[atomic_symbol][
-                'atomic_radii']
+            radii = napmo.AtomicElementsDatabase().get(atomic_symbol, {}).get(
+                'atomic_radii', 1.0)
 
         self._rtransform = rtransform
 

@@ -1,8 +1,8 @@
 # Molecule definition
 molecule {
-    O	0.000	0.000	0.127
-    H	0.000	0.758	-0.508
-    H	0.000	-0.758	-0.508
+    O  0.000   0.000   0.113
+    H  0.000   0.752   -0.451
+    H  0.000   -0.752  -0.451
 }
 
 # basis-set specification
@@ -14,8 +14,8 @@ basis {
 scf {
     # direct # for eris calculation on-the-fly (slower)
     hf
-    #numeric
-    grid = [500, 110]
+    numeric
+    grid = [100, 110]
 }
 
 code {

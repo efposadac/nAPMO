@@ -12,6 +12,8 @@ from ctypes import *
 import numpy as np
 import napmo
 
+import matplotlib.pyplot as plt
+
 
 class PSIB(Structure):
     """
@@ -59,6 +61,8 @@ class PSIB(Structure):
             self._ndim = self.nbasis
         else:
             self._ndim = ndim
+
+        assert self._ndim > 0
 
         self.S = np.zeros([self._ndim, self._ndim])
         self._S = self.S.ctypes.data_as(POINTER(c_double))
@@ -139,3 +143,61 @@ class PSIB(Structure):
         Id of the object owner's
         """
         return self._sid
+
+    #### TEST ###
+    def _compute_density_from_dm(self, dm, psi):
+        """
+        Computes the density in the grid for each orbital from density matrix.
+        Includes virtual orbitals.
+        """
+        with napmo.runtime.timeblock('Numerical Density'):
+            dens = np.array([phi * dm.dot(phi)
+                             for phi in psi.T]).T
+        return dens
+
+    def get_data(self, grid, index, F):
+
+        data = np.zeros([index.size, 2])
+
+        for i, j in enumerate(index):
+            data[i, 0] = grid.points[j, 2]
+            data[i, 1] = F[j]
+
+        return data
+
+    def get_index_center(self):
+
+        index = [np.array([i for i in range(atgrid.size) if np.abs(
+            atgrid.points[i, 0]) < 1.0e-10 and np.abs(atgrid.points[i, 1]) < 1.0e-10])
+            for atgrid in self._grid.atgrids]
+
+        return index
+
+    def plot_dens(self, grid=None):
+        print("Plotting Density...", end=' ')
+
+        if grid is not None:
+            self._grid = grid
+            gbasis = self.species.get('basis').compute(
+                self._grid.points).T.copy()
+            self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
+
+        self.plot_obj(self.Dgrid.sum(axis=0), "rho" + self.symbol)
+        print("Done!")
+
+    def plot_obj(self, obj, label, marker="-"):
+
+        index = self.get_index_center()
+
+        for i, atgrid in enumerate(self._grid.atgrids):
+            bwa = self.get_data(atgrid, index[i], obj[
+                i * atgrid.size:i * atgrid.size + atgrid.size])
+
+            bwa.view("float64, float64").sort(order=["f0"], axis=0)
+            plt.plot(bwa[:, 0], bwa[:, 1], marker, label=label + str(i))
+
+        plt.xlabel("z")
+        plt.ylabel("obj")
+        plt.legend()
+        plt.xlim(-2, 2)
+        # plt.ylim(0, 2)

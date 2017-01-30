@@ -1,0 +1,20 @@
+# Molecule definition
+molecule {
+H  0.000   0.000   0.000
+}
+
+# basis-set specification
+basis {
+    e- STO-3G
+}
+
+# scf options
+scf {
+    hf
+    numeric
+}
+
+grid {
+    e- [500, 110]
+}
+

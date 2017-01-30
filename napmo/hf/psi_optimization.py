@@ -30,11 +30,9 @@ class PSIO(napmo.PSIB):
 
         aux = int(self.ndim * (self.ndim + 1) / 2)
         self.Kgrid = np.zeros([aux, self._grid.size])
-
         self.Jgrid = np.zeros(self._grid.size)
-        self.Vgrid = np.zeros([self.ndim, self._grid.size])
 
-    def optimize(self, wf, scf):
+    def optimize(self, wf, scf, other_wf=None):
         """
         Calculates \Delta \phi as Eq. 14 Becke's paper.
         """
@@ -48,8 +46,7 @@ class PSIO(napmo.PSIB):
         if self.iterations == 0:
             self.compute_guess()
 
-        # scf.single(self, pprint=True)
-        scf.iteration(self)
+        scf.single(self, pprint=True, diis=False, other_psi=other_wf)
         self.iterations += 1
 
         return self._compute_psi_from_cm(self.C, self.psi), self.O[:self.nbasis]
@@ -111,13 +108,40 @@ class PSIO(napmo.PSIB):
         self._compute_2body_exchange()
 
         with napmo.runtime.timeblock('Numerical G matrix'):
-            napmo.cext.nwavefunction_compute_2body_matrix(
+            napmo.cext.nwavefunction_compute_2body_matrix_atm(
                 byref(self), self._grid._this, self.psi, self.Jgrid, self.Kgrid)
 
             self.G *= self.species.get('charge')**2
 
         # print("\n G Matrix:")
         # print(self.G)
+
+    def compute_coupling(self, other_psi, direct=False):
+        """
+        Computes the two-body coupling matrix
+
+        Args:
+            other_psi (WaveFunction) : WaveFunction object for the other species.
+            direct (bool) : Whether to calculate eris on-the-fly or not
+        """
+        aux = np.zeros([self._ndim, self._ndim])
+        self.J[:] = 0.0
+        for psi in other_psi:
+            if self.sid != psi.sid:
+
+                psi.Cgrid = napmo.compute_coulomb(
+                    psi._grid, psi.Dgrid.sum(axis=0), psi.lmax)
+
+                psi.Cgrid *= self.species.get('charge') * \
+                    psi.species.get('charge')
+
+                napmo.cext.nwavefunction_compute_coupling(
+                    byref(self), self._grid._this, self.psi, psi.Cgrid, aux)
+
+                self.J += aux
+
+        # print("\n Coupling Matrix: ", self.symbol)
+        # print(self.J)
 
     def compute_hcore(self):
         """
@@ -155,6 +179,9 @@ class PSIO(napmo.PSIB):
         self.Dgrid = self._compute_density_from_dm(
             self.D, self.psi)
 
+        # print("\n Density Matrix: ", self.symbol)
+        # print(self.D)
+
         # Debug information (Suppose to be the # of e-)
         # print('Number of -e: ', self._grid.integrate(self.Dgrid.sum(axis=0)))
 
@@ -177,9 +204,9 @@ class PSIO(napmo.PSIB):
                 for j in range(cm.shape[0]):
                     res[i] += cm[j, i] * psi[j]
 
-        # Debug information (Suppose to be the # of e-)
+        # Debug information(Suppose to be the  # of e-)
         # print('Number of -e: ', self._grid.integrate(res.sum(axis=0)
-        #                                               * res.sum(axis=0)) * self._eta)
+        #                                              * res.sum(axis=0)) * self._eta)
 
         return res
 
@@ -192,7 +219,9 @@ class PSIO(napmo.PSIB):
 
         """
 
-        self.Vgrid[:] = np.array([phi * self.Vnuc for phi in self.psi])
+        self.Vgrid = np.array([phi * self.Vnuc for phi in self.psi])
+
+        self.Vgrid *= self.species.get('charge')
 
     def _compute_kinetic_operator(self):
         """
@@ -203,6 +232,8 @@ class PSIO(napmo.PSIB):
 
         self.Tgrid = np.array([napmo.compute_kinetic(self._grid, phi, self.lmax)
                                for phi in self.psi])
+
+        self.Tgrid /= self.species.get('mass')
 
     def _compute_2body_coulomb(self):
         """
@@ -233,7 +264,6 @@ class PSIO(napmo.PSIB):
             if self.species.get('size') > 1:
 
                 with napmo.runtime.timeblock('Numerical exchange'):
-
                     self.Kgrid[:] = np.array([napmo.compute_coulomb(
                         self._grid, self.psi[s, :] * self.psi[v, :], self.lmax)
                         for s in range(self.ndim)

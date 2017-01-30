@@ -12,8 +12,8 @@ efposadac@unal.edu.co
 #define INDEX(i, j)                                                            \
   ((i > j) ? (((i) * ((i) + 1) / 2) + (j)) : (((j) * ((j) + 1) / 2) + (i)))
 
-void nwavefunction_compute_2body_matrix(WaveFunction *psi, BeckeGrid *grid,
-                                        double *phi, double *J, double *K) {
+void nwavefunction_compute_2body_matrix_atm(WaveFunction *psi, BeckeGrid *grid,
+                                            double *phi, double *J, double *K) {
 
   unsigned int ndim = psi->ndim;
   unsigned int size = ndim * (ndim + 1) / 2;
@@ -67,29 +67,105 @@ void nwavefunction_compute_2body_matrix(WaveFunction *psi, BeckeGrid *grid,
     }
   }
 
-  // MMap E(K, ndim, grid->get_size());
-  // Matrix exchange(ndim, ndim);
-  // exchange.setZero();
-
-  // double factor = psi->kappa / psi->eta;
-  // for (unsigned int i = 0; i < ndim; ++i) {
-  //   for (unsigned int j = i; j < ndim; ++j) {
-
-  //     Array1D buff = F.row(i).array() * E.row(j).array();
-
-  //     exchange(i, j) += grid->integrate(buff);
-  //   }
-  // }
-
   exchange += exchange.triangularView<Eigen::StrictlyUpper>().transpose();
-  // exchange *= factor * psi->eta;
   exchange *= factor;
-  
+
   // std::cout<<exchange<<std::endl;
 
   MMap G(psi->G, ndim, ndim);
 
   G = coulomb + exchange;
+}
+
+void nwavefunction_compute_2body_matrix_mol(WaveFunction *psi, BeckeGrid *grid,
+                                            double *phi, double *J, double *K) {
+
+  unsigned int ndim = psi->ndim;
+  unsigned int size = ndim * (ndim + 1) / 2;
+
+  // Precompute Psi
+  MMap F(phi, ndim, grid->get_size());
+  Matrix Psi(size, grid->get_size());
+
+  for (unsigned int i = 0; i < ndim; ++i) {
+    for (unsigned int j = i; j < ndim; ++j) {
+      Psi.row(INDEX(i, j)) = F.row(i).array() * F.row(j).array();
+    }
+  }
+
+  // Compute coulomb
+  A1DMap C(J, grid->get_size());
+  Matrix coulomb(ndim, ndim);
+  coulomb.setZero();
+
+  for (unsigned int i = 0; i < ndim; ++i) {
+    for (unsigned int j = i; j < ndim; ++j) {
+
+      Array1D buff = Psi.row(INDEX(i, j));
+      buff *= C;
+
+      coulomb(i, j) += grid->integrate(buff);
+    }
+  }
+
+  coulomb += coulomb.triangularView<Eigen::StrictlyUpper>().transpose();
+
+  MMap E(K, ndim, grid->get_size());
+  Matrix exchange(ndim, ndim);
+  exchange.setZero();
+
+  double factor = psi->kappa / psi->eta;
+  for (unsigned int i = 0; i < ndim; ++i) {
+    for (unsigned int j = i; j < ndim; ++j) {
+
+      Array1D buff = F.row(i).array() * E.row(j).array();
+
+      exchange(i, j) += grid->integrate(buff);
+    }
+  }
+
+  exchange += exchange.triangularView<Eigen::StrictlyUpper>().transpose();
+  exchange *= factor * psi->eta;
+
+  // std::cout<<exchange<<std::endl;
+
+  MMap G(psi->G, ndim, ndim);
+
+  G = coulomb + exchange;
+}
+
+void nwavefunction_compute_coupling(WaveFunction *psi, BeckeGrid *grid,
+                                    double *phi, double *other_J, double *res) {
+
+  unsigned int ndim = psi->ndim;
+  unsigned int size = ndim * (ndim + 1) / 2;
+
+  // Precompute <ab| in the integral <ab|r12|AB> "Coupling integral"
+  MMap PHI(phi, ndim, grid->get_size());
+  Matrix Psi(size, grid->get_size());
+
+  for (unsigned int i = 0; i < ndim; ++i) {
+    for (unsigned int j = i; j < ndim; ++j) {
+      Psi.row(INDEX(i, j)) = PHI.row(i).array() * PHI.row(j).array();
+    }
+  }
+
+  // Compute coupling
+  A1DMap C(other_J, grid->get_size());
+  MMap coupling(res, ndim, ndim);
+  coupling.setZero();
+
+  for (unsigned int i = 0; i < ndim; ++i) {
+    for (unsigned int j = i; j < ndim; ++j) {
+
+      Array1D buff = Psi.row(INDEX(i, j));
+      buff *= C;
+
+      coupling(i, j) += grid->integrate(buff);
+    }
+  }
+
+  coupling += coupling.triangularView<Eigen::StrictlyUpper>().transpose();
 }
 
 void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
@@ -145,85 +221,4 @@ void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
 
     output[point] = rho;
   }
-}
-
-////////////////////////////TESTING///////////////////////////
-
-double nwavefunction_energy(double a, double b, double c1, Matrix E) {
-  return (pow(a, 2) * E(0, 0) + pow(b, 2) * E(1, 1) -
-          sqrt(pow(a, 4) * pow(E(0, 0), 2) + pow(b, 4) * pow(E(1, 1), 2) +
-               2 * pow(a, 2) * pow(b, 2) *
-                   (2 * pow(E(0, 1), 2) - E(0, 0) * E(1, 1)))) /
-         2.;
-}
-
-Vector nwavefunction_energy_grads(double a, double b, double c1, Matrix E,
-                                  Matrix s) {
-  Vector result(3);
-
-  result[0] =
-      (2 * a * E(0, 0) -
-       (2 * a * (pow(a, 2) * pow(E(0, 0), 2) +
-                 pow(b, 2) * (2 * pow(E(0, 1), 2) - E(0, 0) * E(1, 1)))) /
-           sqrt(pow(a, 4) * pow(E(0, 0), 2) + pow(b, 4) * pow(E(1, 1), 2) +
-                2 * pow(a, 2) * pow(b, 2) *
-                    (2 * pow(E(0, 1), 2) - E(0, 0) * E(1, 1)))) /
-          2. -
-      2 * c1 * (a * s(0, 0) + b * s(0, 1));
-
-  result[1] =
-      (2 * b * E(1, 1) -
-       (2 * b * (pow(b, 2) * pow(E(1, 1), 2) +
-                 pow(a, 2) * (2 * pow(E(0, 1), 2) - E(0, 0) * E(1, 1)))) /
-           sqrt(pow(a, 4) * pow(E(0, 0), 2) + pow(b, 4) * pow(E(1, 1), 2) +
-                2 * pow(a, 2) * pow(b, 2) *
-                    (2 * pow(E(0, 1), 2) - E(0, 0) * E(1, 1)))) /
-          2. -
-      2 * c1 * (a * s(0, 1) + b * s(1, 1));
-
-  result[2] = 1 - a * (a * s(0, 0) + 2 * b * s(0, 1)) - pow(b, 2) * s(1, 1);
-
-  return result;
-}
-
-Vector nwavefunction_orbital_optimizer(Vector a, int n_steps, double gamma,
-                                       Matrix E, Matrix s) {
-  Vector ap = a, b;
-  int counter = 0;
-  double old_v, new_v;
-
-  while (counter < n_steps) {
-    old_v = nwavefunction_energy(ap[0], ap[1], ap[2], E);
-    b = ap - gamma * nwavefunction_energy_grads(ap[0], ap[1], ap[2], E, s);
-    ap = b;
-    new_v = nwavefunction_energy(ap[0], ap[1], ap[2], E);
-
-    printf("%d %e %e\n", counter, nwavefunction_energy(ap[0], ap[1], ap[2], E),
-           abs(old_v - new_v));
-    counter++;
-    // if(abs(old_v-new_v)<1.0e-10)
-    //   break;
-  }
-  return ap;
-}
-
-void nwavefunction_optimize(double *H, double *S, double *G, double *res,
-                            int ndim) {
-  MMap E(H, ndim, ndim);
-  MMap s(S, ndim, ndim);
-  VMap R(res, 3);
-
-  Vector guess(3);
-  guess << G[0], G[1], 0.95;
-
-  std::cout << E << std::endl;
-  std::cout << std::endl;
-
-  std::cout << s << std::endl;
-  std::cout << std::endl;
-
-  std::cout << guess << std::endl;
-
-  R = nwavefunction_orbital_optimizer(guess, 500, 0.00001, E, s);
-  std::cout << R << std::endl;
 }

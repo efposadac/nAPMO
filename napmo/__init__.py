@@ -7,6 +7,7 @@ from ctypes import *
 from napmo.system.cext import napmo_library as cext
 from napmo.system.timer import Timer
 from napmo.system.input_parser import InputParser
+from napmo.system.input_parser import raise_exception
 from napmo.system.atomic_element import AtomicElement
 from napmo.system.elementary_particle import ElementaryParticle
 from napmo.system.primitive_gaussian import PrimitiveGaussian
@@ -150,13 +151,17 @@ cext.nwavefunction_compute_density_from_dm.restype = None
 cext.nwavefunction_compute_density_from_dm.argtypes = [
     c_void_p, c_void_p, a2df, a1df, c_double, a1df]
 
-cext.nwavefunction_compute_2body_matrix.restype = None
-cext.nwavefunction_compute_2body_matrix.argtypes = [
+cext.nwavefunction_compute_2body_matrix_atm.restype = None
+cext.nwavefunction_compute_2body_matrix_atm.argtypes = [
     c_void_p, c_void_p, a2df, a1df, a2df]
 
-cext.nwavefunction_optimize.restype = None
-cext.nwavefunction_optimize.argtypes = [
-    a2df, a2df, a1df, a1df, c_int]
+cext.nwavefunction_compute_2body_matrix_mol.restype = None
+cext.nwavefunction_compute_2body_matrix_mol.argtypes = [
+    c_void_p, c_void_p, a2df, a1df, a2df]
+
+cext.nwavefunction_compute_coupling.restype = None
+cext.nwavefunction_compute_coupling.argtypes = [
+    c_void_p, c_void_p, a2df, a1df, a2df]
 
 # PrimitiveGaussian
 cext.PrimitiveGaussian_new.restype = c_void_p

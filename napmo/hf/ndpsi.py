@@ -12,7 +12,20 @@ import numpy as np
 import napmo
 
 
-def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_nuc, J):
+def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_nuc, J, mass):
+    """
+    Computes \Delta \psi from Becke's paper
+
+    Args:
+        grid (BeckeGrid): Molecular grid.
+        lmax (int): Limit for spherical expansion.
+        phi (ndarray): Orbital function evaluated on the grid.
+        doi (float): Delta orbital energy.
+        oi (float): Orbital energy.
+        ri (ndarray): Residual evaluated on the grid.
+        V_nuc (ndarray): Nuclear potential evaluated on the grid.
+        J (ndarray): Two-particles potential evaluated on the grid.
+    """
     offset = 0
 
     dp_s = []
@@ -71,4 +84,4 @@ def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_nuc, J):
     for i in range(grid.ncenter):
         grid.evaluate_decomposition(i, dp_s[i][:], dpsi)
 
-    return dpsi
+    return dpsi / mass  # Check THIS!

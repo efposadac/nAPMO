@@ -57,6 +57,7 @@ class PSIA(napmo.PSIB):
         """
         napmo.cext.LibintInterface_compute_1body_ints(self._libint, 2, self.T)
         self.T /= self.species.get('mass')
+
         # print("\n Kinetic Matrix:")
         # print(self.T)
 
@@ -64,7 +65,10 @@ class PSIA(napmo.PSIB):
         """
         Computes the nuclear-electron potential matrix
         """
-        napmo.cext.LibintInterface_compute_1body_ints(self._libint, 3, self.V)
+        if len(self._pc) > 0:
+            napmo.cext.LibintInterface_compute_1body_ints(
+                self._libint, 3, self.V)
+
         self.V *= -self.species.get('charge')
         # print("\n Attraction Matrix")
         # print(self.V)
@@ -114,7 +118,7 @@ class PSIA(napmo.PSIB):
 
         self.J += np.tril(self.J, -1).T
 
-        # print("\n Coupling Matrix:")
+        # print("\n Coupling Matrix " + self.symbol + ": ")
         # print(self.J)
 
     def compute_hcore(self):
