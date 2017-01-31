@@ -10,8 +10,9 @@ basis {
 
 # scf options
 scf {
-    uhf
+    hf
     numeric
+    #debug = True
 }
 
 grid {

@@ -73,7 +73,8 @@ class HF(object):
                 self._mgrid[-1].show()
 
                 if self.get('hybrid', {}).get(self.PSI[p].symbol, 'N') == 'N':
-                    self.NPSI.append(napmo.PSIN(self.PSI[p], self._mgrid[-1]))
+                    self.NPSI.append(napmo.PSIN(
+                        self.PSI[p], self._mgrid[-1], debug=self.get('debug')))
 
         self._energy = 0.0
 

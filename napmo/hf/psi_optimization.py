@@ -18,6 +18,7 @@ class PSIO(napmo.PSIB):
         super(PSIO, self).__init__(psin.species,
                                    ndim=psin.ndim * 2)
 
+        self._debug = psin._debug
         self._diis = napmo.cext.LibintInterface_diis_new(2)
         self._pc = psin._pc
         self.species = psin.species
@@ -46,7 +47,7 @@ class PSIO(napmo.PSIB):
         if self.iterations == 0:
             self.compute_guess()
 
-        scf.single(self, pprint=True, diis=False, other_psi=other_wf)
+        scf.single(self, pprint=self._debug, diis=False, other_psi=other_wf)
         self.iterations += 1
 
         return self._compute_psi_from_cm(self.C, self.psi), self.O[:self.nbasis]

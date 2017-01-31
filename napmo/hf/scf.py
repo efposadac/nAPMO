@@ -231,14 +231,19 @@ class SCF(object):
 
         if pprint:
             print('\nStarting Single NSCF Calculation...')
-            print('{0:5s}  {1:^10s} {2:>12s} {3:>12s}'
-                  .format("\n***Iter", "E (" + psi.symbol + ")", "Total E", "Delta(E)"))
+            print('{0:5s}  {1:^10s} {2:^12s} {3:^12s} {4:^12s}'
+                  .format("\n***Iter", "E (" + psi.symbol + ")", "Total E", "Delta(E)", "Delta Orb"))
 
         iterations = 0
         e_diff = 1.0
 
         while (iterations < self.get('maxiter') and
                np.abs(e_diff) > self.get('eps_n')):
+
+            if iterations > 0:
+                # Compute \Psi (eq. 14) through conventional SCF for
+                # \psi = a \phi + b \Delta \phi
+                psi.optimize_psi(self)
 
             iterations += 1
             e_last = psi._energy
@@ -258,12 +263,8 @@ class SCF(object):
 
             # print results
             if pprint:
-                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f}'.
-                      format(iterations, psi._energy, self._energy, e_diff))
-
-            # Compute \Psi (eq. 14) through conventional SCF for
-            # \psi = a \phi + b \Delta \phi
-            psi.optimize_psi(self)
+                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12s}'.
+                      format(iterations, psi._energy, self._energy, e_diff, str(psi._res)))
 
         if self.get('debug') and not isinstance(psi, napmo.PSIO):
             psi.plot_dens()
@@ -276,8 +277,8 @@ class SCF(object):
 
         if pprint:
             print('\nStarting Multi NSCF Calculation...')
-            print('{0:5s}  {1:^10s} {2:>12s} {3:>12s}'
-                  .format("\nIter", "Energy", "Total E", "Delta(E)"))
+            print('{0:5s}  {1:^10s} {2:>12s} {3:>12s} {4:>12s}'
+                  .format("\nIter", "Energy", "Total E", "Delta(E)", "Delta orb"))
 
         iterations = 0
         e_diff = 1
@@ -317,8 +318,9 @@ class SCF(object):
             e_diff = self._energy - e_last
 
             if pprint:
-                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f}'.
-                      format(iterations, self._energy - self.pce, self._energy, e_diff))
+                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12s}'.
+                      format(iterations, self._energy - self.pce, self._energy, e_diff,
+                             str([str(psi._res) for psi in PSI])))
 
         if self.get('debug'):
             for psi in PSI:

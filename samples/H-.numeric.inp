@@ -10,11 +10,11 @@ basis {
 
 # scf options
 scf {
-    uhf
+    hf
     numeric
 }
 
 grid {
-    e- [70, 110]
+    e- [100, 110]
 }
 

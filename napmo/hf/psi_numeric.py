@@ -26,7 +26,7 @@ class PSIN(napmo.PSIB):
         psi_grid (ndarray) : Wavefunction expanded on the grid
     """
 
-    def __init__(self, psix, grid, ndim=None):
+    def __init__(self, psix, grid, ndim=None, debug=False):
 
         # Initialize base class
         if ndim:
@@ -39,6 +39,8 @@ class PSIN(napmo.PSIB):
         super(PSIN, self).__init__(psix.species,
                                    ndim=self._aux_ndim)
 
+        self._debug = debug
+        self._res = '--'
         self._diis = napmo.cext.LibintInterface_diis_new(2)
         self._pc = psix._pc
         self.species = psix.species
@@ -318,7 +320,7 @@ class PSIN(napmo.PSIB):
 
         # TODO: K missing!
         self.Rgrid = np.array(
-            [T + (self.Vnuc * phi) + (0.5 * self.Jgrid * phi) + (coupling * phi) - (e * phi)
+            [T + (self.Vnuc * phi * self.species.get('charge')) + (0.5 * self.Jgrid * phi) + (coupling * phi) - (e * phi)
              for T, phi, e in zip(self.Tgrid, self.psi, self._e)])
 
     def _compute_energy_correction(self):
@@ -329,7 +331,8 @@ class PSIN(napmo.PSIB):
         self.delta_e = np.array([self._grid.integrate(r * phi)
                                  for r, phi in zip(self.Rgrid, self.psi)])
 
-        print("Delta Energy " + self.symbol + ": ", self.delta_e)
+        if self._debug:
+            print("Delta Energy " + self.symbol + ": ", self.delta_e)
 
     def _compute_delta_psi(self, coupling):
         """
@@ -340,7 +343,7 @@ class PSIN(napmo.PSIB):
         self.delta_psi = np.array([
             napmo.compute_dpsi(self._grid, self.lmax, phi,
                                doi, oi, ri,
-                               (self.Vnuc) + coupling,
+                               (self.Vnuc * self.species.get('charge')) + coupling,
                                self.Jgrid, self.species.get('mass'))
             for phi, doi, oi, ri in zip(self.psi, self.delta_e, self._e, self.Rgrid)])
 
@@ -351,12 +354,15 @@ class PSIN(napmo.PSIB):
         self._res = np.array([self._grid.integrate(psi * psi)**0.5
                               for psi in self.delta_psi])
 
-        print("Delta Orbital " + self.symbol + ": ", self._res)
+        if self._debug:
+            print("Delta Orbital " + self.symbol + ": ", self._res)
 
     def optimize_psi(self, scf, other_psi=None):
         """
         Calculates \Delta \phi as Eq. 14 Becke's paper.
         """
+        if self._debug:
+            print('Optimizing Wavefunction....')
 
         aux = np.zeros(self.Jgrid.shape)
         if other_psi is not None:
@@ -374,6 +380,9 @@ class PSIN(napmo.PSIB):
         self.normalize()
         self.compute_1body()
         self._exchange = False
+
+        if self._debug:
+            print('...Done!')
 
     @property
     def lmax(self):
