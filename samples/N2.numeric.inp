@@ -13,7 +13,10 @@ basis {
 scf {
     hf
     numeric
-    grid = [100, 110]
+}
+
+grid {
+    e- [100, 110]
 }
 
 #code {

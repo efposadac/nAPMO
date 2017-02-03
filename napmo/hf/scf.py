@@ -218,7 +218,7 @@ class SCF(object):
         if self.get('debug'):
             for psi in PSI:
                 psi.plot_dens(grid)
-            plt.show()
+            plt.savefig('analytic_dens.png')
 
     def nsingle(self, psi, pprint=True):
         """
@@ -322,10 +322,10 @@ class SCF(object):
                       format(iterations, self._energy - self.pce, self._energy, e_diff,
                              str([str(psi._res) for psi in PSI])))
 
-        if self.get('debug'):
+        if not self.get('debug'):
             for psi in PSI:
                 psi.plot_dens()
-            plt.show()
+            plt.savefig('numeric_dens.png')
 
     def compute_energy(self, PSI):
         """

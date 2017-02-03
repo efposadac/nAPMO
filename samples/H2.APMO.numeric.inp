@@ -12,6 +12,10 @@ basis {
 
 scf {
     hf
-    grid = [100, 110]
     numeric
+}
+
+grid {
+    e-  [100, 110]
+    H_1 [100, 110]
 }

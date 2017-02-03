@@ -27,8 +27,12 @@ basis {
 scf {
     maxiter = 1000
     hf
-    grid = [100, 110]
     hybrid = [e-:A, e+:N]
+}
+
+grid {
+    e- [100, 110]    
+    E+ [100, 110]
 }
 
 # You can add some operations in python syntax. 

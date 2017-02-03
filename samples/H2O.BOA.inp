@@ -12,10 +12,8 @@ basis {
 
 # scf options
 scf {
-    # direct # for eris calculation on-the-fly (slower)
+    direct # for eris calculation on-the-fly (slower)
     hf
-    numeric
-    grid = [100, 110]
 }
 
 code {

@@ -4,7 +4,7 @@
 # H- implies charge=1 because you are adding 1 e-
 
 molecule {
-#    O   0.000000      0.000000     -0.066575
+    O   0.000000      0.000000     -0.066575
     H   0.000000      0.754175      0.528381
     H_1   0.000000     -0.754174      0.528382
 }
@@ -38,8 +38,4 @@ result = lambda x: print("PASS!") if abs(x) < 1e-7  else print("FAILED!")
 ref_energy = -75.969794592884
 diff_energy = ref_energy - Energy
 result(diff_energy)
-plt.matshow(D[0])
-# plt.show()
-plt.matshow(D[1])
-# plt.show()
 }
