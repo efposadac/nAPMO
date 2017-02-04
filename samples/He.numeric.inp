@@ -12,10 +12,9 @@ basis {
 scf {
     hf
     numeric
-    #debug = True
 }
 
 grid {
-    e- [500, 110]
+    e- [100, 110]
 }
 
