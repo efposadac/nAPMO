@@ -1,4 +1,4 @@
-# file: npsi.py
+ # file: npsi.py
 # nAPMO package
 # Copyright (c) 2016, Edwin Fernando Posada
 # All rights reserved.
@@ -36,14 +36,21 @@ def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_nuc, J, mass):
 
     for atgrid in grid.atgrids:
 
-        psi = _psi[offset:offset + atgrid.size]
+        psi = _psi[offset:offset + atgrid.size].copy()
 
         # Spherical expansion
         sph_expansion = atgrid.spherical_expansion(lmax, psi)
 
         V_sph = atgrid.spherical_average(
-            (V_nuc[offset:offset + atgrid.size] +
-             J[offset:offset + atgrid.size]) * grid.becke_weights[offset:offset + atgrid.size])
+            (V_nuc[offset:offset + atgrid.size] + J[offset:offset + atgrid.size]) *
+            grid.becke_weights[offset:offset + atgrid.size])
+
+        rtf = atgrid.radial_grid.rtransform
+
+        r = rtf.radius_all()
+        r2 = r * r
+        rinv = 1.0 / r
+        r2inv = 1.0 / r2
 
         res = []
         idx = 0
@@ -53,21 +60,16 @@ def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_nuc, J, mass):
                 aux = np.array(sph_expansion[:, idx])
 
                 # Build b
-                phi = napmo.CubicSpline(aux,
-                                        rtransform=atgrid.radial_grid.rtransform)
+                mu = napmo.CubicSpline(aux,
+                                       rtransform=atgrid.radial_grid.rtransform)
 
-                rtf = phi.rtransform
-                rgrid = napmo.RadialGrid(rtransform=rtf)
-                radii = rtf.radius_all()
-
-                fy = -2 * phi.y
-                fd = -2 * phi.dx
+                fy = -2 * mu.y
+                fd = -2 * mu.dx
                 f = napmo.CubicSpline(fy, fd, rtf)
 
-                b = napmo.CubicSpline(2 / radii, -2 / radii**2, rtf)
+                b = napmo.CubicSpline(2 * rinv, -2 * r2inv, rtf)
 
-                a = napmo.CubicSpline(
-                    2 * (V_sph + oi - doi + (-l * (l + 1) * radii ** -2)), rtransform=rtf)
+                a = napmo.CubicSpline(-l * (l + 1) * r2inv - 2.0 * (V_sph - oi - doi), rtransform=rtf)
 
                 bcs = (0.0, None, 0.0, None)
 
@@ -84,4 +86,4 @@ def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_nuc, J, mass):
     for i in range(grid.ncenter):
         grid.evaluate_decomposition(i, dp_s[i][:], dpsi)
 
-    return dpsi / mass  # Check THIS!
+    return dpsi

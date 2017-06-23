@@ -194,6 +194,10 @@ class PowerRadialTransform(RadialTransform):
     def power(self):
         return self._power
 
+    @property
+    def radii(self):
+        return self._rmax
+
 
 class ChebyshevRadialTransform(RadialTransform):
 

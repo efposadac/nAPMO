@@ -7,10 +7,15 @@ from scipy.optimize import minimize
 
 import napmo
 
+def INDEX(i, j):
+    if i > j:
+        return int((i * (i + 1) / 2) + j)
+    else:
+        return int((j * (j + 1) / 2) + i)
 
 class PSIO(napmo.PSIB):
     """
-    Class for wavefunction optimization. Solves :math:`\Psi = a \Psi + \Delta \Psi` usding a N2-Dim
+    Class for wavefunction optimization. Solves :math:`\Psi = a \Psi + \Delta \Psi` using a N2-Dim
     linear variational optimization
     """
 
@@ -29,8 +34,7 @@ class PSIO(napmo.PSIB):
         self._exchange = False
         self.iterations = 0
 
-        aux = int(self.ndim * (self.ndim + 1) / 2)
-        self.Kgrid = np.zeros([aux, self._grid.size])
+        self.Kgrid = np.zeros([self.ndim, self._grid.size])
         self.Jgrid = np.zeros(self._grid.size)
 
     def optimize(self, wf, scf, other_wf=None):
@@ -50,7 +54,7 @@ class PSIO(napmo.PSIB):
         scf.single(self, pprint=self._debug, diis=False, other_psi=other_wf)
         self.iterations += 1
 
-        return self._compute_psi_from_cm(self.C, self.psi), self.O[:self.nbasis]
+        return self._compute_psi_from_cm(self.C, self.psi), self.O[:self._occupation]
 
     def normalize(self):
         """
@@ -265,12 +269,17 @@ class PSIO(napmo.PSIB):
             if self.species.get('size') > 1:
 
                 with napmo.runtime.timeblock('Numerical exchange'):
-                    self.Kgrid[:] = np.array([napmo.compute_coulomb(
+
+                    aux = np.array([napmo.compute_coulomb(
                         self._grid, self.psi[s, :] * self.psi[v, :], self.lmax)
                         for s in range(self.ndim)
                         for v in range(self.ndim)
                         if s >= v])
 
+                    self.Kgrid[:] = np.array([np.array([self.psi[k, :] * aux[int(INDEX(l, j))] * self.D[k, l]
+                                                        for k in range(self.ndim)
+                                                        for l in range(self.ndim)]).sum(axis=0)
+                                              for j in range(self.ndim)])
                 self._exchange = True
 
     def _get_operator_matrix(self, O):

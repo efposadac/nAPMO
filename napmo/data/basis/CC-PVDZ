@@ -1,4 +1,4 @@
-#  aug-cc-pVDZ  EMSL  Basis Set Exchange Library  3/29/17 1:32 PM
+#  cc-pVDZ  EMSL  Basis Set Exchange Library  3/29/17 11:08 AM
 # Elements                             References
 # --------                             ----------
 # H     : T.H. Dunning, Jr. J. Chem. Phys. 90, 1007 (1989).
@@ -12,63 +12,40 @@
 # 
 
 
-# Elements                             References
-# --------                             ---------
-# H    :  T.H. Dunning, Jr. J. Chem. Phys. 90, 1007 (1989).
-# He   :  D.E. Woon and T.H. Dunning, Jr., J. Chem. Phys. 100, 2975 (1994).
-# B - F:  R.A. Kendall, T.H. Dunning, Jr. and R.J. Harrison, J. Chem. Phys. 96,
-# 6796 (1992).
-# Al - Cl: D.E. Woon and T.H. Dunning, Jr. J. Chem. Phys. 98, 1358 (1993).
-# Sc - Zn: N.B. Balabanov and K.A. Peterson, J. Chem. Phys. 123, 064107 (2005),
-# N.B. Balabanov and K.A. Peterson, J. Chem. Phys. 125, 074110 (2006).
-# 
-
-
 
 
 # This basis set uses spherical components
-O-HYDROGEN H (aug-cc-pVDZ)
+O-HYDROGEN H (cc-pVDZ)
 #
-# Primary Functions: (5s,2p) -> [3s,2p]
+# Primary Functions: (4s,1p) -> [2s,1p]
 # Augmenting Functions: (4s,1p) -> [2s,1p]
-# Augmenting Functions: (1s,1p)
-    5
+    3
     1    0    3
      13.0100000              0.0196850        
       1.9620000              0.1379770        
       0.4446000              0.4781480        
     2    0    1
       0.1220000              1.0000000        
-    3    0    1
-      0.0297400              1.0000000        
     2    1    1
       0.7270000              1.0000000        
-    3    1    1
-      0.1410000              1.0000000        
-O-HELIUM He (aug-cc-pVDZ)
+O-HELIUM He (cc-pVDZ)
 #
-# Primary Functions: (5s,2p) -> [3s,2p]
+# Primary Functions: (4s,1p) -> [2s,1p]
 # Augmenting Functions: (4s,1p) -> [2s,1p]
-# Augmenting Functions: (1s,1p)
-    5
+    3
     1    0    3
      38.3600000              0.0238090        
       5.7700000              0.1548910        
       1.2400000              0.4699870        
     2    0    1
       0.2976000              1.0000000        
-    3    0    1
-      0.0725500              1.0000000        
     2    1    1
       1.2750000              1.0000000        
-    3    1    1
-      0.2473000              1.0000000        
-O-LITHIUM Li (aug-cc-pVDZ)
+O-LITHIUM Li (cc-pVDZ)
 #
-# Primary Functions: (10s,5p,2d) -> [4s,3p,2d]
+# Primary Functions: (9s,4p,1d) -> [3s,2p,1d]
 # Augmenting Functions: (9s,4p,1d) -> [3s,2p,1d]
-# Augmenting Functions: (1s,1p,1d)
-    9
+    6
     1    0    8
    1469.0000000              0.0007660        
     220.5000000              0.0058920        
@@ -89,26 +66,19 @@ O-LITHIUM Li (aug-cc-pVDZ)
       0.0734500              0.5751020        
     3    0    1
       0.0280500              1.0000000        
-    4    0    1
-      0.0086400              1.0000000        
     2    1    3
       1.5340000              0.0227840        
       0.2749000              0.1391070        
       0.0736200              0.5003750        
     3    1    1
       0.0240300              1.0000000        
-    4    1    1
-      0.0057900              1.0000000        
     3    2    1
       0.1239000              1.0000000        
-    4    2    1
-      0.0725000              1.0000000        
-O-BERYLLIUM Be (aug-cc-pVDZ)
+O-BERYLLIUM Be (cc-pVDZ)
 #
-# Primary Functions: (10s,5p,2d) -> [4s,3p,2d]
+# Primary Functions: (9s,4p,1d) -> [3s,2p,1d]
 # Augmenting Functions: (9s,4p,1d) -> [3s,2p,1d]
-# Augmenting Functions: (1s,1p,1d)
-    9
+    6
     1    0    8
    2940.0000000              0.0006800        
     441.2000000              0.0052360        
@@ -129,26 +99,19 @@ O-BERYLLIUM Be (aug-cc-pVDZ)
       0.1811000              0.5307670        
     3    0    1
       0.0589000              1.0000000        
-    4    0    1
-      0.0187700              1.0000000        
     2    1    3
       3.6190000              0.0291110        
       0.7110000              0.1693650        
       0.1951000              0.5134580        
     3    1    1
       0.0601800              1.0000000        
-    4    1    1
-      0.0085000              1.0000000        
     3    2    1
       0.2380000              1.0000000        
-    4    2    1
-      0.0740000              1.0000000        
-O-BORON B (aug-cc-pVDZ)
+O-BORON B (cc-pVDZ)
 #
-# Primary Functions: (10s,5p,2d) -> [4s,3p,2d]
+# Primary Functions: (9s,4p,1d) -> [3s,2p,1d]
 # Augmenting Functions: (9s,4p,1d) -> [3s,2p,1d]
-# Augmenting Functions: (1s,1p,1d)
-    9
+    6
     1    0    8
    4570.0000000              0.0006960        
     685.9000000              0.0053530        
@@ -169,26 +132,19 @@ O-BORON B (aug-cc-pVDZ)
       0.3329000              0.5395260        
     3    0    1
       0.1043000              1.0000000        
-    4    0    1
-      0.0310500              1.0000000        
     2    1    3
       6.0010000              0.0354810        
       1.2410000              0.1980720        
       0.3364000              0.5052300        
     3    1    1
       0.0953800              1.0000000        
-    4    1    1
-      0.0237800              1.0000000        
     3    2    1
       0.3430000              1.0000000        
-    4    2    1
-      0.0904000              1.0000000        
-O-CARBON C (aug-cc-pVDZ)
+O-CARBON C (cc-pVDZ)
 #
-# Primary Functions: (10s,5p,2d) -> [4s,3p,2d]
+# Primary Functions: (9s,4p,1d) -> [3s,2p,1d]
 # Augmenting Functions: (9s,4p,1d) -> [3s,2p,1d]
-# Augmenting Functions: (1s,1p,1d)
-    9
+    6
     1    0    8
    6665.0000000              0.0006920        
    1000.0000000              0.0053290        
@@ -209,26 +165,19 @@ O-CARBON C (aug-cc-pVDZ)
       0.5215000              0.5445290        
     3    0    1
       0.1596000              1.0000000        
-    4    0    1
-      0.0469000              1.0000000        
     2    1    3
       9.4390000              0.0381090        
       2.0020000              0.2094800        
       0.5456000              0.5085570        
     3    1    1
       0.1517000              1.0000000        
-    4    1    1
-      0.0404100              1.0000000        
     3    2    1
       0.5500000              1.0000000        
-    4    2    1
-      0.1510000              1.0000000        
-O-NITROGEN N (aug-cc-pVDZ)
+O-NITROGEN N (cc-pVDZ)
 #
-# Primary Functions: (10s,5p,2d) -> [4s,3p,2d]
+# Primary Functions: (9s,4p,1d) -> [3s,2p,1d]
 # Augmenting Functions: (9s,4p,1d) -> [3s,2p,1d]
-# Augmenting Functions: (1s,1p,1d)
-    9
+    6
     1    0    8
    9046.0000000              0.0007000        
    1357.0000000              0.0053890        
@@ -249,26 +198,19 @@ O-NITROGEN N (aug-cc-pVDZ)
       0.7466000              0.5490030        
     3    0    1
       0.2248000              1.0000000        
-    4    0    1
-      0.0612400              1.0000000        
     2    1    3
      13.5500000              0.0399190        
       2.9170000              0.2171690        
       0.7973000              0.5103190        
     3    1    1
       0.2185000              1.0000000        
-    4    1    1
-      0.0561100              1.0000000        
     3    2    1
       0.8170000              1.0000000        
-    4    2    1
-      0.2300000              1.0000000        
-O-OXYGEN O (aug-cc-pVDZ)
+O-OXYGEN O (cc-pVDZ)
 #
-# Primary Functions: (10s,5p,2d) -> [4s,3p,2d]
+# Primary Functions: (9s,4p,1d) -> [3s,2p,1d]
 # Augmenting Functions: (9s,4p,1d) -> [3s,2p,1d]
-# Augmenting Functions: (1s,1p,1d)
-    9
+    6
     1    0    8
   11720.0000000              0.0007100        
    1759.0000000              0.0054700        
@@ -289,26 +231,19 @@ O-OXYGEN O (aug-cc-pVDZ)
       1.0130000              0.5573680        
     3    0    1
       0.3023000              1.0000000        
-    4    0    1
-      0.0789600              1.0000000        
     2    1    3
      17.7000000              0.0430180        
       3.8540000              0.2289130        
       1.0460000              0.5087280        
     3    1    1
       0.2753000              1.0000000        
-    4    1    1
-      0.0685600              1.0000000        
     3    2    1
       1.1850000              1.0000000        
-    4    2    1
-      0.3320000              1.0000000        
-O-FLUORINE F (aug-cc-pVDZ)
+O-FLUORINE F (cc-pVDZ)
 #
-# Primary Functions: (10s,5p,2d) -> [4s,3p,2d]
+# Primary Functions: (9s,4p,1d) -> [3s,2p,1d]
 # Augmenting Functions: (9s,4p,1d) -> [3s,2p,1d]
-# Augmenting Functions: (1s,1p,1d)
-    9
+    6
     1    0    8
   14710.0000000              0.0007210        
    2207.0000000              0.0055530        
@@ -329,26 +264,19 @@ O-FLUORINE F (aug-cc-pVDZ)
       1.3160000              0.5628140        
     3    0    1
       0.3897000              1.0000000        
-    4    0    1
-      0.0986300              1.0000000        
     2    1    3
      22.6700000              0.0448780        
       4.9770000              0.2357180        
       1.3470000              0.5085210        
     3    1    1
       0.3471000              1.0000000        
-    4    1    1
-      0.0850200              1.0000000        
     3    2    1
       1.6400000              1.0000000        
-    4    2    1
-      0.4640000              1.0000000        
-O-NEON Ne (aug-cc-pVDZ)
+O-NEON Ne (cc-pVDZ)
 #
-# Primary Functions: (10s,5p,2d) -> [4s,3p,2d]
+# Primary Functions: (9s,4p,1d) -> [3s,2p,1d]
 # Augmenting Functions: (9s,4p,1d) -> [3s,2p,1d]
-# Augmenting Functions: (1s,1p,1d)
-    9
+    6
     1    0    8
   17880.0000000              0.0007380        
    2683.0000000              0.0056770        
@@ -369,18 +297,12 @@ O-NEON Ne (aug-cc-pVDZ)
       1.6530000              0.5670500        
     3    0    1
       0.4869000              1.0000000        
-    4    0    1
-      0.1230000              1.0000000        
     2    1    3
      28.3900000              0.0460870        
       6.2700000              0.2401810        
       1.6950000              0.5087440        
     3    1    1
       0.4317000              1.0000000        
-    4    1    1
-      0.1064000              1.0000000        
     3    2    1
       2.2020000              1.0000000        
-    4    2    1
-      0.6310000              1.0000000        
 

@@ -13,6 +13,13 @@ import numpy as np
 import napmo
 
 
+def INDEX(i, j):
+    if i > j:
+        return int((i * (i + 1) / 2) + j)
+    else:
+        return int((j * (j + 1) / 2) + i)
+
+
 class PSIN(napmo.PSIB):
 
     """
@@ -45,17 +52,17 @@ class PSIN(napmo.PSIB):
         self._pc = psix._pc
         self.species = psix.species
         self._e = psix.O[:self.ndim].copy()
+        self._total_mass = psix._total_mass
 
         self._grid = grid
         self._lmax = int(napmo.lebedev_get_order(self._grid.nang) / 2)
 
-        # Calculate the wavefunction on the grid for occupied orbitals only
+        # Calculate the wave-function on the grid for occupied orbitals only
         gbasis = self.species.get('basis').compute(self._grid.points).T.copy()
         self.psi = self._compute_psi_from_cm(psix.C, gbasis)
 
         # Initialize integrals
-        aux = int(self.ndim * (self.ndim + 1) / 2)
-        self.Kgrid = np.zeros([aux, self._grid.size])
+        self.Kgrid = np.zeros([self.ndim, self._grid.size])
         self.Jgrid = np.zeros(self._grid.size)
         self.Vnuc = napmo.compute_nuclear(self._grid, self._pc)
         self._exchange = False
@@ -102,6 +109,12 @@ class PSIN(napmo.PSIB):
         self._compute_kinetic_operator()
         self.T[:] = self._get_operator_matrix(self.Tgrid)
 
+        # Correction
+        # correction = (1.0 / self.species.get('mass')) - \
+        #     (1.0 / self._total_mass)
+
+        # self.T *= correction
+
         # print("\n Kinetic Matrix:", self.symbol)
         # print(self.T)
 
@@ -126,7 +139,7 @@ class PSIN(napmo.PSIB):
         self._compute_2body_exchange()
 
         with napmo.runtime.timeblock('Numerical 2 body'):
-            napmo.cext.nwavefunction_compute_2body_matrix_atm(
+            napmo.cext.nwavefunction_compute_2body_matrix_mol(
                 byref(self), self._grid._this, self.psi, self.Jgrid, self.Kgrid)
 
             self.G *= self.species.get('charge')**2
@@ -249,7 +262,6 @@ class PSIN(napmo.PSIB):
         """
 
         self.Vgrid = np.array([phi * self.Vnuc for phi in self.psi])
-
         self.Vgrid *= self.species.get('charge')
 
     def _compute_2body_coulomb(self):
@@ -282,11 +294,15 @@ class PSIN(napmo.PSIB):
 
                 with napmo.runtime.timeblock('Numerical exchange'):
 
-                    self.Kgrid[:] = np.array([napmo.compute_coulomb(
+                    aux = np.array([napmo.compute_coulomb(
                         self._grid, self.psi[s, :] * self.psi[v, :], self.lmax)
                         for s in range(self.ndim)
                         for v in range(self.ndim)
                         if s >= v])
+
+                    self.Kgrid[:] = np.array([np.array([self.psi[j, :] * aux[INDEX(i, j)]
+                                                        for j in range(self.ndim)]).sum(axis=0)
+                                              for i in range(self.ndim)])
 
                 self._exchange = True
 
@@ -315,19 +331,13 @@ class PSIN(napmo.PSIB):
         Build R (Eq. 10) :math:`R = (T + V - e) \phi`
         """
 
-        # self.Rgrid = np.array([T + (self.Vnuc * psi) + (self.Jgrid * psi) - K - (e * psi)
-        # for T, K, e, psi in zip(self.Tgrid, self.Kgrid, self._e, self.psi)])
-
-        # TODO: K missing!
-        self.Rgrid = np.array(
-            [T + (self.Vnuc * phi * self.species.get('charge')) + (0.5 * self.Jgrid * phi) + (coupling * phi) - (e * phi)
-             for T, phi, e in zip(self.Tgrid, self.psi, self._e)])
+        self.Rgrid = np.array([T + (((self.Vnuc * self.species.get('charge')) + self.Jgrid + coupling - e) * phi) - k
+                               for T, phi, k, e in zip(self.Tgrid, self.psi, self.Kgrid, self.O)])
 
     def _compute_energy_correction(self):
         """
         Computes energy correction. Eq. 11
         """
-
         self.delta_e = np.array([self._grid.integrate(r * phi)
                                  for r, phi in zip(self.Rgrid, self.psi)])
 
@@ -338,13 +348,11 @@ class PSIN(napmo.PSIB):
         """
         Computes \Delta \psi. Eq. 13
         """
-
-        # TODO: K missing!
+        # TODO: K missing?
         self.delta_psi = np.array([
-            napmo.compute_dpsi(self._grid, self.lmax, phi,
-                               doi, oi, ri,
+            napmo.compute_dpsi(self._grid, self.lmax, phi, doi, oi, ri,
                                (self.Vnuc * self.species.get('charge')) + coupling,
-                               self.Jgrid, self.species.get('mass'))
+                               (self.Jgrid), self.species.get('mass'))
             for phi, doi, oi, ri in zip(self.psi, self.delta_e, self._e, self.Rgrid)])
 
     def _compute_delta_orb(self):
@@ -375,6 +383,7 @@ class PSIN(napmo.PSIB):
         self._compute_delta_psi(aux)
         self._compute_delta_orb()
 
+        # TODO: check optimization
         self.psi, self._e = self._optimize.optimize(self, scf, other_psi)
 
         self.normalize()

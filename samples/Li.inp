@@ -1,20 +1,16 @@
 # Molecule definition
 molecule {
-Be  0.000   0.000   0.000
+Li  0.000   0.000   0.000
 }
 
 # basis-set specification
 basis {
-    e- CC-PVQZ
+    e- CC-PV5Z
 }
 
 # scf options
 scf {
     hf
-    numeric
-}
-
-grid {
-    e- [100, 110]
+    #debug=True
 }
 

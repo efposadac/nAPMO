@@ -39,31 +39,25 @@ void nwavefunction_compute_2body_matrix_atm(WaveFunction *psi, BeckeGrid *grid,
       Array1D buff = Psi.row(INDEX(i, j));
       buff *= C;
 
-      coulomb(i, j) += grid->integrate(buff);
+      coulomb(i, j) = grid->integrate(buff);
     }
   }
 
   coulomb += coulomb.triangularView<Eigen::StrictlyUpper>().transpose();
 
   // Compute exchange
-  MMap D(psi->D, ndim, ndim);
-  MMap E(K, size, grid->get_size());
+  MMap E(K, ndim, grid->get_size());
   Matrix exchange(ndim, ndim);
   exchange.setZero();
 
   double factor = psi->kappa / psi->eta;
 
-  for (unsigned int u = 0; u < ndim; ++u) {
-    for (unsigned int v = u; v < ndim; ++v) {
-      for (unsigned int l = 0; l < ndim; ++l) {
-        for (unsigned int s = 0; s < ndim; ++s) {
+  for (unsigned int i = 0; i < ndim; ++i) {
+    for (unsigned int j = i; j < ndim; ++j) {
 
-          Array1D buff =
-              Psi.row(INDEX(u, l)).array() * E.row(INDEX(s, v)).array();
+      Array1D buff = F.row(i).array() * E.row(j).array();
 
-          exchange(u, v) += grid->integrate(buff) * D(l, s);
-        }
-      }
+      exchange(i, j) = grid->integrate(buff);
     }
   }
 
@@ -104,7 +98,7 @@ void nwavefunction_compute_2body_matrix_mol(WaveFunction *psi, BeckeGrid *grid,
       Array1D buff = Psi.row(INDEX(i, j));
       buff *= C;
 
-      coulomb(i, j) += grid->integrate(buff);
+      coulomb(i, j) = grid->integrate(buff);
     }
   }
 
@@ -120,7 +114,7 @@ void nwavefunction_compute_2body_matrix_mol(WaveFunction *psi, BeckeGrid *grid,
 
       Array1D buff = F.row(i).array() * E.row(j).array();
 
-      exchange(i, j) += grid->integrate(buff);
+      exchange(i, j) = grid->integrate(buff);
     }
   }
 
@@ -161,7 +155,7 @@ void nwavefunction_compute_coupling(WaveFunction *psi, BeckeGrid *grid,
       Array1D buff = Psi.row(INDEX(i, j));
       buff *= C;
 
-      coupling(i, j) += grid->integrate(buff);
+      coupling(i, j) = grid->integrate(buff);
     }
   }
 

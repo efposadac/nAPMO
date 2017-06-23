@@ -6,13 +6,14 @@ molecule [e-:0:1]{
 
 # basis-set specification
 basis {
-    e- STO-3G
+    e- AUG-CC-PVDZ
 }
 
 # scf options
 scf {
-    uhf
+    hf
     numeric
+    debug=True
 }
 
 grid {

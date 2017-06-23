@@ -53,6 +53,15 @@ void wavefunction_iterate(WaveFunction *psi) {
 
   L = D;
 
+  // std::cout << "\n\tFock Matrix:\n";
+  // std::cout << F << std::endl;
+
+  // std::cout << "\n\tS Matrix:\n";
+  // std::cout << S << std::endl;
+
+  // std::cout << "\n\tDensity Matrix:\n";
+  // std::cout << D << std::endl;
+
   Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(F, S);
 
   O = gen_eig_solver.eigenvalues();

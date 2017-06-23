@@ -11,7 +11,7 @@ class HF(object):
     Hartree-Fock solver
     """
 
-    def __init__(self, system, options=None):
+    def __init__(self, system, options=None, pprint=True):
         super(HF, self).__init__()
 
         self.system = system
@@ -30,13 +30,14 @@ class HF(object):
 
         # Analytic initialization
         self.PSI = [napmo.PSIA(self.system.get_species(i),
-                               self.system.point_charges)
+                               self.system.point_charges,
+                               self.system.total_mass)
                     for i in range(self.system.size_species)]
 
         self._pce = sum([psi.pce for psi in self.PSI])
 
         # SCF solver
-        self.scf = napmo.SCF(options=self.options, pce=self._pce)
+        self.scf = napmo.SCF(options=self.options, pce=self._pce, pprint=pprint)
 
         # Numerical initialization
         self._mgrid = []
@@ -46,9 +47,9 @@ class HF(object):
 
             # Perform a single iteration (needed for numerical initialization)
             if len(self.PSI) > 1:
-                self.scf.multi(self.PSI, pprint=True)
+                self.scf.multi(self.PSI, pprint=pprint)
             else:
-                self.scf.single(self.PSI[-1], pprint=True)
+                self.scf.single(self.PSI[-1], pprint=pprint)
 
             # Build grids and numerical wavefunctions
             for p, key in enumerate(system.keys()):
@@ -70,7 +71,8 @@ class HF(object):
                                                    aux.get('nang', 110),
                                                    rtransform=aux.get('rtransform', None)))
 
-                self._mgrid[-1].show()
+                if pprint:
+                    self._mgrid[-1].show()
 
                 if self.get('hybrid', {}).get(self.PSI[p].symbol, 'N') == 'N':
                     self.NPSI.append(napmo.PSIN(
@@ -114,7 +116,8 @@ class HF(object):
 
         self._energy = self.scf._energy
 
-        self.scf.show_results(self.PSI)
+        if pprint:
+            self.scf.show_results(self.PSI)
 
     def compute_numeric(self, pprint=True):
         """
@@ -135,7 +138,8 @@ class HF(object):
 
         self._energy = self.scf.energy
 
-        self.scf.show_results(self.NPSI)
+        if pprint:
+            self.scf.show_results(self.NPSI)
 
     def get(self, key, default=None):
         """

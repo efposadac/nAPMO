@@ -5,16 +5,17 @@ Li  0.000   0.000   0.000
 
 # basis-set specification
 basis {
-    e- STO-3G
+    e- CC-PVQZ
 }
 
 # scf options
 scf {
     hf
     numeric
+    #debug=True
 }
 
 grid {
-    e- [500, 110]
+    e- [100, 110]
 }
 

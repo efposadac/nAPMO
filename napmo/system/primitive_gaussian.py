@@ -101,7 +101,7 @@ class PrimitiveGaussian(object):
         """
         Prints information about the object in a compact way.
         """
-        lvalue = {0: "s", 1: "p", 2: "d", 3: "f", 4: "g"}
+        lvalue = {0: "s", 1: "p", 2: "d", 3: "f", 4: "g", 5: "h"}
         out = '  {0:3s} {1:10.5f} {2:10.5f} {2:10.5f}\n'.format(
             lvalue[sum(self.l)],
             self.exponent,

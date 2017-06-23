@@ -31,7 +31,7 @@ CFLAGS := -Wall -O2 -fPIC -g -pg
 # LDLIBS := -lgsl -lgslcblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lblas -lm -lint2
 LDLIBS := -lgsl -lgslcblas -lm -lint2 -lstdc++
 # LDLIBS := /opt/local/lib/libgsl.19.dylib /opt/local/lib/libgslcblas.0.dylib -lm
-LDFLAGS := -shared
+LDFLAGS +=  -shared
 
 #-----------------------
 # OpenMP support

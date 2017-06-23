@@ -1,7 +1,6 @@
 # Molecule definition
 molecule [e-:0:1]{
-   N	0.000	0.000	0.567
-   N	0.000	0.000	-0.567
+    Ne  0.000   0.000   0.000
 }
 
 # basis-set specification
@@ -12,9 +11,6 @@ basis {
 # scf options
 scf {
     hf
-    numeric
 }
 
-grid {
-    e- [100, 110]
-}
+

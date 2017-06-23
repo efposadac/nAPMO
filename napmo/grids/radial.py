@@ -33,7 +33,7 @@ class RadialGrid(object):
         if rtransform is None:
             self._rtransform = napmo.ChebyshevRadialTransform(radii, size)
 
-        self._this = napmo.cext.RadialGrid_new(self._rtransform._this, radii)
+        self._this = napmo.cext.RadialGrid_new(self._rtransform._this, self._rtransform.radii)
 
     def integrate(self, f, segments):
         """

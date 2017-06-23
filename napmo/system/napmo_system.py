@@ -21,7 +21,7 @@ class NAPMO(object):
 
     Energy = 0.0
 
-    def __init__(self, data):
+    def __init__(self, data, pprint=True):
         super(NAPMO, self).__init__()
 
         assert isinstance(data, napmo.InputParser)
@@ -34,7 +34,8 @@ class NAPMO(object):
         self.build_system()
 
         # Show system info
-        self.show()
+        if pprint:
+            self.show()
 
     def build_system(self):
         """
@@ -90,7 +91,10 @@ class NAPMO(object):
         l = {"Energy": self._energy,
              "D": [psi.D for psi in self.solver.PSI],
              "C": [psi.C for psi in self.solver.PSI],
-             "E": [psi.O for psi in self.solver.PSI]}
+             "E": [psi.O for psi in self.solver.PSI],
+             "ND": [psi.D for psi in self.solver.NPSI],
+             "NC": [psi.C for psi in self.solver.NPSI],
+             "NE": [psi.O for psi in self.solver.NPSI]}
 
         if self.data.code != '':
             print('Code results:')

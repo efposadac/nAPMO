@@ -10,6 +10,7 @@ from __future__ import print_function
 
 import numpy as np
 import napmo
+from scipy.interpolate import splrep, splev
 
 
 def compute_kinetic(grid, psi, lmax):
@@ -55,19 +56,24 @@ def compute_kinetic(grid, psi, lmax):
                 # calculate Laplacian
                 aux = np.array(sph_exp[:, idx]).copy()
 
+                phi = splrep(r, aux * r, k=5)
+                d2phi = splev(r, phi, der=2)
+
+                ####################################################
                 # phi'
-                phi = napmo.CubicSpline(
-                    aux * r, rtransform=rtf,
-                    extrapolation=napmo.PowerExtrapolation(-l - 1))
+                # phi = napmo.CubicSpline(
+                #     aux * r, rtransform=rtf,
+                #     extrapolation=napmo.PowerExtrapolation(-l - 1))
 
-                dphi = phi.deriv(r)
+                # dphi = phi.deriv(r)
 
-                # phi''
-                dphi = napmo.CubicSpline(
-                    dphi, rtransform=rtf,
-                    extrapolation=napmo.PowerExtrapolation(-l - 1))
+                # # phi''
+                # dphi = napmo.CubicSpline(
+                #     dphi, rtransform=rtf,
+                #     extrapolation=napmo.PowerExtrapolation(-l - 1))
 
-                d2phi = dphi.deriv(r)
+                # d2phi = dphi.deriv(r)
+                ####################################################
 
                 # Build equation
                 res.append(napmo.CubicSpline(

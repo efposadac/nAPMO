@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # file: setup.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada

@@ -93,7 +93,7 @@ class MolecularSystem(dict):
         eparticle = napmo.ElementaryParticle(symbol, origin, 'BOHR')
 
         # setting defaults for species
-        self.setdefault(symbol, eparticle)
+        self.setdefault(symbol, copy.deepcopy(eparticle))
 
         self[symbol].setdefault('id', self.size_species - 1)
         self[symbol].setdefault('size', 0)
@@ -101,8 +101,9 @@ class MolecularSystem(dict):
         self[symbol].setdefault('origin', [])
         self[symbol].setdefault('is_electron', False)
 
+        self[symbol].pop('origin')
+        
         if symbol == 'e-':
-            self[symbol].pop('origin')
             self[symbol]['is_electron'] = True
 
         # load basis-set
@@ -128,6 +129,9 @@ class MolecularSystem(dict):
         if particle:
             self.get(symbol)['particles'].append(particle)
         else:
+            if basis:
+                eparticle['basis'] = basis
+
             self.get(symbol)['particles'].append(eparticle)
 
         if not self.get(symbol).get('particles')[-1].is_quantum:
@@ -182,7 +186,7 @@ class MolecularSystem(dict):
 
         if basis:
             self.get(symbol)['basis'].update(basis)
-            nucleus['basis'] = basis
+            nucleus['basis'] = copy.deepcopy(basis)
         else:
             nucleus['is_quantum'] = False
 
@@ -259,11 +263,7 @@ Charges description:
                 beta = int(eleft * 0.5)
                 keys = {'e-alpha': alpha, 'e-beta': beta}
 
-                self._abe = (
-                    """
-e-alpha: {0:<3d} e-beta: {1:<3d}
-
---------------------------------------------------""".format(alpha, beta))
+                self._abe = "\ne-alpha: {0:<3d} e-beta: {1:<3d}\n".format(alpha, beta)
 
                 if alpha != beta or open_shell:
                     for k in keys:
@@ -301,7 +301,10 @@ e-alpha: {0:<3d} e-beta: {1:<3d}
                 self.get(key, {})['occupation'] = int(
                     self.get(key, {})['size'] * self.get(key, {})['particlesfraction'])
 
+                self._abe += "{0:<7s}: {1:<3d}\n".format(key, self.get(key, {})['size'])
+                        
         self._buff += "-----------------------"
+        self._abe += "\n--------------------------------------------------"
 
     def size_particles(self, symbol):
         """
@@ -339,6 +342,18 @@ e-alpha: {0:<3d} e-beta: {1:<3d}
         for species in self:
             if self.get(species, {}).get('id', -100) is sid:
                 return self.get(species)
+
+    def _get_total_mass(self):
+        output = 0
+        for species in self:
+            output += (self.get(species, {}).get('mass')
+                       * self.get(species, {}).get('size'))
+
+        return output
+
+    @property
+    def total_mass(self):
+        return self._get_total_mass()
 
     @property
     def size_species(self):

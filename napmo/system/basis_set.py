@@ -157,6 +157,13 @@ class BasisSet(dict):
 
         return output
 
+    def _lmax(self):
+        return np.max(np.array([cont.l.sum() for cont in self.get('cont')]))
+
+    @property
+    def lmax(self):
+        return self._lmax()
+
     def __repr__(self):
 
         out = """

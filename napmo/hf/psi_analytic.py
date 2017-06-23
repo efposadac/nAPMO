@@ -18,13 +18,14 @@ class PSIA(napmo.PSIB):
     Defines the Fock operator for a Hartree-Fock Calculation with analytic calculation of integrals.
     """
 
-    def __init__(self, species, point_charges):
+    def __init__(self, species, point_charges, total_mass):
         super(PSIA, self).__init__(species)
 
         # Initialize Libint object to calculate integrals
         self._libint = napmo.cext.LibintInterface_new(species.get('id'))
         self._diis = napmo.cext.LibintInterface_diis_new(2)
         self._pc = point_charges
+        self._total_mass = total_mass
 
         for particle in species.get('particles'):
             napmo.cext.LibintInterface_add_basis(
@@ -58,7 +59,13 @@ class PSIA(napmo.PSIB):
         napmo.cext.LibintInterface_compute_1body_ints(self._libint, 2, self.T)
         self.T /= self.species.get('mass')
 
-        # print("\n Kinetic Matrix:")
+        # Correction
+        # correction = (1.0 / self.species.get('mass')) - \
+        #     (1.0 / self._total_mass)
+
+        # self.T *= correction
+
+        # print("\n Kinetic Matrix: ", self.species.get('symbol'))
         # print(self.T)
 
     def compute_nuclear(self):

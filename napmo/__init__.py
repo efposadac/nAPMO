@@ -44,6 +44,7 @@ from napmo.data.databases import AtomicElementsDatabase
 from napmo.data.databases import ElementaryParticlesDatabase
 from napmo.data.databases import CouplingConstantsDatabase
 from napmo.data.constants import ANGSTROM_TO_BOHR
+from napmo.data.constants import BOHR_TO_ANGSTROM
 from napmo.data.constants import PROTON_MASS
 from napmo.data.constants import NEUTRON_MASS
 from napmo.data.constants import SPIN_ELECTRON

@@ -655,6 +655,22 @@
         "particlesfraction": 0.5,
         "eta": 2.0
     },
+    "e+s": {
+        "name": "positron",
+        "lambda": 2.0,
+        "kappa": -1.0,
+        "symbol": "e-",
+        "particlesfraction": 0.5,
+        "eta": 2.0
+    },
+    "es": {
+        "name": "electron",
+        "lambda": 2.0,
+        "kappa": -1.0,
+        "symbol": "e-",
+        "particlesfraction": 0.5,
+        "eta": 2.0
+    },    
     "h-d_2": {
         "name": "deuterium",
         "lambda": 1.0,
@@ -2821,6 +2837,22 @@
         "lambda": 1.0,
         "kappa": -1.0,
         "symbol": "e+",
+        "particlesfraction": 1.0,
+        "eta": 1.0
+    },
+    "e+alpha": {
+        "name": "positron",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "e+alpha",
+        "particlesfraction": 1.0,
+        "eta": 1.0
+    },
+    "e+beta": {
+        "name": "positron",
+        "lambda": 1.0,
+        "kappa": -1.0,
+        "symbol": "e+beta",
         "particlesfraction": 1.0,
         "eta": 1.0
     },

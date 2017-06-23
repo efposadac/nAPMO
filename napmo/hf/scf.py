@@ -23,11 +23,11 @@ class SCF(object):
         pce (double) : Point charges energy
     """
 
-    def __init__(self, options=None, pce=0.0):
+    def __init__(self, options=None, pce=0.0, pprint=True):
         super(SCF, self).__init__()
         self.options = {'maxiter': 100,
                         'eps_e': 1e-9,
-                        'eps_n': 1e-6,
+                        'eps_n': 1e-9,
                         'eps_d': 1e-9,
                         'eps_r': 1e-5,
                         'method': 'hf',
@@ -42,12 +42,14 @@ class SCF(object):
         if self.get('kind') is 'numeric':
             self.options['print'] = False
 
-        print(self)
+        if pprint:
+            print(self)
 
         self._energy = 0.0
         self._pce = pce
 
-        print("Point charges energy: {0:<12.8f}".format(self._pce))
+        if pprint:
+            print("Point charges energy: {0:<12.8f}".format(self._pce))
 
     def iteration_single(self, psi):
 
@@ -116,14 +118,15 @@ class SCF(object):
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12.7f}'.
                       format(iterations, psi._energy, self._energy, e_diff, psi._rmsd))
 
-        if self.get('debug') and not isinstance(psi, napmo.PSIO):
-            grid = napmo.BeckeGrid(psi.species, 100, 110)
-            psi.plot_dens(grid)
-            plt.show()
+        # if self.get('debug') and not isinstance(psi, napmo.PSIO):
+        # if not isinstance(psi, napmo.PSIO):
+        #     grid = napmo.BeckeGrid(psi.species, 500, 110)
+        #     psi.plot_dens(grid, kind="anal")
+        #     # plt.show()
 
         # elif self.get('debug') and isinstance(psi, napmo.PSIO):
         #     psi.plot_dens()
-        #     plt.show()
+            # plt.show()
 
     def multi(self, PSI, pprint=True, case=0):
         """
@@ -143,9 +146,9 @@ class SCF(object):
         iterations = 0
         e_diff = 1
 
-        for psi in PSI:
-            if psi.symbol == "e-" or psi.symbol == "e-alpha":
-                grid = napmo.BeckeGrid(psi.species, 100, 110)
+        # for psi in PSI:
+        #     if psi.symbol == "e-" or psi.symbol == "e-alpha":
+        #         grid = napmo.BeckeGrid(psi.species, 1000, 110)
 
         while (iterations < self.get('maxiter') and
                np.abs(e_diff) > self.get('eps_e')):
@@ -163,7 +166,7 @@ class SCF(object):
 
                     psi.build_fock()
 
-                    # solve F C = e S C
+                    # Solve F C = e S C
                     with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
                         napmo.cext.wavefunction_iterate(byref(psi))
 
@@ -215,10 +218,11 @@ class SCF(object):
             self.multi(PSI, case=case)
             return
 
-        if self.get('debug'):
-            for psi in PSI:
-                psi.plot_dens(grid)
-            plt.savefig('analytic_dens.png')
+        # if self.get('debug'):
+        # for psi in PSI:
+        #     psi.plot_dens(grid, kind="anal")
+            # plt.show()
+            # plt.savefig('analytic_dens.png')
 
     def nsingle(self, psi, pprint=True):
         """
@@ -266,9 +270,10 @@ class SCF(object):
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12s}'.
                       format(iterations, psi._energy, self._energy, e_diff, str(psi._res)))
 
-        if self.get('debug') and not isinstance(psi, napmo.PSIO):
-            psi.plot_dens()
-            plt.show()
+        # if self.get('debug') and not isinstance(psi, napmo.PSIO):
+        # if not isinstance(psi, napmo.PSIO):
+        #     psi.plot_dens(kind="num")
+            # plt.show()
 
     def nmulti(self, PSI, pprint=True):
         """
@@ -284,7 +289,7 @@ class SCF(object):
         e_diff = 1
 
         while (iterations < self.get('maxiter') and
-               np.abs(e_diff) > self.get('eps_e')):
+               np.abs(e_diff) > self.get('eps_n')):
 
             iterations += 1
 
@@ -322,10 +327,11 @@ class SCF(object):
                       format(iterations, self._energy - self.pce, self._energy, e_diff,
                              str([str(psi._res) for psi in PSI])))
 
-        if not self.get('debug'):
-            for psi in PSI:
-                psi.plot_dens()
-            plt.savefig('numeric_dens.png')
+        # if self.get('debug'):
+        for psi in PSI:
+            psi.plot_dens(kind="num")
+            # plt.show()
+            # plt.savefig('numeric_dens.png')
 
     def compute_energy(self, PSI):
         """

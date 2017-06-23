@@ -173,7 +173,7 @@ class PSIB(Structure):
 
         return index
 
-    def plot_dens(self, grid=None):
+    def plot_dens(self, grid=None, kind=''):
         print("Plotting Density...", end=' ')
 
         if grid is not None:
@@ -182,22 +182,29 @@ class PSIB(Structure):
                 self._grid.points).T.copy()
             self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
 
-        self.plot_obj(self.Dgrid.sum(axis=0), "rho" + self.symbol)
+        self.plot_obj(self.Dgrid.sum(axis=0), "rho" + self.symbol + kind)
         print("Done!")
 
     def plot_obj(self, obj, label, marker="-"):
 
         index = self.get_index_center()
+        bwa = np.zeros([0, 2])
 
         for i, atgrid in enumerate(self._grid.atgrids):
-            bwa = self.get_data(atgrid, index[i], obj[
+            tmp = self.get_data(atgrid, index[i], obj[
                 i * atgrid.size:i * atgrid.size + atgrid.size])
+            bwa = np.concatenate((bwa, tmp))
 
-            bwa.view("float64, float64").sort(order=["f0"], axis=0)
-            plt.plot(bwa[:, 0], bwa[:, 1], marker, label=label + str(i))
+        bwa.view("float64, float64").sort(order=["f0"], axis=0)
 
-        plt.xlabel("z")
-        plt.ylabel("obj")
-        plt.legend()
-        plt.xlim(-2, 2)
-        # plt.ylim(0, 2)
+        np.savetxt(
+            label + '.txt', np.stack([bwa[:, 0], bwa[:, 1]]).T, delimiter='\t', fmt=['%.12f', '%.12f'])
+
+        # plt.plot(bwa[:, 0] * napmo.BOHR_TO_ANGSTROM,
+        #          bwa[:, 1], marker, label=label)
+
+        # plt.xlabel("z")
+        # plt.ylabel("obj")
+        # plt.legend()
+        # plt.xlim(-5, 5)
+        #plt.ylim(0, 0.5)
