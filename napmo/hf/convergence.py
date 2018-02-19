@@ -31,6 +31,9 @@ class Convergence(object):
         self.ID[:] = D
 
     def damping(self, NF, ND):
+        """
+        Damping implementation
+        """
 
         # Computes the effect of the changes in the Density matrix
         self.X[:] = self.IF

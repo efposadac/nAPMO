@@ -158,100 +158,6 @@ class PSIB(Structure):
 
     #### TEST ###
 
-    # def plot_dens(self, grid=None, kind=''):
-    #     print("Plotting Density...", end=' ')
-
-
-    #     if grid is not None:
-    #         self._grid = grid
-    #         gbasis = self.species.get('basis').compute(
-    #             self._grid.points).T.copy()
-    #         self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
-
-    #     # x=0, y=1, z=2
-    #     self.plot_obj(self.Dgrid.sum(axis=0), "rho" + self.symbol + kind, dim=[0])
-    #     print("Done!")
-
-    # def _compute_density_from_dm(self, dm, psi):
-    #     """
-    #     Computes the density in the grid for each orbital from density matrix.
-    #     Includes virtual orbitals.
-    #     """
-    #     with napmo.runtime.timeblock('Numerical Density'):
-    #         dens = np.array([phi * dm.dot(phi)
-    #                          for phi in psi.T]).T
-    #     return dens
-
-    # def plot_obj(self, obj, label, marker="-", dim=[2]):
-
-    #     index = self.get_index_center(dim)
-    #     bwa = np.zeros([0, len(dim) + 1])
-    #     case = len(dim)
-    #     f = open(label + ".txt", "ab")
-    #     for i, atgrid in enumerate(self._grid.atgrids):
-    #         tmp = self.get_data(atgrid, index[i], obj[
-    #             i * atgrid.size:i * atgrid.size + atgrid.size], dim)
-
-    #         # 3D plot
-    #         if case == 2:
-    #             # tmp.view("float64, float64, float64").sort(order=["f0"], axis=0)
-    #             np.savetxt(f, np.stack([tmp[:, 0], tmp[:, 1], tmp[:, 2]]).T, delimiter='\t', fmt=['%.12f', '%.12f', '%.12f'])
-    #             f.write(b'\r\n')
-    #         else:
-    #             bwa = np.concatenate((bwa, tmp))
-
-    #     f.close()
-
-    #     # 2D plot
-    #     if case == 1:
-    #         bwa.view("float64, float64").sort(order=["f0"], axis=0)
-    #         np.savetxt(
-    #             label + '.txt', np.stack([bwa[:, 0], bwa[:, 1]]).T, delimiter='\t', fmt=['%.12f', '%.12f'])
-
-    #         # plt.plot(bwa[:, 0] * napmo.BOHR_TO_ANGSTROM,
-    #         #          bwa[:, 1], marker, label=label)
-
-    #         # plt.xlabel("z")
-    #         # plt.ylabel("obj")
-    #         # plt.legend()
-    #         # plt.xlim(-5, 5)
-    #         #plt.ylim(0, 0.5)
-        
-
-
-    # def get_index_center(self, dim):
-
-    #     case = len(dim)
-    #     axis = self._get_axis(dim)
-
-    #     # 2D plot
-    #     if case == 1:
-    #         index = [np.array([i for i in range(atgrid.size) if np.abs(
-    #             atgrid.points[i, axis[0]]) < 1.0e-10 and np.abs(atgrid.points[i, axis[1]]) < 1.0e-10])
-    #             for atgrid in self._grid.atgrids]
-    #     # 3D plot
-    #     if case == 2:
-    #         index = [np.array([i for i in range(atgrid.size) if np.abs(
-    #             atgrid.points[i, axis[0]]) < 1.0e-10])
-    #             for atgrid in self._grid.atgrids]
-
-    #     return index
-
-    # def get_data(self, grid, index, F, dim):
-
-    #     data = np.zeros([index.size, len(dim) + 1])
-
-    #     for i, j in enumerate(index):
-    #         data[i, 0:len(dim)] = [grid.points[j, i] for i in dim]
-    #         data[i, len(dim)] = F[j]
-
-    #     return data
-
-    # def _get_axis(self, dim):
-    #     axis = [0, 1, 2]
-    #     [axis.remove(i) for i in dim]
-    #     return axis
-
     def _compute_density_from_dm(self, dm, psi):
         """
         Computes the density in the grid for each orbital from density matrix.
@@ -312,10 +218,10 @@ class PSIB(Structure):
         np.savetxt(
             label + '.txt', np.stack([bwa[:, 0], bwa[:, 1]]).T, delimiter='\t', fmt=['%.12f', '%.12f'])
 
-        plt.plot(bwa[:, 0] * napmo.BOHR_TO_ANGSTROM,
-                 bwa[:, 1], marker, label=label)
-        plt.xlabel("z")
-        plt.ylabel("obj")
-        plt.legend()
-        plt.xlim(-2, 2)
-        # plt.ylim(0, 0.4)
+        # plt.plot(bwa[:, 0] * napmo.BOHR_TO_ANGSTROM,
+        #          bwa[:, 1], marker, label=label)
+        # plt.xlabel("z")
+        # plt.ylabel("obj")
+        # plt.legend()
+        # plt.xlim(-2, 2)
+        # # plt.ylim(0, 0.4)
