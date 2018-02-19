@@ -12,6 +12,7 @@ efposadac@unal.edu.co*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+#include <iostream>
 
 #include "../ints/overlap.h"
 #include "../utils/utils.h"

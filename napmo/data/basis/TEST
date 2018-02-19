@@ -1,0 +1,15 @@
+# TEST BASIS SET FILE
+
+O-HYDROGEN H (TEST)
+    3
+    1    0    1
+    1.0000 1.0000
+    2    1    1
+    1.0000 1.0000
+    3    2    1
+    1.0000 1.0000
+	
+O-HELIUM He (TEST)
+    1
+    1    0    1
+    1.0000 1.000000

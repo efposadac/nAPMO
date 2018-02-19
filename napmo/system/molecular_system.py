@@ -12,7 +12,7 @@ import numpy as np
 import copy
 
 import napmo
-
+import sys 
 
 class MolecularSystem(dict):
 
@@ -46,7 +46,7 @@ class MolecularSystem(dict):
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
         if units is 'ANGSTROMS':
-            origin *= napmo.ANGSTROM_TO_BOHR
+            origin /= napmo.BOHR_TO_ANGSTROM
 
         # Fetching atom database
         atom = napmo.AtomicElement(symbol, origin, 'BOHR')
@@ -123,6 +123,7 @@ class MolecularSystem(dict):
             eparticle['is_quantum'] = False
 
         self.get(symbol)['size'] += size
+
         self.get(symbol)['occupation'] = int(
             self.get(symbol)['size'] * self.get(symbol)['particlesfraction'])
 
@@ -198,7 +199,7 @@ class MolecularSystem(dict):
         self.get(symbol)['size'] += size
         self.get(symbol)['occupation'] = int(
             self.get(symbol)['size'] * self.get(symbol)['particlesfraction'])
-        self.get(symbol)['charge'] = nucleus.get('atomic_number', 1)
+        self.get(symbol)['charge'] = np.float64(nucleus.get('atomic_number', 1))
         self.get(symbol)['spin'] = nucleus.get('spin', 1)
         self.get(symbol)['mass'] = nucleus.get('mass', 1)
         self.get(symbol)['particles'].append(nucleus)
@@ -216,6 +217,7 @@ class MolecularSystem(dict):
             open_shell (bool) : whether the electrons should be split or not.
         """
         assert isinstance(data, dict)
+
         defaults = {key: {'charge': 0, 'multiplicity': 0}
                     for key in self}
 

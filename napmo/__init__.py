@@ -52,6 +52,7 @@ from napmo.data.constants import SPIN_ELECTRON
 from napmo.hf.psi_base import PSIB
 from napmo.hf.psi_analytic import PSIA
 from napmo.hf.psi_numeric import PSIN
+from napmo.hf.psi_hybrid import PSIH
 from napmo.hf.psi_optimization import PSIO
 from napmo.hf.nkinetic import compute_kinetic
 from napmo.hf.nnuclear import compute_nuclear
@@ -59,6 +60,7 @@ from napmo.hf.ntwobody import compute_coulomb
 from napmo.hf.ndpsi import compute_dpsi
 from napmo.hf.hf_solver import HF
 from napmo.hf.scf import SCF
+from napmo.hf.convergence import Convergence
 
 # OMP Threads
 threads = int(os.environ.get('OMP_NUM_THREADS', 1))
@@ -126,6 +128,9 @@ cext.LibintInterface_diis.argtypes = [c_void_p, c_void_p]
 # Wavefunction
 cext.wavefunction_guess_hcore.restype = None
 cext.wavefunction_guess_hcore.argtypes = [c_void_p]
+
+cext.wavefunction_transformation_matrix.restype = None
+cext.wavefunction_transformation_matrix.argtypes = [c_void_p]
 
 cext.wavefunction_compute_coefficients.restype = None
 cext.wavefunction_compute_coefficients.argtypes = [

@@ -10,6 +10,7 @@ from __future__ import print_function
 import napmo
 import matplotlib.pylab as plt
 
+import sys
 
 class NAPMO(object):
     """

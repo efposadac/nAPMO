@@ -113,6 +113,8 @@ ContractedGaussian::ContractedGaussian(PrimitiveGaussian **primitives, int n)
   origin[1] = primitives[0]->get_origin()[1];
   origin[2] = primitives[0]->get_origin()[2];
 
+  // printf("Origin: %3.15f %3.15f %3.15f\n", origin[0], origin[1], origin[2]);
+
   l[0] = primitives[0]->get_l()[0];
   l[1] = primitives[0]->get_l()[1];
   l[2] = primitives[0]->get_l()[2];

@@ -13,6 +13,9 @@ import numpy as np
 import napmo
 import matplotlib.pyplot as plt
 
+import sys
+from scipy import linalg as SLA
+
 
 class SCF(object):
     """
@@ -27,7 +30,7 @@ class SCF(object):
         super(SCF, self).__init__()
         self.options = {'maxiter': 100,
                         'eps_e': 1e-9,
-                        'eps_n': 1e-9,
+                        'eps_n': 1e-7,
                         'eps_d': 1e-9,
                         'eps_r': 1e-5,
                         'method': 'hf',
@@ -101,9 +104,15 @@ class SCF(object):
 
             psi.build_fock()
 
-            if diis:
-                with napmo.runtime.timeblock('DIIS'):
-                    napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
+            # Iterate
+            if iterations > 2:
+                psi.F[:] = psi.convergence.damping(psi.F, psi.D)
+            else:
+                psi.convergence = napmo.Convergence(psi.F, psi.D)
+
+            # if diis:
+            #     with napmo.runtime.timeblock('DIIS'):
+            #         napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
 
             # solve F C = e S C
             with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
@@ -118,11 +127,12 @@ class SCF(object):
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12.7f}'.
                       format(iterations, psi._energy, self._energy, e_diff, psi._rmsd))
 
-        # if self.get('debug') and not isinstance(psi, napmo.PSIO):
-        # if not isinstance(psi, napmo.PSIO):
-        #     grid = napmo.BeckeGrid(psi.species, 500, 110)
-        #     psi.plot_dens(grid, kind="anal")
-        #     # plt.show()
+        if self.get('debug') and not isinstance(psi, napmo.PSIO):
+
+            if not isinstance(psi, napmo.PSIO):
+                grid = napmo.BeckeGrid(psi.species, 500, 110)
+                psi.plot_dens(grid, kind="anal")
+                plt.show()
 
         # elif self.get('debug') and isinstance(psi, napmo.PSIO):
         #     psi.plot_dens()
@@ -146,9 +156,10 @@ class SCF(object):
         iterations = 0
         e_diff = 1
 
-        # for psi in PSI:
-        #     if psi.symbol == "e-" or psi.symbol == "e-alpha":
-        #         grid = napmo.BeckeGrid(psi.species, 1000, 110)
+        # Initialization
+        for psi in PSI:
+            # Calculate 2 body Matrix
+            psi.compute_2body(self.get('direct'))
 
         while (iterations < self.get('maxiter') and
                np.abs(e_diff) > self.get('eps_e')):
@@ -158,27 +169,24 @@ class SCF(object):
             e_last = self._energy
 
             if case is 0:
+
+                for psi in PSI:
+                    psi.build_fock()
+
+                    # Iterate
+                    if iterations > 2:
+                        psi.F[:] = psi.convergence.damping(psi.F, psi.D)
+                    else:
+                        psi.convergence = napmo.Convergence(psi.F, psi.D)
+
+                    napmo.cext.wavefunction_iterate(byref(psi))
+
                 for psi in PSI:
 
                     # Calculate 2 body Matrix
-                    with napmo.runtime.timeblock('2 body ints'):
-                        psi.compute_2body(self.get('direct'))
+                    psi.compute_2body(self.get('direct'))
+                    psi.compute_coupling(PSI, direct=self.get('direct'))
 
-                    psi.build_fock()
-
-                    # Solve F C = e S C
-                    with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
-                        napmo.cext.wavefunction_iterate(byref(psi))
-
-                    with napmo.runtime.timeblock('Coupling ints'):
-                        psi.compute_coupling(PSI, direct=self.get('direct'))
-
-                    # with napmo.runtime.timeblock('DIIS'):
-                    #     napmo.cext.LibintInterface_diis(psi._diis, byref(psi))
-
-                    if self.get('debug'):
-                        print("Single particle energy for " +
-                              psi.symbol + ":", psi._energy + psi.pce)
 
             if case is 1:
                 for psi in PSI:
@@ -218,9 +226,13 @@ class SCF(object):
             self.multi(PSI, case=case)
             return
 
+        print('{0:11s} {1:>12.7f}'.
+                      format("ANALYTICAL ", self._energy))
+
         # if self.get('debug'):
-        # for psi in PSI:
-        #     psi.plot_dens(grid, kind="anal")
+        for psi in PSI:
+            grid = napmo.BeckeGrid(psi.species, 100, 110)
+            psi.plot_dens(grid, kind="anal")
             # plt.show()
             # plt.savefig('analytic_dens.png')
 
@@ -238,24 +250,29 @@ class SCF(object):
             print('{0:5s}  {1:^10s} {2:^12s} {3:^12s} {4:^12s}'
                   .format("\n***Iter", "E (" + psi.symbol + ")", "Total E", "Delta(E)", "Delta Orb"))
 
-        iterations = 0
+        iterations = 1
         e_diff = 1.0
+        e_last = psi._energy
 
-        while (iterations < self.get('maxiter') and
-               np.abs(e_diff) > self.get('eps_n')):
+        converged = False
+        while (not converged):
 
-            if iterations > 0:
+            if iterations > 1:
                 # Compute \Psi (eq. 14) through conventional SCF for
                 # \psi = a \phi + b \Delta \phi
                 psi.optimize_psi(self)
 
-            iterations += 1
             e_last = psi._energy
 
             with napmo.runtime.timeblock('Numerical 2 body'):
                 psi.compute_2body(self.get('direct'))
 
             psi.build_fock()
+
+            # if iterations > 2:
+            #     psi.F[:] = psi.convergence.damping(psi.F, psi.D)
+            # else:
+            #     psi.convergence = napmo.Convergence(psi.F, psi.D)
 
             # solve F C = e S C
             with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
@@ -267,13 +284,19 @@ class SCF(object):
 
             # print results
             if pprint:
-                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12s}'.
+                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7g} {4:>12s}'.
                       format(iterations, psi._energy, self._energy, e_diff, str(psi._res)))
 
+            if iterations > self.get('maxiter') or np.abs(e_diff) < self.get('eps_n'):
+                if iterations > 1:
+                    converged = True
+            
+            iterations += 1
+
         # if self.get('debug') and not isinstance(psi, napmo.PSIO):
-        # if not isinstance(psi, napmo.PSIO):
-        #     psi.plot_dens(kind="num")
-            # plt.show()
+        #     if not isinstance(psi, napmo.PSIO):
+        #         psi.plot_dens(kind="num")
+        #         plt.show()
 
     def nmulti(self, PSI, pprint=True):
         """
@@ -285,13 +308,10 @@ class SCF(object):
             print('{0:5s}  {1:^10s} {2:>12s} {3:>12s} {4:>12s}'
                   .format("\nIter", "Energy", "Total E", "Delta(E)", "Delta orb"))
 
-        iterations = 0
+        iterations = 1
         e_diff = 1
-
-        while (iterations < self.get('maxiter') and
-               np.abs(e_diff) > self.get('eps_n')):
-
-            iterations += 1
+        converged = False
+        while (not converged):
 
             e_last = self._energy
 
@@ -306,6 +326,11 @@ class SCF(object):
                     psi.compute_2body(self.get('direct'))
 
                 psi.build_fock()
+
+                # if iterations > 2:
+                #     psi.F[:] = psi.convergence.damping(psi.F, psi.D)
+                # else:
+                #     psi.convergence = napmo.Convergence(psi.F, psi.D)
 
                 # solve F C = e S C
                 with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
@@ -323,15 +348,88 @@ class SCF(object):
             e_diff = self._energy - e_last
 
             if pprint:
-                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12s}'.
+                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7g} {4:>12s}'.
                       format(iterations, self._energy - self.pce, self._energy, e_diff,
                              str([str(psi._res) for psi in PSI])))
+
+            if iterations > self.get('maxiter') or np.abs(e_diff) < self.get('eps_n'):
+                if iterations > 1:
+                    converged = True
+
+            iterations += 1
+
+        # if self.get('debug'):
+        # for psi in PSI:
+        #     psi.plot_dens(kind="num")
+            # plt.show()
+            # plt.savefig('numeric_dens.png')
+
+    def hmulti(self, PSI, pprint=True):
+        """
+        Perform SCF iteration for all species in this object.
+        """
+
+        if pprint:
+            print('\nStarting HYBRID Multi NSCF Calculation...')
+            print('{0:5s}  {1:^10s} {2:>12s} {3:>12s}'
+                  .format("\nIter", "Energy", "Total E", "Delta(E)"))
+
+        iterations = 0
+        e_diff = 1
+
+        while (iterations < self.get('maxiter') and
+               np.abs(e_diff) > self.get('eps_n')):
+
+        # while (iterations < 3):
+            iterations += 1
+
+            e_last = self._energy
+
+            if iterations > 1:
+                for psi in PSI:
+                    psi.optimize_psi(self, PSI)
+
+            for psi in PSI:
+
+                # Calculate 2 body Matrix
+                psi.compute_2body(self.get('direct'))
+                psi.build_fock()
+
+                if iterations > 2:
+                    psi.F[:] = psi.convergence.damping(psi.F, psi.D)
+                else:
+                    psi.convergence = napmo.Convergence(psi.F, psi.D)
+
+                # solve F C = e S C
+                with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
+                    napmo.cext.wavefunction_iterate(byref(psi))
+
+                with napmo.runtime.timeblock('Coupling ints'):
+                    psi.compute_coupling(PSI, direct=self.get('direct'))
+
+                if psi.symbol == 'e-':
+                    self.nsingle(psi, pprint=False)
+
+                if self.get('debug'):
+                    print("Single particle energy for " +
+                        psi.symbol + ":", psi._energy + psi.pce)
+
+
+            self.compute_energy(PSI)
+
+            e_diff = self._energy - e_last
+
+            if pprint:
+                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12s}'.
+                      format(iterations, self._energy - self.pce, self._energy, e_diff, str([str(psi._rmsd) for psi in PSI])))
 
         # if self.get('debug'):
         for psi in PSI:
             psi.plot_dens(kind="num")
             # plt.show()
             # plt.savefig('numeric_dens.png')
+
+
 
     def compute_energy(self, PSI):
         """
@@ -343,10 +441,10 @@ class SCF(object):
 
         for psi in PSI:
             # Add independient particle energies
-            self._energy += (psi.D * (psi.H + (0.5 * psi.G))).sum()
+            self._energy += (psi.D.T * (psi.H + (0.5 * psi.G))).sum()
 
             # Calculate coupling energy
-            self._coupling_energy += 0.5 * (psi.D * psi.J).sum()
+            self._coupling_energy += 0.5 * (psi.D.T * psi.J).sum()
 
             if self.get('debug'):
                 print("coupling " + psi.symbol + ": ",
@@ -455,19 +553,24 @@ Hartree-Fock Results:
            self._coupling_energy,
            self._potential_energy))
 
+        for psi in PSI:
+            print("Orbitals: ",psi.symbol, "\n", psi.O)
+
     def __repr__(self):
         out = ("""\nSCF setup:
 
-Method:   {0:<10s}
-Kind:     {1:<10s}
-Direct:   {2:<10s}
-E Tol:    {3:<10.3e}
-Dens Tol: {4:<10.3e}
+Method:      {0:<10s}
+Kind:        {1:<10s}
+Direct:      {2:<10s}
+E Tol:       {3:<10.3e}
+Dens Tol:    {4:<10.3e}
+E Tol NUM:   {5:<10.3e}
 """.format(self.get('method'),
            self.get('kind'),
            str(self.get('direct')),
            self.get('eps_e'),
-           self.get('eps_d')
+           self.get('eps_d'), 
+           self.get('eps_n')
            ))
 
         return out

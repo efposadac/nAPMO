@@ -7,11 +7,13 @@ from scipy.optimize import minimize
 
 import napmo
 
+
 def INDEX(i, j):
     if i > j:
         return int((i * (i + 1) / 2) + j)
     else:
         return int((j * (j + 1) / 2) + i)
+
 
 class PSIO(napmo.PSIB):
     """
@@ -30,6 +32,7 @@ class PSIO(napmo.PSIB):
         self._grid = psin._grid
         self._lmax = psin._lmax
         self.Vnuc = psin.Vnuc
+        self._mass_inv = psin._mass_inv
 
         self._exchange = False
         self.iterations = 0
@@ -99,6 +102,7 @@ class PSIO(napmo.PSIB):
         """
         self._compute_nuclear_operator()
         self.V[:] = self._get_operator_matrix(self.Vgrid)
+        self.V *= self.species.get('charge')
 
         # print("\n Attraction Matrix")
         # print(self.V)
@@ -116,7 +120,7 @@ class PSIO(napmo.PSIB):
             napmo.cext.nwavefunction_compute_2body_matrix_atm(
                 byref(self), self._grid._this, self.psi, self.Jgrid, self.Kgrid)
 
-            self.G *= self.species.get('charge')**2
+            self.G *= self.species.get('charge')
 
         # print("\n G Matrix:")
         # print(self.G)
@@ -226,8 +230,6 @@ class PSIO(napmo.PSIB):
 
         self.Vgrid = np.array([phi * self.Vnuc for phi in self.psi])
 
-        self.Vgrid *= self.species.get('charge')
-
     def _compute_kinetic_operator(self):
         """
         Computes the action of the Kinetic operator on a trial function
@@ -238,7 +240,7 @@ class PSIO(napmo.PSIB):
         self.Tgrid = np.array([napmo.compute_kinetic(self._grid, phi, self.lmax)
                                for phi in self.psi])
 
-        self.Tgrid /= self.species.get('mass')
+        self.Tgrid *= self._mass_inv
 
     def _compute_2body_coulomb(self):
         """
@@ -251,6 +253,8 @@ class PSIO(napmo.PSIB):
 
                 self.Jgrid[:] = napmo.compute_coulomb(
                     self._grid, self.Dgrid.sum(axis=0), self.lmax)
+
+                self.Jgrid *= self.species.get('charge')
 
         # Debug information
         # print("Coulomb energy: ", 0.5 *
@@ -280,6 +284,9 @@ class PSIO(napmo.PSIB):
                                                         for k in range(self.ndim)
                                                         for l in range(self.ndim)]).sum(axis=0)
                                               for j in range(self.ndim)])
+
+                    self.Kgrid *= self.species.get('charge')
+
                 self._exchange = True
 
     def _get_operator_matrix(self, O):

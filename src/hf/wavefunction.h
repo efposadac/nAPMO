@@ -10,6 +10,7 @@ efposadac@unal.edu.co
 #ifndef WAVEFUNCTION_H
 #define WAVEFUNCTION_H
 
+#include <math.h>
 #include "../grid/becke.h"
 #include "../ints/ints.h"
 #include "../system/basis_set.h"
@@ -18,6 +19,7 @@ efposadac@unal.edu.co
 
 struct wf {
   double *S; // Overlap matrix
+  double *X; // Tranformation matrix
   double *T; // Kinetic matrix
   double *V; // Nuclear matrix
   double *H; // One-particle Hamiltonian
@@ -44,6 +46,8 @@ extern "C" {
 #endif
 
 void wavefunction_guess_hcore(WaveFunction *psi);
+
+void wavefunction_transformation_matrix(WaveFunction *psi);
 
 void wavefunction_compute_coefficients(WaveFunction *psi);
 

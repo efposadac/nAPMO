@@ -38,6 +38,32 @@ void wavefunction_guess_hcore(WaveFunction *psi) {
   // std::cout << D << std::endl;
 }
 
+void wavefunction_transformation_matrix(WaveFunction *psi){
+  int ndim = psi->ndim;
+  MMap X(psi->X, ndim, ndim);  
+  VMap O(psi->O, ndim);
+
+  // Eigen::EigenSolver<Matrix> eig_solver(S);
+
+  // auto eig_val = eig_solver.eigenvalues().real();
+  Matrix eig_vec = X;
+
+  using namespace std;
+
+  // cout << O.sum() << " " << X.sum() << endl;
+
+  for (int i = 0; i < ndim; ++i)
+    for (int j = 0; j < ndim; ++j) {
+      X(i, j) /= sqrt(O(j));
+    }
+
+  // cout << X.sum() << " "<< eig_vec.sum()<< endl;
+
+  X *= eig_vec.transpose();
+
+}
+
+
 void wavefunction_iterate(WaveFunction *psi) {
 
   int ndim = psi->ndim;

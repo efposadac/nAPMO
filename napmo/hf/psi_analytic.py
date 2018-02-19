@@ -11,6 +11,7 @@ from __future__ import print_function
 from ctypes import *
 import numpy as np
 import napmo
+from scipy import linalg as SLA
 
 
 class PSIA(napmo.PSIB):
@@ -18,8 +19,8 @@ class PSIA(napmo.PSIB):
     Defines the Fock operator for a Hartree-Fock Calculation with analytic calculation of integrals.
     """
 
-    def __init__(self, species, point_charges, total_mass):
-        super(PSIA, self).__init__(species)
+    def __init__(self, species, point_charges, total_mass, options=None):
+        super(PSIA, self).__init__(species, options=options)
 
         # Initialize Libint object to calculate integrals
         self._libint = napmo.cext.LibintInterface_new(species.get('id'))
@@ -39,6 +40,7 @@ class PSIA(napmo.PSIB):
 
         # Initialize all
         self.compute_overlap()
+        self.compute_transformation()
         self.compute_kinetic()
         self.compute_nuclear()
         self.compute_hcore()
@@ -49,23 +51,37 @@ class PSIA(napmo.PSIB):
         Computes the overlap matrix
         """
         napmo.cext.LibintInterface_compute_1body_ints(self._libint, 1, self.S)
-        # print("\n Overlap Matrix:")
+        # print("\n Overlap Matrix:" + self.symbol + ": ", self.S.sum())
         # print(self.S)
+
+    def compute_transformation(self):
+        """
+        Computes the overlap matrix
+        """
+        # S = np.fromfile("Overlap.txt", sep=" ", dtype=np.float64)
+        # S = S.reshape(self.ndim, self.ndim)
+        # self.S[:] = S
+
+        tmp = SLA.lapack.dsyev(self.S)
+        self.O[:] = tmp[0]
+        self.X[:] = tmp[1]
+        napmo.cext.wavefunction_transformation_matrix(byref(self))
+        # print("\n Transformation Matrix:" + self.symbol + ": ", self.X.sum())
+        # print(self.X)
 
     def compute_kinetic(self):
         """
         Computes the Kinetic matrix
         """
         napmo.cext.LibintInterface_compute_1body_ints(self._libint, 2, self.T)
-        self.T /= self.species.get('mass')
 
-        # Correction
-        # correction = (1.0 / self.species.get('mass')) - \
-        #     (1.0 / self._total_mass)
+        if self._tf:
+            # Translational correction
+            self.T *= ((1.0 / self.species.get('mass')) - (1.0 / self._total_mass))
+        else:
+            self.T /= self.species.get('mass')
 
-        # self.T *= correction
-
-        # print("\n Kinetic Matrix: ", self.species.get('symbol'))
+        # print("\n Kinetic Matrix (A): "+ self.symbol + ": ", self.T.sum())
         # print(self.T)
 
     def compute_nuclear(self):
@@ -77,7 +93,7 @@ class PSIA(napmo.PSIB):
                 self._libint, 3, self.V)
 
         self.V *= -self.species.get('charge')
-        # print("\n Attraction Matrix")
+        # print("\n Attraction Matrix" + self.symbol + ": ", self.V.sum())
         # print(self.V)
 
     def compute_2body(self, direct=False):
@@ -87,23 +103,26 @@ class PSIA(napmo.PSIB):
         Args:
             direct (bool) : Whether to calculate eris on-the-fly or not
         """
-        if self.species.get('size') > 1:
+        # print("\n D Matrix:" + self.symbol + ": ", self.D.sum())
+        if self.species.get('size') > 0:
 
-            napmo.cext.LibintInterface_init_2body_ints(self._libint)
+            with napmo.runtime.timeblock('Numerical coupling ints'):
 
-            if direct:
-                napmo.cext.LibintInterface_compute_2body_direct(
-                    self._libint, self.D, self.G)
-            else:
-                if not self._ints:
-                    self._ints = napmo.cext.LibintInterface_compute_2body_ints(
-                        self._libint, self.D)
-                napmo.cext.wavefunction_compute_2body_matrix(
-                    byref(self), self._ints)
+                napmo.cext.LibintInterface_init_2body_ints(self._libint)
 
-            self.G *= self.species.get('charge')**2
+                if direct:
+                    napmo.cext.LibintInterface_compute_2body_direct(
+                        self._libint, self.D, self.G)
+                else:
+                    if not self._ints:
+                        self._ints = napmo.cext.LibintInterface_compute_2body_ints(
+                            self._libint, self.D)
+                    napmo.cext.wavefunction_compute_2body_matrix(
+                        byref(self), self._ints)
 
-            # print("\n G Matrix:")
+                self.G *= self.species.get('charge')**2
+
+            # print("\n G Matrix:" + self.symbol + ": ", self.G.sum())
             # print(self.G)
 
     def compute_coupling(self, other_psi, direct=False):
@@ -125,7 +144,7 @@ class PSIA(napmo.PSIB):
 
         self.J += np.tril(self.J, -1).T
 
-        # print("\n Coupling Matrix " + self.symbol + ": ")
+        # print("\n Coupling Matrix " + self.symbol + ": ", self.J.sum())
         # print(self.J)
 
     def compute_hcore(self):
@@ -133,7 +152,7 @@ class PSIA(napmo.PSIB):
         Builds the Hcore matrix
         """
         self.H[:] = self.T + self.V
-        # print("\n hcore Matrix")
+        # print("\n hcore Matrix" + self.symbol + ": " , self.H.sum())
         # print(self.H)
 
     def compute_guess(self):
@@ -142,10 +161,10 @@ class PSIA(napmo.PSIB):
         :math:`H C = e S C`
         """
         napmo.cext.wavefunction_guess_hcore(byref(self))
-        # print("\n Coefficients Matrix")
+        # print("\n Coefficients Matrix" + self.symbol + ": ", self.C.sum())
         # print(self.C)
 
-        # print("\n Density Guess")
+        # print("\n Density Guess" + self.symbol + ": ", self.D.sum())
         # print(self.D)
 
     def build_fock(self):
@@ -154,5 +173,5 @@ class PSIA(napmo.PSIB):
         """
 
         self.F[:] = self.H + self.G + self.J
-        # print("\n Fock Matrix:")
+        # print("\n Fock Matrix:" + self.symbol + ": ", self.F.sum())
         # print(self.F)

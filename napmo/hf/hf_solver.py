@@ -23,25 +23,28 @@ class HF(object):
         if options:
             self.options.update(options)
 
+        # Analytic initialization
+        self.PSI = [napmo.PSIA(self.system.get_species(i),
+                               self.system.point_charges,
+                               self.system.total_mass, 
+                               options = self.options)
+                    for i in range(self.system.size_species)]
+
         if 'hybrid' in self.options:
             self.options['kind'] = 'numeric'
             self.options['hybrid'] = {k: v for d in self.options.get('hybrid', {})
                                       for k, v in d.items()}
 
-        # Analytic initialization
-        self.PSI = [napmo.PSIA(self.system.get_species(i),
-                               self.system.point_charges,
-                               self.system.total_mass)
-                    for i in range(self.system.size_species)]
-
         self._pce = sum([psi.pce for psi in self.PSI])
 
         # SCF solver
-        self.scf = napmo.SCF(options=self.options, pce=self._pce, pprint=pprint)
+        self.scf = napmo.SCF(options=self.options,
+                             pce=self._pce, pprint=pprint)
 
         # Numerical initialization
         self._mgrid = []
         self.NPSI = []
+        self.HPSI = []
 
         if self.get('kind') is 'numeric':
 
@@ -51,7 +54,7 @@ class HF(object):
             else:
                 self.scf.single(self.PSI[-1], pprint=pprint)
 
-            # Build grids and numerical wavefunctions
+            # Build grids and numerical wave-functions
             for p, key in enumerate(system.keys()):
 
                 particle = system.get(key, {})
@@ -74,9 +77,23 @@ class HF(object):
                 if pprint:
                     self._mgrid[-1].show()
 
-                if self.get('hybrid', {}).get(self.PSI[p].symbol, 'N') == 'N':
-                    self.NPSI.append(napmo.PSIN(
-                        self.PSI[p], self._mgrid[-1], debug=self.get('debug')))
+                if 'hybrid' in self.options:
+
+                    if self.get('hybrid', {}).get(self.PSI[p].symbol, 'N') == 'N':
+                        self.HPSI.append(napmo.PSIN(
+                            self.PSI[p], self._mgrid[0], debug=self.get('debug')))
+
+                    elif self.get('hybrid', {}).get(self.PSI[p].symbol, 'N') == 'A':
+                        self.HPSI.append(napmo.PSIH(self.system.get_species(p),
+                                                    self.system.point_charges,
+                                                    self.system.total_mass,
+                                                    self._mgrid[0],
+                                                    self.PSI[p]))
+
+                else:
+                    if self.get('hybrid', {}).get(self.PSI[p].symbol, 'N') == 'N':
+                        self.NPSI.append(napmo.PSIN(
+                            self.PSI[p], self._mgrid[-1], debug=self.get('debug')))
 
         self._energy = 0.0
 
@@ -140,6 +157,20 @@ class HF(object):
 
         if pprint:
             self.scf.show_results(self.NPSI)
+
+    def compute_hybrid(self, pprint=True):
+        """
+        Hybrid HF
+        """
+
+        # Only multi-species is expected.
+        with napmo.runtime.timeblock('SCF Multi'):
+            self.scf.hmulti(self.HPSI, pprint=pprint)
+
+        self._energy = self.scf.energy
+
+        if pprint:
+            self.scf.show_results(self.HPSI)
 
     def get(self, key, default=None):
         """

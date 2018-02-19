@@ -47,12 +47,21 @@ class PSIN(napmo.PSIB):
                                    ndim=self._aux_ndim)
 
         self._debug = debug
-        self._res = '--'
+        self._res = np.ones(self.ndim)
         self._diis = napmo.cext.LibintInterface_diis_new(2)
         self._pc = psix._pc
         self.species = psix.species
         self._e = psix.O[:self.ndim].copy()
         self._total_mass = psix._total_mass
+        self._energy = psix._energy
+        self._tf = psix._tf
+
+        if self._tf:
+            # TF Correction
+            self._mass_inv = ((1.0 / self.species.get('mass')) - (1.0 / self._total_mass))
+        else:
+            self._mass_inv = 1.0 / self.species.get('mass')
+
 
         self._grid = grid
         self._lmax = int(napmo.lebedev_get_order(self._grid.nang) / 2)
@@ -109,13 +118,7 @@ class PSIN(napmo.PSIB):
         self._compute_kinetic_operator()
         self.T[:] = self._get_operator_matrix(self.Tgrid)
 
-        # Correction
-        # correction = (1.0 / self.species.get('mass')) - \
-        #     (1.0 / self._total_mass)
-
-        # self.T *= correction
-
-        # print("\n Kinetic Matrix:", self.symbol)
+        # print("\n Kinetic Matrix (N): "+ self.symbol + ": ", self.T.sum())
         # print(self.T)
 
     def compute_nuclear(self):
@@ -125,6 +128,7 @@ class PSIN(napmo.PSIB):
 
         self._compute_nuclear_operator()
         self.V[:] = self._get_operator_matrix(self.Vgrid)
+        self.V *= self.species.get('charge')
 
         # print("\n Attraction Matrix", self.symbol)
         # print(self.V)
@@ -142,7 +146,7 @@ class PSIN(napmo.PSIB):
             napmo.cext.nwavefunction_compute_2body_matrix_mol(
                 byref(self), self._grid._this, self.psi, self.Jgrid, self.Kgrid)
 
-            self.G *= self.species.get('charge')**2
+            self.G *= self.species.get('charge')
 
         # print("\n G Matrix:", self.symbol)
         # print(self.G)
@@ -155,6 +159,8 @@ class PSIN(napmo.PSIB):
             other_psi (WaveFunction) : WaveFunction object for the other species.
             direct (bool) : Whether to calculate eris on-the-fly or not
         """
+
+        # TODO check Cgrid for more than one species
         aux = np.zeros([self._aux_ndim, self._aux_ndim])
         self.J[:] = 0.0
         for psi in other_psi:
@@ -163,13 +169,14 @@ class PSIN(napmo.PSIB):
                 psi.Cgrid = napmo.compute_coulomb(
                     psi._grid, psi.Dgrid.sum(axis=0), psi.lmax)
 
-                psi.Cgrid *= self.species.get('charge') * \
-                    psi.species.get('charge')
+                psi.Cgrid *= psi.species.get('charge')
 
                 napmo.cext.nwavefunction_compute_coupling(
                     byref(self), self._grid._this, self.psi, psi.Cgrid, aux)
 
                 self.J += aux
+
+        self.J *= self.species.get('charge')
 
         # print("\n Coupling Matrix: ", self.symbol)
         # print(self.J)
@@ -250,7 +257,7 @@ class PSIN(napmo.PSIB):
         self.Tgrid = np.array([napmo.compute_kinetic(self._grid, phi, self.lmax)
                                for phi in self.psi])
 
-        self.Tgrid /= self.species.get('mass')
+        self.Tgrid *= self._mass_inv
 
     def _compute_nuclear_operator(self):
         """
@@ -262,19 +269,20 @@ class PSIN(napmo.PSIB):
         """
 
         self.Vgrid = np.array([phi * self.Vnuc for phi in self.psi])
-        self.Vgrid *= self.species.get('charge')
 
     def _compute_2body_coulomb(self):
         """
         Computes coulomb potential solving Poisson's equation
         following Becke procedure using the current density
         """
-        if self.species.get('size') > 1:
+        if self.species.get('size') > 0:
 
             with napmo.runtime.timeblock('Numerical coulomb'):
 
                 self.Jgrid[:] = napmo.compute_coulomb(
                     self._grid, self.Dgrid.sum(axis=0), self.lmax)
+
+                self.Jgrid *= self.species.get('charge')
 
         # Debug information
         # print("Coulomb energy " + self.symbol + ": ", 0.5 *
@@ -290,7 +298,7 @@ class PSIN(napmo.PSIB):
 
         """
         if not self._exchange:
-            if self.species.get('size') > 1:
+            if self.species.get('size') > 0:
 
                 with napmo.runtime.timeblock('Numerical exchange'):
 
@@ -303,6 +311,8 @@ class PSIN(napmo.PSIB):
                     self.Kgrid[:] = np.array([np.array([self.psi[j, :] * aux[INDEX(i, j)]
                                                         for j in range(self.ndim)]).sum(axis=0)
                                               for i in range(self.ndim)])
+
+                    self.Kgrid *= self.species.get('charge')
 
                 self._exchange = True
 
@@ -326,13 +336,26 @@ class PSIN(napmo.PSIB):
 
         return M
 
+    def _compute_potential(self, coupling):
+        """
+        Computes the total potential
+        """
+        # print("Vnuc", self.Vnuc.sum() * self.species.get('charge'))
+        # print("Jgrid", self.Jgrid.sum() * self.species.get('charge'))
+        # print("Kgrid", self.Kgrid.sum() * self.species.get('charge'))
+        # print("coupling", coupling.sum() * self.species.get('charge'))
+
+        return np.array([(self.Vnuc + self.Jgrid + coupling) * self.species.get('charge')])
+
     def _compute_residual(self, coupling):
         """
         Build R (Eq. 10) :math:`R = (T + V - e) \phi`
         """
 
-        self.Rgrid = np.array([T + (((self.Vnuc * self.species.get('charge')) + self.Jgrid + coupling - e) * phi) - k
-                               for T, phi, k, e in zip(self.Tgrid, self.psi, self.Kgrid, self.O)])
+        V_tot = self._compute_potential(coupling)
+
+        self.Rgrid = np.array([T + ((V - e) * phi) - (K * self.species.get('charge'))
+                               for T, V, e, phi, K in zip(self.Tgrid, V_tot, self.O, self.psi, self.Kgrid)])
 
     def _compute_energy_correction(self):
         """
@@ -348,12 +371,14 @@ class PSIN(napmo.PSIB):
         """
         Computes \Delta \psi. Eq. 13
         """
-        # TODO: K missing?
+
+        V_tot = self._compute_potential(coupling)
+
+        # print("V_tot", V_tot.sum())
+
         self.delta_psi = np.array([
-            napmo.compute_dpsi(self._grid, self.lmax, phi, doi, oi, ri,
-                               (self.Vnuc * self.species.get('charge')) + coupling,
-                               (self.Jgrid), self.species.get('mass'))
-            for phi, doi, oi, ri in zip(self.psi, self.delta_e, self._e, self.Rgrid)])
+            napmo.compute_dpsi(self._grid, self.lmax, phi, doi, oi, ri, V, self._mass_inv, self.species.get('charge'))
+            for phi, doi, oi, ri, V in zip(self.psi, self.delta_e, self._e, self.Rgrid, V_tot)])
 
     def _compute_delta_orb(self):
         """
@@ -372,26 +397,29 @@ class PSIN(napmo.PSIB):
         if self._debug:
             print('Optimizing Wavefunction....')
 
-        aux = np.zeros(self.Jgrid.shape)
-        if other_psi is not None:
-            aux[:] = np.array([psi.Cgrid
-                               for psi in other_psi
-                               if psi.sid != self.sid]).sum(axis=0)
+        if np.abs(self._res.sum()) < 1.0e-5:
+            print("No wave-function optimization!!!")
+        else:
+            aux = np.zeros(self.Jgrid.shape)
+            if other_psi is not None:
+                aux[:] = np.array([psi.Cgrid
+                                   for psi in other_psi
+                                   if psi.sid != self.sid]).sum(axis=0)
 
-        self._compute_residual(aux)
-        self._compute_energy_correction()
-        self._compute_delta_psi(aux)
-        self._compute_delta_orb()
+            self._compute_residual(aux)
+            self._compute_energy_correction()
+            self._compute_delta_psi(aux)
+            self._compute_delta_orb()
 
-        # TODO: check optimization
-        self.psi, self._e = self._optimize.optimize(self, scf, other_psi)
+            # TODO: check optimization
+            self.psi, self._e = self._optimize.optimize(self, scf, other_psi)
 
-        self.normalize()
-        self.compute_1body()
-        self._exchange = False
+            self.normalize()
+            self.compute_1body()
+            self._exchange = False
 
-        if self._debug:
-            print('...Done!')
+            if self._debug:
+                print('...Done!')
 
     @property
     def lmax(self):

@@ -369,9 +369,8 @@ LibintInterface::compute_2body_ints(const Matrix &D, const Matrix &Schwartz,
     engines[t].print_timers();
 #endif
 
-  // std::cout << " Number of unique integrals for species: " << sID << "
-  // = "
-  //           << num_ints_computed << std::endl;
+  // std::cout << " Number of unique integrals for species: " << sID << " = " << num_ints_computed << std::endl;
+
   return buffers;
 }
 
@@ -554,8 +553,8 @@ void LibintInterface::compute_2body_disk(const char *filename, const Matrix &D,
     engines[t].print_timers();
 #endif
 
-  std::cout << " Number of unique integrals for species: " << sID << " = "
-            << num_ints_computed << std::endl;
+  // std::cout << " Number of unique integrals for species: " << sID << " = "
+  //           << num_ints_computed << std::endl;
 }
 
 Matrix LibintInterface::compute_2body_direct(const Matrix &D,
@@ -920,8 +919,8 @@ void LibintInterface::compute_coupling_disk(LibintInterface &other,
     engines[t].print_timers();
 #endif
 
-  std::cout << " Number of unique integrals for species: " << sID << " / "
-            << other.get_sID() << " = " << num_ints_computed << std::endl;
+  // std::cout << " Number of unique integrals for species: " << sID << " / "
+  //           << other.get_sID() << " = " << num_ints_computed << std::endl;
 }
 
 Matrix LibintInterface::compute_coupling_direct(LibintInterface &other,
@@ -1102,10 +1101,7 @@ Matrix LibintInterface::compute_coupling_direct(LibintInterface &other,
     engines[t].print_timers();
 #endif
 
-  // std::cout << " Number of unique integrals for species: " << sID << "
-  // / "
-  //           << other.get_sID() << " = " << num_ints_computed <<
-  //           std::endl;
+  // std::cout << " Number of unique integrals for species: " << sID << " / " << other.get_sID() << " = " << num_ints_computed << std::endl;
 
   return B[0];
 }

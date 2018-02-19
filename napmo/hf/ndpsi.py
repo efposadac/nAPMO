@@ -1,4 +1,4 @@
- # file: npsi.py
+# file: npsi.py
 # nAPMO package
 # Copyright (c) 2016, Edwin Fernando Posada
 # All rights reserved.
@@ -12,7 +12,7 @@ import numpy as np
 import napmo
 
 
-def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_nuc, J, mass):
+def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_tot, mass_inv, charge):
     """
     Computes \Delta \psi from Becke's paper
 
@@ -23,8 +23,8 @@ def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_nuc, J, mass):
         doi (float): Delta orbital energy.
         oi (float): Orbital energy.
         ri (ndarray): Residual evaluated on the grid.
-        V_nuc (ndarray): Nuclear potential evaluated on the grid.
-        J (ndarray): Two-particles potential evaluated on the grid.
+        V_tot (ndarray): Electrostatic potential evaluated on the grid.
+        mass_inv (float) : Mass inverse
     """
     offset = 0
 
@@ -42,8 +42,7 @@ def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_nuc, J, mass):
         sph_expansion = atgrid.spherical_expansion(lmax, psi)
 
         V_sph = atgrid.spherical_average(
-            (V_nuc[offset:offset + atgrid.size] + J[offset:offset + atgrid.size]) *
-            grid.becke_weights[offset:offset + atgrid.size])
+            V_tot[offset:offset + atgrid.size] * grid.becke_weights[offset:offset + atgrid.size])
 
         rtf = atgrid.radial_grid.rtransform
 
@@ -63,18 +62,19 @@ def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_nuc, J, mass):
                 mu = napmo.CubicSpline(aux,
                                        rtransform=atgrid.radial_grid.rtransform)
 
-                fy = -2 * mu.y
-                fd = -2 * mu.dx
+                fy = -2.0 / mass_inv * mu.y
+                fd = -2.0 / mass_inv * mu.dx
+
                 f = napmo.CubicSpline(fy, fd, rtf)
 
-                b = napmo.CubicSpline(2 * rinv, -2 * r2inv, rtf)
+                b = napmo.CubicSpline(2.0 * rinv, -2.0 * r2inv, rtf)
 
-                a = napmo.CubicSpline(-l * (l + 1) * r2inv - 2.0 * (V_sph - oi - doi), rtransform=rtf)
+                a = napmo.CubicSpline(-2.0 / mass_inv * ((l * (l + 1.0) * r2inv) + (V_sph - oi - doi)), rtransform=rtf)
 
                 bcs = (0.0, None, 0.0, None)
 
                 p = napmo.solve_ode2(
-                    b, a, f, bcs, napmo.PowerExtrapolation(-l - 1))
+                    b, a, f, bcs, napmo.PotentialExtrapolation(l))
 
                 res.append(p)
                 idx += 1

@@ -44,7 +44,44 @@ O-HYDROGEN H (aug-cc-pVDZ)
     2    1    1
       0.7270000              1.0000000        
     3    1    1
-      0.1410000              1.0000000        
+      0.1410000              1.0000000     
+# This basis set uses spherical components
+O-E- E-ALPHA (aug-cc-pVDZ)
+#
+# Primary Functions: (5s,2p) -> [3s,2p]
+# Augmenting Functions: (4s,1p) -> [2s,1p]
+# Augmenting Functions: (1s,1p)
+    5
+    1    0    3
+     13.0100000              0.0196850        
+      1.9620000              0.1379770        
+      0.4446000              0.4781480        
+    2    0    1
+      0.1220000              1.0000000        
+    3    0    1
+      0.0297400              1.0000000        
+    2    1    1
+      0.7270000              1.0000000        
+    3    1    1
+      0.1410000              1.0000000    
+O-E+ E+ (aug-cc-pVDZ)
+#
+# Primary Functions: (5s,2p) -> [3s,2p]
+# Augmenting Functions: (4s,1p) -> [2s,1p]
+# Augmenting Functions: (1s,1p)
+    5
+    1    0    3
+     13.0100000              0.0196850        
+      1.9620000              0.1379770        
+      0.4446000              0.4781480        
+    2    0    1
+      0.1220000              1.0000000        
+    3    0    1
+      0.0297400              1.0000000        
+    2    1    1
+      0.7270000              1.0000000        
+    3    1    1
+      0.1410000              1.0000000            
 O-HELIUM He (aug-cc-pVDZ)
 #
 # Primary Functions: (5s,2p) -> [3s,2p]

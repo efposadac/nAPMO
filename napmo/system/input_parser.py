@@ -83,7 +83,7 @@ def fix_casting(item):
         return int(item)
     except ValueError:
         try:
-            return float(item)
+            return np.float64(item)
         except ValueError:
             # Boolean
             if item == "True":
@@ -304,7 +304,8 @@ class InputParser(object):
                    'rhf': {'method': 'rhf'},
                    'analytic': {'kind': 'analytic'},
                    'numeric': {'kind': 'numeric'},
-                   'direct': {'direct': True}
+                   'direct': {'direct': True},
+                   'tf': {'tf': True}
                    }
 
         aux = {}
