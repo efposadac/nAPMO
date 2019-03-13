@@ -1,0 +1,23 @@
+# Molecule definition
+molecule [e-:-1:1]{
+    H  0.000   0.513   0.000
+    H  0.445   -0.257  0.000
+    H  -0.445  -0.257  0.000
+}
+
+# basis-set specification
+basis {
+    e- AUG-CC-PVDZ
+}
+
+# scf options
+scf {
+    hf
+}
+
+code {
+result = lambda x: print("PASS!") if abs(x) < 1e-5  else print("FAILED!")
+ref_energy = -1.294005
+diff_energy = ref_energy - Energy
+result(diff_energy) 
+}

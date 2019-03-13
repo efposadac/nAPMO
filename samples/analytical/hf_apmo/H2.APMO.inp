@@ -14,3 +14,10 @@ scf {
     maxiter = 1000
     hf
 }
+
+code {
+result = lambda x: print("PASS!") if abs(x) < 1e-5  else print("FAILED!")
+ref_energy = -126.604525
+diff_energy = ref_energy - Energy
+result(diff_energy)    
+}

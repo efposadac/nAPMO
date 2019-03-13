@@ -1,6 +1,6 @@
 # Molecule definition
-molecule [e-:0:1]{
-He  0.000   0.000   0.000
+molecule {
+H  0.000   0.000   0.000
 }
 
 # basis-set specification
@@ -10,12 +10,12 @@ basis {
 
 # scf options
 scf {
-    uhf
+    hf
 }
 
 code {
 result = lambda x: print("PASS!") if abs(x) < 1e-5  else print("FAILED!")
-ref_energy = -2.807784
+ref_energy = -0.466582
 diff_energy = ref_energy - Energy
 result(diff_energy)    
 }

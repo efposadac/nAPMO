@@ -29,9 +29,9 @@ class SCF(object):
     def __init__(self, options=None, pce=0.0, pprint=True):
         super(SCF, self).__init__()
         self.options = {'maxiter': 100,
-                        'eps_e': 1e-9,
+                        'eps_e': 1e-7,
                         'eps_n': 1e-7,
-                        'eps_d': 1e-9,
+                        'eps_d': 1e-7,
                         'eps_r': 1e-5,
                         'method': 'hf',
                         'kind': 'analytic',
@@ -55,7 +55,12 @@ class SCF(object):
             print("Point charges energy: {0:<12.8f}".format(self._pce))
 
     def iteration_single(self, psi):
+        """
+        Performs a single iteration for one species.
 
+        Args:
+            psi (WaveFunction) : WaveFunction object for one species.
+        """
         with napmo.runtime.timeblock('2 body ints'):
             psi.compute_2body(self.get('direct'))
 
@@ -134,13 +139,14 @@ class SCF(object):
                 psi.plot_dens(grid, kind="anal")
                 plt.show()
 
-        # elif self.get('debug') and isinstance(psi, napmo.PSIO):
-        #     psi.plot_dens()
-            # plt.show()
 
     def multi(self, PSI, pprint=True, case=0):
         """
         Perform SCF iteration for all species in this object.
+
+        Args:
+            psi (WaveFunction) : WaveFunction object for one species.
+            pprint (bool): Whether to print or not the progress of the calculation.
         """
 
         if pprint and case is 0:
@@ -229,12 +235,12 @@ class SCF(object):
         print('{0:11s} {1:>12.7f}'.
                       format("ANALYTICAL ", self._energy))
 
-        # if self.get('debug'):
-        for psi in PSI:
-            grid = napmo.BeckeGrid(psi.species, 100, 110)
-            psi.plot_dens(grid, kind="anal")
-            # plt.show()
-            # plt.savefig('analytic_dens.png')
+        if self.get('debug'):
+            for psi in PSI:
+                grid = napmo.BeckeGrid(psi.species, 100, 110)
+                psi.plot_dens(grid, kind="anal")
+                # plt.show()
+                # plt.savefig('analytic_dens.png')
 
     def nsingle(self, psi, pprint=True):
         """
