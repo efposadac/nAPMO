@@ -69,8 +69,8 @@ void LibintInterface::add_basis(BasisSet *basis) {
         cont.get_l()[0])
       continue;
 
-    std::vector<double> exponents;
-    std::vector<double> coefficients;
+    libint2::svector<double> exponents;
+    libint2::svector<double> coefficients;
 
     for (auto prim : cont.get_prim()) {
       exponents.push_back(prim.get_zeta());
