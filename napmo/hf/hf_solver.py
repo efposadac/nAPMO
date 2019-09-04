@@ -106,11 +106,11 @@ class HF(object):
         """
         if self.get('kind') is 'numeric':
             if 'hybrid' in self.options:
-                self.compute_hybrid()
+                self.compute_hybrid(pprint)
             else:
-                self.compute_numeric()
+                self.compute_numeric(pprint)
         else:
-            self.compute_analytic()
+            self.compute_analytic(pprint)
 
         return self._energy
 
