@@ -20,8 +20,8 @@ class PSIH(napmo.PSIA):
     Defines the Fock operator for a Hartree-Fock Calculation with hybrid calculation of integrals.
     """
 
-    def __init__(self, species, point_charges, total_mass, grid, psia=None):
-        super(PSIH, self).__init__(species, point_charges, total_mass)
+    def __init__(self, species, point_charges, total_mass, grid, psia):
+        super(PSIH, self).__init__(species, point_charges, total_mass, psia.options)
 
         self._grid = grid
         self._lmax = int(napmo.lebedev_get_order(self._grid.nang) / 2)

@@ -13,7 +13,7 @@ basis {
 scf {
     hf
     numeric
-    debug=True
+    debug=False
 }
 
 grid {

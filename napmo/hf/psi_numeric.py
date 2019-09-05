@@ -62,7 +62,6 @@ class PSIN(napmo.PSIB):
         else:
             self._mass_inv = 1.0 / self.species.get('mass')
 
-
         self._grid = grid
         self._lmax = int(napmo.lebedev_get_order(self._grid.nang) / 2)
 

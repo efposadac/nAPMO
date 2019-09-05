@@ -2,7 +2,7 @@
 
 molecule [e-:0:1] {
     H    0.000000  0.00000  0.367
-    H_1  0.000000 -0.00000 -0.367
+    H_1  0.000000  0.00000 -0.367
 }
 
 basis {
@@ -11,13 +11,14 @@ basis {
 }
 
 scf {
-    maxiter = 1000
+    maxiter = 100
     hf
 }
 
 code {
 result = lambda x: print("PASS!") if abs(x) < 1e-5  else print("FAILED!")
-ref_energy = -0.87588775224
+ref_energy = -1.075567138188
 diff_energy = ref_energy - Energy
+print(diff_energy)
 result(diff_energy)    
 }

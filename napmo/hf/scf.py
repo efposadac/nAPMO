@@ -30,9 +30,9 @@ class SCF(object):
         super(SCF, self).__init__()
         self.options = {'maxiter': 100,
                         'eps_e': 1e-7,
-                        'eps_n': 1e-7,
-                        'eps_d': 1e-7,
-                        'eps_r': 1e-5,
+                        'eps_n': 1e-5,
+                        'eps_d': 1e-6,
+                        'eps_r': 1e-4,
                         'method': 'hf',
                         'kind': 'analytic',
                         'direct': False,
@@ -139,7 +139,6 @@ class SCF(object):
                 psi.plot_dens(grid, kind="anal")
                 plt.show()
 
-
     def multi(self, PSI, pprint=True, case=0):
         """
         Perform SCF iteration for all species in this object.
@@ -185,14 +184,17 @@ class SCF(object):
                     else:
                         psi.convergence = napmo.Convergence(psi.F, psi.D)
 
-                    napmo.cext.wavefunction_iterate(byref(psi))
+                    with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
+                        napmo.cext.wavefunction_iterate(byref(psi))
 
                 for psi in PSI:
 
                     # Calculate 2 body Matrix
-                    psi.compute_2body(self.get('direct'))
-                    psi.compute_coupling(PSI, direct=self.get('direct'))
+                    with napmo.runtime.timeblock('2 body ints'):
+                        psi.compute_2body(self.get('direct'))
 
+                    with napmo.runtime.timeblock('Coupling ints'):
+                        psi.compute_coupling(PSI, direct=self.get('direct'))
 
             if case is 1:
                 for psi in PSI:
@@ -232,8 +234,7 @@ class SCF(object):
             self.multi(PSI, case=case)
             return
 
-        print('{0:11s} {1:>12.7f}'.
-                      format("ANALYTICAL ", self._energy))
+        print('{0:11s} {1:>12.7f}'.format("\nANALYTICAL ", self._energy))
 
         if self.get('debug'):
             for psi in PSI:

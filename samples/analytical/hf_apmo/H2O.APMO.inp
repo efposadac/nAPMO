@@ -24,7 +24,7 @@ basis {
 # direct = False 
 
 scf {
-    maxiter = 1000
+    maxiter = 100
     hf
     analytic
 }
@@ -34,8 +34,8 @@ scf {
 # and plot some graphics:
 
 code {
-result = lambda x: print("PASS!") if abs(x) < 1e-7  else print("FAILED!")
-ref_energy = -75.969794592884
+result = lambda x: print("PASS!") if abs(x) < 1e-6  else print("FAILED!")
+ref_energy = -74.921704947406
 diff_energy = ref_energy - Energy
 result(diff_energy)
 }
