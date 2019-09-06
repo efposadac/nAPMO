@@ -12,7 +12,7 @@ NAPMO is a numerical implementation of APMO - NEO - OMNE method.
 This program implements the  basis-set free  Hartree-Fock OMNE approach.
 
 * Edwin Fernando Posada
-* eposada@unal.edu.co
+* fernando.posada@temple.edu
 * Version 0.8
 
 **Prerequisites:**
