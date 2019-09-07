@@ -32,10 +32,10 @@ efposadac@unal.edu.co
 #define RTRANSFORM_H
 
 class RTransform {
- protected:
+protected:
   int npoint;
 
- public:
+public:
   RTransform(int npoint);
   virtual ~RTransform(){};
   virtual double radius(double t) = 0;
@@ -79,7 +79,7 @@ int RTransform_get_npoint(RTransform *rtransform);
 #endif
 
 class IdentityRTransform : public RTransform {
- public:
+public:
   IdentityRTransform(int npoint) : RTransform(npoint){};
   virtual double radius(double t);
   virtual double deriv(double t);
@@ -99,10 +99,10 @@ IdentityRTransform *IdentityRTransform_new(int npoint);
 #endif
 
 class LinearRTransform : public RTransform {
- private:
+private:
   double rmin, rmax, alpha;
 
- public:
+public:
   LinearRTransform(double rmin, double rmax, int npoint);
   virtual double radius(double t);
   virtual double deriv(double t);
@@ -129,10 +129,10 @@ double LinearRTransform_get_alpha(LinearRTransform *rtransform);
 #endif
 
 class ExpRTransform : public RTransform {
- private:
+private:
   double rmin, rmax, alpha;
 
- public:
+public:
   ExpRTransform(double rmin, double rmax, int npoint);
   virtual double radius(double t);
   virtual double deriv(double t);
@@ -159,10 +159,10 @@ double ExpRTransform_get_alpha(ExpRTransform *rtransform);
 #endif
 
 class ShiftedExpRTransform : public RTransform {
- private:
+private:
   double rmin, rshift, rmax, r0, alpha;
 
- public:
+public:
   ShiftedExpRTransform(double rmin, double rshift, double rmax, int npoint);
   virtual double radius(double t);
   virtual double deriv(double t);
@@ -194,11 +194,11 @@ double ShiftedExpRTransform_get_alpha(ShiftedExpRTransform *rtransform);
 #endif
 
 class PowerRTransform : public RTransform {
- private:
+private:
   double rmin, rmax;
   double power;
 
- public:
+public:
   PowerRTransform(double rmin, double rmax, int npoint);
   virtual double radius(double t);
   virtual double deriv(double t);
@@ -225,11 +225,11 @@ double PowerRTransform_get_power(PowerRTransform *rtransform);
 #endif
 
 class ChebyshevRTransform : public RTransform {
- private:
+private:
   double radii;
   double z;
 
- public:
+public:
   ChebyshevRTransform(double radii, int npoint);
   virtual double radius(double t);
   virtual double deriv(double t);

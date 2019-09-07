@@ -16,3 +16,4 @@ napmo.egg-info
 gmon.out
 /Debug
 *.x
+TMP

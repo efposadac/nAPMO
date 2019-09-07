@@ -56,6 +56,24 @@
         "spin": 0.5,
         "symbol": "e+"
     },
+    "e+alpha": {
+        "name": "positron",
+        "is_quantum": true,
+        "mass": 1.0,
+        "category": "lepton",
+        "charge": 1.0,
+        "spin": 0.5,
+        "symbol": "e+"
+    },
+    "e+beta": {
+        "name": "positron",
+        "is_quantum": true,
+        "mass": 1.0,
+        "category": "lepton",
+        "charge": 1.0,
+        "spin": 0.5,
+        "symbol": "e+"
+    },
     "u-": {
         "name": "muon",
         "is_quantum": true,

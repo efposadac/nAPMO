@@ -12,7 +12,7 @@ import numpy as np
 import copy
 
 import napmo
-
+import sys 
 
 class MolecularSystem(dict):
 
@@ -25,6 +25,8 @@ class MolecularSystem(dict):
     def __init__(self):
         super(MolecularSystem, self).__init__()
         self._point_charges = []
+        self._buff = ''
+        self._abe = ''
 
     def add_atom(self, symbol, origin, units='ANGSTROMS', quantum=False,
                  basis_name=None, basis_file=None):
@@ -44,7 +46,7 @@ class MolecularSystem(dict):
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
         if units is 'ANGSTROMS':
-            origin *= napmo.ANGSTROM_TO_BOHR
+            origin /= napmo.BOHR_TO_ANGSTROM
 
         # Fetching atom database
         atom = napmo.AtomicElement(symbol, origin, 'BOHR')
@@ -91,13 +93,18 @@ class MolecularSystem(dict):
         eparticle = napmo.ElementaryParticle(symbol, origin, 'BOHR')
 
         # setting defaults for species
-        self.setdefault(symbol, eparticle)
+        self.setdefault(symbol, copy.deepcopy(eparticle))
 
         self[symbol].setdefault('id', self.size_species - 1)
         self[symbol].setdefault('size', 0)
         self[symbol].setdefault('particles', [])
         self[symbol].setdefault('origin', [])
+        self[symbol].setdefault('is_electron', False)
+
         self[symbol].pop('origin')
+        
+        if symbol == 'e-':
+            self[symbol]['is_electron'] = True
 
         # load basis-set
         basis = None
@@ -116,12 +123,16 @@ class MolecularSystem(dict):
             eparticle['is_quantum'] = False
 
         self.get(symbol)['size'] += size
+
         self.get(symbol)['occupation'] = int(
             self.get(symbol)['size'] * self.get(symbol)['particlesfraction'])
 
         if particle:
             self.get(symbol)['particles'].append(particle)
         else:
+            if basis:
+                eparticle['basis'] = basis
+
             self.get(symbol)['particles'].append(eparticle)
 
         if not self.get(symbol).get('particles')[-1].is_quantum:
@@ -176,7 +187,7 @@ class MolecularSystem(dict):
 
         if basis:
             self.get(symbol)['basis'].update(basis)
-            nucleus['basis'] = basis
+            nucleus['basis'] = copy.deepcopy(basis)
         else:
             nucleus['is_quantum'] = False
 
@@ -188,7 +199,7 @@ class MolecularSystem(dict):
         self.get(symbol)['size'] += size
         self.get(symbol)['occupation'] = int(
             self.get(symbol)['size'] * self.get(symbol)['particlesfraction'])
-        self.get(symbol)['charge'] = nucleus.get('atomic_number', 1)
+        self.get(symbol)['charge'] = np.float64(nucleus.get('atomic_number', 1))
         self.get(symbol)['spin'] = nucleus.get('spin', 1)
         self.get(symbol)['mass'] = nucleus.get('mass', 1)
         self.get(symbol)['particles'].append(nucleus)
@@ -207,13 +218,28 @@ class MolecularSystem(dict):
         """
         assert isinstance(data, dict)
 
+        defaults = {key: {'charge': 0, 'multiplicity': 0}
+                    for key in self}
+
+        defaults.update(data)
+        data = defaults
+
+        self._buff += ("""
+
+Charges description:
+
+{0:<7s} {1:<7s} {2:<6s}
+-----------------------
+""".format(
+            "Symbol", "Charge", "Multi"))
+
         for key in data:
             if key not in self:
-                print("Imposible to set " + key +
+                print("Impossible to set " + key +
                       " charges: Particle does not exist!")
                 return
 
-            multi = data.get(key, {}).get('multiplicity', None)
+            multi = data.get(key, {}).get('multiplicity', 0)
             charge = data.get(key, {}).get('charge', 0)
 
             np = self.size_particles(key) + charge
@@ -221,7 +247,10 @@ class MolecularSystem(dict):
             # electronic case
             if key == 'e-':
                 if not multi:
-                    multi = 2 * ((np % 2) * 0.5) + 1
+                    multi = int(2 * ((np % 2) * 0.5) + 1)
+
+                self._buff += ('{0:<7s} {1:<7d} {2:<6d}\n'.format(
+                    key, charge, multi))
 
                 spin = (multi - 1) * 0.5
 
@@ -232,13 +261,18 @@ class MolecularSystem(dict):
                     print("Bad charge / multiplicity")
                     raise ValueError
 
-                alpha = (np - np % 2) * 0.5
-                alpha += spin / napmo.SPIN_ELECTRON
-                beta = np - alpha
+                alpha = int((eleft * 0.5) + nereq)
+                beta = int(eleft * 0.5)
                 keys = {'e-alpha': alpha, 'e-beta': beta}
+
+                self._abe = "\ne-alpha: {0:<3d} e-beta: {1:<3d}\n".format(alpha, beta)
 
                 if alpha != beta or open_shell:
                     for k in keys:
+
+                        if keys[k] == 0:
+                            continue
+
                         eparticle = napmo.ElementaryParticle(k)
                         eparticle.pop('origin')
 
@@ -260,9 +294,19 @@ class MolecularSystem(dict):
                     self.get('e-')['occupation'] = int(
                         self.get('e-')['size'] * self.get('e-')['particlesfraction'])
             else:
+                # TODO: Implement multiplicity for other species
+
+                self._buff += ('{0:<7s} {1:<7d} {2:<6d}\n'.format(
+                    key, charge, multi))
+
                 self.get(key, {})['size'] += charge
                 self.get(key, {})['occupation'] = int(
                     self.get(key, {})['size'] * self.get(key, {})['particlesfraction'])
+
+                self._abe += "{0:<7s}: {1:<3d}\n".format(key, self.get(key, {})['size'])
+                        
+        self._buff += "-----------------------"
+        self._abe += "\n--------------------------------------------------"
 
     def size_particles(self, symbol):
         """
@@ -301,19 +345,17 @@ class MolecularSystem(dict):
             if self.get(species, {}).get('id', -100) is sid:
                 return self.get(species)
 
-    def get_basis_as_cstruct(self, symbol):
-        """
-        Returns the basis set of the system of a given ``symbol`` particle as a
-        CTYPES structure.
+    def _get_total_mass(self):
+        output = 0
+        for species in self:
+            output += (self.get(species, {}).get('mass')
+                       * self.get(species, {}).get('size'))
 
-        Returns:
-            napmo.BasisSet_C: basis set CTYPES structure
-        """
-        out = None
-        basis = self.get_basis(symbol)
-        if basis:
-            out = napmo.BasisSet_C(basis)
-        return out
+        return output
+
+    @property
+    def total_mass(self):
+        return self._get_total_mass()
 
     @property
     def size_species(self):
@@ -366,4 +408,10 @@ Object: {0:9s}
 
         out += ('--------------------------------------------------')
 
-        return out + ''.join(s for s in basis)
+        out += ''.join(s for s in basis)
+
+        out += self._buff
+
+        out += self._abe
+
+        return out

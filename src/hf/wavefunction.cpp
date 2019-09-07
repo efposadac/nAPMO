@@ -9,69 +9,21 @@ efposadac@unal.edu.co
 
 #include "wavefunction.h"
 
-namespace napmo {
-
-unsigned int nthreads;
-
-// / fires off \c nthreads instances of lambda in parallel
-template <typename Lambda> void parallel_do(Lambda &lambda) {
-#ifdef _OPENMP
-#pragma omp parallel
-  {
-    auto thread_id = omp_get_thread_num();
-    lambda(thread_id);
-  }
-#else // use C++11 threads
-  std::vector<std::thread> threads;
-  for (unsigned int thread_id = 0; thread_id != napmo::nthreads; ++thread_id) {
-    if (thread_id != nthreads - 1)
-      threads.push_back(std::thread(lambda, thread_id));
-    else
-      lambda(thread_id);
-  } // threads_id
-  for (unsigned int thread_id = 0; thread_id < nthreads - 1; ++thread_id)
-    threads[thread_id].join();
-#endif
-}
-} // end namespace
-
-__inline void set_nthreads() {
-  {
-    using napmo::nthreads;
-    auto nthreads_cstr = getenv("OMP_NUM_THREADS");
-    nthreads = 1;
-    if (nthreads_cstr && strcmp(nthreads_cstr, "")) {
-      std::istringstream iss(nthreads_cstr);
-      iss >> nthreads;
-      if (nthreads > 1 << 16 || nthreads <= 0)
-        nthreads = 1;
-    }
-
-#if defined(_OPENMP)
-    omp_set_num_threads(nthreads);
-#endif
-    //     std::cout << "Will scale over " << nthreads
-    // #if defined(_OPENMP)
-    //               << " OpenMP"
-    // #else
-    //               << " C++11"
-    // #endif
-    //               << " threads" << std::endl;
-  }
-}
-
 void wavefunction_guess_hcore(WaveFunction *psi) {
 
-  int nbasis = psi->nbasis;
+  int ndim = psi->ndim;
 
-  Map S(psi->S, nbasis, nbasis);
-  Map H(psi->H, nbasis, nbasis);
-  Map C(psi->C, nbasis, nbasis);
-  Map D(psi->D, nbasis, nbasis);
+  MMap S(psi->S, ndim, ndim);
+  MMap H(psi->H, ndim, ndim);
+  MMap C(psi->C, ndim, ndim);
+  MMap D(psi->D, ndim, ndim);
+  VMap O(psi->O, ndim);
+
+  // std::cout<<ndim<<psi->occupation<<"\n";
 
   Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(H, S);
-  auto eps = gen_eig_solver.eigenvalues();
 
+  O = gen_eig_solver.eigenvalues();
   C = gen_eig_solver.eigenvectors();
 
   // std::cout << "\n\tC Matrix: " << "occupation: "<< psi->occupation<<"\n";
@@ -86,22 +38,63 @@ void wavefunction_guess_hcore(WaveFunction *psi) {
   // std::cout << D << std::endl;
 }
 
+void wavefunction_transformation_matrix(WaveFunction *psi){
+  int ndim = psi->ndim;
+  MMap X(psi->X, ndim, ndim);  
+  VMap O(psi->O, ndim);
+
+  // Eigen::EigenSolver<Matrix> eig_solver(S);
+
+  // auto eig_val = eig_solver.eigenvalues().real();
+  Matrix eig_vec = X;
+
+  using namespace std;
+
+  // cout << O.sum() << " " << X.sum() << endl;
+
+  for (int i = 0; i < ndim; ++i)
+    for (int j = 0; j < ndim; ++j) {
+      X(i, j) /= sqrt(O(j));
+    }
+
+  // cout << X.sum() << " "<< eig_vec.sum()<< endl;
+
+  X *= eig_vec.transpose();
+
+}
+
+
 void wavefunction_iterate(WaveFunction *psi) {
 
-  int nbasis = psi->nbasis;
-  Map S(psi->S, nbasis, nbasis);
-  Map C(psi->C, nbasis, nbasis);
-  Map H(psi->H, nbasis, nbasis);
-  Map D(psi->D, nbasis, nbasis);
-  Map L(psi->L, nbasis, nbasis);
-  Map G(psi->G, nbasis, nbasis);
-  Map F(psi->F, nbasis, nbasis);
+  int ndim = psi->ndim;
+  MMap S(psi->S, ndim, ndim);
+  MMap C(psi->C, ndim, ndim);
+  MMap H(psi->H, ndim, ndim);
+  MMap D(psi->D, ndim, ndim);
+  MMap L(psi->L, ndim, ndim);
+  MMap G(psi->G, ndim, ndim);
+  MMap J(psi->J, ndim, ndim);
+  MMap F(psi->F, ndim, ndim);
+  VMap O(psi->O, ndim);
 
   L = D;
 
+  // std::cout << "\n\tFock Matrix:\n";
+  // std::cout << F << std::endl;
+
+  // std::cout << "\n\tS Matrix:\n";
+  // std::cout << S << std::endl;
+
+  // std::cout << "\n\tDensity Matrix:\n";
+  // std::cout << D << std::endl;
+
   Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(F, S);
-  auto eps = gen_eig_solver.eigenvalues();
+
+  O = gen_eig_solver.eigenvalues();
   C = gen_eig_solver.eigenvectors();
+
+  // std::cout << "\n\tEigenvectors:\n";
+  // std::cout << O << std::endl;
 
   // std::cout << "\n\tC Matrix:\n";
   // std::cout << C << std::endl;
@@ -115,17 +108,17 @@ void wavefunction_iterate(WaveFunction *psi) {
   // std::cout << D << std::endl;
 
   // compute HF energy
-  auto ehf = D.cwiseProduct(H + (0.5 * G)).sum();
+  auto ehf = D.cwiseProduct(H + (0.5 * G) + J).sum();
   psi->energy = ehf;
   psi->rmsd = (D - L).norm();
 }
 
 void wavefunction_compute_coefficients(WaveFunction *psi) {
 
-  int nbasis = psi->nbasis;
-  Map S(psi->S, nbasis, nbasis);
-  Map C(psi->C, nbasis, nbasis);
-  Map F(psi->F, nbasis, nbasis);
+  int ndim = psi->ndim;
+  MMap S(psi->S, ndim, ndim);
+  MMap C(psi->C, ndim, ndim);
+  MMap F(psi->F, ndim, ndim);
 
   Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(F, S);
   auto eps = gen_eig_solver.eigenvalues();
@@ -137,10 +130,10 @@ void wavefunction_compute_coefficients(WaveFunction *psi) {
 
 void wavefunction_compute_density(WaveFunction *psi) {
 
-  int nbasis = psi->nbasis;
-  Map C(psi->C, nbasis, nbasis);
-  Map D(psi->D, nbasis, nbasis);
-  Map L(psi->L, nbasis, nbasis);
+  int ndim = psi->ndim;
+  MMap C(psi->C, ndim, ndim);
+  MMap D(psi->D, ndim, ndim);
+  MMap L(psi->L, ndim, ndim);
 
   L = D;
 
@@ -157,12 +150,12 @@ void wavefunction_compute_density(WaveFunction *psi) {
 
 void wavefunction_compute_energy(WaveFunction *psi) {
 
-  int nbasis = psi->nbasis;
-  Map H(psi->H, nbasis, nbasis);
-  Map D(psi->D, nbasis, nbasis);
-  Map G(psi->G, nbasis, nbasis);
-  Map J(psi->J, nbasis, nbasis);
-  
+  int ndim = psi->ndim;
+  MMap H(psi->H, ndim, ndim);
+  MMap D(psi->D, ndim, ndim);
+  MMap G(psi->G, ndim, ndim);
+  MMap J(psi->J, ndim, ndim);
+
   // compute HF energy
   auto ehf = D.cwiseProduct(H + (0.5 * G) + J).sum();
   psi->energy = ehf;
@@ -175,15 +168,16 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
 
   set_nthreads();
 
-  int nbasis = psi->nbasis;
-  Map D(psi->D, nbasis, nbasis);
-  Map G(psi->G, nbasis, nbasis);
+  int ndim = psi->ndim;
+  MMap D(psi->D, ndim, ndim);
+  MMap G(psi->G, ndim, ndim);
 
   G.setZero();
 
   auto factor = psi->kappa / psi->eta;
 
-  std::vector<Matrix> GB(nthreads, Matrix::Zero(nbasis, nbasis));
+  std::vector<Matrix> GB(nthreads, Matrix::Zero(ndim, ndim));
+  std::vector<Matrix> TEST(nthreads, Matrix::Zero(ndim, ndim));
 
   auto lambda = [&](unsigned int thread_id) {
 
@@ -197,7 +191,7 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
       auto s = ints->at(thread_id).p[i];
       auto val = ints->at(thread_id).val[i];
 
-      // cout << p << " " << q << " " << r << " " << s << " " << val << endl;
+      // std::cout << p << " " << q << " " << r << " " << s << " " << val << std::endl;
 
       auto coulomb = D(r, s) * val;
 
@@ -224,30 +218,32 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
       auto exchange = 0.0;
       if (r != s) {
         exchange = D(q, s) * val * factor;
-        g(p, r) = g(p, r) + exchange;
+        g(p, r) += exchange;
+
         if (p == r && q != s) {
-          g(p, r) = g(p, r) + exchange;
+          g(p, r) += exchange;
         }
       }
       if (p != q) {
         exchange = D(p, r) * val * factor;
         if (q > s) {
-          g(s, q) = g(s, q) + exchange;
+          g(s, q) += exchange;
         } else {
-          g(q, s) = g(q, s) + exchange;
+          g(q, s) += exchange;
+
           if (q == s && p != r) {
-            g(q, s) = g(q, s) + exchange;
+            g(q, s) += exchange;
           }
         }
         if (r != s) {
           exchange = D(p, s) * val * factor;
           if (q <= r) {
-            g(q, r) = g(q, r) + exchange;
+            g(q, r) += exchange;
             if (q == r) {
-              g(q, r) = g(q, r) + exchange;
+              g(q, r) += exchange;
             }
           } else {
-            g(r, q) = g(r, q) + exchange;
+            g(r, q) += exchange;
             if (p == r && s == q)
               continue;
           }
@@ -255,7 +251,7 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
       }
 
       exchange = D(q, r) * val * factor;
-      g(p, s) = g(p, s) + exchange;
+      g(p, s) += exchange;
     }
   }; // end lambda
 
@@ -270,4 +266,5 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
   GB[0] += GB[0].triangularView<Eigen::StrictlyLower>().transpose();
   G = GB[0].triangularView<Eigen::Upper>();
   G += G.triangularView<Eigen::StrictlyUpper>().transpose();
+
 }

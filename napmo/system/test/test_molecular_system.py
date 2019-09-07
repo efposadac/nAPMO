@@ -123,6 +123,5 @@ def test_molecular_system_interface():
     charges = {'e-': {'charge': 1, 'multiplicity': 1}}
     molecule.set_charges(charges, open_shell=False)
 
-    c_basis = molecule.get_basis_as_cstruct('e-')
 
-test_molecular_system_interface()
+# test_molecular_system_interface()

@@ -13,33 +13,14 @@ LibintInterface
 */
 LibintInterface::LibintInterface(const int id)
     : max_nprim(0), nbasis(0), max_l(0), sID(id) {
-  // set up thread pool
-  {
-    using libint2::nthreads;
-    auto nthreads_cstr = getenv("OMP_NUM_THREADS");
-    nthreads = 1;
-    if (nthreads_cstr && strcmp(nthreads_cstr, "")) {
-      std::istringstream iss(nthreads_cstr);
-      iss >> nthreads;
-      if (nthreads > 1 << 16 || nthreads <= 0)
-        nthreads = 1;
-    }
 
-#if defined(_OPENMP)
-    omp_set_num_threads(nthreads);
-#endif
-    //     std::cout << "Will scale over " << nthreads
-    // #if defined(_OPENMP)
-    //               << " OpenMP"
-    // #else
-    //               << " C++11"
-    // #endif
-    //               << " threads" << std::endl;
-  }
+  // set up thread pool
+  using napmo::nthreads;
+  set_nthreads();
 
   // initializes the Libint integrals library ... now ready to compute
   libint2::initialize();
-};
+}
 
 void LibintInterface::init_2body_ints() {
 
@@ -73,45 +54,35 @@ void LibintInterface::add_pointcharges(const int z, const double *center) {
 void LibintInterface::add_basis(BasisSet *basis) {
 
   // add basis-set
+
+  nbasis += basis->get_nbasis();
+  max_nprim = std::max(max_nprim, basis->get_max_nprim());
+  max_l = std::max(max_l, basis->get_max_l());
+
+  // std::cout<<nbasis<<' '<<max_nprim<<' '<<max_l<<std::endl;
+
   libint2::Shell::do_enforce_unit_normalization(false);
 
-  for (int i = 0; i < basis->n_cont; ++i) {
-    int l = 0;
-    for (int j = 0; j < 3; ++j) {
-      l += basis->basis_l[i * 3 + j];
-    }
+  for (auto cont : basis->get_cont()) {
 
-    if (basis->basis_l[i * 3] != l)
+    if ((cont.get_l()[0] + cont.get_l()[1] + cont.get_l()[2]) !=
+        cont.get_l()[0])
       continue;
 
-    int nprim = basis->n_prim_cont[i];
-    std::vector<double> exponents(nprim);
-    std::vector<double> coefficients(nprim);
+    libint2::svector<double> exponents;
+    libint2::svector<double> coefficients;
 
-    for (int j = 0; j < nprim; ++j) {
-      int index = basis->prim_index[i];
-      exponents[j] = basis->exponent[index + j];
-      coefficients[j] = basis->coefficient[index + j];
+    for (auto prim : cont.get_prim()) {
+      exponents.push_back(prim.get_zeta());
+      coefficients.push_back(prim.get_coeff());
     }
 
-    shells.push_back({{exponents},
-                      {
-                          {l, false, {coefficients}},
-                      },
-                      {{basis->origin[i * 3 + 0], 
-                        basis->origin[i * 3 + 1],
-                        basis->origin[i * 3 + 2]}}});
-
-    // nbasis, max_nprim and max_l
-    nbasis = 0;
-    max_nprim = 0;
-    max_l = 0;
-    for (const auto &shell : shells) {
-      nbasis += shell.size();
-      max_nprim = std::max(shell.nprim(), max_nprim);
-      for (auto c : shell.contr)
-        max_l = std::max(c.l, max_l);
-    }
+    shells.push_back(
+        {{exponents},
+         {
+             {cont.get_l()[0], false, {coefficients}},
+         },
+         {{cont.get_origin()[0], cont.get_origin()[1], cont.get_origin()[2]}}});
 
     // Renormalize
     const auto &shell = shells.back();
@@ -221,7 +192,7 @@ std::vector<QuartetBuffer> *
 LibintInterface::compute_2body_ints(const Matrix &D, const Matrix &Schwartz,
                                     double precision) {
 
-  using libint2::nthreads;
+  using napmo::nthreads;
   using libint2::Engine;
 
   const auto nshells = shells.size();
@@ -229,6 +200,8 @@ LibintInterface::compute_2body_ints(const Matrix &D, const Matrix &Schwartz,
   auto n = (nbasis * (nbasis + 1)) / 2;
   n = (n * (n + 1)) / 2;
   n = ceil(n / nthreads) + 1;
+
+  // std::cout<<"Size per buffer: "<<n<<std::endl;
 
   const auto do_schwartz_screen = Schwartz.cols() != 0 && Schwartz.rows() != 0;
   Matrix D_shblk_norm; // matrix of infty-norms of shell blocks
@@ -383,7 +356,7 @@ LibintInterface::compute_2body_ints(const Matrix &D, const Matrix &Schwartz,
 
   }; // end of lambda
 
-  libint2::parallel_do(lambda);
+  napmo::parallel_do(lambda);
 
 #if defined(REPORT_INTEGRAL_TIMINGS)
   double time_for_ints = 0.0;
@@ -396,9 +369,8 @@ LibintInterface::compute_2body_ints(const Matrix &D, const Matrix &Schwartz,
     engines[t].print_timers();
 #endif
 
-  // std::cout << " Number of unique integrals for species: " << sID << "
-  // = "
-  //           << num_ints_computed << std::endl;
+  // std::cout << " Number of unique integrals for species: " << sID << " = " << num_ints_computed << std::endl;
+
   return buffers;
 }
 
@@ -407,7 +379,7 @@ void LibintInterface::compute_2body_disk(const char *filename, const Matrix &D,
                                          double precision) {
   const auto nshells = shells.size();
 
-  using libint2::nthreads;
+  using napmo::nthreads;
 
   const auto do_schwartz_screen = Schwartz.cols() != 0 && Schwartz.rows() != 0;
   Matrix D_shblk_norm; // matrix of infty-norms of shell blocks
@@ -568,7 +540,7 @@ void LibintInterface::compute_2body_disk(const char *filename, const Matrix &D,
 
   }; // end of lambda
 
-  libint2::parallel_do(lambda);
+  napmo::parallel_do(lambda);
 
 #if defined(REPORT_INTEGRAL_TIMINGS)
   double time_for_ints = 0.0;
@@ -581,8 +553,8 @@ void LibintInterface::compute_2body_disk(const char *filename, const Matrix &D,
     engines[t].print_timers();
 #endif
 
-  std::cout << " Number of unique integrals for species: " << sID << " = "
-            << num_ints_computed << std::endl;
+  // std::cout << " Number of unique integrals for species: " << sID << " = "
+  //           << num_ints_computed << std::endl;
 }
 
 Matrix LibintInterface::compute_2body_direct(const Matrix &D,
@@ -591,7 +563,7 @@ Matrix LibintInterface::compute_2body_direct(const Matrix &D,
   const auto n = nbasis;
   const auto nshells = shells.size();
 
-  using libint2::nthreads;
+  using napmo::nthreads;
 
   std::vector<Matrix> G(nthreads, Matrix::Zero(n, n));
 
@@ -748,7 +720,7 @@ Matrix LibintInterface::compute_2body_direct(const Matrix &D,
 
   }; // end of lambda
 
-  libint2::parallel_do(lambda);
+  napmo::parallel_do(lambda);
 
   // accumulate contributions from all threads
   for (size_t i = 1; i != nthreads; ++i) {
@@ -783,7 +755,7 @@ void LibintInterface::compute_coupling_disk(LibintInterface &other,
   const auto oshells = other.get_shells();
   const auto onshells = oshells.size();
 
-  using libint2::nthreads;
+  using napmo::nthreads;
 
   auto fock_precision = precision;
 
@@ -934,7 +906,7 @@ void LibintInterface::compute_coupling_disk(LibintInterface &other,
 
   }; // end of lambda
 
-  libint2::parallel_do(lambda);
+  napmo::parallel_do(lambda);
 
 #if defined(REPORT_INTEGRAL_TIMINGS)
   double time_for_ints = 0.0;
@@ -947,8 +919,8 @@ void LibintInterface::compute_coupling_disk(LibintInterface &other,
     engines[t].print_timers();
 #endif
 
-  std::cout << " Number of unique integrals for species: " << sID << " / "
-            << other.get_sID() << " = " << num_ints_computed << std::endl;
+  // std::cout << " Number of unique integrals for species: " << sID << " / "
+  //           << other.get_sID() << " = " << num_ints_computed << std::endl;
 }
 
 Matrix LibintInterface::compute_coupling_direct(LibintInterface &other,
@@ -961,7 +933,7 @@ Matrix LibintInterface::compute_coupling_direct(LibintInterface &other,
   const auto oshells = other.get_shells();
   const auto onshells = oshells.size();
 
-  using libint2::nthreads;
+  using napmo::nthreads;
 
   std::vector<Matrix> B(nthreads, Matrix::Zero(n, n));
 
@@ -1111,7 +1083,7 @@ Matrix LibintInterface::compute_coupling_direct(LibintInterface &other,
 
   }; // end of lambda
 
-  libint2::parallel_do(lambda);
+  napmo::parallel_do(lambda);
 
   // accumulate contributions from all threads
   for (size_t i = 1; i != nthreads; ++i) {
@@ -1129,10 +1101,7 @@ Matrix LibintInterface::compute_coupling_direct(LibintInterface &other,
     engines[t].print_timers();
 #endif
 
-  // std::cout << " Number of unique integrals for species: " << sID << "
-  // / "
-  //           << other.get_sID() << " = " << num_ints_computed <<
-  //           std::endl;
+  // std::cout << " Number of unique integrals for species: " << sID << " / " << other.get_sID() << " = " << num_ints_computed << std::endl;
 
   return B[0];
 }
@@ -1148,16 +1117,16 @@ shellpair_list_t compute_shellpair_list(const std::vector<libint2::Shell> &bs1,
   const auto nsh2 = bs2.size();
   const auto bs1_equiv_bs2 = (&bs1 == &bs2);
 
-  using libint2::nthreads;
+  using napmo::nthreads;
 
   // construct the 2-electron repulsion integrals engine
   using libint2::Engine;
-  libint2::BasisSet obs_aux;
+
   std::vector<Engine> engines;
   engines.reserve(nthreads);
   engines.emplace_back(libint2::Operator::overlap,
-                       std::max(obs_aux.max_nprim(bs1), obs_aux.max_nprim(bs2)),
-                       std::max(obs_aux.max_l(bs1), obs_aux.max_l(bs2)), 0);
+                       std::max(max_nprim(bs1), max_nprim(bs2)),
+                       std::max(max_l(bs1), max_l(bs2)), 0);
 
   for (size_t i = 1; i != nthreads; ++i) {
     engines.push_back(engines[0]);
@@ -1211,7 +1180,7 @@ shellpair_list_t compute_shellpair_list(const std::vector<libint2::Shell> &bs1,
     }
   }; // end of compute
 
-  libint2::parallel_do(compute);
+  napmo::parallel_do(compute);
 
   // resort shell list in increasing order, i.e. result[s][s1] < result[s][s2]
   // if s1 < s2
@@ -1224,7 +1193,7 @@ shellpair_list_t compute_shellpair_list(const std::vector<libint2::Shell> &bs1,
     }
   }; // end of sort
 
-  libint2::parallel_do(sort);
+  napmo::parallel_do(sort);
 
   timer.stop(0);
   // std::cout << "done (" << timer.read(0) << " s)" << std::endl;
@@ -1246,15 +1215,15 @@ Matrix compute_schwartz_ints(
 
   // construct the 2-electron repulsion integrals engine
   using libint2::Engine;
-  using libint2::nthreads;
+  using napmo::nthreads;
   std::vector<Engine> engines(nthreads);
 
   // !!! very important: cannot screen primitives in Schwartz computation !!!
-  libint2::BasisSet obs_aux;
   auto epsilon = 0.;
   engines[0] = Engine(
-      Kernel, std::max(obs_aux.max_nprim(bs1), obs_aux.max_nprim(bs2)),
-      std::max(obs_aux.max_l(bs1), obs_aux.max_l(bs2)), 0, epsilon, params);
+      Kernel, std::max(max_nprim(bs1), max_nprim(bs2)),
+      std::max(max_l(bs1), max_l(bs2)), 0, epsilon, params);
+
   for (size_t i = 1; i != nthreads; ++i) {
     engines[i] = engines[0];
   }
@@ -1295,7 +1264,7 @@ Matrix compute_schwartz_ints(
     }
   }; // thread lambda
 
-  libint2::parallel_do(lambda);
+  napmo::parallel_do(lambda);
 
   timer.stop(0);
   // std::cout << "done (" << timer.read(0) << " s)" << std::endl;
@@ -1317,6 +1286,28 @@ __inline__ void write_buffer(const QuartetBuffer &buffer,
                 STACK_SIZE * sizeof(double));
 }
 
+size_t nbasis(const std::vector<libint2::Shell>& shells) {
+  size_t n = 0;
+  for (const auto& shell: shells)
+    n += shell.size();
+  return n;
+}
+
+size_t max_nprim(const std::vector<libint2::Shell>& shells) {
+  size_t n = 0;
+  for (auto shell: shells)
+    n = std::max(shell.nprim(), n);
+  return n;
+}
+
+int max_l(const std::vector<libint2::Shell>& shells) {
+  int l = 0;
+  for (auto shell: shells)
+    for (auto c: shell.contr)
+      l = std::max(c.l, l);
+  return l;
+}
+
 /*
 Python functions
 */
@@ -1326,11 +1317,11 @@ LibintInterface *LibintInterface_new(int id) { return new LibintInterface(id); }
 void LibintInterface_del(LibintInterface *lint) { lint->~LibintInterface(); }
 
 void LibintInterface_add_pointcharges(LibintInterface *lint, const int z,
-                                      const double *center){
+                                      const double *center) {
   lint->add_pointcharges(z, center);
 }
 
-void LibintInterface_add_basis(LibintInterface *lint, BasisSet *basis){
+void LibintInterface_add_basis(LibintInterface *lint, BasisSet *basis) {
   lint->add_basis(basis);
 }
 
@@ -1447,20 +1438,20 @@ void LibintInterface_compute_coupling_disk(LibintInterface *lint,
   lint->compute_coupling_disk(*olint, filename);
 }
 
-libint2::DIIS<Matrix> * LibintInterface_diis_new(int iter){
-  return new libint2::DIIS<Matrix> (iter);
+libint2::DIIS<Matrix> *LibintInterface_diis_new(int iter) {
+  return new libint2::DIIS<Matrix>(iter);
 }
 
-void LibintInterface_diis(libint2::DIIS<Matrix> * diis, WaveFunction * psi){
+void LibintInterface_diis(libint2::DIIS<Matrix> *diis, WaveFunction *psi) {
   int nbasis = psi->nbasis;
 
-  Map S(psi->S, nbasis, nbasis);
-  Map D(psi->D, nbasis, nbasis);
-  Map F(psi->F, nbasis, nbasis);
+  MMap S(psi->S, nbasis, nbasis);
+  MMap D(psi->D, nbasis, nbasis);
+  MMap F(psi->F, nbasis, nbasis);
 
   // compute SCF error
   Matrix FD_comm = F * D * S - S * D * F;
-  Matrix F_diis = F; 
+  Matrix F_diis = F;
 
   diis->extrapolate(F_diis, FD_comm);
 
@@ -1468,3 +1459,4 @@ void LibintInterface_diis(libint2::DIIS<Matrix> * diis, WaveFunction * psi){
     psi->F[i] = F_diis.array()(i);
   }
 }
+

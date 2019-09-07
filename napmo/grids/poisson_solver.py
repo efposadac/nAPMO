@@ -14,7 +14,7 @@ from ctypes import *
 import napmo
 
 
-def poisson_solver(grid, dens, lmax):
+def poisson_solver(grid, _dens, lmax, sph_exp=None):
     """
     Returns the spherically expanded potential :math:`U_{\ell m}(r)` obtained following Becke's procedure.
     (finite elements).
@@ -33,15 +33,19 @@ def poisson_solver(grid, dens, lmax):
 
     assert isinstance(grid, napmo.BeckeGrid)
 
+    dens = _dens * grid.becke_weights
+
     offset = 0
     U = []
     for i in range(grid.ncenter):
         atgrid = grid.atgrids[i]
-        p = dens[offset:offset + atgrid.size]
-        bw = grid.becke_weights[offset:offset + atgrid.size]
+        p = dens[offset:offset + atgrid.size].copy()
 
         # Spherical expansion
-        sph_expansion = atgrid.spherical_expansion(lmax, p)
+        if not sph_exp:
+            sph_expansion = atgrid.spherical_expansion(lmax, p)
+        else:
+            sph_expansion = sph_exp[i]
 
         result = []
         idx = 0
@@ -78,9 +82,15 @@ def poisson_solver(grid, dens, lmax):
                 # and assume that V(r)=B*r**l for small r.
                 V_rmin = rgrid.integrate(rho.y * radii**(-l - 1),
                                          1) * radii[0]**(l) / (2 * l + 1)
+
                 bcs = (V_rmin, None, V_rmax, None)
+
                 v = napmo.solve_ode2(
-                    b, a, f, bcs, napmo.PowerExtrapolation(-l - 1))
+                    b, a, f, bcs, napmo.PotentialExtrapolation(l))
+
+                # v = napmo.solve_ode2(
+                #     b, a, f, bcs, napmo.PowerExtrapolation(-l - 1))
+
                 result.append(v)
                 idx += 1
 
@@ -88,74 +98,3 @@ def poisson_solver(grid, dens, lmax):
         U.append(result)
 
     return U
-
-
-def poisson_solver_finite_differences(grid, rho, lmax):
-    """
-    Returns the spherically expanded potential :math:`U_{\ell m}(r)` obtained following Becke's procedure.
-    (finite differences).
-
-    References:
-        Becke, A. D. Dickson, R. M. Numerical solution of Poisson's equation in polyatomic molecules. J. Chem. Phys. 89(5), 1988.
-
-    Args:
-        grid (BeckeGrid): Molecular grid.
-        rho (ndarray): Array with the source density calculated in each point of the grid.
-        lmax (int): Maximum :math:`\ell` order of the expansion.
-
-    Returns:
-        U (ndarray): Spherical expanded potential. Array with shape (nrad, lsize), where :math:`\ell_{size} = (\ell_{max} + 1)^2`
-    """
-    assert isinstance(grid, napmo.BeckeGrid)
-
-    offset = 0
-    result = []
-    for i in range(grid.ncenter):
-        atgrid = grid.atgrids[i]
-        p = rho[offset:offset + atgrid.size]
-        bw = grid.becke_weights[offset:offset + atgrid.size]
-
-        # Spherical expansion
-        sph_expansion = atgrid.spherical_expansion(lmax, p)
-
-        # Boundary condition
-        # q = atgrid.integrate(p, bw)
-        # u_00 = 0.0
-        # if np.abs(q) > 1.0e-16:
-        #     u_00 = np.sqrt(4.0 * np.pi * q)
-
-        # Solve differential equation Ax = b
-        U = np.zeros(sph_expansion.shape, dtype=np.float64)
-        b = np.zeros(atgrid.radial_grid.size + 2, dtype=np.float64)
-        data = np.zeros(atgrid.radial_grid.size * 3 + 2, dtype=np.float64)
-        row = np.zeros(atgrid.radial_grid.size * 3 + 2, dtype=np.int32)
-        col = np.zeros(atgrid.radial_grid.size * 3 + 2, dtype=np.int32)
-
-        idx = 0
-        pi4 = -4 * np.pi
-        for l in range(lmax + 1):
-
-            # Build A
-            napmo.cext.finite_difference_matrix(
-                byref(atgrid.radial_grid), data, row, col, l)
-            for m in range(-l, l + 1):
-
-                # Build b
-                b[1:-1] = sph_expansion[:, idx]
-                b[1:-1] *= atgrid.radial_grid.points * pi4
-                if l == 0:
-                    b[0] = u_00
-                # Solve
-                x = spsolve(
-                    csc_matrix(
-                        (data, (row, col)),
-                        shape=(atgrid.radial_grid.size + 2,
-                               atgrid.radial_grid.size + 2)),
-                    b)
-                U[:, idx] = x[1:-1]
-
-                idx += 1
-        result.append(U)
-        offset += atgrid.size
-
-    return result

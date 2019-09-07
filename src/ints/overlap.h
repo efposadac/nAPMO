@@ -9,8 +9,8 @@ efposadac@unal.edu.co*/
 #define OVERLAP_H
 
 #include <math.h>
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "../system/gto.h"
 
@@ -18,10 +18,13 @@ efposadac@unal.edu.co*/
 extern "C" {
 #endif
 
+struct PrimitiveGaussian;
+
 /*
 Computes the overlap integral between two primitive Gaussian functions.
+Used only for normalization!
 */
-double gto_overlap_primitive(PrimitiveGaussian *f_a, PrimitiveGaussian *f_b);
+double overlap_primitive(PrimitiveGaussian *f_a, PrimitiveGaussian *f_b);
 
 #ifdef __cplusplus
 }
@@ -44,9 +47,8 @@ Args:
 Returns:
     x, y, z : x, y, and z components of the recursion.
 */
-void gto_obaraSaika_recursion(double *x, double *y, double *z, double PA[3],
-                              double PB[3], const double gamma, const int l_a,
-                              const int l_b, const int max_l);
-
+void obaraSaika_recursion(double *x, double *y, double *z, double PA[3],
+                          double PB[3], const double gamma, const int l_a,
+                          const int l_b, const int max_l);
 
 #endif

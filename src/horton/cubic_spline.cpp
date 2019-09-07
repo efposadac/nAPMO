@@ -152,22 +152,27 @@ CubicSpline::CubicSpline(double *y, double *dt, Extrapolation *extrapolation,
   extrapolation->prepare(this);
 }
 
-void CubicSpline::eval(double *new_x, double *new_y, int new_n) {
+void CubicSpline::eval(const double *new_x, double *new_y, int new_n) {
   for (int i = 0; i < new_n; i++) {
     if (*new_x < first_x) {
+
       // Left extrapolation
       *new_y = extrapolation->eval_left(*new_x);
     } else if (*new_x <= last_x) {
       // Cubic Spline interpolation
+
       // 1) transform *new_x to t
       double t = rtf->inv(*new_x);
-      //#ifdef DEBUG
-      //            printf("X_TO_T x=%f t=%f\n", *new_x, t);
-      //#endif
+
       // 2) find the index of the interval in which t lies.
-      int j = (int)floor(t);
+      int j = static_cast<int>(floor(t));
+
       if (j == n - 1)
         j = n - 2;
+
+      if (j < 0)
+        j = 0;
+
       // 3) do the interpolation
       double u = t - j;
       double z = y[j + 1] - y[j];
@@ -175,6 +180,7 @@ void CubicSpline::eval(double *new_x, double *new_y, int new_n) {
                u * (dt[j] +
                     u * (3 * z - 2 * dt[j] - dt[j + 1] +
                          u * (-2 * z + dt[j] + dt[j + 1])));
+
     } else {
       // Right extrapolation
       *new_y = extrapolation->eval_right(*new_x);
@@ -197,6 +203,10 @@ void CubicSpline::eval_deriv(double *new_x, double *new_dx, int new_n) {
       int j = (int)floor(t);
       if (j == n - 1)
         j = n - 2;
+
+      if (j < 0)
+        j = 0;
+      
       // 3) do the interpolation
       double u = t - j;
       double z = y[j + 1] - y[j];

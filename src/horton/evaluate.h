@@ -6,7 +6,6 @@ Version: 0.1
 efposadac@unal.edu.co
 */
 
-
 // HORTON: Helpful Open-source Research TOol for N-fermion systems.
 // Copyright (C) 2011-2015 The HORTON Development Team
 //
@@ -32,23 +31,25 @@ efposadac@unal.edu.co
 #ifndef EVALUATE_H
 #define EVALUATE_H
 
-
 #include "cell.h"
 #include "cubic_spline.h"
 #include "uniform.h"
+#include "../utils/omp_helper.h"
 
-void eval_spline_cube(CubicSpline* spline, double* center, double* output,
-                      UniformGrid* ugrid);
+#include <vector>
 
-void eval_spline_grid(CubicSpline* spline, double* center, double* output,
-                      double* points, Cell* cell, long npoint);
+void eval_spline_cube(CubicSpline *spline, double *center, double *output,
+                      UniformGrid *ugrid);
+
+void eval_spline_grid(CubicSpline *spline, double *center, double *output,
+                      double *points, Cell *cell, long npoint);
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-void eval_decomposition_grid(CubicSpline** splines, double* center,
-                             double* output, double* points, Cell* cell,
+void eval_decomposition_grid(CubicSpline **splines, double *center,
+                             double *output, double *points, Cell *cell,
                              long nspline, long npoint);
 
 #ifdef __cplusplus

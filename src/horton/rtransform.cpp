@@ -340,11 +340,12 @@ double ChebyshevRTransform::deriv3(double t) {
   t = npoint - t;
   double aux = t * z;
   double aux_2 = aux * 0.5;
-  return 0.25 * z * z * z * radii * (11 * cos(aux_2) + cos(1.5 * aux)) * pow(1 / sin(aux_2), 5);
+  return 0.25 * z * z * z * radii * (11 * cos(aux_2) + cos(1.5 * aux)) *
+         pow(1 / sin(aux_2), 5);
 }
 
 double ChebyshevRTransform::inv(double r) {
-  return -(acos((r - radii) / (r + radii)) / z)  + npoint;
+  return -(acos((r - radii) / (r + radii)) / z) + npoint;
 }
 
 ChebyshevRTransform *ChebyshevRTransform_new(double radii, int npoint) {

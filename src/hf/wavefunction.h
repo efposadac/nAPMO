@@ -10,17 +10,16 @@ efposadac@unal.edu.co
 #ifndef WAVEFUNCTION_H
 #define WAVEFUNCTION_H
 
-// #include <stdlib.h>
-// #include <iostream>
-
-// Eigen matrix algebra library
-// #include <Eigen/Dense>
-// #include <Eigen/Eigenvalues>
-
+#include <math.h>
+#include "../grid/becke.h"
 #include "../ints/ints.h"
+#include "../system/basis_set.h"
+#include "../utils/eigen_helper.h"
+#include "../utils/omp_helper.h"
 
 struct wf {
   double *S; // Overlap matrix
+  double *X; // Tranformation matrix
   double *T; // Kinetic matrix
   double *V; // Nuclear matrix
   double *H; // One-particle Hamiltonian
@@ -30,8 +29,10 @@ struct wf {
   double *G; // two-particle matrix
   double *J; // Coupling matrix
   double *F; // Fock matrix
+  double *O; // Orbitals energy
   // Convenience Variables
-  int nbasis; // order of matrices
+  int nbasis; // number of basis
+  int ndim;   // Size of the matrix
   int occupation;
   double eta;    // Constant of coupling
   double kappa;  // Constant of coupling
@@ -40,20 +41,13 @@ struct wf {
 };
 typedef struct wf WaveFunction;
 
-/*
-Type definitions
-*/
-typedef Eigen::Matrix<double, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>
-    Matrix; // import dense, dynamically sized Matrix type from Eigen;
-            // this is a matrix with row-major storage
-            // (http://en.wikipedia.org/wiki/Row-major_order)
-typedef Eigen::Map<Matrix> Map;
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 void wavefunction_guess_hcore(WaveFunction *psi);
+
+void wavefunction_transformation_matrix(WaveFunction *psi);
 
 void wavefunction_compute_coefficients(WaveFunction *psi);
 
@@ -67,6 +61,21 @@ void wavefunction_compute_energy(WaveFunction *psi);
 
 void wavefunction_compute_2body_matrix(WaveFunction *psi,
                                        std::vector<QuartetBuffer> *ints);
+
+// nwavefunction
+
+void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
+                                           double *dm, double *output,
+                                           double epsilon, double *dmmaxrow);
+
+void nwavefunction_compute_2body_matrix_atm(WaveFunction *psi, BeckeGrid *grid,
+                                            double *phi, double *J, double *K);
+
+void nwavefunction_compute_2body_matrix_mol(WaveFunction *psi, BeckeGrid *grid,
+                                            double *phi, double *J, double *K);
+
+void nwavefunction_compute_coupling(WaveFunction *psi, BeckeGrid *grid,
+                                    double *phi, double *other_J, double *res);
 
 #ifdef __cplusplus
 }

@@ -1,0 +1,24 @@
+# Molecule definition
+molecule {
+    O  0.000   0.000   0.127
+    H  0.000   0.758   -0.508
+    H  0.000   -0.758  -0.508
+}
+
+# basis-set specification
+basis {
+    e- STO-3G
+}
+
+# scf options
+scf {
+    hf
+}
+
+code {
+result = lambda x: print("PASS!") if abs(x) < 1e-5  else print("FAILED!")
+ref_energy = -74.965901
+diff_energy = ref_energy - Energy
+result(diff_energy)    
+}
+

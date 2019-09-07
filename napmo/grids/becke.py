@@ -15,7 +15,7 @@ from ctypes import *
 import napmo
 
 
-class BeckeGrid(Structure):
+class BeckeGrid(object):
 
     """
     This class creates the Becke grid.
@@ -28,68 +28,26 @@ class BeckeGrid(Structure):
         n_radial (int, optional): Number of radial points. Default is 40
         n_angular (int, optional): Number of angular points. Default is 110
     """
-    _fields_ = [
-        ("_ncenter", c_int), ("_size", c_int), ("_radii", POINTER(c_double)),
-        ("_origin", POINTER(c_double * 3)), ("_points", POINTER(c_double * 3)),
-        ("_weights", POINTER(c_double))
-    ]
 
-    def __init__(self, species, n_radial=40, n_angular=110):
+    def __init__(self, species, n_radial=40, n_angular=110, rtransform=None):
         super(BeckeGrid, self).__init__()
 
         assert isinstance(species, dict)
 
         centers = species.get('particles')
+        ncenter = len(centers)
 
-        self._ncenter = len(centers)
-        self._size = n_radial * n_angular * self.ncenter
+        self._nrad = n_radial
+        self._nang = n_angular
 
-        self.radii = np.empty(self.ncenter, dtype=np.float64)
-        self._radii = np.ctypeslib.as_ctypes(self.radii)
+        self.atgrids = [napmo.AtomicGrid(n_radial, n_angular, center.get(
+            'origin'), center.get('symbol'), rtransform=rtransform)
+            for center in centers]
 
-        self.origin = np.empty([self.ncenter, 3], dtype=np.float64)
-        self._origin = np.ctypeslib.as_ctypes(self.origin)
+        atgrids_ptr = np.array(
+            [atgrid._this for atgrid in self.atgrids], dtype=c_void_p)
 
-        self.points = np.empty([self.size, 3], dtype=np.float64)
-        self._points = np.ctypeslib.as_ctypes(self.points)
-
-        self.weights = np.empty(self.size, dtype=np.float64)
-        self._weights = np.ctypeslib.as_ctypes(self.weights)
-
-        self.atgrids = []
-
-        offset = 0
-        for i in range(self.ncenter):
-            self.atgrids.append(napmo.AtomicGrid(n_radial, n_angular, centers[i].get(
-                'origin'), centers[i].get('symbol')))
-
-            self.origin[i] = self.atgrids[-1].origin
-
-            self.radii[i] = self.atgrids[-1].radial_grid.radii
-
-            self.points[offset:offset + self.atgrids[-1].size] = self.atgrids[
-                -1].points
-
-            self.weights[offset:offset + self.atgrids[-1].size] = self.atgrids[
-                -1].weights
-
-            offset += self.atgrids[-1].size
-
-        self.becke_weights = self._becke_weights()
-
-    def _becke_weights(self):
-        """Computes the Becke weights :math:`w(r)` for the entire grid as described in eq. 22 Becke, 1988.
-
-        References:
-            Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
-
-        Returns:
-            P (ndarray): The value of cell_function (eq. 13, Becke, 1988)
-        """
-        P = np.empty(self.size, dtype=np.float64)
-
-        napmo.cext.becke_weights(byref(self), P)
-        return P
+        self._this = napmo.cext.BeckeGrid_new(atgrids_ptr, ncenter)
 
     def evaluate_decomposition(self, atom, cubic_splines, output, cell=None):
         """
@@ -106,7 +64,7 @@ class BeckeGrid(Structure):
         if cell is None:
             cell = napmo.Cell(None)
 
-        c_splines = [cubic_splines[i]._this for i in range(len(cubic_splines))]
+        c_splines = [cs._this for cs in cubic_splines]
         splines = np.array(c_splines, dtype=c_void_p)
 
         napmo.cext.eval_decomposition_grid(splines, self.origin[atom, :], output, self.points,
@@ -119,34 +77,65 @@ class BeckeGrid(Structure):
         Args:
             f (ndarray): array of F computed in all grid points.
         """
-        offset = 0
-        integral = 0.0
-        for i in range(self.ncenter):
-            integral += self.atgrids[i].integrate(
-                f[offset:offset + self.atgrids[i].size],
-                self.becke_weights[offset:offset + self.atgrids[i].size])
-            offset += self.atgrids[i].size
-        return integral
+        return napmo.cext.BeckeGrid_integrate(self._this, f)
 
     def show(self):
         """
         Prints information of the object.
         """
-        print("Grid Information:")
+        print("\nGrid Information:")
         print("-----------------")
         print("Centers: ", self.ncenter)
         print("Size: ", self.size)
+
+    @property
+    def becke_weights(self):
+        """Computes the Becke weights :math:`w(r)` for the entire grid as described in eq. 22 Becke, 1988.
+
+        References:
+            Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).
+
+        Returns:
+            P (ndarray): The value of cell_function (eq. 13, Becke, 1988)
+        """
+        ptr = napmo.cext.BeckeGrid_get_becke_weights(self._this)
+        return np.ctypeslib.as_array(ptr, shape=(self.size,))
+
+    @property
+    def points(self):
+        ptr = napmo.cext.BeckeGrid_get_points(self._this)
+        return np.ctypeslib.as_array(ptr, shape=(self.size, 3))
+
+    @property
+    def weights(self):
+        ptr = napmo.cext.BeckeGrid_get_weights(self._this)
+        return np.ctypeslib.as_array(ptr, shape=(self.size,))
+
+    @property
+    def origin(self):
+        ptr = napmo.cext.BeckeGrid_get_origin(self._this)
+        return np.ctypeslib.as_array(ptr, shape=(self.ncenter, 3))
+
+    @property
+    def size(self):
+        return napmo.cext.BeckeGrid_get_size(self._this)
+
+    @property
+    def radii(self):
+        ptr = napmo.cext.BeckeGrid_get_radii(self._this)
+        return np.ctypeslib.as_array(ptr, shape=(self.ncenter,))
 
     @property
     def ncenter(self):
         """
         Number of particles of a given species in the molecular grid
         """
-        return self._ncenter
+        return napmo.cext.BeckeGrid_get_ncenter(self._this)
 
     @property
-    def size(self):
-        """
-        Number of points in the grid
-        """
-        return self._size
+    def nrad(self):
+        return self._nrad
+
+    @property
+    def nang(self):
+        return self._nang

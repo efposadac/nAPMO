@@ -8,9 +8,9 @@ efposadac@unal.edu.co*/
 #ifndef CUDA_HELPER_H
 #define CUDA_HELPER_H
 
-#include <stdio.h>
 #include <cuda.h>
 #include <cuda_runtime.h>
+#include <stdio.h>
 
 /*Helper function to check errors in each CUDA function excecution.*/
 #define CUERR                                                                  \

@@ -8,7 +8,6 @@ efposadac@unal.edu.co
 */
 
 #include "iterators.h"
-#include <algorithm>
 
 IntraIntsIt::IntraIntsIt(const int &n1, const int &n2, const int &n3,
                          const int &n4, const int &fi1, const int &fi2,

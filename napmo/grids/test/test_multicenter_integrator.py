@@ -11,7 +11,7 @@ import os
 
 from napmo.system.molecular_system import MolecularSystem
 from napmo.system.cext import *
-from napmo.hf.scf import SCF
+from napmo.hf.hf_solver import HF
 from napmo.grids.becke import BeckeGrid
 
 
@@ -30,7 +30,7 @@ def test_multicenter_integrator():
 
     for (element, distance) in zip(elements, distances):
 
-        print(element)
+        # print(element)
 
         # Molecule definition
         molecule = MolecularSystem()
@@ -39,10 +39,10 @@ def test_multicenter_integrator():
         molecule.add_atom(
             element, [0.0, 0.0, -distance / 2.0], basis_name=basis_name)
 
-        print(molecule)
+        # print(molecule)
 
         # Get the density matrix (from a previous calculation)
-        hf = SCF(molecule)
+        hf = HF(molecule)
         energy = hf.compute(pprint=False)
 
         D = hf.PSI[-1].D
@@ -51,7 +51,7 @@ def test_multicenter_integrator():
         angularPoints = 194
         radialPoints = 100
         grid = BeckeGrid(molecule.get('e-'), radialPoints, angularPoints)
-        grid.show()
+        # grid.show()
 
         basis = molecule.get_basis('e-')
         f = basis.compute(grid.points)

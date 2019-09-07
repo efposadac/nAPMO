@@ -7,9 +7,7 @@ efposadac@unal.edu.co*/
 
 #define THREADS_PER_BLOCK 64
 
-extern "C" {
 #include "basis_set.h"
-}
 
 #include "cuda_helper.cuh"
 

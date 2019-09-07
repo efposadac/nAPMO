@@ -1,0 +1,40 @@
+# This is a comment
+
+# Molecule definition:
+# molecule [species name:charge:multiplicity]{}
+# Charge is to add particles to the species, for instance,
+# H- implies charge=1 because you are adding 1 e-
+
+molecule [e-:1] {
+    H  0.00 0.00 0.00
+    E+ 0.00 0.00 0.00
+}
+
+# basis-set specification
+# You must express the basis-set for species. 
+# If you have only one species you can declare the basis-set as,
+# basis = STO-3G
+
+basis {
+   e- STO-3G
+   E+ E+-H-7SP-AUG-CC-PVTZ
+}
+
+# SCF engine options the keyword means True even though you can
+# express if you want it False or True, for instance:
+# direct = False 
+
+scf {
+    maxiter = 1000
+    hf
+}
+
+# You can add some operations in python syntax. 
+# Here we compare the actual result "Energy" with the ref energy:
+
+code {
+result = lambda x: print("PASS!") if abs(x) < 1e-6  else print("FAILED!")
+ref_energy = -0.417799698665
+diff_energy = ref_energy - Energy
+result(diff_energy)
+}

@@ -1,34 +1,29 @@
-os:
-  - linux
+dist: bionic
 language : python
-python:
-  - 3.4
 compiler:
   - gcc
 env:
-  - GCC_VERSION=6
+  - GCC_VERSION=7
 addons:
   apt:
-    sources:
-      - ubuntu-toolchain-r-test
-      - boost-latest
+    update: true
     packages:
-      - gcc-6
-      - g++-6
+      - gcc
+      - g++
       - liblapack-dev
       - libgsl0-dev
       - libeigen3-dev
       - libgmp-dev
       - git
       - libmpfr-dev
-      - libboost1.55-dev
+      - libboost-all-dev
 install:
   - conda update --yes conda
-  - conda create -n testenv --yes scipy numpy pip nose setuptools matplotlib python=3.4
+  - conda create -n testenv --yes scipy numpy pip nose setuptools matplotlib
   - source activate testenv
 before_install:
-  - gcc-6 --version
-  - wget http://repo.continuum.io/miniconda/Miniconda3-3.5.5-Linux-x86_64.sh -O miniconda.sh
+  - gcc --version
+  - wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - chmod +x miniconda.sh
   - ./miniconda.sh -b -p /home/travis/mc
   - export PATH=/home/travis/mc/bin:$PATH
@@ -36,8 +31,8 @@ before_install:
   - WORKDIR=$PWD
   - git clone https://github.com/evaleev/libint.git
   - cd libint
-  - export CC=gcc-6
-  - export CXX=g++-6
+  - export CC=gcc
+  - export CXX=g++
   - export OPENMPFLAGS=-fopenmp
   - export CXXFLAGS="-std=c++11 -fPIC -Wno-enum-compare $OPENMPFLAGS"
   - export LDFLAGS=$OPENMPFLAGS

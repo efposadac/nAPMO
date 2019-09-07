@@ -1,0 +1,24 @@
+# Molecule definition
+molecule [e-:-1:2]{
+He  0.000   0.000   0.000
+U-  0.000   0.000   0.000
+}
+
+# basis-set specification
+basis {
+    e- STO-3G*
+    U- HEMU
+}
+
+# scf options
+scf {
+    uhf
+    numeric
+    #debug = True
+}
+
+
+grid {
+    e- [2.577533167224667e-07, 16.276983371222354, 500, 194]
+    U- [2.577533167224667e-07, 16.276983371222354, 500, 194]
+}

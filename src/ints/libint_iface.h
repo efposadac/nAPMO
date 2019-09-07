@@ -11,10 +11,10 @@ efposadac@unal.edu.co
 #ifndef LIBINT_IFACE_H
 #define LIBINT_IFACE_H
 
+#include "../hf/wavefunction.h"
 #include "../system/basis_set.h"
 #include "ints.h"
 #include "iterators.h"
-#include "../hf/wavefunction.h"
 #include <libint2.hpp>
 #include <libint2/diis.h>
 
@@ -22,36 +22,6 @@ efposadac@unal.edu.co
 
 using shellpair_list_t = std::unordered_map<size_t, std::vector<size_t>>;
 
-/*
-Namespace extension for threads
-*/
-namespace libint2 {
-
-unsigned int nthreads;
-
-// / fires off \c nthreads instances of lambda in parallel
-template <typename Lambda> void parallel_do(Lambda &lambda) {
-#ifdef _OPENMP
-#pragma omp parallel
-  {
-    auto thread_id = omp_get_thread_num();
-    lambda(thread_id);
-  }
-#else // use C++11 threads
-  std::vector<std::thread> threads;
-  for (unsigned int thread_id = 0; thread_id != libint2::nthreads;
-       ++thread_id) {
-    if (thread_id != nthreads - 1)
-      threads.push_back(std::thread(lambda, thread_id));
-    else
-      lambda(thread_id);
-  } // threads_id
-  for (unsigned int thread_id = 0; thread_id < nthreads - 1; ++thread_id)
-    threads[thread_id].join();
-#endif
-}
-
-} // end libint2 namespace
 
 /*
 Auxiliary functions
@@ -80,8 +50,8 @@ Class definition
 class LibintInterface {
 
 private:
-  size_t max_nprim;
-  size_t nbasis;
+  int max_nprim;
+  int nbasis;
   int max_l;
   int sID;
   shellpair_list_t obs_shellpair_list;
@@ -171,9 +141,9 @@ void LibintInterface_compute_coupling_disk(LibintInterface *lint,
                                            const char *filename);
 int LibintInterface_get_nbasis(LibintInterface *lint);
 
-libint2::DIIS<Matrix> * LibintInterface_diis_new(int iter);
+libint2::DIIS<Matrix> *LibintInterface_diis_new(int iter);
 
-void LibintInterface_diis(libint2::DIIS<Matrix> * diis, WaveFunction * psi);
+void LibintInterface_diis(libint2::DIIS<Matrix> *diis, WaveFunction *psi);
 
 #ifdef __cplusplus
 }

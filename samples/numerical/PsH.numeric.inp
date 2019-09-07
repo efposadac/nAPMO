@@ -1,0 +1,22 @@
+molecule [e-:1] {
+    H  0.00 0.00 0.00
+    E+ 0.00 0.00 0.00
+}
+
+basis {
+   e- AUG-CC-PVTZ
+   E+ E+-H-7SP-AUG-CC-PVTZ
+}
+
+scf {
+    maxiter = 100
+    hf
+    numeric
+    debug=True
+}
+
+grid {
+    e- [0.5858151015155881, 100, 110]
+    E+ [0.5858151015155881, 100, 110]
+}
+

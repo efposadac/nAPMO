@@ -11,65 +11,39 @@ from ctypes import *
 import napmo
 
 
-class RadialGrid(Structure):
+class RadialGrid(object):
 
     """
     An integration grid for the radial component of a spherical coordinate system
     """
 
-    _fields_ = [
-        ("_size", c_int),
-        ("_radii", c_double),
-        ("_points", POINTER(c_double)),
-        ("_weights", POINTER(c_double))
-    ]
+    def __init__(self, size=2, atomic_symbol=None, rtransform=None):
 
-    def __init__(self, size=None, atomic_symbol=None, rtransform=None, int1d=None):
+        self._symbol = '--'
+        radii = 1.0
+
+        if atomic_symbol in napmo.AtomicElementsDatabase():
+
+            self._symbol = atomic_symbol
+            radii = napmo.AtomicElementsDatabase().get(atomic_symbol, {}).get(
+                'atomic_radii', 1.0)
+
+        self._rtransform = rtransform
 
         if rtransform is None:
-            self._size = size
-            self._radii = napmo.AtomicElementsDatabase()[atomic_symbol][
-                'atomic_radii_2']
+            self._rtransform = napmo.ChebyshevRadialTransform(radii, size)
 
-            # tmp = napmo.RadialGridCheb(size, atomic_symbol)
-
-            # self._rtransform = PowerRadialTransform(tmp.points.min(),
-            #                                         tmp.points.max(),
-            #                                         tmp.size)
-            self._rtransform = napmo.ChebyshevRadialTransform(
-                self._radii, size)
-        else:
-            self._rtransform = rtransform
-            self._size = self._rtransform.size
-
-        if int1d is None:
-            self._int1d = self._rtransform.get_default_int1d()
-        else:
-            self._int1d = int1d
-
-        self.points = self._rtransform.radius_all()
-        self._points = np.ctypeslib.as_ctypes(self.points)
-
-        self.weights = (4 * np.pi) * (
-            self._rtransform.deriv_all() *
-            self._rtransform.radius_all()**2 *
-            self._int1d.get_weights(self._rtransform.size)
-        )
-
-        self._weights = np.ctypeslib.as_ctypes(self.weights)
-
-        self._size = self._rtransform.size
+        self._this = napmo.cext.RadialGrid_new(self._rtransform._this, self._rtransform.radii)
 
     def integrate(self, f, segments):
         """
         Perform integration on the radial grid.
         """
-
-        return napmo.cext.radial_integrate(byref(self), segments, f)
+        return napmo.cext.RadialGrid_integrate(self._this, segments, f)
 
     @property
     def size(self):
-        return self._size
+        return napmo.cext.RadialGrid_get_size(self._this)
 
     @property
     def symbol(self):
@@ -77,15 +51,21 @@ class RadialGrid(Structure):
 
     @property
     def radii(self):
-        return self._radii
+        return napmo.cext.RadialGrid_get_radii(self._this)
 
     @property
     def rtransform(self):
         return self._rtransform
 
     @property
-    def int1d(self):
-        return self._int1d
+    def points(self):
+        ptr = napmo.cext.RadialGrid_get_points(self._this)
+        return np.ctypeslib.as_array(ptr, shape=(self.size,))
+
+    @property
+    def weights(self):
+        ptr = napmo.cext.RadialGrid_get_weights(self._this)
+        return np.ctypeslib.as_array(ptr, shape=(self.size,))
 
     def zeros(self):
-        return np.zeros(self.shape)
+        return np.zeros(self.size)

@@ -8,38 +8,60 @@ efposadac@unal.edu.co*/
 #ifndef RADIAL_H
 #define RADIAL_H
 
+#include "../horton/rtransform.h"
+#include "../utils/utils.h"
 #include <math.h>
 #include <stdlib.h>
-#include "../utils/utils.h"
-#include "gauss_chebyshev.h"
 
-struct _radial {
-  int size;        // number of grid points.
-  double radii;    // covalent radius of atom
-  double *points;  // points of the grid
-  double *weights; // weights of the grid
-  double *z;       // Uniform spaced grid
-  double *dz;      // first derivative of z
-  double *d2z;     // second derivative of z
+struct RadialGrid {
+
+private:
+  unsigned int size; // number of grid points.
+  double radii;      // covalent radius of atom
+  double *points;    // points of the grid
+  double *weights;   // weights of the grid
+  RTransform *rtf;
+
+public:
+  RadialGrid() : size(0), radii(1.0){};
+
+  RadialGrid(const RadialGrid &) = default;
+
+  RadialGrid(RTransform *rt, double rad);
+
+  ~RadialGrid() {
+    delete[] points;
+    delete[] weights;
+  };
+
+  double integrate(const int segments, double *f);
+
+  unsigned int get_size() { return size; };
+  double get_radii() { return radii; };
+  double *get_points() { return points; };
+  double *get_weights() { return weights; };
 };
-typedef struct _radial RadialGrid;
 
-/*
-Returns the radial points mapped uniformly in the interval [0,1], see
-Becke's paper.
-*/
-void radial_get_z(RadialGrid *grid);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-/*
-Returns the first derivative of the uniform z grid.
-*/
-void radial_deriv_z(RadialGrid *grid);
+RadialGrid *RadialGrid_new(RTransform *rtf, double rad);
 
-/*
-Returns the second derivative of the uniform z grid.
-*/
-void radial_deriv2_z(RadialGrid *grid);
+void RadialGrid_del(RadialGrid *grid);
 
-double radial_integrate(RadialGrid *grid, const int segments, double *f);
+double RadialGrid_integrate(RadialGrid *grid, int segments, double *f);
+
+int RadialGrid_get_size(RadialGrid *grid);
+
+double RadialGrid_get_radii(RadialGrid *grid);
+
+double *RadialGrid_get_points(RadialGrid *grid);
+
+double *RadialGrid_get_weights(RadialGrid *grid);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

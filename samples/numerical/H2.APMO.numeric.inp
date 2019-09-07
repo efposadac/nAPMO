@@ -1,0 +1,21 @@
+# Molecule definition:
+
+molecule [e-:0]{
+    H_1  0.000000  0.00000  0.367
+    H  0.000000  0.00000 -0.367
+}
+
+basis {
+    e- STO-3G
+   H_1 DZSNB
+}
+
+scf {
+    hf
+    numeric
+}
+
+grid {
+    e-  [100, 110]
+    H_1 [100, 110]
+}

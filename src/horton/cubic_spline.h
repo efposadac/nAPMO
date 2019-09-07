@@ -31,8 +31,8 @@ efposadac@unal.edu.co
 #ifndef CUBIC_SPLINE_H
 #define CUBIC_SPLINE_H
 
-#include "rtransform.h"
 #include "extrapolation.h"
+#include "rtransform.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,7 +62,7 @@ public:
 
   CubicSpline(double *y, double *dt, Extrapolation *extrapolation,
               RTransform *rtf, int n);
-  void eval(double *new_x, double *new_y, int new_n);
+  void eval(const double* new_x, double* new_y, int new_n);
   void eval_deriv(double *new_x, double *new_dx, int new_n);
   RTransform *get_rtransform() { return rtf; }
   // position of first (transformed) grid point

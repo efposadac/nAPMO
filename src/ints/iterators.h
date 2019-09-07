@@ -10,8 +10,10 @@ efposadac@unal.edu.co
 #ifndef ITERATORS_H
 #define ITERATORS_H
 
+#include <algorithm>
+
 class IntraIntsIt {
- private:
+private:
   struct Integral {
     int i;
     int j;
@@ -27,7 +29,7 @@ class IntraIntsIt {
   int ii, iimax, jj, jjmax, kk, kkmax, ll, llmax;
   const int &ni, &nj, &nk, &nl, &fii, &fij, &fik, &fil;
 
- public:
+public:
   IntraIntsIt(const int &n1, const int &n2, const int &n3, const int &n4,
               const int &fi1, const int &fi2, const int &fi3, const int &fi4);
 

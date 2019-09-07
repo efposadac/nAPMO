@@ -7,16 +7,16 @@ from ctypes import *
 from napmo.system.cext import napmo_library as cext
 from napmo.system.timer import Timer
 from napmo.system.input_parser import InputParser
+from napmo.system.input_parser import raise_exception
 from napmo.system.atomic_element import AtomicElement
 from napmo.system.elementary_particle import ElementaryParticle
 from napmo.system.primitive_gaussian import PrimitiveGaussian
 from napmo.system.contracted_gaussian import ContractedGaussian
-from napmo.system.basis_set import BasisSet, BasisSet_C
+from napmo.system.basis_set import BasisSet
 from napmo.system.molecular_system import MolecularSystem
-from napmo.system.napmo import NAPMO
+from napmo.system.napmo_system import NAPMO
 
 from napmo.grids.radial import RadialGrid
-from napmo.grids.radial_cheb import RadialGridCheb
 from napmo.grids.radial_transform import RadialTransform
 from napmo.grids.radial_transform import IndentityRadialTransform
 from napmo.grids.radial_transform import PowerRadialTransform
@@ -28,6 +28,9 @@ from napmo.grids.cubic_spline import CubicSpline
 from napmo.grids.extrapolation import Extrapolation
 from napmo.grids.extrapolation import CuspExtrapolation
 from napmo.grids.extrapolation import PowerExtrapolation
+from napmo.grids.extrapolation import PotentialExtrapolation
+from napmo.grids.lebedev import lebedev_get_order
+from napmo.grids.poisson_solver import poisson_solver
 
 from napmo.utilities.cell import Cell
 from napmo.utilities.ode2 import solve_ode2
@@ -41,12 +44,23 @@ from napmo.data.databases import AtomicElementsDatabase
 from napmo.data.databases import ElementaryParticlesDatabase
 from napmo.data.databases import CouplingConstantsDatabase
 from napmo.data.constants import ANGSTROM_TO_BOHR
+from napmo.data.constants import BOHR_TO_ANGSTROM
 from napmo.data.constants import PROTON_MASS
 from napmo.data.constants import NEUTRON_MASS
 from napmo.data.constants import SPIN_ELECTRON
 
-from napmo.hf.wavefunction import WaveFunction
+from napmo.hf.psi_base import PSIB
+from napmo.hf.psi_analytic import PSIA
+from napmo.hf.psi_numeric import PSIN
+from napmo.hf.psi_hybrid import PSIH
+from napmo.hf.psi_optimization import PSIO
+from napmo.hf.nkinetic import compute_kinetic
+from napmo.hf.nnuclear import compute_nuclear
+from napmo.hf.ntwobody import compute_coulomb
+from napmo.hf.ndpsi import compute_dpsi
+from napmo.hf.hf_solver import HF
 from napmo.hf.scf import SCF
+from napmo.hf.convergence import Convergence
 
 # OMP Threads
 threads = int(os.environ.get('OMP_NUM_THREADS', 1))
@@ -61,8 +75,9 @@ basis_dir = os.path.join(os.path.dirname(__file__), 'data/basis')
 a1df = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
 a2df = npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
 a1di = npct.ndpointer(dtype=np.int32, ndim=1, flags='CONTIGUOUS')
+a1dli = npct.ndpointer(dtype=np.int64, ndim=1, flags='CONTIGUOUS')
 aptr = npct.ndpointer(c_void_p, flags="C_CONTIGUOUS")
-
+d1pp = npct.ndpointer(dtype=np.uintp, ndim=1, flags='C')
 # C functions
 
 # Libint
@@ -73,7 +88,7 @@ cext.LibintInterface_del.restype = None
 
 cext.LibintInterface_add_basis.restype = None
 cext.LibintInterface_add_basis.argtypes = [
-    c_void_p, POINTER(BasisSet_C)]
+    c_void_p, c_void_p]
 
 cext.LibintInterface_add_pointcharges.restype = None
 cext.LibintInterface_add_pointcharges.argtypes = [
@@ -108,79 +123,235 @@ cext.LibintInterface_diis_new.restype = c_void_p
 cext.LibintInterface_diis_new.argtypes = [c_int]
 
 cext.LibintInterface_diis.restype = None
-cext.LibintInterface_diis.argtypes = [c_void_p, POINTER(WaveFunction)]
+cext.LibintInterface_diis.argtypes = [c_void_p, c_void_p]
 
 # Wavefunction
 cext.wavefunction_guess_hcore.restype = None
-cext.wavefunction_guess_hcore.argtypes = [POINTER(WaveFunction)]
+cext.wavefunction_guess_hcore.argtypes = [c_void_p]
+
+cext.wavefunction_transformation_matrix.restype = None
+cext.wavefunction_transformation_matrix.argtypes = [c_void_p]
 
 cext.wavefunction_compute_coefficients.restype = None
 cext.wavefunction_compute_coefficients.argtypes = [
-    POINTER(WaveFunction)]
+    c_void_p]
 
 cext.wavefunction_compute_density.restype = None
 cext.wavefunction_compute_density.argtypes = [
-    POINTER(WaveFunction)]
+    c_void_p]
 
 cext.wavefunction_compute_energy.restype = None
 cext.wavefunction_compute_energy.argtypes = [
-    POINTER(WaveFunction)]
+    c_void_p]
 
 cext.wavefunction_iterate.restype = None
 cext.wavefunction_iterate.argtypes = [
-    POINTER(WaveFunction)]
+    c_void_p]
 
 cext.wavefunction_compute_2body_matrix.restype = None
 cext.wavefunction_compute_2body_matrix.argtypes = [
-    POINTER(WaveFunction), c_void_p]
+    c_void_p, c_void_p]
 
-# Primitive Gaussian
-cext.gto_normalize_primitive.restype = c_double
-cext.gto_normalize_primitive.argtypes = [
-    POINTER(PrimitiveGaussian)]
+# NWavefunction
+cext.nwavefunction_compute_density_from_dm.restype = None
+cext.nwavefunction_compute_density_from_dm.argtypes = [
+    c_void_p, c_void_p, a2df, a1df, c_double, a1df]
 
-cext.gto_compute_primitive.restype = None
-cext.gto_compute_primitive.argtypes = [
-    POINTER(PrimitiveGaussian),
-    a2df, a1df, c_int]
+cext.nwavefunction_compute_2body_matrix_atm.restype = None
+cext.nwavefunction_compute_2body_matrix_atm.argtypes = [
+    c_void_p, c_void_p, a2df, a1df, a2df]
 
-cext.gto_overlap_primitive.restype = c_double
-cext.gto_overlap_primitive.argtypes = [
-    POINTER(PrimitiveGaussian),
-    POINTER(PrimitiveGaussian)]
+cext.nwavefunction_compute_2body_matrix_mol.restype = None
+cext.nwavefunction_compute_2body_matrix_mol.argtypes = [
+    c_void_p, c_void_p, a2df, a1df, a2df]
+
+cext.nwavefunction_compute_coupling.restype = None
+cext.nwavefunction_compute_coupling.argtypes = [
+    c_void_p, c_void_p, a2df, a1df, a2df]
+
+# PrimitiveGaussian
+cext.PrimitiveGaussian_new.restype = c_void_p
+cext.PrimitiveGaussian_new.argtypes = [
+    a1di, a1df, c_double, c_double]
+
+cext.PrimitiveGaussian_compute.restype = c_double
+cext.PrimitiveGaussian_compute.argtypes = [
+    c_void_p, a2df, a1df, c_int]
+
+cext.PrimitiveGaussian_overlap.restype = c_double
+cext.PrimitiveGaussian_overlap.argtypes = [c_void_p, c_void_p]
+
+cext.PrimitiveGaussian_get_l.restype = None
+cext.PrimitiveGaussian_get_l.argtypes = [c_void_p, a1di]
+
+cext.PrimitiveGaussian_get_origin.restype = None
+cext.PrimitiveGaussian_get_origin.argtypes = [c_void_p, a1df]
+
+cext.PrimitiveGaussian_get_zeta.restype = c_double
+cext.PrimitiveGaussian_get_zeta.argtypes = [c_void_p]
+
+cext.PrimitiveGaussian_get_coeff.restype = c_double
+cext.PrimitiveGaussian_get_coeff.argtypes = [c_void_p]
+
+cext.PrimitiveGaussian_get_norma.restype = c_double
+cext.PrimitiveGaussian_get_norma.argtypes = [c_void_p]
+
+# ContractedGaussian
+cext.ContractedGaussian_new.restype = c_void_p
+cext.ContractedGaussian_new.argtypes = [aptr, c_int]
+
+cext.ContractedGaussian_get_nprim.restype = c_int
+cext.ContractedGaussian_get_nprim.argtypes = [c_void_p]
+
+cext.ContractedGaussian_get_l.restype = None
+cext.ContractedGaussian_get_l.argtypes = [c_void_p, a1di]
+
+cext.ContractedGaussian_get_origin.restype = None
+cext.ContractedGaussian_get_origin.argtypes = [c_void_p, a1df]
+
+cext.ContractedGaussian_compute.restype = None
+cext.ContractedGaussian_compute.argtypes = [
+    c_void_p, a2df, a1df, c_int]
+
+cext.ContractedGaussian_overlap.restype = c_double
+cext.ContractedGaussian_overlap.argtypes = [c_void_p, c_void_p]
+
+cext.ContractedGaussian_get_norma.restype = c_double
+cext.ContractedGaussian_get_norma.argtypes = [c_void_p]
+
+
+# BasisSet
+cext.BasisSet_new_empty.restype = c_void_p
+
+cext.BasisSet_new.restype = c_void_p
+cext.BasisSet_new.argtypes = [aptr, c_int]
+
+cext.BasisSet_compute.restype = None
+cext.BasisSet_compute.argtypes = [
+    c_void_p, a2df, a2df, c_int]
+
+cext.BasisSet_update.restype = None
+cext.BasisSet_update.argtypes = [
+    c_void_p, c_void_p]
+
+cext.BasisSet_get_nbasis.restype = c_int
+cext.BasisSet_get_nbasis.argtypes = [c_void_p]
+
+cext.BasisSet_get_max_l.restype = c_int
+cext.BasisSet_get_max_l.argtypes = [c_void_p]
+
+cext.BasisSet_get_max_nprim.restype = c_int
+cext.BasisSet_get_max_nprim.argtypes = [c_void_p]
+
 
 # Angular grid
-cext.angular_cartesian.restype = None
-cext.angular_cartesian.argtypes = [POINTER(AngularGrid)]
+cext.AngularGrid_new.restype = c_void_p
+cext.AngularGrid_new.argtypes = [c_int]
 
-cext.angular_to_spherical.restype = None
-cext.angular_to_spherical.argtypes = [POINTER(AngularGrid)]
+cext.AngularGrid_del.restype = None
+cext.AngularGrid_del.argtypes = [c_void_p]
 
-cext.angular_integrate.restype = c_double
-cext.angular_integrate.argtypes = [
-    POINTER(AngularGrid), c_int, a1df]
+cext.AngularGrid_spherical.restype = None
+cext.AngularGrid_spherical.argtypes = [c_void_p]
+
+cext.AngularGrid_spherical_expansion.restype = None
+cext.AngularGrid_spherical_expansion.argtypes = [
+    c_void_p, c_int, c_int, a1df, a2df]
+
+cext.AngularGrid_eval_expansion.restype = None
+cext.AngularGrid_eval_expansion.argtypes = [
+    c_void_p, c_int, c_int, a2df, a1df]
+
+cext.AngularGrid_integrate.restype = c_double
+cext.AngularGrid_integrate.argtypes = [c_void_p, c_int, a1df]
+
+cext.AngularGrid_get_lorder.restype = c_int
+cext.AngularGrid_get_lorder.argtypes = [c_void_p]
+
+cext.AngularGrid_get_points.restype = POINTER(c_double)
+cext.AngularGrid_get_points.argtypes = [c_void_p]
+
+cext.AngularGrid_get_weights.restype = POINTER(c_double)
+cext.AngularGrid_get_weights.argtypes = [c_void_p]
+
+# Radial grid
+cext.RadialGrid_new.restype = c_void_p
+cext.RadialGrid_new.argtypes = [c_void_p, c_double]
+
+cext.RadialGrid_del.restype = None
+cext.RadialGrid_del.argtypes = [c_void_p]
+
+cext.RadialGrid_integrate.restype = c_double
+cext.RadialGrid_integrate.argtypes = [c_void_p, c_int, a1df]
+
+cext.RadialGrid_get_size.restype = c_int
+cext.RadialGrid_get_size.argtypes = [c_void_p]
+
+cext.RadialGrid_get_radii.restype = c_double
+cext.RadialGrid_get_radii.argtypes = [c_void_p]
+
+cext.RadialGrid_get_points.restype = POINTER(c_double)
+cext.RadialGrid_get_points.argtypes = [c_void_p]
+
+cext.RadialGrid_get_weights.restype = POINTER(c_double)
+cext.RadialGrid_get_weights.argtypes = [c_void_p]
+
 
 # Atomic grid
-cext.atomic_grid_init.restype = None
-cext.atomic_grid_init.argtypes = [
-    POINTER(AtomicGrid), POINTER(AngularGrid),
-    POINTER(RadialGrid)]
+cext.AtomicGrid_new.restype = c_void_p
+cext.AtomicGrid_new.argtypes = [c_void_p, c_void_p, a1df]
 
-cext.angular_spherical_expansion.restype = None
-cext.angular_spherical_expansion.argtypes = [
-    POINTER(AngularGrid), c_int, c_int, a1df, a2df]
+cext.AtomicGrid_del.restype = None
+cext.AtomicGrid_del.argtypes = [c_void_p]
 
-cext.angular_eval_expansion.restype = None
-cext.angular_eval_expansion.argtypes = [
-    POINTER(AngularGrid), c_int, c_int, a2df, a1df]
+cext.AtomicGrid_integrate.restype = POINTER(c_double)
+cext.AtomicGrid_integrate.argtypes = [c_void_p, c_int, c_int, c_int, a1df]
 
-cext.atomic_grid_integrate.restype = None
-cext.atomic_grid_integrate.argtypes = [
-    POINTER(AtomicGrid), c_int, c_int, c_int, a1df, a1df]
+cext.AtomicGrid_get_size.restype = c_int
+cext.AtomicGrid_get_size.argtypes = [c_void_p]
+
+cext.AtomicGrid_get_radii.restype = c_double
+cext.AtomicGrid_get_radii.argtypes = [c_void_p]
+
+cext.AtomicGrid_get_origin.restype = POINTER(c_double)
+cext.AtomicGrid_get_origin.argtypes = [c_void_p]
+
+cext.AtomicGrid_get_points.restype = POINTER(c_double)
+cext.AtomicGrid_get_points.argtypes = [c_void_p]
+
+cext.AtomicGrid_get_weights.restype = POINTER(c_double)
+cext.AtomicGrid_get_weights.argtypes = [c_void_p]
 
 # Becke grid
-cext.becke_weights.restype = None
-cext.becke_weights.argtypes = [POINTER(BeckeGrid), a1df]
+cext.BeckeGrid_new.restype = c_void_p
+cext.BeckeGrid_new.argtypes = [aptr]
+
+cext.BeckeGrid_del.restype = None
+cext.BeckeGrid_del.argtypes = [c_void_p]
+
+cext.BeckeGrid_integrate.restype = c_double
+cext.BeckeGrid_integrate.argtypes = [c_void_p, a1df]
+
+cext.BeckeGrid_get_ncenter.restype = c_int
+cext.BeckeGrid_get_ncenter.argtypes = [c_void_p]
+
+cext.BeckeGrid_get_size.restype = c_int
+cext.BeckeGrid_get_size.argtypes = [c_void_p]
+
+cext.BeckeGrid_get_radii.restype = POINTER(c_double)
+cext.BeckeGrid_get_radii.argtypes = [c_void_p]
+
+cext.BeckeGrid_get_points.restype = POINTER(c_double)
+cext.BeckeGrid_get_points.argtypes = [c_void_p]
+
+cext.BeckeGrid_get_weights.restype = POINTER(c_double)
+cext.BeckeGrid_get_weights.argtypes = [c_void_p]
+
+cext.BeckeGrid_get_origin.restype = POINTER(c_double)
+cext.BeckeGrid_get_origin.argtypes = [c_void_p]
+
+cext.BeckeGrid_get_becke_weights.restype = POINTER(c_double)
+cext.BeckeGrid_get_becke_weights.argtypes = [c_void_p]
 
 cext.eval_decomposition_grid.restype = None
 cext.eval_decomposition_grid.argtypes = [
@@ -251,23 +422,9 @@ cext.PowerExtrapolation_new.argtypes = [c_double]
 cext.PowerExtrapolation_get_power.restype = c_double
 cext.PowerExtrapolation_get_power.argtypes = [c_void_p]
 
-# Radial grid
-cext.radial_integrate.restype = c_double
-cext.radial_integrate.argtypes = [
-    POINTER(RadialGrid), c_int, a1df]
+cext.PotentialExtrapolation_new.restype = c_void_p
+cext.PotentialExtrapolation_new.argtypes = [c_int]
 
-# RadialCheb
-cext.radial_init.restype = None
-cext.radial_init.argtypes = [POINTER(RadialGridCheb)]
-
-cext.radial_get_z.restype = None
-cext.radial_get_z.argtypes = [POINTER(RadialGridCheb)]
-
-cext.radial_deriv_z.restype = None
-cext.radial_deriv_z.argtypes = [POINTER(RadialGridCheb)]
-
-cext.radial_deriv2_z.restype = None
-cext.radial_deriv2_z.argtypes = [POINTER(RadialGridCheb)]
 
 # Radial Transform
 cext.RTransform_get_npoint.restype = c_int
@@ -347,3 +504,8 @@ cext.compute_cubic_spline_int_weights.argtypes = [a1df, c_int]
 cext.build_ode2.restype = None
 cext.build_ode2.argtypes = [
     a1df, a1df, a1df, a1df, a2df, a1df, c_long]
+
+# Multipolar expansion
+cext.dot_multi_moments.restype = None
+cext.dot_multi_moments.argtypes = [
+    c_long, c_long, d1pp, a2df, a1df, c_long, c_long, a1dli, a2df, c_long]

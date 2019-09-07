@@ -7,7 +7,7 @@ efposadac@unal.edu.co*/
 
 #include "overlap.h"
 
-double gto_overlap_primitive(PrimitiveGaussian *f_a, PrimitiveGaussian *f_b) {
+double overlap_primitive(PrimitiveGaussian *f_a, PrimitiveGaussian *f_b) {
   int i;
   int l_a = 0, l_b = 0, max_l;
 
@@ -18,37 +18,39 @@ double gto_overlap_primitive(PrimitiveGaussian *f_a, PrimitiveGaussian *f_b) {
   double x0, y0, z0;
   double *x, *y, *z;
 
-  gamma = f_a->exponent + f_b->exponent;
+  gamma = f_a->get_zeta() + f_b->get_zeta();
   gammaInv = 1.0 / gamma;
 
   for (i = 0; i < 3; ++i) {
-    double AB = f_a->origin[i] - f_b->origin[i];
-    double P0 = (f_a->exponent * f_a->origin[i] + f_b->exponent * f_b->origin[i]) *
-         gammaInv;
-    PA[i] = P0 - f_a->origin[i];
-    PB[i] = P0 - f_b->origin[i];
+    double AB = f_a->get_origin()[i] - f_b->get_origin()[i];
+    double P0 = (f_a->get_zeta() * f_a->get_origin()[i] +
+                 f_b->get_zeta() * f_b->get_origin()[i]) *
+                gammaInv;
+
+    PA[i] = P0 - f_a->get_origin()[i];
+    PB[i] = P0 - f_b->get_origin()[i];
     AB2 += AB * AB;
-    l_a += f_a->l[i];
-    l_b += f_b->l[i];
+    l_a += f_a->get_l()[i];
+    l_b += f_b->get_l()[i];
   }
 
-  preFactor = exp(-f_a->exponent * f_b->exponent * AB2 * gammaInv) *
-              (sqrt(M_PI * gammaInv) * M_PI * gammaInv * f_a->coefficient *
-               f_b->coefficient * f_a->normalization * f_b->normalization);
+  preFactor = exp(-f_a->get_zeta() * f_b->get_zeta() * AB2 * gammaInv) *
+              (sqrt(M_PI * gammaInv) * M_PI * gammaInv * f_a->get_coeff() *
+               f_b->get_coeff() * f_a->get_norma() * f_b->get_norma());
 
   // recursion
-  max_l = max(l_a, l_b) + 4;
+  max_l = std::max(l_a, l_b) + 4;
 
   x = (double *)calloc(max_l * max_l, sizeof(double));
   y = (double *)calloc(max_l * max_l, sizeof(double));
   z = (double *)calloc(max_l * max_l, sizeof(double));
 
-  gto_obaraSaika_recursion(x, y, z, PA, PB, gamma, l_a + 2, l_b + 2, max_l);
+  obaraSaika_recursion(x, y, z, PA, PB, gamma, l_a + 2, l_b + 2, max_l);
 
   // Calculating integrals for primitives
-  x0 = x[f_a->l[0] * max_l + f_b->l[0]];
-  y0 = y[f_a->l[1] * max_l + f_b->l[1]];
-  z0 = z[f_a->l[2] * max_l + f_b->l[2]];
+  x0 = x[f_a->get_l()[0] * max_l + f_b->get_l()[0]];
+  y0 = y[f_a->get_l()[1] * max_l + f_b->get_l()[1]];
+  z0 = z[f_a->get_l()[2] * max_l + f_b->get_l()[2]];
 
   output = preFactor * x0 * y0 * z0;
 
@@ -59,9 +61,9 @@ double gto_overlap_primitive(PrimitiveGaussian *f_a, PrimitiveGaussian *f_b) {
   return output;
 }
 
-void gto_obaraSaika_recursion(double *x, double *y, double *z, double PA[3],
-                              double PB[3], const double gamma, const int l_a,
-                              const int l_b, const int max_l) {
+void obaraSaika_recursion(double *x, double *y, double *z, double PA[3],
+                          double PB[3], const double gamma, const int l_a,
+                          const int l_b, const int max_l) {
 
   int i, j, idx;
 

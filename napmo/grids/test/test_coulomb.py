@@ -32,8 +32,8 @@ def test_coulomb_H():
     # basis set
     basis = molecule.get_basis('H')
 
-    a = basis.get('function')[0]
-    b = basis.get('function')[0]
+    a = basis.get('cont')[0]
+    b = basis.get('cont')[0]
 
     # Build grid
     angularPoints = 110
@@ -53,6 +53,7 @@ def test_coulomb_H():
             i, U[i][:], v)
 
     integral = grid.integrate(rho * v)
+    # print(integral)
     assert np.allclose(integral, 0.77461)
 
 # test_coulomb_H()

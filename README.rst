@@ -1,7 +1,7 @@
 Numerical Any particle Molecular Orbital (NAPMO)
 ================================================
 
-:Author: Fernando Posada Correa, MHPC, UNAL, 2015
+:Author: Fernando Posada Correa, MHPC, UNAL, Temple, 2015
 
 .. image:: https://travis-ci.com/efposadac/nAPMO.svg?token=HUrCr32Dap17ppyzhhdd&branch=hf_dev
     :target: https://travis-ci.com/efposadac/nAPMO
@@ -12,7 +12,7 @@ NAPMO is a numerical implementation of APMO - NEO - OMNE method.
 This program implements the  basis-set free  Hartree-Fock OMNE approach.
 
 * Edwin Fernando Posada
-* eposada@unal.edu.co
+* fernando.posada@temple.edu
 * Version 0.8
 
 **Prerequisites:**
@@ -50,13 +50,11 @@ This version contains:
 * Numerical single or multi species Hartree-Fock solver
 * The C interface has been parallelized  with OMP and "some" CUDA. That code should be enabled in compilation time.
 
-For examples on how to use the code please refer to the test folders located in napmo folder.
-
 Any suggestion and help is more than welcome and appreciated. 
 
-Code documentation can be found at http://efposadac.github.io/nAPMO/
+The code documentation can be found at http://efposadac.github.io/nAPMO/
 
-efposadac@unal.edu.co
+fernando.posada@temple.edu
 
 
 .. _libint: https://github.com/evaleev/libint

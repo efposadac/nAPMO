@@ -12,8 +12,10 @@ from napmo.system.contracted_gaussian import ContractedGaussian
 
 def test_contracted_gaussian_interface():
     test = ContractedGaussian(exponents=[0.5])
-    assert test.length == 1
-    assert test.norma == 1.0
+    assert test.nprim == 1
+    assert test.normalization == 1.0
+    print(test)
+
     np.testing.assert_allclose(np.zeros(3), test.l)
     np.testing.assert_allclose(test.compute(np.zeros([1, 3])), 0.423777208124)
     np.testing.assert_allclose(test.overlap(test), 1.0)

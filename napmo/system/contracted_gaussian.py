@@ -8,12 +8,13 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
+from ctypes import *
 import scipy.misc
 
 import napmo
 
 
-class ContractedGaussian(dict):
+class ContractedGaussian(object):
 
     """
     Defines a linear combination of Cartesian Gaussian type orbitals GTO.
@@ -57,22 +58,13 @@ class ContractedGaussian(dict):
 
         assert isinstance(exponents, np.ndarray) or isinstance(exponents, list)
 
-        self["length"] = len(exponents)
-        self["l"] = l
-        self["origin"] = origin
-        self["primitive"] = [
+        self._primitives = [
             napmo.PrimitiveGaussian(exponent, coefficient, l, origin)
             for (exponent, coefficient) in zip(exponents, coefficients)]
 
-        self["normalization"] = 1.0
-        aux = self.normalize()
-        self["normalization"] = aux
+        aux = np.array([p._this for p in self._primitives], dtype=c_void_p)
 
-    def normalize(self):
-        """
-        Normalizes the contraction
-        """
-        return 1.0 / np.sqrt(self.overlap(self))
+        self._this = napmo.cext.ContractedGaussian_new(aux, len(exponents))
 
     def overlap(self, other):
         """
@@ -82,13 +74,8 @@ class ContractedGaussian(dict):
             other (ContractedGaussian) : Contracted function to perform :math:`<\phi_{self} | \phi_{other}>`
 
         """
-        output = (
-            sum([pa.overlap(pb)
-                 for pa in self.get('primitive')
-                 for pb in other.get('primitive')]) *
-            self.get('normalization') * other.get('normalization'))
 
-        return output
+        return napmo.cext.ContractedGaussian_overlap(self._this, other._this)
 
     def compute(self, coord):
         """
@@ -98,24 +85,38 @@ class ContractedGaussian(dict):
             coord (ndarray) : array with the points where the function will be
             calculated.
         """
-        return sum([primitive.compute(coord) * self.get('normalization')
-                    for primitive in self.get('primitive')])
+        n_coord = coord.shape[0]
+        output = np.empty(n_coord)
+        napmo.cext.ContractedGaussian_compute(
+            self._this, coord, output, n_coord)
+
+        return output
 
     @property
     def l(self):
-        return self.get('l')
+        """
+        The angular moment of the object
+        """
+        output = np.zeros(3, dtype=np.int32)
+        napmo.cext.ContractedGaussian_get_l(self._this, output)
+        return output
 
     @property
     def origin(self):
-        return self.get('origin')
+        """
+        The center of the function
+        """
+        output = np.zeros(3)
+        napmo.cext.ContractedGaussian_get_origin(self._this, output)
+        return output
 
     @property
-    def length(self):
-        return self.get('length')
+    def nprim(self):
+        return napmo.cext.ContractedGaussian_get_nprim(self._this)
 
     @property
-    def norma(self):
-        return self.get('normalization')
+    def normalization(self):
+        return napmo.cext.ContractedGaussian_get_norma(self._this)
 
     def _show_compact(self):
         """
@@ -124,7 +125,7 @@ class ContractedGaussian(dict):
 
         out = ''
         out += "".join([p._show_compact()
-                        for p in self.get('primitive') if p.l[0] == sum(p.l)])
+                        for p in self._primitives if p.l[0] == sum(p.l)])
 
         return out
 
@@ -134,10 +135,10 @@ class ContractedGaussian(dict):
 ==================================================
 Object: {0:9s}
 --------------------------------------------------
-Origin: {1:<10.5f} {2:<10.5f} {3:<10.5f}
+Origin: {1:<18.14f} {2:<18.14f} {3:<18.14f}
 l:      {4:<3d} {5:<3d} {6:<3d}
-length: {7:<10d}
-norma:  {8:<10.5f}
+nprim: {7:<10d}
+norma:  {8:<18.14f}
 --------------------------------------------------
 """.format(
             type(self).__name__,
@@ -147,8 +148,8 @@ norma:  {8:<10.5f}
             self.l[0],
             self.l[1],
             self.l[2],
-            self.length,
-            self.norma)
+            self.nprim,
+            self.normalization)
 
         out += """
   {0:<3s} {1:>10s} {2:>10s} {3:>10s}
@@ -160,6 +161,6 @@ norma:  {8:<10.5f}
             "Norma")
 
         out += "".join([p._show_compact()
-                        for p in self.get('primitive')])
+                        for p in self._primitives])
 
         return out
