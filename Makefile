@@ -14,8 +14,8 @@ default: OMP
 
 $(BUILD):
 	cd src && $(MAKE) $@
-	/usr/bin/env python3 setup.py install --record files.txt --user
-	# python2 setup.py install --record files.txt --user
+	python2 setup.py install --record files.txt --user
+	# /usr/bin/env python3 setup.py install --record files.txt --user
 
 clean:
 	for dir in $(SUBDIRS); \

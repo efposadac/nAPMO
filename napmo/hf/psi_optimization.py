@@ -39,6 +39,7 @@ class PSIO(napmo.PSIB):
 
         self.Kgrid = np.zeros([self.ndim, self._grid.size])
         self.Jgrid = np.zeros(self._grid.size)
+        self.XCgrid = np.zeros(self._grid.size)
 
     def optimize(self, wf, scf, other_wf=None):
         """
@@ -113,11 +114,15 @@ class PSIO(napmo.PSIB):
         """
 
         self._compute_density()
-        self._compute_2body_coulomb()
-        self._compute_2body_exchange()
 
-        with napmo.runtime.timeblock('Numerical G matrix'):
-            napmo.cext.nwavefunction_compute_2body_matrix_atm(
+        if self.species.get('size') > 1:
+            self._compute_2body_coulomb()
+            if self._exchangefactor != 0.0:
+                self._compute_2body_exchange()
+            #FELIX: add if bla bla bla bla
+            # self._compute_2body_exchange()
+            with napmo.runtime.timeblock('Numerical G matrix'):
+                napmo.cext.nwavefunction_compute_2body_matrix_atm(
                 byref(self), self._grid._this, self.psi, self.Jgrid, self.Kgrid)
 
             self.G *= self.species.get('charge')
@@ -152,6 +157,46 @@ class PSIO(napmo.PSIB):
         # print("\n Coupling Matrix: ", self.symbol)
         # print(self.J)
 
+    def compute_exccor(self):
+        """
+        Computes the exchange correlation matrix
+
+        Args:
+        """
+        self._ecenergy = 0.0
+        self.XC[:] = 0.0
+        self.XCgrid[:] = 0.0
+
+        if (self.symbol == "e-"):
+            napmo.cext.nwavefunction_compute_exccor_matrix(
+                byref(self), self._grid._this, self.psi, self.Dgrid.sum(axis=0), self.XCgrid)
+
+        # print("\n XC Energy:" + self.symbol + ":")
+        # print(self._ecenergy)
+
+        # print("\n XC Potential:" + self.symbol + ":")
+        # print(self.XCgrid)
+
+        # print("\n XC Matrix:" + self.symbol + ": ")
+        # print(self.XC)
+        
+    def compute_cor2species(self,other_psi):
+        """
+        Computes the exchange correlation matrix
+
+        Args:
+        """
+        for psi in other_psi:
+            if self.sid != psi.sid:
+                napmo.cext.nwavefunction_compute_cor2species_matrix(
+                    byref(self), byref(psi), self._grid._this, self.psi, self.Dgrid.sum(axis=0), psi.Dgrid.sum(axis=0), self.XCgrid)
+
+        # print("\n XC Energy:" + self.symbol + ":")
+        # print(self._ecenergy)
+        
+        # print("\n XC Matrix:" + self.symbol + ": ")
+        # print(self.XC)
+        
     def compute_hcore(self):
         """
         Builds the Hcore matrix
@@ -175,7 +220,7 @@ class PSIO(napmo.PSIB):
         Builds the Fock matrix
         """
 
-        self.F[:] = self.H + self.G + self.J
+        self.F[:] = self.H + self.G + self.J + self.XC
 
         # print("\n Fock Matrix:")
         # print(self.F)
@@ -301,12 +346,19 @@ class PSIO(napmo.PSIB):
         Args:
             O (ndarray): :math:`O| \psi_j \rangle` calculated on the grid.
         """
+        # print ("Trololo se cae aqui", self.ndim, "size O", O.size)
+
         M = np.array([self._grid.integrate(self.psi[i] * O[j])
                       for i in range(self.ndim)
                       for j in range(self.ndim)])
 
         M = M.reshape([self.ndim, self.ndim])
 
+        # M = np.zeros([self.ndim, self.ndim])
+        # for i in range(self.ndim):
+        #     for j in range(self.ndim):
+        #         M[i,j] = self._grid.integrate(self.psi[i] * O[j])
+        
         return M
 
     @property

@@ -9,7 +9,7 @@ import napmo
 import numpy as np
 import os
 import re
-
+import sys
 
 def extract_keywork(data, beg=0):
     """
@@ -124,7 +124,8 @@ class InputParser(object):
             'basis': self.load_basis,
             'scf': self.load_scf,
             'code': self.load_code,
-            'grid': self.load_grid
+            'grid': self.load_grid,
+            'functional': self.load_functional
         }
 
         self.code = ''  # code to execute at the end of the calculation
@@ -132,6 +133,7 @@ class InputParser(object):
         self.charges = {}  # options for charges and multiplicity
         self.scf = {}  # options for SCF engine
         self.grid = {}  # data for grids
+        self.functional = {}  # data for functionals
 
         # remove all comments from data and blank lines
         data = re.sub('""".*\n?', '', data)
@@ -328,6 +330,7 @@ class InputParser(object):
         aux = {}
 
         data = data.splitlines()
+        
         for line in data:
             line = line.strip().split(' ')
             symbol = line[0].strip()
@@ -362,9 +365,59 @@ class InputParser(object):
             aux[symbol] = {'nrad': nrad,
                            'nang': nang,
                            'rtransform': rtransform}
-
+            
         self.scf['grid'] = aux
+        
+    def load_functional(self, data, group=True, options=None):
+        """
+        Loads the functionals information for DFT calculations
 
+        Args:
+            data (str) : Relevant data from input corresponding to the keyword ``functional``
+            group (bool) : Whether the data is a group ie. ``{...}`` or just a variable ``functional = ...``
+        """
+
+        aux = {}
+
+        data = data.splitlines()
+        
+        for line in data:
+
+            line = line.strip().split(' ')
+
+            symbol = line[0].strip()
+            if symbol not in self.data and symbol != 'e-':
+                raise_exception(
+                    ValueError,
+                    "Particle not found!",
+                    'Check the "functional" block in your input file ' + symbol + ' is undefined in "molecular" block')
+
+            if len(line) > 3:
+                raise_exception(
+                    ValueError,
+                    "There is an extra term in a functional line!",
+                    'Check the "functional" block in your input file')
+
+            elif len(line) == 3:
+                otherSymbol= line[1].strip()
+
+                if otherSymbol not in self.data and symbol != 'e-':
+                    raise_exception(
+                    ValueError, 
+                    "Particle not found!",
+                    'Check the "functional" block in your input file ' + symbol + ' is undefined in "molecular" block')
+
+                functional= line[2].strip()
+                aux[symbol+'//'+otherSymbol]= functional
+
+            else:
+                functional= line[1].strip()
+                aux[symbol] = functional
+                
+        self.functional = aux
+        print self.functional
+
+        
     def load_code(self, data, group=True, options=None):
         """
         Loads the code keyword

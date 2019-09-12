@@ -58,6 +58,8 @@ class SCF(object):
 
         with napmo.runtime.timeblock('2 body ints'):
             psi.compute_2body(self.get('direct'))
+            psi.compute_exccor()
+
 
         psi.build_fock()
 
@@ -92,18 +94,23 @@ class SCF(object):
                np.abs(e_diff) > self.get('eps_e') and
                np.abs(psi._rmsd) > self.get('eps_d')):
 
+            
             iterations += 1
             e_last = psi._energy
 
+
             with napmo.runtime.timeblock('2 body ints'):
                 psi.compute_2body(self.get('direct'))
-
+                psi.compute_exccor()
+            
+           
             if other_psi is not None:
                 with napmo.runtime.timeblock('Coupling ints'):
                     psi.compute_coupling(other_psi, direct=self.get('direct'))
-
+                    psi.compute_cor2species(other_psi)
+                    
             psi.build_fock()
-
+                     
             # Iterate
             if iterations > 2:
                 psi.F[:] = psi.convergence.damping(psi.F, psi.D)
@@ -117,7 +124,7 @@ class SCF(object):
             # solve F C = e S C
             with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
                 napmo.cext.wavefunction_iterate(byref(psi))
-
+          
             e_diff = psi._energy - e_last
 
             self._energy = psi._energy + psi.pce
@@ -132,7 +139,7 @@ class SCF(object):
             if not isinstance(psi, napmo.PSIO):
                 grid = napmo.BeckeGrid(psi.species, 500, 110)
                 psi.plot_dens(grid, kind="anal")
-                plt.show()
+                # plt.show()
 
         # elif self.get('debug') and isinstance(psi, napmo.PSIO):
         #     psi.plot_dens()
@@ -160,6 +167,7 @@ class SCF(object):
         for psi in PSI:
             # Calculate 2 body Matrix
             psi.compute_2body(self.get('direct'))
+            psi.compute_exccor()
 
         while (iterations < self.get('maxiter') and
                np.abs(e_diff) > self.get('eps_e')):
@@ -185,7 +193,10 @@ class SCF(object):
 
                     # Calculate 2 body Matrix
                     psi.compute_2body(self.get('direct'))
+                    psi.compute_exccor()
+
                     psi.compute_coupling(PSI, direct=self.get('direct'))
+                    psi.compute_cor2species(PSI)
 
 
             if case is 1:
@@ -193,6 +204,7 @@ class SCF(object):
 
                     with napmo.runtime.timeblock('2 body ints'):
                         psi.compute_2body(self.get('direct'))
+                        psi.compute_exccor()
 
                     psi.build_fock()
 
@@ -202,6 +214,7 @@ class SCF(object):
 
                     with napmo.runtime.timeblock('Coupling ints'):
                         psi.compute_coupling(PSI, direct=self.get('direct'))
+                        psi.compute_cor2species(PSI)
 
                     self.single(psi, pprint=False)
 
@@ -266,7 +279,9 @@ class SCF(object):
 
             with napmo.runtime.timeblock('Numerical 2 body'):
                 psi.compute_2body(self.get('direct'))
+                psi.compute_exccor()
 
+            
             psi.build_fock()
 
             # if iterations > 2:
@@ -324,6 +339,7 @@ class SCF(object):
                 # Calculate 2 body Matrix
                 with napmo.runtime.timeblock('2 body ints'):
                     psi.compute_2body(self.get('direct'))
+                    psi.compute_exccor()
 
                 psi.build_fock()
 
@@ -338,6 +354,7 @@ class SCF(object):
 
                 with napmo.runtime.timeblock('Coupling ints'):
                     psi.compute_coupling(PSI, direct=self.get('direct'))
+                    psi.compute_cor2species(PSI)
 
                 if self.get('debug'):
                     print("Single particle energy for " +
@@ -359,8 +376,8 @@ class SCF(object):
             iterations += 1
 
         # if self.get('debug'):
-        # for psi in PSI:
-        #     psi.plot_dens(kind="num")
+        for psi in PSI:
+            psi.plot_dens(kind="num")
             # plt.show()
             # plt.savefig('numeric_dens.png')
 
@@ -393,6 +410,7 @@ class SCF(object):
 
                 # Calculate 2 body Matrix
                 psi.compute_2body(self.get('direct'))
+                psi.compute_exccor()
                 psi.build_fock()
 
                 if iterations > 2:
@@ -406,6 +424,7 @@ class SCF(object):
 
                 with napmo.runtime.timeblock('Coupling ints'):
                     psi.compute_coupling(PSI, direct=self.get('direct'))
+                    psi.compute_cor2species(PSI)
 
                 if psi.symbol == 'e-':
                     self.nsingle(psi, pprint=False)
@@ -441,7 +460,7 @@ class SCF(object):
 
         for psi in PSI:
             # Add independient particle energies
-            self._energy += (psi.D.T * (psi.H + (0.5 * psi.G))).sum()
+            self._energy += (psi.D.T * (psi.H + (0.5 * psi.G))).sum()+psi._ecenergy
 
             # Calculate coupling energy
             self._coupling_energy += 0.5 * (psi.D.T * psi.J).sum()
@@ -465,6 +484,7 @@ class SCF(object):
         self._pcqui_energy = 0.0
         self._2body_energy = 0.0
         self._coupling_energy = 0.0
+        self._ec_energy = 0.0
 
         for psi in PSI:
             # Calculate kinetic energy
@@ -486,11 +506,15 @@ class SCF(object):
             # Calculate coupling energy
             self._coupling_energy += 0.5 * (psi.D * psi.J).sum()
 
+            # Calculate exchange correlation energy
+            self._ec_energy += psi._ecenergy
+
         # Calculate potential energy
         self._potential_energy = (self.pce +
                                   self._2body_energy +
                                   self._pcqui_energy +
-                                  self._coupling_energy)
+                                  self._coupling_energy +
+                                  self._ec_energy)
 
         self._energy = self._potential_energy + self._kinetic_energy
 
@@ -540,8 +564,9 @@ Hartree-Fock Results:
   Quantum-Point energy     {5:>16.11f}
   Repulsion energy         {6:>16.11f}
   Coupling energy          {7:>16.11f}
+  Exc. corr. energy        {8:>16.11f}
                           -----------------
-  Potential energy         {8:>16.11f}
+  Potential energy         {9:>16.11f}
 
 """.format(self._potential_energy,
            self._kinetic_energy,
@@ -551,10 +576,16 @@ Hartree-Fock Results:
            self._pcqui_energy,
            self._2body_energy,
            self._coupling_energy,
+           self._ec_energy,
            self._potential_energy))
 
         for psi in PSI:
             print("Orbitals: ",psi.symbol, "\n", psi.O)
+            print("Kinetic energy: ",psi.symbol, (psi.D * psi.T).sum(), "\n")
+            print("Quantum-Point energy: ",psi.symbol, (psi.D * psi.V).sum(), "\n")
+            print("Repulsion energy: ",psi.symbol, 0.5 * (psi.D * psi.G).sum(), "\n")
+            print("Coupling energy: ",psi.symbol, 0.5 * (psi.D * psi.J).sum(), "\n")
+            print("Exc. corr. energy (fix): ",psi.symbol, psi._ecenergy, "\n")
 
     def __repr__(self):
         out = ("""\nSCF setup:

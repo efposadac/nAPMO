@@ -57,6 +57,7 @@ from napmo.hf.psi_optimization import PSIO
 from napmo.hf.nkinetic import compute_kinetic
 from napmo.hf.nnuclear import compute_nuclear
 from napmo.hf.ntwobody import compute_coulomb
+#from napmo.hf.nexccor import compute_exccor
 from napmo.hf.ndpsi import compute_dpsi
 from napmo.hf.hf_solver import HF
 from napmo.hf.scf import SCF
@@ -64,6 +65,7 @@ from napmo.hf.convergence import Convergence
 
 # OMP Threads
 threads = int(os.environ.get('OMP_NUM_THREADS', 1))
+print("threads",threads) 
 
 # Timer singleton
 runtime = Timer()
@@ -152,6 +154,10 @@ cext.wavefunction_compute_2body_matrix.restype = None
 cext.wavefunction_compute_2body_matrix.argtypes = [
     c_void_p, c_void_p]
 
+# cext.wavefunction_compute_exccor_matrix.restype = None
+# cext.wavefunction_compute_exccor_matrix.argtypes = [
+#     c_void_p]
+
 # NWavefunction
 cext.nwavefunction_compute_density_from_dm.restype = None
 cext.nwavefunction_compute_density_from_dm.argtypes = [
@@ -168,6 +174,14 @@ cext.nwavefunction_compute_2body_matrix_mol.argtypes = [
 cext.nwavefunction_compute_coupling.restype = None
 cext.nwavefunction_compute_coupling.argtypes = [
     c_void_p, c_void_p, a2df, a1df, a2df]
+
+cext.nwavefunction_compute_exccor_matrix.restype = None
+cext.nwavefunction_compute_exccor_matrix.argtypes = [
+    c_void_p, c_void_p, a2df, a1df, a1df]
+
+cext.nwavefunction_compute_cor2species_matrix.restype = None
+cext.nwavefunction_compute_cor2species_matrix.argtypes = [
+    c_void_p, c_void_p, c_void_p, a2df, a1df, a1df, a1df]
 
 # PrimitiveGaussian
 cext.PrimitiveGaussian_new.restype = c_void_p

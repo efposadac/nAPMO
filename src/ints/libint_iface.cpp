@@ -7,6 +7,7 @@ efposadac@unal.edu.co
 */
 
 #include "libint_iface.h"
+#include <libint2/util/small_vector.h>
 
 /*
 LibintInterface
@@ -69,8 +70,10 @@ void LibintInterface::add_basis(BasisSet *basis) {
         cont.get_l()[0])
       continue;
 
-    std::vector<double> exponents;
-    std::vector<double> coefficients;
+    // std::vector<double> exponents;
+    // std::vector<double> coefficients;
+    boost::container::small_vector<double,6> exponents;
+    boost::container::small_vector<double,6> coefficients;
 
     for (auto prim : cont.get_prim()) {
       exponents.push_back(prim.get_zeta());

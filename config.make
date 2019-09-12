@@ -29,7 +29,7 @@ endif
 #-----------------------
 CFLAGS := -Wall -O2 -fPIC -g -pg  
 # LDLIBS := -lgsl -lgslcblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lblas -lm -lint2
-LDLIBS := -lgsl -lgslcblas -lm -lint2 -lstdc++
+LDLIBS := -lgsl -lgslcblas -lm -lint2 -lstdc++ -lxc 
 # LDLIBS := /opt/local/lib/libgsl.19.dylib /opt/local/lib/libgslcblas.0.dylib -lm
 LDFLAGS +=  -shared
 

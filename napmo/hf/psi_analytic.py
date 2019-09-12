@@ -11,6 +11,8 @@ from __future__ import print_function
 from ctypes import *
 import numpy as np
 import napmo
+
+import sys
 from scipy import linalg as SLA
 
 
@@ -45,7 +47,7 @@ class PSIA(napmo.PSIB):
         self.compute_nuclear()
         self.compute_hcore()
         self.compute_guess()
-
+        
     def compute_overlap(self):
         """
         Computes the overlap matrix
@@ -103,8 +105,9 @@ class PSIA(napmo.PSIB):
         Args:
             direct (bool) : Whether to calculate eris on-the-fly or not
         """
-        # print("\n D Matrix:" + self.symbol + ": ", self.D.sum())
-        if self.species.get('size') > 0:
+        
+        # if self.species.get('size') > 0:
+        if self.species.get('size') > 1:
 
             with napmo.runtime.timeblock('Numerical coupling ints'):
 
@@ -113,10 +116,12 @@ class PSIA(napmo.PSIB):
                 if direct:
                     napmo.cext.LibintInterface_compute_2body_direct(
                         self._libint, self.D, self.G)
+
                 else:
                     if not self._ints:
                         self._ints = napmo.cext.LibintInterface_compute_2body_ints(
                             self._libint, self.D)
+
                     napmo.cext.wavefunction_compute_2body_matrix(
                         byref(self), self._ints)
 
@@ -147,6 +152,69 @@ class PSIA(napmo.PSIB):
         # print("\n Coupling Matrix " + self.symbol + ": ", self.J.sum())
         # print(self.J)
 
+    def compute_exccor(self):
+        """
+        Computes the exchange correlation matrix - numerically
+
+        Args:
+        """
+        self._ecenergy = 0.0
+        self.XC[:] = 0.0
+        # numerical wavefunction
+        # FELIX: TODO, use input grid 
+        grid = napmo.BeckeGrid(self.species, 100, 110)
+        #atomic orbitals represented in the grid
+        gbasis = self.species.get('basis').compute(grid.points).T.copy()
+        #density in the grid
+        self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
+        #exchange correlation potential in the grid - Probably it's not required in the analytical SCF
+        XCgrid = np.zeros(grid.size)
+           
+        if (self.symbol == "e-"):
+            napmo.cext.nwavefunction_compute_exccor_matrix(
+                byref(self), grid._this, gbasis, self.Dgrid.sum(axis=0), XCgrid)
+        
+        # print("\n XC Energy:" + self.symbol + ":")
+        # print(self._ecenergy)
+        
+        # print("\n XC Matrix:" + self.symbol + ": ")
+        # print(self.XC)
+
+
+    def compute_cor2species(self,other_psi):
+        """
+        Computes the exchange correlation matrix - numerically
+
+        Args:
+        """
+        # numerical wavefunction
+        # FELIX: TODO, use input grid 
+        grid = napmo.BeckeGrid(self.species, 100, 110)
+
+        #atomic orbitals represented in the grid
+        gbasis = self.species.get('basis').compute(grid.points).T.copy()
+
+        #density in the grid
+        self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
+        
+        #exchange correlation potential in the grid - Probably it's not required in the analytical SCF
+        XCgrid = np.zeros(grid.size)
+        
+        for psi in other_psi:
+            if self.sid != psi.sid:
+                othergbasis = psi.species.get('basis').compute(grid.points).T.copy()
+                psi.Dgrid = psi._compute_density_from_dm(psi.D, othergbasis)
+                napmo.cext.nwavefunction_compute_cor2species_matrix(
+                    byref(self), byref(psi), grid._this, gbasis, self.Dgrid.sum(axis=0), psi.Dgrid.sum(axis=0), XCgrid)
+
+        
+        # print("\n XC Energy:" + self.symbol + ":")
+        # print(self._ecenergy)
+        
+        # print("\n XC Matrix:" + self.symbol + ": ")
+        # print(self.XC)
+
+        
     def compute_hcore(self):
         """
         Builds the Hcore matrix
@@ -172,6 +240,6 @@ class PSIA(napmo.PSIB):
         Builds the Fock matrix
         """
 
-        self.F[:] = self.H + self.G + self.J
+        self.F[:] = self.H + self.G + self.J + self.XC
         # print("\n Fock Matrix:" + self.symbol + ": ", self.F.sum())
         # print(self.F)

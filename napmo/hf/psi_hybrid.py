@@ -40,6 +40,7 @@ class PSIH(napmo.PSIA):
             self.L[:] = psia.L
             self.G[:] = psia.G
             self.J[:] = psia.J
+            self.XC[:] = psia.XC
             self.F[:] = psia.F
             self.O[:] = psia.O
 
@@ -108,6 +109,39 @@ class PSIH(napmo.PSIA):
         # Debug information
         # print("\n Coupling Matrix " + self.symbol + ": ")
         # print(self.J)
+
+    def compute_exccorr(self):
+        """
+        Computes the exchange correlation matrix
+
+        Args:
+        """
+
+        print("\n XC Matrix:" + self.symbol + ": ", self.XC.sum())
+        print(self.XC)
+
+        # print("\n D Matrix:" + self.symbol + ": ", self.D.sum())
+        # if self.species.get('size') > 0:
+
+        #     with napmo.runtime.timeblock('Numerical coupling ints'):
+
+        #         napmo.cext.LibintInterface_init_2body_ints(self._libint)
+
+        #         if direct:
+        #             napmo.cext.LibintInterface_compute_2body_direct(
+        #                 self._libint, self.D, self.G)
+        #         else:
+        #             if not self._ints:
+        #                 self._ints = napmo.cext.LibintInterface_compute_2body_ints(
+        #                     self._libint, self.D)
+        #             napmo.cext.wavefunction_compute_2body_matrix(
+        #                 byref(self), self._ints)
+
+        #         self.G *= self.species.get('charge')**2
+
+            # print("\n G Matrix:" + self.symbol + ": ", self.G.sum())
+            # print(self.G)
+
 
     def _compute_density(self):
         """
