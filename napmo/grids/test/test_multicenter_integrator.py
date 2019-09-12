@@ -65,5 +65,4 @@ def test_multicenter_integrator():
 
         count += 1
 
-
-test_multicenter_integrator()
+# test_multicenter_integrator()

@@ -114,16 +114,14 @@ class PSIO(napmo.PSIB):
         """
 
         self._compute_density()
-
         if self.species.get('size') > 1:
             self._compute_2body_coulomb()
             if self._exchangefactor != 0.0:
                 self._compute_2body_exchange()
-            #FELIX: add if bla bla bla bla
-            # self._compute_2body_exchange()
+
             with napmo.runtime.timeblock('Numerical G matrix'):
                 napmo.cext.nwavefunction_compute_2body_matrix_atm(
-                byref(self), self._grid._this, self.psi, self.Jgrid, self.Kgrid)
+                    byref(self), self._grid._this, self.psi, self.Jgrid, self.Kgrid)
 
             self.G *= self.species.get('charge')
 
@@ -179,8 +177,8 @@ class PSIO(napmo.PSIB):
 
         # print("\n XC Matrix:" + self.symbol + ": ")
         # print(self.XC)
-        
-    def compute_cor2species(self,other_psi):
+
+    def compute_cor2species(self, other_psi):
         """
         Computes the exchange correlation matrix
 
@@ -193,10 +191,10 @@ class PSIO(napmo.PSIB):
 
         # print("\n XC Energy:" + self.symbol + ":")
         # print(self._ecenergy)
-        
+
         # print("\n XC Matrix:" + self.symbol + ": ")
         # print(self.XC)
-        
+
     def compute_hcore(self):
         """
         Builds the Hcore matrix
@@ -219,7 +217,6 @@ class PSIO(napmo.PSIB):
         """
         Builds the Fock matrix
         """
-
         self.F[:] = self.H + self.G + self.J + self.XC
 
         # print("\n Fock Matrix:")
@@ -354,11 +351,6 @@ class PSIO(napmo.PSIB):
 
         M = M.reshape([self.ndim, self.ndim])
 
-        # M = np.zeros([self.ndim, self.ndim])
-        # for i in range(self.ndim):
-        #     for j in range(self.ndim):
-        #         M[i,j] = self._grid.integrate(self.psi[i] * O[j])
-        
         return M
 
     @property

@@ -9,7 +9,7 @@ import napmo
 import numpy as np
 import os
 import re
-import sys
+
 
 def extract_keywork(data, beg=0):
     """
@@ -328,9 +328,8 @@ class InputParser(object):
     def load_grid(self, data, group=True, options=None):
 
         aux = {}
-
         data = data.splitlines()
-        
+
         for line in data:
             line = line.strip().split(' ')
             symbol = line[0].strip()
@@ -365,9 +364,9 @@ class InputParser(object):
             aux[symbol] = {'nrad': nrad,
                            'nang': nang,
                            'rtransform': rtransform}
-            
+
         self.scf['grid'] = aux
-        
+
     def load_functional(self, data, group=True, options=None):
         """
         Loads the functionals information for DFT calculations
@@ -380,7 +379,7 @@ class InputParser(object):
         aux = {}
 
         data = data.splitlines()
-        
+
         for line in data:
 
             line = line.strip().split(' ')
@@ -399,25 +398,24 @@ class InputParser(object):
                     'Check the "functional" block in your input file')
 
             elif len(line) == 3:
-                otherSymbol= line[1].strip()
+                otherSymbol = line[1].strip()
 
                 if otherSymbol not in self.data and symbol != 'e-':
                     raise_exception(
-                    ValueError, 
-                    "Particle not found!",
-                    'Check the "functional" block in your input file ' + symbol + ' is undefined in "molecular" block')
+                        ValueError,
+                        "Particle not found!",
+                        'Check the "functional" block in your input file ' + symbol + ' is undefined in "molecular" block')
 
-                functional= line[2].strip()
-                aux[symbol+'//'+otherSymbol]= functional
+                functional = line[2].strip()
+                aux[symbol+'//'+otherSymbol] = functional
 
             else:
-                functional= line[1].strip()
+                functional = line[1].strip()
                 aux[symbol] = functional
-                
-        self.functional = aux
-        print self.functional
 
-        
+        self.functional = aux
+        print(self.functional)
+
     def load_code(self, data, group=True, options=None):
         """
         Loads the code keyword

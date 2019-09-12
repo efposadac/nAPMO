@@ -38,9 +38,9 @@ void wavefunction_guess_hcore(WaveFunction *psi) {
   // std::cout << D << std::endl;
 }
 
-void wavefunction_transformation_matrix(WaveFunction *psi){
+void wavefunction_transformation_matrix(WaveFunction *psi) {
   int ndim = psi->ndim;
-  MMap X(psi->X, ndim, ndim);  
+  MMap X(psi->X, ndim, ndim);
   VMap O(psi->O, ndim);
 
   // Eigen::EigenSolver<Matrix> eig_solver(S);
@@ -68,6 +68,7 @@ void wavefunction_iterate(WaveFunction *psi) {
 
   int ndim = psi->ndim;
   double ecenergy = psi->ecenergy;
+
   MMap S(psi->S, ndim, ndim);
   MMap C(psi->C, ndim, ndim);
   MMap H(psi->H, ndim, ndim);
@@ -154,15 +155,17 @@ void wavefunction_compute_energy(WaveFunction *psi) {
 
   int ndim = psi->ndim;
   double ecenergy = psi->ecenergy;
+
   MMap H(psi->H, ndim, ndim);
   MMap D(psi->D, ndim, ndim);
   MMap G(psi->G, ndim, ndim);
   MMap J(psi->J, ndim, ndim);
 
   // compute HF energy
-  auto ehf = D.cwiseProduct(H + (0.5 * G) + J).sum()+ecenergy;
+  auto ehf = D.cwiseProduct(H + (0.5 * G) + J).sum() + ecenergy;
   psi->energy = ehf;
 }
+
 void wavefunction_compute_2body_matrix(WaveFunction *psi,
                                        std::vector<QuartetBuffer> *ints) {
 
@@ -172,27 +175,27 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
 
   int ndim = psi->ndim;
   double factor = psi->exchangefactor;
+
   MMap D(psi->D, ndim, ndim);
   MMap G(psi->G, ndim, ndim);
 
   G.setZero();
 
- // FELIX: add a conditional for HF or hybrid functionals
+  // FELIX: add a conditional for HF or hybrid functionals
   // printf("exchange factor %f \n", factor);
-  
-  
-  if (nthreads==0) {
-    std::cout << "Felix: I don't know why nthreads is zero in this point\n";
-    std::cout << "Fixing it the bad way, nthreads=1\n";
-    nthreads=1;
-  }
-  
+
+  // TODO: FIX THIS
+  // if (nthreads==0) {
+  //   std::cout << "Felix: I don't know why nthreads is zero in this point\n";
+  //   std::cout << "Fixing it the bad way, nthreads=1\n";
+  //   nthreads=1;
+  // }
+
   std::vector<Matrix> GB(nthreads, Matrix::Zero(ndim, ndim));
   std::vector<Matrix> TEST(nthreads, Matrix::Zero(ndim, ndim));
 
 
   auto lambda = [&](unsigned int thread_id) {
-    
     auto &g = GB[thread_id];
 
     for (unsigned int i = 0; i < ints->at(thread_id).p.size(); i++) {
@@ -228,43 +231,43 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
 
       // Adds exchange operator contributions
       auto exchange = 0.0;
-      if (factor != 0.0){
-	if (r != s) {
-	  exchange = D(q, s) * val * factor;
-	  g(p, r) += exchange;
+      if (factor != 0.0) {
+        if (r != s) {
+          exchange = D(q, s) * val * factor;
+          g(p, r) += exchange;
 
-	  if (p == r && q != s) {
-	    g(p, r) += exchange;
-	  }
-	}
-	if (p != q) {
-	  exchange = D(p, r) * val * factor;
-	  if (q > s) {
-	    g(s, q) += exchange;
-	  } else {
-	    g(q, s) += exchange;
+          if (p == r && q != s) {
+            g(p, r) += exchange;
+          }
+        }
+        if (p != q) {
+          exchange = D(p, r) * val * factor;
+          if (q > s) {
+            g(s, q) += exchange;
+          } else {
+            g(q, s) += exchange;
 
-	    if (q == s && p != r) {
-	      g(q, s) += exchange;
-	    }
-	  }
-	  if (r != s) {
-	    exchange = D(p, s) * val * factor;
-	    if (q <= r) {
-	      g(q, r) += exchange;
-	      if (q == r) {
-		g(q, r) += exchange;
-	      }
-	    } else {
-	      g(r, q) += exchange;
-	      if (p == r && s == q)
-		continue;
-	    }
-	  }
-	}
+            if (q == s && p != r) {
+              g(q, s) += exchange;
+            }
+          }
+          if (r != s) {
+            exchange = D(p, s) * val * factor;
+            if (q <= r) {
+              g(q, r) += exchange;
+              if (q == r) {
+                g(q, r) += exchange;
+              }
+            } else {
+              g(r, q) += exchange;
+              if (p == r && s == q)
+                continue;
+            }
+          }
+        }
 
-	exchange = D(q, r) * val * factor;
-	g(p, s) += exchange;
+        exchange = D(q, r) * val * factor;
+        g(p, s) += exchange;
       }
     }
   }; // end lambda
@@ -280,7 +283,6 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
   GB[0] += GB[0].triangularView<Eigen::StrictlyLower>().transpose();
   G = GB[0].triangularView<Eigen::Upper>();
   G += G.triangularView<Eigen::StrictlyUpper>().transpose();
-
 }
 
 // void wavefunction_compute_exccor_matrix(WaveFunction *psi) {

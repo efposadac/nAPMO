@@ -20,8 +20,8 @@ class PSIH(napmo.PSIA):
     Defines the Fock operator for a Hartree-Fock Calculation with hybrid calculation of integrals.
     """
 
-    def __init__(self, species, point_charges, total_mass, grid, psia=None):
-        super(PSIH, self).__init__(species, point_charges, total_mass)
+    def __init__(self, species, point_charges, total_mass, grid, psia):
+        super(PSIH, self).__init__(species, point_charges, total_mass, psia.options)
 
         self._grid = grid
         self._lmax = int(napmo.lebedev_get_order(self._grid.nang) / 2)
@@ -47,7 +47,6 @@ class PSIH(napmo.PSIA):
             self._energy = psia._energy
             self._rmsd = psia._rmsd
 
-
     def compute_2body(self, direct=False):
         """
         Computes the two-body matrix
@@ -59,7 +58,7 @@ class PSIH(napmo.PSIA):
         self._compute_density()
 
         if self.species.get('size') > 1:
-            
+
             with napmo.runtime.timeblock('Analytical G matrix'):
 
                 napmo.cext.LibintInterface_init_2body_ints(self._libint)
@@ -139,9 +138,8 @@ class PSIH(napmo.PSIA):
 
         #         self.G *= self.species.get('charge')**2
 
-            # print("\n G Matrix:" + self.symbol + ": ", self.G.sum())
-            # print(self.G)
-
+        # print("\n G Matrix:" + self.symbol + ": ", self.G.sum())
+        # print(self.G)
 
     def _compute_density(self):
         """
@@ -157,7 +155,6 @@ class PSIH(napmo.PSIA):
 
     def optimize_psi(self, scf, other_psi=None):
         pass
-
 
     @property
     def lmax(self):

@@ -37,7 +37,7 @@ struct wf {
   int occupation;
   double eta;    // Constant of coupling
   double kappa;  // Constant of coupling
-  double exchangefactor;    // Fraction of exchange
+  double exchangefactor; // Fraction of exchange
   double ecenergy; // Exchange-Correlation Energy
   double energy; // HF Energy
   double rmsd;   // Density root-mean-square deviation
@@ -67,7 +67,6 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
 
 /* void wavefunction_compute_exccor_matrix(WaveFunction *psi); */
 
-  
 // nwavefunction
 
 void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,

@@ -7,7 +7,6 @@ efposadac@unal.edu.co
 */
 
 #include "libint_iface.h"
-#include <libint2/util/small_vector.h>
 
 /*
 LibintInterface
@@ -70,10 +69,8 @@ void LibintInterface::add_basis(BasisSet *basis) {
         cont.get_l()[0])
       continue;
 
-    // std::vector<double> exponents;
-    // std::vector<double> coefficients;
-    boost::container::small_vector<double,6> exponents;
-    boost::container::small_vector<double,6> coefficients;
+    libint2::svector<double> exponents;
+    libint2::svector<double> coefficients;
 
     for (auto prim : cont.get_prim()) {
       exponents.push_back(prim.get_zeta());
@@ -1124,12 +1121,12 @@ shellpair_list_t compute_shellpair_list(const std::vector<libint2::Shell> &bs1,
 
   // construct the 2-electron repulsion integrals engine
   using libint2::Engine;
-  libint2::BasisSet obs_aux;
+
   std::vector<Engine> engines;
   engines.reserve(nthreads);
   engines.emplace_back(libint2::Operator::overlap,
-                       std::max(obs_aux.max_nprim(bs1), obs_aux.max_nprim(bs2)),
-                       std::max(obs_aux.max_l(bs1), obs_aux.max_l(bs2)), 0);
+                       std::max(max_nprim(bs1), max_nprim(bs2)),
+                       std::max(max_l(bs1), max_l(bs2)), 0);
 
   for (size_t i = 1; i != nthreads; ++i) {
     engines.push_back(engines[0]);
@@ -1222,11 +1219,11 @@ Matrix compute_schwartz_ints(
   std::vector<Engine> engines(nthreads);
 
   // !!! very important: cannot screen primitives in Schwartz computation !!!
-  libint2::BasisSet obs_aux;
   auto epsilon = 0.;
   engines[0] = Engine(
-      Kernel, std::max(obs_aux.max_nprim(bs1), obs_aux.max_nprim(bs2)),
-      std::max(obs_aux.max_l(bs1), obs_aux.max_l(bs2)), 0, epsilon, params);
+      Kernel, std::max(max_nprim(bs1), max_nprim(bs2)),
+      std::max(max_l(bs1), max_l(bs2)), 0, epsilon, params);
+
   for (size_t i = 1; i != nthreads; ++i) {
     engines[i] = engines[0];
   }
@@ -1287,6 +1284,28 @@ __inline__ void write_buffer(const QuartetBuffer &buffer,
                 STACK_SIZE * sizeof(int));
   outfile.write(reinterpret_cast<const char *>(&buffer.val[0]),
                 STACK_SIZE * sizeof(double));
+}
+
+size_t nbasis(const std::vector<libint2::Shell>& shells) {
+  size_t n = 0;
+  for (const auto& shell: shells)
+    n += shell.size();
+  return n;
+}
+
+size_t max_nprim(const std::vector<libint2::Shell>& shells) {
+  size_t n = 0;
+  for (auto shell: shells)
+    n = std::max(shell.nprim(), n);
+  return n;
+}
+
+int max_l(const std::vector<libint2::Shell>& shells) {
+  int l = 0;
+  for (auto shell: shells)
+    for (auto c: shell.contr)
+      l = std::max(c.l, l);
+  return l;
 }
 
 /*

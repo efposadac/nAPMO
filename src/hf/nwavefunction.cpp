@@ -126,6 +126,7 @@ void nwavefunction_compute_2body_matrix_mol(WaveFunction *psi, BeckeGrid *grid,
     exchange += exchange.triangularView<Eigen::StrictlyUpper>().transpose();
     exchange *= factor * psi->eta;
   }
+
   // std::cout<<exchange<<std::endl;
 
   MMap G(psi->G, ndim, ndim);
@@ -469,3 +470,4 @@ void nwavefunction_compute_cor2species_matrix(WaveFunction *psi, WaveFunction *o
 
 
 }
+

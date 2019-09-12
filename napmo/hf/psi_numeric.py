@@ -11,7 +11,6 @@ from __future__ import print_function
 from ctypes import *
 import numpy as np
 import napmo
-import sys
 
 
 def INDEX(i, j):
@@ -63,7 +62,6 @@ class PSIN(napmo.PSIB):
             self._mass_inv = ((1.0 / self.species.get('mass')) - (1.0 / self._total_mass))
         else:
             self._mass_inv = 1.0 / self.species.get('mass')
-
 
         self._grid = grid
         self._lmax = int(napmo.lebedev_get_order(self._grid.nang) / 2)
@@ -148,10 +146,10 @@ class PSIN(napmo.PSIB):
             self._compute_2body_coulomb()
             if self._exchangefactor != 0.0:
                 self._compute_2body_exchange()
-                
+
             with napmo.runtime.timeblock('Numerical 2 body'):
                 napmo.cext.nwavefunction_compute_2body_matrix_mol(
-                byref(self), self._grid._this, self.psi, self.Jgrid, self.Kgrid)
+                    byref(self), self._grid._this, self.psi, self.Jgrid, self.Kgrid)
 
             self.G *= self.species.get('charge')
 
@@ -211,7 +209,6 @@ class PSIN(napmo.PSIB):
 
         # print("\n XC Matrix:" + self.symbol + ": ")
         # print(self.XC)
-        
 
     def compute_cor2species(self,other_psi):
         """
@@ -226,12 +223,10 @@ class PSIN(napmo.PSIB):
 
         # print("\n XC Energy:" + self.symbol + ":")
         # print(self._ecenergy)
-        
+
         # print("\n XC Matrix:" + self.symbol + ": ")
         # print(self.XC)
 
-
-        
     def compute_hcore(self):
         """
         Builds the Hcore matrix
@@ -395,8 +390,8 @@ class PSIN(napmo.PSIB):
         # print("Jgrid", self.Jgrid.sum() * self.species.get('charge'))
         # print("Kgrid", self.Kgrid.sum() * self.species.get('charge'))
         # print("coupling", coupling.sum() * self.species.get('charge'))
-        print("XCgrid", self.XCgrid.sum())
-        
+        # print("XCgrid", self.XCgrid.sum())
+
         return np.array([(self.Vnuc + self.Jgrid + coupling) * self.species.get('charge')+self.XCgrid])
 
     def _compute_residual(self, coupling):
@@ -432,9 +427,9 @@ class PSIN(napmo.PSIB):
             napmo.compute_dpsi(self._grid, self.lmax, phi, doi, oi, ri, V, self._mass_inv, self.species.get('charge'))
             for phi, doi, oi, ri, V in zip(self.psi, self.delta_e, self._e, self.Rgrid, V_tot)])
 
-        print ("psi", self.psi.size )
-        print ("delta psi", self.delta_psi.size )
-        
+        # print("psi", self.psi.size)
+        # print("delta psi", self.delta_psi.size)
+
     def _compute_delta_orb(self):
         """
         Computes \Delta_{orb} Eq. 18
@@ -455,7 +450,6 @@ class PSIN(napmo.PSIB):
         if np.abs(self._res.sum()) < 1.0e-5:
             print("No wave-function optimization!!!")
         else:
-
             aux = np.zeros(self.Jgrid.shape)
             if other_psi is not None:
                 aux[:] = np.array([psi.Cgrid

@@ -30,7 +30,7 @@ class PSIB(Structure):
         ("_L", POINTER(c_double)),  # Last Density
         ("_G", POINTER(c_double)),  # 2 Body
         ("_J", POINTER(c_double)),  # Coupling
-        ("_XC", POINTER(c_double)), # Exchange Correlation Matrix
+        ("_XC", POINTER(c_double)),  # Exchange Correlation Matrix
         ("_F", POINTER(c_double)),  # Fock
         ("_O", POINTER(c_double)),  # Orbitals
         ("_nbasis", c_int),
@@ -38,8 +38,8 @@ class PSIB(Structure):
         ("_occupation", c_int),
         ("_eta", c_double),
         ("_kappa", c_double),
-        ("_exchangefactor", c_double), #Fraction of exchange
-        ("_ecenergy", c_double), # Exchange Correlation Energy
+        ("_exchangefactor", c_double),  # Fraction of exchange
+        ("_ecenergy", c_double),  # Exchange Correlation Energy
         ("_energy", c_double),
         ("_rmsd", c_double)  # Root medium square deviation, for D matrix
     ]
@@ -72,7 +72,6 @@ class PSIB(Structure):
 
         # print(self._symbol, "exchangefactor", self._exchangefactor)
 
-            
         if 'tf' in options:
             self._tf = True
             print("Using Translation-Free Correction!!!")

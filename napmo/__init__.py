@@ -57,7 +57,8 @@ from napmo.hf.psi_optimization import PSIO
 from napmo.hf.nkinetic import compute_kinetic
 from napmo.hf.nnuclear import compute_nuclear
 from napmo.hf.ntwobody import compute_coulomb
-#from napmo.hf.nexccor import compute_exccor
+# from napmo.hf.nexccor import compute_exccor
+
 from napmo.hf.ndpsi import compute_dpsi
 from napmo.hf.hf_solver import HF
 from napmo.hf.scf import SCF
@@ -65,7 +66,6 @@ from napmo.hf.convergence import Convergence
 
 # OMP Threads
 threads = int(os.environ.get('OMP_NUM_THREADS', 1))
-print("threads",threads) 
 
 # Timer singleton
 runtime = Timer()

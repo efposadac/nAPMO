@@ -26,8 +26,8 @@ class HF(object):
         # Analytic initialization
         self.PSI = [napmo.PSIA(self.system.get_species(i),
                                self.system.point_charges,
-                               self.system.total_mass, 
-                               options = self.options)
+                               self.system.total_mass,
+                               options=self.options)
                     for i in range(self.system.size_species)]
 
         if 'hybrid' in self.options:
@@ -106,11 +106,11 @@ class HF(object):
         """
         if self.get('kind') is 'numeric':
             if 'hybrid' in self.options:
-                self.compute_hybrid()
+                self.compute_hybrid(pprint)
             else:
-                self.compute_numeric()
+                self.compute_numeric(pprint)
         else:
-            self.compute_analytic()
+            self.compute_analytic(pprint)
 
         return self._energy
 
