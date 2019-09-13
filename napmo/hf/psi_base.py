@@ -65,12 +65,14 @@ class PSIB(Structure):
         self._pce = 0.0
         self._tf = False
 
-        if (self._symbol == "e-"):
-            self._exchangefactor = 0.0
-        else:
-            self._exchangefactor = self._kappa/self._eta
+        self._exchangefactor = self._kappa/self._eta
 
-        # print(self._symbol, "exchangefactor", self._exchangefactor)
+        # if (self._symbol == "e-"):
+        #     self._exchangefactor = 0.0
+        # else:
+        #     self._exchangefactor = self._kappa/self._eta
+
+        print(self._symbol, "exchangefactor", self._exchangefactor)
 
         if 'tf' in options:
             self._tf = True

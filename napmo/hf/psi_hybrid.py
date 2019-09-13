@@ -57,7 +57,7 @@ class PSIH(napmo.PSIA):
 
         self._compute_density()
 
-        if self.species.get('size') > 1:
+        if self.species.get('size') > 0:
 
             with napmo.runtime.timeblock('Analytical G matrix'):
 

@@ -30,7 +30,7 @@ class SCF(object):
         super(SCF, self).__init__()
         self.options = {'maxiter': 100,
                         'eps_e': 1e-7,
-                        'eps_n': 1e-5,
+                        'eps_n': 1e-6,
                         'eps_d': 1e-6,
                         'eps_r': 1e-4,
                         'method': 'hf',
@@ -63,7 +63,7 @@ class SCF(object):
         """
         with napmo.runtime.timeblock('2 body ints'):
             psi.compute_2body(self.get('direct'))
-            psi.compute_exccor()
+            # psi.compute_exccor()
 
         psi.build_fock()
 
@@ -103,12 +103,12 @@ class SCF(object):
 
             with napmo.runtime.timeblock('2 body ints'):
                 psi.compute_2body(self.get('direct'))
-                psi.compute_exccor()
+                # psi.compute_exccor()
 
             if other_psi is not None:
                 with napmo.runtime.timeblock('Coupling ints'):
                     psi.compute_coupling(other_psi, direct=self.get('direct'))
-                    psi.compute_cor2species(other_psi)
+                    # psi.compute_cor2species(other_psi)
 
             psi.build_fock()
 
@@ -168,7 +168,7 @@ class SCF(object):
         for psi in PSI:
             # Calculate 2 body Matrix
             psi.compute_2body(self.get('direct'))
-            psi.compute_exccor()
+            # psi.compute_exccor()
 
         while (iterations < self.get('maxiter') and
                np.abs(e_diff) > self.get('eps_e')):
@@ -196,18 +196,18 @@ class SCF(object):
                     # Calculate 2 body Matrix
                     with napmo.runtime.timeblock('2 body ints'):
                         psi.compute_2body(self.get('direct'))
-                        psi.compute_exccor()
+                        # psi.compute_exccor()
 
                     with napmo.runtime.timeblock('Coupling ints'):
                         psi.compute_coupling(PSI, direct=self.get('direct'))
-                        psi.compute_cor2species(PSI)
+                        # psi.compute_cor2species(PSI)
 
             if case is 1:
                 for psi in PSI:
 
                     with napmo.runtime.timeblock('2 body ints'):
                         psi.compute_2body(self.get('direct'))
-                        psi.compute_exccor()
+                        # psi.compute_exccor()
 
                     psi.build_fock()
 
@@ -217,7 +217,7 @@ class SCF(object):
 
                     with napmo.runtime.timeblock('Coupling ints'):
                         psi.compute_coupling(PSI, direct=self.get('direct'))
-                        psi.compute_cor2species(PSI)
+                        # psi.compute_cor2species(PSI)
 
                     self.single(psi, pprint=False)
 
@@ -281,7 +281,7 @@ class SCF(object):
 
             with napmo.runtime.timeblock('Numerical 2 body'):
                 psi.compute_2body(self.get('direct'))
-                psi.compute_exccor()
+                # psi.compute_exccor()
 
             psi.build_fock()
 
@@ -340,7 +340,7 @@ class SCF(object):
                 # Calculate 2 body Matrix
                 with napmo.runtime.timeblock('2 body ints'):
                     psi.compute_2body(self.get('direct'))
-                    psi.compute_exccor()
+                    # psi.compute_exccor()
 
                 psi.build_fock()
 
@@ -355,7 +355,7 @@ class SCF(object):
 
                 with napmo.runtime.timeblock('Coupling ints'):
                     psi.compute_coupling(PSI, direct=self.get('direct'))
-                    psi.compute_cor2species(PSI)
+                    # psi.compute_cor2species(PSI)
 
                 if self.get('debug'):
                     print("Single particle energy for " +
@@ -411,7 +411,7 @@ class SCF(object):
 
                 # Calculate 2 body Matrix
                 psi.compute_2body(self.get('direct'))
-                psi.compute_exccor()
+                # psi.compute_exccor()
                 psi.build_fock()
 
                 if iterations > 2:
@@ -425,7 +425,7 @@ class SCF(object):
 
                 with napmo.runtime.timeblock('Coupling ints'):
                     psi.compute_coupling(PSI, direct=self.get('direct'))
-                    psi.compute_cor2species(PSI)
+                    # psi.compute_cor2species(PSI)
 
                 if psi.symbol == 'e-':
                     self.nsingle(psi, pprint=False)
@@ -443,11 +443,11 @@ class SCF(object):
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12s}'.
                       format(iterations, self._energy - self.pce, self._energy, e_diff, str([str(psi._rmsd) for psi in PSI])))
 
-        # if self.get('debug'):
-        for psi in PSI:
-            psi.plot_dens(kind="num")
-            # plt.show()
-            # plt.savefig('numeric_dens.png')
+        if self.get('debug'):
+            for psi in PSI:
+                psi.plot_dens(kind="num")
+                # plt.show()
+                # plt.savefig('numeric_dens.png')
 
     def compute_energy(self, PSI):
         """
@@ -579,11 +579,11 @@ Hartree-Fock Results:
            self._potential_energy))
 
         for psi in PSI:
-            print("Orbitals: ", psi.symbol, "\n", psi.O)
-            print("Kinetic energy: ", psi.symbol, (psi.D * psi.T).sum(), "\n")
-            print("Quantum-Point energy: ", psi.symbol, (psi.D * psi.V).sum(), "\n")
-            print("Repulsion energy: ", psi.symbol, 0.5 * (psi.D * psi.G).sum(), "\n")
-            print("Coupling energy: ", psi.symbol, 0.5 * (psi.D * psi.J).sum(), "\n")
+            print("Orbitals: ", psi.symbol, "\n", psi.O, "\n")
+            print("Kinetic energy: ", psi.symbol, (psi.D * psi.T).sum())
+            print("Quantum-Point energy: ", psi.symbol, (psi.D * psi.V).sum())
+            print("Repulsion energy: ", psi.symbol, 0.5 * (psi.D * psi.G).sum())
+            print("Coupling energy: ", psi.symbol, 0.5 * (psi.D * psi.J).sum())
             print("Exc. corr. energy (fix): ", psi.symbol, psi._ecenergy, "\n")
 
     def __repr__(self):

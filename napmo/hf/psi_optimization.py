@@ -114,7 +114,7 @@ class PSIO(napmo.PSIB):
         """
 
         self._compute_density()
-        if self.species.get('size') > 1:
+        if self.species.get('size') > 0:
             self._compute_2body_coulomb()
             if self._exchangefactor != 0.0:
                 self._compute_2body_exchange()

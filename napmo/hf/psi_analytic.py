@@ -106,7 +106,7 @@ class PSIA(napmo.PSIB):
 
         # print("\n D Matrix:" + self.symbol + ": ", self.D.sum())
 
-        if self.species.get('size') > 1:
+        if self.species.get('size') > 0:
             with napmo.runtime.timeblock('Numerical coupling ints'):
 
                 napmo.cext.LibintInterface_init_2body_ints(self._libint)
