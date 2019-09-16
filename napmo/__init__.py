@@ -10,11 +10,12 @@ from napmo.system.input_parser import InputParser
 from napmo.system.input_parser import raise_exception
 from napmo.system.atomic_element import AtomicElement
 from napmo.system.elementary_particle import ElementaryParticle
-from napmo.system.primitive_gaussian import PrimitiveGaussian
-from napmo.system.contracted_gaussian import ContractedGaussian
-from napmo.system.basis_set import BasisSet
 from napmo.system.molecular_system import MolecularSystem
 from napmo.system.napmo_system import NAPMO
+
+from napmo.gto.basis_set import BasisSet
+from napmo.gto.primitive_gaussian import PrimitiveGaussian
+from napmo.gto.contracted_gaussian import ContractedGaussian
 
 from napmo.grids.radial import RadialGrid
 from napmo.grids.radial_transform import RadialTransform
@@ -49,20 +50,23 @@ from napmo.data.constants import PROTON_MASS
 from napmo.data.constants import NEUTRON_MASS
 from napmo.data.constants import SPIN_ELECTRON
 
-from napmo.hf.psi_base import PSIB
-from napmo.hf.psi_analytic import PSIA
-from napmo.hf.psi_numeric import PSIN
-from napmo.hf.psi_hybrid import PSIH
-from napmo.hf.psi_optimization import PSIO
-from napmo.hf.nkinetic import compute_kinetic
-from napmo.hf.nnuclear import compute_nuclear
-from napmo.hf.ntwobody import compute_coulomb
-# from napmo.hf.nexccor import compute_exccor
+from napmo.scf.convergence import Convergence
+from napmo.scf.scf import SCF
 
-from napmo.hf.ndpsi import compute_dpsi
-from napmo.hf.hf_solver import HF
-from napmo.hf.scf import SCF
-from napmo.hf.convergence import Convergence
+from napmo.solver.hf_solver import HF
+from napmo.solver.dft_solver import DFT
+
+from napmo.wavefunction.psi_base import PSIB
+from napmo.wavefunction.psi_analytic import PSIA
+from napmo.wavefunction.psi_numeric import PSIN
+from napmo.wavefunction.psi_hybrid import PSIH
+from napmo.wavefunction.psi_optimization import PSIO
+from napmo.wavefunction.nkinetic import compute_kinetic
+from napmo.wavefunction.nnuclear import compute_nuclear
+from napmo.wavefunction.ntwobody import compute_coulomb
+from napmo.wavefunction.ndpsi import compute_dpsi
+# from napmo.wavefunction.nexccor import compute_exccor
+
 
 # OMP Threads
 threads = int(os.environ.get('OMP_NUM_THREADS', 1))

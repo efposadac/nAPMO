@@ -64,6 +64,7 @@ class PSIB(Structure):
         self._energy = 0.0
         self._pce = 0.0
         self._tf = False
+        self._grid = None
 
         self._exchangefactor = self._kappa/self._eta
 
@@ -71,8 +72,6 @@ class PSIB(Structure):
         #     self._exchangefactor = 0.0
         # else:
         #     self._exchangefactor = self._kappa/self._eta
-
-        print(self._symbol, "exchangefactor", self._exchangefactor)
 
         if 'tf' in options:
             self._tf = True
@@ -139,6 +138,48 @@ class PSIB(Structure):
                   ]
         return sum(output)
 
+    def compute_exccor(self):
+        """
+        Computes the exchange correlation matrix
+        """
+        self._ecenergy = 0.0
+        self.XC[:] = 0.0
+        self.XCgrid[:] = 0.0
+
+        if (self.symbol == "e-"):
+            napmo.cext.nwavefunction_compute_exccor_matrix(
+                byref(self), self._grid._this, self.psi, self.Dgrid.sum(axis=0), self.XCgrid
+            )
+
+        # print("\n XC Energy:" + self.symbol + ":")
+        # print(self._ecenergy)
+
+        # print("\n XC Potential:" + self.symbol + ":")
+        # print(self.XCgrid)
+
+        # print("\n XC Matrix:" + self.symbol + ": ")
+        # print(self.XC)
+
+    def compute_cor2species(self, other_psi):
+        """
+        Computes the exchange correlation matrix
+
+        Args:
+            other_psi (WaveFunction) : WaveFunction object for the other species.
+        """
+        for psi in other_psi:
+            if self.sid != psi.sid:
+                napmo.cext.nwavefunction_compute_cor2species_matrix(
+                    byref(self), byref(psi), self._grid._this, self.psi, self.Dgrid.sum(axis=0),
+                    psi.Dgrid.sum(axis=0), self.XCgrid
+                )
+
+        # print("\n XC Energy:" + self.symbol + ":")
+        # print(self._ecenergy)
+
+        # print("\n XC Matrix:" + self.symbol + ": ")
+        # print(self.XC)
+
     @property
     def nbasis(self):
         """
@@ -171,7 +212,7 @@ class PSIB(Structure):
         """
         return self._sid
 
-    #### TEST ###
+    # ### TEST ###
 
     def _compute_density_from_dm(self, dm, psi):
         """

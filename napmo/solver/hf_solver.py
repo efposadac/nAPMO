@@ -18,7 +18,7 @@ class HF(object):
 
         self.options = {'method': 'hf',
                         'kind': 'analytic',
-                        'grid': [50, 110]}
+                        'grid': [100, 110]}
 
         if options:
             self.options.update(options)

@@ -14,6 +14,7 @@ import napmo
 
 from scipy import linalg as SLA
 
+
 class Convergence(object):
     """
     Implements several converge algorithms
@@ -42,7 +43,7 @@ class Convergence(object):
         dens_effect = -0.5 * self.X.trace()
 
         # Computes the effect of the changes in the Fock and Density matrices
-        self.X[:] = (NF - self.IF).dot(ND -self.ID)
+        self.X[:] = (NF - self.IF).dot(ND - self.ID)
 
         dens_fock_effect = self.X.trace()
 
@@ -61,7 +62,6 @@ class Convergence(object):
             self.ID[:] += damping_factor * (ND - self.ID)
 
         return output
-        
 
     @property
     def ndim(self):

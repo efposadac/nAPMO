@@ -7,7 +7,7 @@
 
 import numpy as np
 
-from napmo.system.contracted_gaussian import ContractedGaussian
+from napmo.gto.contracted_gaussian import ContractedGaussian
 
 
 def test_contracted_gaussian_interface():

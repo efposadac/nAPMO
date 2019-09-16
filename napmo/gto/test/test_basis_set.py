@@ -7,7 +7,7 @@
 # efposadac@unal.edu.co
 
 import numpy as np
-from napmo.system.basis_set import BasisSet
+from napmo.gto.basis_set import BasisSet
 
 
 def tests_basis_set_interface():

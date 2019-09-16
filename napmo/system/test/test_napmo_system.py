@@ -138,5 +138,6 @@ diff_energy = ref_energy - Energy
 
     np.testing.assert_allclose(pe, e, rtol=10e-6)
 
+
 test_napmo_single()
 # test_napmo_multi()

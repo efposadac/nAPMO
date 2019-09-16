@@ -6,7 +6,7 @@
 # efposadac@unal.edu.co
 
 from napmo.system.elementary_particle import ElementaryParticle
-from napmo.system.basis_set import BasisSet
+from napmo.gto.basis_set import BasisSet
 
 
 def test_elementary_particle_interface():

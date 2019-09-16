@@ -12,7 +12,8 @@ import numpy as np
 import copy
 
 import napmo
-import sys 
+import sys
+
 
 class MolecularSystem(dict):
 
@@ -102,7 +103,7 @@ class MolecularSystem(dict):
         self[symbol].setdefault('is_electron', False)
 
         self[symbol].pop('origin')
-        
+
         if symbol == 'e-':
             self[symbol]['is_electron'] = True
 
@@ -304,7 +305,7 @@ Charges description:
                     self.get(key, {})['size'] * self.get(key, {})['particlesfraction'])
 
                 self._abe += "{0:<7s}: {1:<3d}\n".format(key, self.get(key, {})['size'])
-                        
+
         self._buff += "-----------------------"
         self._abe += "\n--------------------------------------------------"
 

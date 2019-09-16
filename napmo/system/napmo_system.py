@@ -12,6 +12,7 @@ import matplotlib.pylab as plt
 
 import sys
 
+
 class NAPMO(object):
     """
     NAPMO system manager
@@ -77,9 +78,20 @@ class NAPMO(object):
         """
         Executes the tasks to be performed
         """
-        # TODO: Parse method and others (class solver maybe?)
-        self.solver = napmo.HF(self.system, options=self.data.scf)
-        self._energy = self.solver.compute()
+        methods = {
+           'uhf': napmo.HF,
+           'hf':  napmo.HF,
+           'rhf': napmo.HF,
+           'dft': napmo.DFT
+        }
+
+        method = methods.get(self.data.scf.get('method', 'rhf'), None)
+
+        if method is None:
+            raise NotImplementedError(self.data.scf.get('method', 'rhf')+" method Not Implemented")
+        else:
+            self.solver = method(self.system, options=self.data.scf)
+            self._energy = self.solver.compute()
 
     def exec_code(self):
         """

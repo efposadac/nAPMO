@@ -304,6 +304,7 @@ class InputParser(object):
         options = {'uhf': {'method': 'uhf'},
                    'hf': {'method': 'rhf'},
                    'rhf': {'method': 'rhf'},
+                   'dft': {'method': 'dft'},
                    'analytic': {'kind': 'analytic'},
                    'numeric': {'kind': 'numeric'},
                    'direct': {'direct': True},
@@ -414,7 +415,6 @@ class InputParser(object):
                 aux[symbol] = functional
 
         self.functional = aux
-        print(self.functional)
 
     def load_code(self, data, group=True, options=None):
         """

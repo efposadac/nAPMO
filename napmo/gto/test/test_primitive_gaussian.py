@@ -7,7 +7,7 @@
 
 import numpy as np
 
-from napmo.system.primitive_gaussian import PrimitiveGaussian
+from napmo.gto.primitive_gaussian import PrimitiveGaussian
 
 
 def test_primitive_gaussian_interface():

@@ -187,45 +187,47 @@ class PSIN(napmo.PSIB):
         # print("\n Coupling Matrix: ", self.symbol)
         # print(self.J)
 
-    def compute_exccor(self):
-        """
-        Computes the exchange correlation matrix
+    # def compute_exccor(self):
+    #     """
+    #     Computes the exchange correlation matrix
 
-        Args:
-        """
-        self._ecenergy = 0.0
-        self.XC[:] = 0.0
-        self.XCgrid[:] = 0.0
+    #     Args:
+    #     """
+    #     self._ecenergy = 0.0
+    #     self.XC[:] = 0.0
+    #     self.XCgrid[:] = 0.0
 
-        if (self.symbol == "e-"):
-            napmo.cext.nwavefunction_compute_exccor_matrix(
-            byref(self), self._grid._this, self.psi, self.Dgrid.sum(axis=0), self.XCgrid)
+    #     if (self.symbol == "e-"):
+    #         napmo.cext.nwavefunction_compute_exccor_matrix(
+    #         byref(self), self._grid._this, self.psi, self.Dgrid.sum(axis=0), self.XCgrid)
 
-        # print("\n XC Energy:" + self.symbol + ":")
-        # print(self._ecenergy)
+    #     # print("\n XC Energy:" + self.symbol + ":")
+    #     # print(self._ecenergy)
 
-        # print("\n XC Potential:" + self.symbol + ":")
-        # print(self.XCgrid)
+    #     # print("\n XC Potential:" + self.symbol + ":")
+    #     # print(self.XCgrid)
 
-        # print("\n XC Matrix:" + self.symbol + ": ")
-        # print(self.XC)
+    #     # print("\n XC Matrix:" + self.symbol + ": ")
+    #     # print(self.XC)
 
-    def compute_cor2species(self,other_psi):
-        """
-        Computes the exchange correlation matrix
+    # def compute_cor2species(self, other_psi):
+    #     """
+    #     Computes the exchange correlation matrix
 
-        Args:
-        """
-        for psi in other_psi:
-            if self.sid != psi.sid:
-                napmo.cext.nwavefunction_compute_cor2species_matrix(
-                    byref(self), byref(psi), self._grid._this, self.psi, self.Dgrid.sum(axis=0), psi.Dgrid.sum(axis=0), self.XCgrid)
+    #     Args:
+    #     """
+    #     for psi in other_psi:
+    #         if self.sid != psi.sid:
+    #             napmo.cext.nwavefunction_compute_cor2species_matrix(
+    #                 byref(self), byref(psi), self._grid._this, self.psi, self.Dgrid.sum(axis=0),
+    #                 psi.Dgrid.sum(axis=0), self.XCgrid
+    #             )
 
-        # print("\n XC Energy:" + self.symbol + ":")
-        # print(self._ecenergy)
+    #     # print("\n XC Energy:" + self.symbol + ":")
+    #     # print(self._ecenergy)
 
-        # print("\n XC Matrix:" + self.symbol + ": ")
-        # print(self.XC)
+    #     # print("\n XC Matrix:" + self.symbol + ": ")
+    #     # print(self.XC)
 
     def compute_hcore(self):
         """

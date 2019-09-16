@@ -19,6 +19,7 @@ def read(fname):
     """Include README file in the package."""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+
 if __name__ == '__main__':
 
     setup(

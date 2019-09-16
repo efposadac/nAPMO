@@ -19,7 +19,7 @@ class PSIA(napmo.PSIB):
     Defines the Fock operator for a Hartree-Fock Calculation with analytic calculation of integrals.
     """
 
-    def __init__(self, species, point_charges, total_mass, options=None):
+    def __init__(self, species, point_charges, total_mass, grid=None, options=None):
         super(PSIA, self).__init__(species, options=options)
 
         # Initialize Libint object to calculate integrals
@@ -45,6 +45,17 @@ class PSIA(napmo.PSIB):
         self.compute_nuclear()
         self.compute_hcore()
         self.compute_guess()
+
+        # for DFT grid is True
+        if grid is not None:
+            # Atomic orbitals represented in the grid
+            self.gbasis = self.species.get('basis').compute(grid.points).T.copy()
+
+            # Density in the grid
+            self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
+
+            # Exchange correlation potential in the grid - Probably it's not required in the analytical SCF
+            self.XCgrid = np.zeros(self._grid.size)
 
     def compute_overlap(self):
         """
@@ -179,33 +190,33 @@ class PSIA(napmo.PSIB):
         # print("\n XC Matrix:" + self.symbol + ": ")
         # print(self.XC)
 
-    def compute_cor2species(self, other_psi):
-        """
-        Computes the exchange correlation matrix - numerically
+    # def compute_cor2species(self, other_psi):
+    #     """
+    #     Computes the exchange correlation matrix - numerically
 
-        Args:
-            other_psi (WaveFunction) : WaveFunction object for the other species.
-        """
+    #     Args:
+    #         other_psi (WaveFunction) : WaveFunction object for the other species.
+    #     """
 
-        # numerical wavefunction
-        # FELIX: TODO, use input grid
-        grid = napmo.BeckeGrid(self.species, 100, 110)
+    #     # numerical wavefunction
+    #     # FELIX: TODO, use input grid
+    #     grid = napmo.BeckeGrid(self.species, 100, 110)
 
-        # Atomic orbitals represented in the grid
-        gbasis = self.species.get('basis').compute(grid.points).T.copy()
+    #     # Atomic orbitals represented in the grid
+    #     gbasis = self.species.get('basis').compute(grid.points).T.copy()
 
-        # Density in the grid
-        self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
+    #     # Density in the grid
+    #     self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
 
-        # Exchange correlation potential in the grid - Probably it's not required in the analytical SCF
-        XCgrid = np.zeros(grid.size)
+    #     # Exchange correlation potential in the grid - Probably it's not required in the analytical SCF
+    #     XCgrid = np.zeros(grid.size)
 
-        for psi in other_psi:
-            if self.sid != psi.sid:
-                othergbasis = psi.species.get('basis').compute(grid.points).T.copy()
-                psi.Dgrid = psi._compute_density_from_dm(psi.D, othergbasis)
-                napmo.cext.nwavefunction_compute_cor2species_matrix(
-                    byref(self), byref(psi), grid._this, gbasis, self.Dgrid.sum(axis=0), psi.Dgrid.sum(axis=0), XCgrid)
+    #     for psi in other_psi:
+    #         if self.sid != psi.sid:
+    #             othergbasis = psi.species.get('basis').compute(grid.points).T.copy()
+    #             psi.Dgrid = psi._compute_density_from_dm(psi.D, othergbasis)
+    #             napmo.cext.nwavefunction_compute_cor2species_matrix(
+    #                 byref(self), byref(psi), grid._this, gbasis, self.Dgrid.sum(axis=0), psi.Dgrid.sum(axis=0), XCgrid)
 
         # print("\n XC Energy:" + self.symbol + ":")
         # print(self._ecenergy)

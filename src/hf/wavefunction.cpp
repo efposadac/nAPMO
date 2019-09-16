@@ -184,13 +184,6 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
   // FELIX: add a conditional for HF or hybrid functionals
   // printf("exchange factor %f \n", factor);
 
-  // TODO: FIX THIS
-  // if (nthreads==0) {
-  //   std::cout << "Felix: I don't know why nthreads is zero in this point\n";
-  //   std::cout << "Fixing it the bad way, nthreads=1\n";
-  //   nthreads=1;
-  // }
-
   std::vector<Matrix> GB(nthreads, Matrix::Zero(ndim, ndim));
   std::vector<Matrix> TEST(nthreads, Matrix::Zero(ndim, ndim));
 
@@ -296,6 +289,5 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
 //   MMap XC(psi->XC, ndim, ndim);
 
 //   XC.setZero();
-//   std::cout << "Hola Felix C\n";
 
 // }

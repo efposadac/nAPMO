@@ -47,11 +47,13 @@ before_install:
   # Build libxc
   - git clone https://gitlab.com/libxc/libxc.git
   - cd libxc
-  - git checkout 724fe21518a34433dee327ec2232ff26b8d1142e
-  - autoreconf -i
-  - ./configure --enable-shared --prefix=$WORKDIR
-  - make -j 4
-  - make install
+  - git checkout 4.3.4
+  - python setup.py install --user
+  - cmake . -Bobjdir -DCMAKE_INSTALL_PREFIX=$WORKDIR
+  - cd objdir
+  - make install -j 4
+  - cd ..
+  - cd ..
   # Setting up environment
   - export C_INCLUDE_PATH=$C_INCLUDE_PATH:$WORKDIR/include:$WORKDIR/include/libint2:/usr/include/eigen3
   - export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$WORKDIR/include:$WORKDIR/include/libint2:/usr/include/eigen3

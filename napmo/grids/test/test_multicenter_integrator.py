@@ -11,7 +11,7 @@ import os
 
 from napmo.system.molecular_system import MolecularSystem
 from napmo.system.cext import *
-from napmo.hf.hf_solver import HF
+from napmo.solver.hf_solver import HF
 from napmo.grids.becke import BeckeGrid
 
 
