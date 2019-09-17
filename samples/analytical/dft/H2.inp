@@ -10,12 +10,16 @@ basis {
 }
 
 functional {
-	e- LDA	
+	e- lda_x lda_c_vwn
 }
 
 # scf options
 scf {
-    hf
+    dft
+}
+
+grid {
+    e- [50, 110]
 }
 
 code {

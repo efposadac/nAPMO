@@ -23,26 +23,50 @@ class DFT(object):
         if options:
             self.options.update(options)
 
+        # Create grids for integration
+        self._mgrid = []
+        for p, key in enumerate(system.keys()):
+
+            particle = system.get(key, {})
+            if particle.get('is_electron'):
+                key = 'e-'
+
+            aux = self.get('grid').get(key, None)
+
+            if aux is None:
+                napmo.raise_exception(
+                    ValueError,
+                    "Grid specification not found!",
+                    'Check the "grid" block in your input file ' + key + ' has not grid specifications')
+
+            self._mgrid.append(napmo.BeckeGrid(particle,
+                                               aux.get('nrad', 100),
+                                               aux.get('nang', 110),
+                                               rtransform=aux.get('rtransform', None)))
+
+            if pprint:
+                self._mgrid[-1].show()
+
         # Analytic initialization
         self.PSI = [napmo.PSIA(self.system.get_species(i),
                                self.system.point_charges,
                                self.system.total_mass,
+                               grid=self._mgrid[i],
                                options=self.options)
                     for i in range(self.system.size_species)]
+
+        self._pce = sum([psi.pce for psi in self.PSI])
+
+        # SCF solver
+        self.scf = napmo.SCF(options=self.options,
+                             pce=self._pce, pprint=pprint)
 
         # if 'hybrid' in self.options:
         #     self.options['kind'] = 'numeric'
         #     self.options['hybrid'] = {k: v for d in self.options.get('hybrid', {})
         #                               for k, v in d.items()}
 
-        # self._pce = sum([psi.pce for psi in self.PSI])
-
-        # # SCF solver
-        # self.scf = napmo.SCF(options=self.options,
-        #                      pce=self._pce, pprint=pprint)
-
         # # Numerical initialization
-        # self._mgrid = []
         # self.NPSI = []
         # self.HPSI = []
 
@@ -54,28 +78,7 @@ class DFT(object):
         #     else:
         #         self.scf.single(self.PSI[-1], pprint=pprint)
 
-        #     # Build grids and numerical wave-functions
-        #     for p, key in enumerate(system.keys()):
-
-        #         particle = system.get(key, {})
-        #         if particle.get('is_electron'):
-        #             key = 'e-'
-
-        #         aux = self.get('grid').get(key, None)
-
-        #         if aux is None:
-        #             napmo.raise_exception(
-        #                 ValueError,
-        #                 "Grid specification not found!",
-        #                 'Check the "grid" block in your input file ' + key + ' has not grid specifications')
-
-        #         self._mgrid.append(napmo.BeckeGrid(particle,
-        #                                            aux.get('nrad', 100),
-        #                                            aux.get('nang', 110),
-        #                                            rtransform=aux.get('rtransform', None)))
-
-        #         if pprint:
-        #             self._mgrid[-1].show()
+        #     # Build numerical wave-functions
 
         #         if 'hybrid' in self.options:
 

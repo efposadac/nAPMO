@@ -64,7 +64,6 @@ class PSIB(Structure):
         self._energy = 0.0
         self._pce = 0.0
         self._tf = False
-        self._grid = None
 
         self._exchangefactor = self._kappa/self._eta
 

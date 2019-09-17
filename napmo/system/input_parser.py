@@ -392,13 +392,13 @@ class InputParser(object):
                     "Particle not found!",
                     'Check the "functional" block in your input file ' + symbol + ' is undefined in "molecular" block')
 
-            if len(line) > 3:
+            if len(line) > 4:
                 raise_exception(
                     ValueError,
                     "There is an extra term in a functional line!",
                     'Check the "functional" block in your input file')
 
-            elif len(line) == 3:
+            elif len(line) == 4:
                 otherSymbol = line[1].strip()
 
                 if otherSymbol not in self.data and symbol != 'e-':
@@ -407,14 +407,17 @@ class InputParser(object):
                         "Particle not found!",
                         'Check the "functional" block in your input file ' + symbol + ' is undefined in "molecular" block')
 
-                functional = line[2].strip()
+                functional = line[3].strip()
                 aux[symbol+'//'+otherSymbol] = functional
 
             else:
-                functional = line[1].strip()
+                exchange = line[1].strip()
+                correlation = line[2].strip()
                 aux[symbol] = functional
 
         self.functional = aux
+
+        print(self.functional)
 
     def load_code(self, data, group=True, options=None):
         """

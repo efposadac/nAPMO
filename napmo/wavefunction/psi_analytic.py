@@ -27,6 +27,7 @@ class PSIA(napmo.PSIB):
         self._diis = napmo.cext.LibintInterface_diis_new(2)
         self._pc = point_charges
         self._total_mass = total_mass
+        self._grid = grid
 
         for particle in species.get('particles'):
             napmo.cext.LibintInterface_add_basis(
@@ -46,16 +47,8 @@ class PSIA(napmo.PSIB):
         self.compute_hcore()
         self.compute_guess()
 
-        # for DFT grid is True
         if grid is not None:
-            # Atomic orbitals represented in the grid
-            self.gbasis = self.species.get('basis').compute(grid.points).T.copy()
-
-            # Density in the grid
-            self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
-
-            # Exchange correlation potential in the grid - Probably it's not required in the analytical SCF
-            self.XCgrid = np.zeros(self._grid.size)
+            self._gbasis = self.species.get('basis').compute(self._grid.points).T.copy()
 
     def compute_overlap(self):
         """
@@ -164,25 +157,19 @@ class PSIA(napmo.PSIB):
         """
         Computes the exchange correlation matrix - numerically
         """
-        self._ecenergy = 0.0
-        self.XC[:] = 0.0
+        if self._grid is not None:
+            self._ecenergy = 0.0
+            self.XC[:] = 0.0
 
-        # Numerical wavefunction
-        # FELIX: TODO, use input grid
-        grid = napmo.BeckeGrid(self.species, 100, 110)
+            # Density in the grid
+            self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
 
-        # Atomic orbitals represented in the grid
-        gbasis = self.species.get('basis').compute(grid.points).T.copy()
+            # Exchange correlation potential in the grid - Probably it's not required in the analytical SCF
+            XCgrid = np.zeros(grid.size)
 
-        # Density in the grid
-        self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
-
-        # Exchange correlation potential in the grid - Probably it's not required in the analytical SCF
-        XCgrid = np.zeros(grid.size)
-
-        if (self.symbol == "e-"):
-            napmo.cext.nwavefunction_compute_exccor_matrix(
-                byref(self), grid._this, gbasis, self.Dgrid.sum(axis=0), XCgrid)
+            if (self.symbol == "e-"):
+                napmo.cext.nwavefunction_compute_exccor_matrix(
+                    byref(self), grid._this, gbasis, self.Dgrid.sum(axis=0), XCgrid)
 
         # print("\n XC Energy:" + self.symbol + ":")
         # print(self._ecenergy)
