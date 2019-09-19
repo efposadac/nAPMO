@@ -103,7 +103,7 @@ class SCF(object):
 
             with napmo.runtime.timeblock('2 body ints'):
                 psi.compute_2body(self.get('direct'))
-                # psi.compute_exccor()
+                psi.compute_exccor()
 
             if other_psi is not None:
                 with napmo.runtime.timeblock('Coupling ints'):

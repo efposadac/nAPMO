@@ -7,15 +7,23 @@ class Functional(object):
     Electronic functionals provided by libxc
     ... complete
     """
-    def __init__(self, options={}):
+    def __init__(self, name):
         super(Functional, self).__init__()
+
+        _database = {
+            'lda': {'correlation': 'lda_c_vwn', 'exchange': 'lda_x'}
+        }
+
         self.options = {
+            'symbol': 'e-',
             'correlation': 'lda_c_vwn',
             'exchange': 'lda_x',
             'spin': 'unpolarized',
         }
 
-        self.options.update(options)
+        self._x_factor = 0.0
+        self.options.update(_database[name])
+
         self._available = pylibxc.util.xc_available_functional_names()
         self._exchange = self.options.get('exchange')
         self._spin = self.options.get('spin')
@@ -57,6 +65,10 @@ class Functional(object):
     @property
     def spin(self):
         return self._spin
+
+    @property
+    def x_factor(self):
+        return self._x_factor
 
 
 if __name__ == '__main__':

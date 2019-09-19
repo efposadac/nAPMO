@@ -18,7 +18,8 @@ class DFT(object):
 
         self.options = {'method': 'dft',
                         'kind': 'analytic',
-                        'grid': [100, 110]}
+                        'grid': [100, 110],
+                        'functional': {'e-': 'lda'}}
 
         if options:
             self.options.update(options)
@@ -61,14 +62,15 @@ class DFT(object):
         self.scf = napmo.SCF(options=self.options,
                              pce=self._pce, pprint=pprint)
 
+        
         # if 'hybrid' in self.options:
         #     self.options['kind'] = 'numeric'
         #     self.options['hybrid'] = {k: v for d in self.options.get('hybrid', {})
         #                               for k, v in d.items()}
 
-        # # Numerical initialization
-        # self.NPSI = []
-        # self.HPSI = []
+        # Numerical initialization
+        self.NPSI = []
+        self.HPSI = []
 
         # if self.get('kind') is 'numeric':
 
@@ -113,7 +115,7 @@ class DFT(object):
         #     else:
         #         self.compute_numeric(pprint)
         # else:
-        self.compute_analytic(pprint)
+        # self.compute_analytic(pprint)
 
         return self._energy
 

@@ -56,6 +56,8 @@ from napmo.scf.scf import SCF
 from napmo.solver.hf_solver import HF
 from napmo.solver.dft_solver import DFT
 
+from napmo.functional.xc_interface import Functional
+
 from napmo.wavefunction.psi_base import PSIB
 from napmo.wavefunction.psi_analytic import PSIA
 from napmo.wavefunction.psi_numeric import PSIN

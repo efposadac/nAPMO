@@ -38,8 +38,8 @@ class PSIB(Structure):
         ("_occupation", c_int),
         ("_eta", c_double),
         ("_kappa", c_double),
-        ("_exchangefactor", c_double),  # Fraction of exchange
-        ("_ecenergy", c_double),  # Exchange Correlation Energy
+        ("_x_factor", c_double),  # Fraction of exchange
+        ("_xc_energy", c_double),  # Exchange Correlation Energy
         ("_energy", c_double),
         ("_rmsd", c_double)  # Root medium square deviation, for D matrix
     ]
@@ -55,26 +55,28 @@ class PSIB(Structure):
         self._occupation = species.get('occupation')
         self._eta = species.get('eta')
         self._kappa = species.get('kappa')
+        self._functional = None
         self._ints = None
         self._symbol = species.get('symbol')
         self._sid = species.get('id')
-        self._exc = 0.0
         self._rmsd = 1.0
         self._pce = 0.0
         self._energy = 0.0
-        self._pce = 0.0
+        self._xc_energy = 0.0
         self._tf = False
 
-        self._exchangefactor = self._kappa/self._eta
+        self._x_factor = self._kappa/self._eta
 
-        # if (self._symbol == "e-"):
-        #     self._exchangefactor = 0.0
-        # else:
-        #     self._exchangefactor = self._kappa/self._eta
-
-        if 'tf' in options:
+        if 'tf' in self.options:
             self._tf = True
             print("Using Translation-Free Correction!!!")
+
+        self._method = self.options.get('method')
+
+        if self._method is 'dft':
+            self._functional = napmo.Functional(self.options['functional'][self.symbol])
+            if (self._symbol == "e-"):
+                self._x_factor = self._functional.x_factor
 
         if ndim is None:
             self._ndim = self.nbasis
@@ -136,48 +138,6 @@ class PSIB(Structure):
                   if j > i and not pa.is_quantum and not pb.is_quantum
                   ]
         return sum(output)
-
-    def compute_exccor(self):
-        """
-        Computes the exchange correlation matrix
-        """
-        self._ecenergy = 0.0
-        self.XC[:] = 0.0
-        self.XCgrid[:] = 0.0
-
-        if (self.symbol == "e-"):
-            napmo.cext.nwavefunction_compute_exccor_matrix(
-                byref(self), self._grid._this, self.psi, self.Dgrid.sum(axis=0), self.XCgrid
-            )
-
-        # print("\n XC Energy:" + self.symbol + ":")
-        # print(self._ecenergy)
-
-        # print("\n XC Potential:" + self.symbol + ":")
-        # print(self.XCgrid)
-
-        # print("\n XC Matrix:" + self.symbol + ": ")
-        # print(self.XC)
-
-    def compute_cor2species(self, other_psi):
-        """
-        Computes the exchange correlation matrix
-
-        Args:
-            other_psi (WaveFunction) : WaveFunction object for the other species.
-        """
-        for psi in other_psi:
-            if self.sid != psi.sid:
-                napmo.cext.nwavefunction_compute_cor2species_matrix(
-                    byref(self), byref(psi), self._grid._this, self.psi, self.Dgrid.sum(axis=0),
-                    psi.Dgrid.sum(axis=0), self.XCgrid
-                )
-
-        # print("\n XC Energy:" + self.symbol + ":")
-        # print(self._ecenergy)
-
-        # print("\n XC Matrix:" + self.symbol + ": ")
-        # print(self.XC)
 
     @property
     def nbasis(self):

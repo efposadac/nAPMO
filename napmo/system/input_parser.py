@@ -132,13 +132,12 @@ class InputParser(object):
         self.data = {}  # data of the molecule
         self.charges = {}  # options for charges and multiplicity
         self.scf = {}  # options for SCF engine
-        self.grid = {}  # data for grids
-        self.functional = {}  # data for functionals
 
         # remove all comments from data and blank lines
         data = re.sub('""".*\n?', '', data)
         data = re.sub('#.*\n?', '', data)
         data = re.sub('(?imu)^\s*\n', '', data)
+        data = data.replace('\t', '')
 
         pos = 0
         while True:
@@ -380,44 +379,30 @@ class InputParser(object):
         aux = {}
 
         data = data.splitlines()
-
+        print(data)
         for line in data:
 
             line = line.strip().split(' ')
 
             symbol = line[0].strip()
-            if symbol not in self.data and symbol != 'e-':
-                raise_exception(
-                    ValueError,
-                    "Particle not found!",
-                    'Check the "functional" block in your input file ' + symbol + ' is undefined in "molecular" block')
 
-            if len(line) > 4:
+            for sym in symbol.split(':'):
+                if sym not in self.data and sym != 'e-':
+                    raise_exception(
+                        ValueError,
+                        "Particle not found!",
+                        'Check the "functional" block in your input file ' + sym + ' is undefined in "molecular" block')
+
+            if len(line) > 2:
                 raise_exception(
                     ValueError,
                     "There is an extra term in a functional line!",
                     'Check the "functional" block in your input file')
 
-            elif len(line) == 4:
-                otherSymbol = line[1].strip()
+            functional = line[1].strip()
+            aux[symbol] = functional
 
-                if otherSymbol not in self.data and symbol != 'e-':
-                    raise_exception(
-                        ValueError,
-                        "Particle not found!",
-                        'Check the "functional" block in your input file ' + symbol + ' is undefined in "molecular" block')
-
-                functional = line[3].strip()
-                aux[symbol+'//'+otherSymbol] = functional
-
-            else:
-                exchange = line[1].strip()
-                correlation = line[2].strip()
-                aux[symbol] = functional
-
-        self.functional = aux
-
-        print(self.functional)
+        self.scf['functional'] = aux
 
     def load_code(self, data, group=True, options=None):
         """

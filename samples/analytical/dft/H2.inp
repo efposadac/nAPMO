@@ -10,7 +10,8 @@ basis {
 }
 
 functional {
-	e- lda_x lda_c_vwn
+	e- lda
+	# e-:H abcd
 }
 
 # scf options

@@ -153,23 +153,28 @@ class PSIA(napmo.PSIB):
         # print("\n Coupling Matrix " + self.symbol + ": ", self.J.sum())
         # print(self.J)
 
-    def compute_exccor(self):
+    def compute_xc(self):
         """
         Computes the exchange correlation matrix - numerically
         """
-        if self._grid is not None:
-            self._ecenergy = 0.0
-            self.XC[:] = 0.0
-
+        if self._functional is not None:
             # Density in the grid
-            self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
+            self.Dgrid = self._compute_density_from_dm(self.D, self.gbasis)
+            cene, cpot = func.compute_correlation(self.Dgrid)
+            xene, xpot = func.compute_exchange(self.Dgrid)
 
-            # Exchange correlation potential in the grid - Probably it's not required in the analytical SCF
-            XCgrid = np.zeros(grid.size)
+            print(cene, cpot)
 
-            if (self.symbol == "e-"):
-                napmo.cext.nwavefunction_compute_exccor_matrix(
-                    byref(self), grid._this, gbasis, self.Dgrid.sum(axis=0), XCgrid)
+            # self._xc_energy = 0.0
+            # self.XC[:] = 0.0
+
+
+            # # Exchange correlation potential in the grid - Probably it's not required in the analytical SCF
+            # XCgrid = np.zeros(grid.size)
+
+            # if (self.symbol == "e-"):
+            #     napmo.cext.nwavefunction_compute_exccor_matrix(
+            #         byref(self), grid._this, gbasis, self.Dgrid.sum(axis=0), XCgrid)
 
         # print("\n XC Energy:" + self.symbol + ":")
         # print(self._ecenergy)
