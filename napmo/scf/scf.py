@@ -63,7 +63,7 @@ class SCF(object):
         """
         with napmo.runtime.timeblock('2 body ints'):
             psi.compute_2body(self.get('direct'))
-            # psi.compute_exccor()
+            # psi.compute_xc()
 
         psi.build_fock()
 
@@ -103,7 +103,7 @@ class SCF(object):
 
             with napmo.runtime.timeblock('2 body ints'):
                 psi.compute_2body(self.get('direct'))
-                psi.compute_exccor()
+                psi.compute_xc()
 
             if other_psi is not None:
                 with napmo.runtime.timeblock('Coupling ints'):
@@ -168,7 +168,7 @@ class SCF(object):
         for psi in PSI:
             # Calculate 2 body Matrix
             psi.compute_2body(self.get('direct'))
-            # psi.compute_exccor()
+            # psi.compute_xc()
 
         while (iterations < self.get('maxiter') and
                np.abs(e_diff) > self.get('eps_e')):
@@ -196,7 +196,7 @@ class SCF(object):
                     # Calculate 2 body Matrix
                     with napmo.runtime.timeblock('2 body ints'):
                         psi.compute_2body(self.get('direct'))
-                        # psi.compute_exccor()
+                        # psi.compute_xc()
 
                     with napmo.runtime.timeblock('Coupling ints'):
                         psi.compute_coupling(PSI, direct=self.get('direct'))
@@ -207,7 +207,7 @@ class SCF(object):
 
                     with napmo.runtime.timeblock('2 body ints'):
                         psi.compute_2body(self.get('direct'))
-                        # psi.compute_exccor()
+                        # psi.compute_xc()
 
                     psi.build_fock()
 
@@ -281,7 +281,7 @@ class SCF(object):
 
             with napmo.runtime.timeblock('Numerical 2 body'):
                 psi.compute_2body(self.get('direct'))
-                # psi.compute_exccor()
+                # psi.compute_xc()
 
             psi.build_fock()
 
@@ -340,7 +340,7 @@ class SCF(object):
                 # Calculate 2 body Matrix
                 with napmo.runtime.timeblock('2 body ints'):
                     psi.compute_2body(self.get('direct'))
-                    # psi.compute_exccor()
+                    # psi.compute_xc()
 
                 psi.build_fock()
 
@@ -411,7 +411,7 @@ class SCF(object):
 
                 # Calculate 2 body Matrix
                 psi.compute_2body(self.get('direct'))
-                # psi.compute_exccor()
+                # psi.compute_xc()
                 psi.build_fock()
 
                 if iterations > 2:
@@ -459,7 +459,7 @@ class SCF(object):
 
         for psi in PSI:
             # Add independient particle energies
-            self._energy += (psi.D.T * (psi.H + (0.5 * psi.G))).sum()+psi._ecenergy
+            self._energy += (psi.D.T * (psi.H + (0.5 * psi.G))).sum()+psi._xc_energy
 
             # Calculate coupling energy
             self._coupling_energy += 0.5 * (psi.D.T * psi.J).sum()
@@ -483,7 +483,7 @@ class SCF(object):
         self._pcqui_energy = 0.0
         self._2body_energy = 0.0
         self._coupling_energy = 0.0
-        self._ec_energy = 0.0
+        self._xc_energy = 0.0
 
         for psi in PSI:
             # Calculate kinetic energy
@@ -506,14 +506,14 @@ class SCF(object):
             self._coupling_energy += 0.5 * (psi.D * psi.J).sum()
 
             # Calculate exchange correlation energy
-            self._ec_energy += psi._ecenergy
+            self._xc_energy += psi._xc_energy
 
         # Calculate potential energy
         self._potential_energy = (self.pce +
                                   self._2body_energy +
                                   self._pcqui_energy +
                                   self._coupling_energy +
-                                  self._ec_energy)
+                                  self._xc_energy)
 
         self._energy = self._potential_energy + self._kinetic_energy
 
@@ -575,7 +575,7 @@ Hartree-Fock Results:
            self._pcqui_energy,
            self._2body_energy,
            self._coupling_energy,
-           self._ec_energy,
+           self._xc_energy,
            self._potential_energy))
 
         for psi in PSI:
@@ -584,7 +584,7 @@ Hartree-Fock Results:
             print("Quantum-Point energy: ", psi.symbol, (psi.D * psi.V).sum())
             print("Repulsion energy: ", psi.symbol, 0.5 * (psi.D * psi.G).sum())
             print("Coupling energy: ", psi.symbol, 0.5 * (psi.D * psi.J).sum())
-            print("Exc. corr. energy (fix): ", psi.symbol, psi._ecenergy, "\n")
+            print("Exc. Corr. energy (fix): ", psi.symbol, psi._xc_energy, "\n")
 
     def __repr__(self):
         out = ("""\nSCF setup:
