@@ -17,7 +17,7 @@ void nwavefunction_compute_2body_matrix_atm(WaveFunction *psi, BeckeGrid *grid,
                                             double *phi, double *J, double *K) {
 
   unsigned int ndim = psi->ndim;
-  double factor = psi->exchangefactor;
+  double factor = psi->x_factor;
   unsigned int size = ndim * (ndim + 1) / 2;
 
   // Precompute Psi
@@ -78,7 +78,7 @@ void nwavefunction_compute_2body_matrix_mol(WaveFunction *psi, BeckeGrid *grid,
                                             double *phi, double *J, double *K) {
 
   unsigned int ndim = psi->ndim;
-  double factor = psi->exchangefactor;
+  double factor = psi->x_factor;
   unsigned int size = ndim * (ndim + 1) / 2;
 
   // Precompute Psi
@@ -231,7 +231,6 @@ void nwavefunction_compute_exccor_matrix(WaveFunction *psi, BeckeGrid *grid, dou
   unsigned int size = ndim * (ndim + 1) / 2; // triangular matrix size
 
   // Creation of the required objects:
-
   // rho is density in grid
   
   // Orbitals in grid - organized
@@ -248,7 +247,7 @@ void nwavefunction_compute_exccor_matrix(WaveFunction *psi, BeckeGrid *grid, dou
   //TODO: Density and orbitals gradients
   
   // Output: total exchange correlation energy for species
-  psi->ecenergy = 0.0;
+  psi->xc_energy = 0.0;
   // Output: exchange correlation matrix for species
   MMap exccor(psi->XC, ndim, ndim);
   exccor.setZero();
@@ -314,7 +313,7 @@ void nwavefunction_compute_exccor_matrix(WaveFunction *psi, BeckeGrid *grid, dou
 
   // printf("exchange energy'%f' \n", grid->integrate(buff));
 
-  psi->ecenergy += grid->integrate(buff) ;
+  psi->xc_energy += grid->integrate(buff) ;
     
   // Correlation contributions
   memset(ene,0,n);
@@ -340,7 +339,7 @@ void nwavefunction_compute_exccor_matrix(WaveFunction *psi, BeckeGrid *grid, dou
 
   // printf("correlation energy'%f' \n", grid->integrate(buff));
 
-  psi->ecenergy += grid->integrate(buff) ;
+  psi->xc_energy += grid->integrate(buff) ;
 
   
   //Building matrix
@@ -358,7 +357,7 @@ void nwavefunction_compute_exccor_matrix(WaveFunction *psi, BeckeGrid *grid, dou
   exccor += exccor.triangularView<Eigen::StrictlyUpper>().transpose();
 
   // tests
-  // printf("ecenergy'%f' \n", psi->ecenergy) ;
+  // printf("xc_energy'%f' \n", psi->xc_energy) ;
 
   // std::cout << "\n\t exccor:\n";
   // std::cout << exccor << std::endl;
@@ -375,6 +374,159 @@ void nwavefunction_compute_exccor_matrix(WaveFunction *psi, BeckeGrid *grid, dou
   
 
 }
+
+// void nwavefunction_compute_exccor_matrix(WaveFunction *psi, BeckeGrid *grid, double *phi,
+//                                     double *rho, double *XC) {
+
+//   unsigned int n = grid->get_size(); //grid points 
+//   unsigned int ndim = psi->ndim; // number of orbitals
+//   unsigned int size = ndim * (ndim + 1) / 2; // triangular matrix size
+
+//   // Creation of the required objects:
+
+//   // rho is density in grid
+  
+//   // Orbitals in grid - organized
+//   MMap F(phi, ndim, grid->get_size());
+
+//   // Orbital products in grid - calculated
+//   Matrix Psi(size, grid->get_size());
+//   for (unsigned int i = 0; i < ndim; ++i) {
+//     for (unsigned int j = i; j < ndim; ++j) {
+//       Psi.row(INDEX(i, j)) = F.row(i).array() * F.row(j).array();
+//     }
+//   }
+
+//   //TODO: Density and orbitals gradients
+  
+//   // Output: total exchange correlation energy for species
+//   psi->xc_energy = 0.0;
+//   // Output: exchange correlation matrix for species
+//   MMap exccor(psi->XC, ndim, ndim);
+//   exccor.setZero();
+//   // Output: exchange correlation potential grid for species
+//   A1DMap P(XC, grid->get_size());
+//   P.setZero();
+
+//   //Libxc objects
+//   xc_func_type exc_func;
+//   xc_func_type cor_func;
+//   int exc_func_id;
+//   int cor_func_id;
+
+//   // local variables to store the exchange and correlation contributions
+//   double *ene ; 
+//   ene = (double*)malloc(sizeof(double)*n); // energy density
+//   double *pot ; 
+//   pot = (double*)malloc(sizeof(double)*n); // density potential
+//   double *sig ;  
+//   sig = (double*)malloc(sizeof(double)*n); // gradient squared
+//   double *sigpot ; 
+//   sigpot = (double*)malloc(sizeof(double)*n); // gradient squared potential
+
+//   Array1D buff(n); //auxiliary for integration
+
+  
+//   //Temporal
+//   //TODO set variables in the input 
+//   exc_func_id= xc_functional_get_number("LDA_X");
+//   cor_func_id= xc_functional_get_number("LDA_C_VWN");
+
+//   //TODO select closed shell or open shell
+//   xc_func_init(&exc_func, exc_func_id , XC_UNPOLARIZED);
+//   xc_func_init(&cor_func, cor_func_id , XC_UNPOLARIZED);
+
+//   //TODO place this somewhere else
+//   // printf("Grid size '%i' \n", n);
+//   // printf("Electron exchange functional is '%s' \n", exc_func.info->name);
+//   // printf("Electron exchange family is '%d' \n", exc_func.info->family);
+//   // printf("Electron correlation functional is '%s' \n", cor_func.info->name);
+//   // printf("Electron correlation family is '%d' \n", cor_func.info->family);
+ 
+//   // printf("density test '%f' \n", grid->integrate(rho));
+  
+//   // Exchange contributions
+//   switch(exc_func.info->family)
+//     {
+//     case XC_FAMILY_LDA:
+//       xc_lda_exc_vxc(&exc_func, n, rho, ene, pot);
+//       break;
+//     case XC_FAMILY_GGA:
+//       xc_gga_exc_vxc(&exc_func, n, rho, sig, ene, pot, sigpot);
+//       break;
+//     case XC_FAMILY_HYB_GGA:
+//       xc_gga_exc_vxc(&exc_func, n, rho, sig, ene, pot, sigpot);
+//       break;
+//     }
+
+//   for (unsigned int i = 0; i < n; ++i) {
+//     buff[i]=rho[i]*ene[i];
+//     P[i]=pot[i];
+//   }
+
+//   // printf("exchange energy'%f' \n", grid->integrate(buff));
+
+//   psi->xc_energy += grid->integrate(buff) ;
+    
+//   // Correlation contributions
+//   memset(ene,0,n);
+//   memset(pot,0,n);
+
+//   switch(cor_func.info->family)
+//     {
+//     case XC_FAMILY_LDA:
+//       xc_lda_exc_vxc(&cor_func, n, rho, ene, pot);
+//       break;
+//     case XC_FAMILY_GGA:
+//       xc_gga_exc_vxc(&cor_func, n, rho, sig, ene, pot, sigpot);
+//       break;
+//     case XC_FAMILY_HYB_GGA:
+//       xc_gga_exc_vxc(&cor_func, n, rho, sig, ene, pot, sigpot);
+//       break;
+//     }
+
+//   for (unsigned int i = 0; i < n; ++i) {
+//     buff[i]=rho[i]*ene[i];
+//     P[i]+=pot[i];
+//   }
+
+//   // printf("correlation energy'%f' \n", grid->integrate(buff));
+
+//   psi->xc_energy += grid->integrate(buff) ;
+
+  
+//   //Building matrix
+
+//   for (unsigned int i = 0; i < ndim; ++i) {
+//     for (unsigned int j = i; j < ndim; ++j) {
+
+//       Array1D buff = Psi.row(INDEX(i, j));
+//       buff *= P;
+      
+//       exccor(i, j) = grid->integrate(buff);
+//     }
+//   }
+
+//   exccor += exccor.triangularView<Eigen::StrictlyUpper>().transpose();
+
+//   // tests
+//   // printf("xc_energy'%f' \n", psi->xc_energy) ;
+
+//   // std::cout << "\n\t exccor:\n";
+//   // std::cout << exccor << std::endl;
+ 
+//   // printf("XC \n");
+//   // for (unsigned int i = 0; i < n; ++i) {
+//   //   printf("%f\n", XC[i] );
+//   // }
+ 
+//   free(ene);
+//   free(pot);
+//   free(sig);
+//   free(sigpot);
+  
+
+// }
 
 void nwavefunction_compute_cor2species_matrix(WaveFunction *psi, WaveFunction *otherPsi, BeckeGrid *grid, double *phi,
 					      double *rho, double *otherRho, double *XC) {
@@ -435,7 +587,7 @@ void nwavefunction_compute_cor2species_matrix(WaveFunction *psi, WaveFunction *o
   }
 
   
-  psi->ecenergy += grid->integrate(ene)/2 ;
+  psi->xc_energy += grid->integrate(ene)/2 ;
       
   // Potential
   for (unsigned int i = 0; i < n; ++i) {

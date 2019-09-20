@@ -74,7 +74,10 @@ class PSIB(Structure):
         self._method = self.options.get('method')
 
         if self._method is 'dft':
-            self._functional = napmo.Functional(self.options['functional'][self.symbol])
+            self._functional = napmo.Functional(
+                self.options['functional'][self.symbol], self.symbol
+            )
+
             if (self._symbol == "e-"):
                 self._x_factor = self._functional.x_factor
 
@@ -171,7 +174,7 @@ class PSIB(Structure):
         """
         return self._sid
 
-    # ### TEST ###
+    # ### TEST: Do not use this functions for real things ###
 
     def _compute_density_from_dm(self, dm, psi):
         """

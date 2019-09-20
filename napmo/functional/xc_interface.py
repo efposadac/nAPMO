@@ -7,7 +7,7 @@ class Functional(object):
     Electronic functionals provided by libxc
     ... complete
     """
-    def __init__(self, name):
+    def __init__(self, name, symbol):
         super(Functional, self).__init__()
 
         _database = {

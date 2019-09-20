@@ -62,7 +62,6 @@ class DFT(object):
         self.scf = napmo.SCF(options=self.options,
                              pce=self._pce, pprint=pprint)
 
-        
         # if 'hybrid' in self.options:
         #     self.options['kind'] = 'numeric'
         #     self.options['hybrid'] = {k: v for d in self.options.get('hybrid', {})
@@ -115,7 +114,7 @@ class DFT(object):
         #     else:
         #         self.compute_numeric(pprint)
         # else:
-        # self.compute_analytic(pprint)
+        self.compute_analytic(pprint)
 
         return self._energy
 

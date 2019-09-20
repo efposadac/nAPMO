@@ -37,8 +37,8 @@ struct wf {
   int occupation;
   double eta;    // Constant of coupling
   double kappa;  // Constant of coupling
-  double exchangefactor; // Fraction of exchange
-  double ecenergy; // Exchange-Correlation Energy
+  double x_factor; // Fraction of exchange
+  double xc_energy; // Exchange-Correlation Energy
   double energy; // HF Energy
   double rmsd;   // Density root-mean-square deviation
 };
