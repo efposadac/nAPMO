@@ -67,7 +67,7 @@ void wavefunction_transformation_matrix(WaveFunction *psi) {
 void wavefunction_iterate(WaveFunction *psi) {
 
   int ndim = psi->ndim;
-  double ecenergy = psi->ecenergy;
+  double xc_energy = psi->xc_energy;
 
   MMap S(psi->S, ndim, ndim);
   MMap C(psi->C, ndim, ndim);
@@ -111,7 +111,7 @@ void wavefunction_iterate(WaveFunction *psi) {
   // std::cout << D << std::endl;
 
   // compute HF energy
-  auto ehf = D.cwiseProduct(H + (0.5 * G) + J).sum() + ecenergy ;
+  auto ehf = D.cwiseProduct(H + (0.5 * G) + J).sum() + xc_energy ;
   psi->energy = ehf;
   psi->rmsd = (D - L).norm();
 }
@@ -154,7 +154,7 @@ void wavefunction_compute_density(WaveFunction *psi) {
 void wavefunction_compute_energy(WaveFunction *psi) {
 
   int ndim = psi->ndim;
-  double ecenergy = psi->ecenergy;
+  double xc_energy = psi->xc_energy;
 
   MMap H(psi->H, ndim, ndim);
   MMap D(psi->D, ndim, ndim);
@@ -162,7 +162,7 @@ void wavefunction_compute_energy(WaveFunction *psi) {
   MMap J(psi->J, ndim, ndim);
 
   // compute HF energy
-  auto ehf = D.cwiseProduct(H + (0.5 * G) + J).sum() + ecenergy;
+  auto ehf = D.cwiseProduct(H + (0.5 * G) + J).sum() + xc_energy;
   psi->energy = ehf;
 }
 
@@ -174,7 +174,7 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
   set_nthreads();
 
   int ndim = psi->ndim;
-  double factor = psi->exchangefactor;
+  double factor = psi->x_factor;
 
   MMap D(psi->D, ndim, ndim);
   MMap G(psi->G, ndim, ndim);
