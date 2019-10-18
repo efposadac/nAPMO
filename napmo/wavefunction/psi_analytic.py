@@ -14,6 +14,15 @@ import napmo
 from scipy import linalg as SLA
 
 
+def print_matrix(A):
+    n = A.shape[0]
+    for i in range(n):
+        for j in range(n):
+            print("%12.6f" % (A[i, j]), end="")
+        print("")
+    print("")
+
+
 class PSIA(napmo.PSIB):
     """
     Defines the Fock operator for a Hartree-Fock Calculation with analytic calculation of integrals.
@@ -108,25 +117,22 @@ class PSIA(napmo.PSIB):
             direct (bool) : Whether to calculate eris on-the-fly or not
         """
 
-        # print("\n D Matrix:" + self.symbol + ": ", self.D.sum())
+        if self.species.get('size') > 1 or self.species.get('is_electron'):
 
-        if self.species.get('size') > 0:
-            with napmo.runtime.timeblock('Numerical coupling ints'):
+            napmo.cext.LibintInterface_init_2body_ints(self._libint)
 
-                napmo.cext.LibintInterface_init_2body_ints(self._libint)
+            if direct:
+                napmo.cext.LibintInterface_compute_2body_direct(
+                    self._libint, self.D, self.G)
+            else:
+                if not self._ints:
+                    self._ints = napmo.cext.LibintInterface_compute_2body_ints(
+                        self._libint, self.D)
 
-                if direct:
-                    napmo.cext.LibintInterface_compute_2body_direct(
-                        self._libint, self.D, self.G)
-                else:
-                    if not self._ints:
-                        self._ints = napmo.cext.LibintInterface_compute_2body_ints(
-                            self._libint, self.D)
+                napmo.cext.wavefunction_compute_2body_matrix(
+                    byref(self), self._ints)
 
-                    napmo.cext.wavefunction_compute_2body_matrix(
-                        byref(self), self._ints)
-
-                self.G *= self.species.get('charge')**2
+            self.G *= self.species.get('charge')**2
 
             # print("\n G Matrix:" + self.symbol + ": ", self.G.sum())
             # print(self.G)
@@ -153,30 +159,57 @@ class PSIA(napmo.PSIB):
         # print("\n Coupling Matrix " + self.symbol + ": ", self.J.sum())
         # print(self.J)
 
-    def compute_xc(self):
+    def compute_xc(self, beta_psi=None):
         """
         Computes the exchange correlation matrix - numerically
         """
         if self._functional is not None:
 
             # Density in the grid
-            rho = np.array([phi * self.D.dot(phi) for phi in self._gbasis.T]).T
-            rho = rho.sum(axis=0)
+            ndim = 2 if beta_psi else 1
+            rho = np.zeros((ndim * self._grid.size))
+
+            # Alpha set
+            alpha_rho = np.array([phi * self.D.dot(phi) for phi in self._gbasis.T]).T
+            rho[::ndim] = alpha_rho.sum(axis=0)
+
+            # Beta set
+            beta_rho = None
+            if beta_psi is not None:
+                beta_rho = np.array([phi * beta_psi.D.dot(phi) for phi in beta_psi._gbasis.T]).T
+                rho[1::ndim] = beta_rho.sum(axis=0)
+
+            # Compute functionals
             c_zk, c_vrho = self._functional.compute_correlation(rho)
             x_zk, x_vrho = self._functional.compute_exchange(rho)
 
-            self._xc_energy = 0.0
+            # Calculate XC Energy
+            self._xc_energy = self._grid.integrate(rho[::ndim] * (c_zk[0, :] + x_zk[0, :]))
 
-            napmo.cext.nwavefunction_compute_exccor_matrix(
-                    byref(self), grid._this, gbasis, self.Dgrid.sum(axis=0), XCgrid)
-            exit()
+            if beta_psi is not None:
+                beta_psi._xc_energy = beta_psi._grid.integrate(rho[1::ndim] * (c_zk[0, :] + x_zk[0, :]))
 
+            # Save potentials
 
-        # print("\n XC Energy:" + self.symbol + ":")
-        # print(self._ecenergy)
+            # Alpha set
+            self._xc_vrho = c_vrho[0, :] + x_vrho[0, :]
 
+            # Beta set
+            if beta_psi is not None:
+                beta_psi._xc_vrho = c_vrho[1, :] + x_vrho[1, :]
+
+        # Build Matrix
+        if self._xc_vrho is not None:
+            napmo.cext.nwavefunction_compute_xc_matrix(
+                    byref(self),
+                    self._grid._this,
+                    self._gbasis,
+                    self._xc_vrho
+                    )
+
+        # print("\n XC Energy: " + self.symbol + ":", self._xc_energy)
         # print("\n XC Matrix:" + self.symbol + ": ")
-        # print(self.XC)
+        # print_matrix(self.XC)
 
     # def compute_cor2species(self, other_psi):
     #     """

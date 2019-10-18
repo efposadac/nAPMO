@@ -269,6 +269,7 @@ Charges description:
                 self._abe = "\ne-alpha: {0:<3d} e-beta: {1:<3d}\n".format(alpha, beta)
 
                 if alpha != beta or open_shell:
+                    self.open_shell = True
                     for k in keys:
 
                         if keys[k] == 0:
@@ -294,6 +295,7 @@ Charges description:
                     self.get('e-')['size'] += charge
                     self.get('e-')['occupation'] = int(
                         self.get('e-')['size'] * self.get('e-')['particlesfraction'])
+                    self.open_shell = False
             else:
                 # TODO: Implement multiplicity for other species
 

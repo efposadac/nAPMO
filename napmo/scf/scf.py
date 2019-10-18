@@ -54,28 +54,28 @@ class SCF(object):
         if pprint:
             print("Point charges energy: {0:<12.8f}".format(self._pce))
 
-    def iteration_single(self, psi):
-        """
-        Performs a single iteration for one species.
+    # def iteration_single(self, psi):
+    #     """
+    #     Performs a single iteration for one species.
 
-        Args:
-            psi (WaveFunction) : WaveFunction object for one species.
-        """
-        with napmo.runtime.timeblock('2 body ints'):
-            psi.compute_2body(self.get('direct'))
-            # psi.compute_xc()
+    #     Args:
+    #         psi (WaveFunction) : WaveFunction object for one species.
+    #     """
+    #     with napmo.runtime.timeblock('2 body ints'):
+    #         psi.compute_2body(self.get('direct'))
+    #         psi.compute_xc()
 
-        psi.build_fock()
+    #     psi.build_fock()
 
-        # solve F C = e S C
-        with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
-            napmo.cext.wavefunction_iterate(byref(psi))
+    #     # solve F C = e S C
+    #     with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
+    #         napmo.cext.wavefunction_iterate(byref(psi))
 
-        self._energy = psi._energy + psi.pce
+    #     self._energy = psi._energy + psi.pce
 
-        if self.get('debug'):
-            print('Single iteration {0:<3s} {1:>12.7f} {2:>12.7f} {3:>12.7f}'.
-                  format(psi.symbol, psi._energy, self._energy, psi._rmsd))
+    #     if self.get('debug'):
+    #         print('Single iteration {0:<3s} {1:>12.7f} {2:>12.7f} {3:>12.7f}'.
+    #               format(psi.symbol, psi._energy, self._energy, psi._rmsd))
 
     def single(self, psi, pprint=False, diis=True, other_psi=None):
         """
@@ -165,10 +165,14 @@ class SCF(object):
         e_diff = 1
 
         # Initialization
+        beta_psi = [
+            psi for psi in PSI if psi.symbol == 'e-beta'
+        ][0] if self.options.get('spin', '') == 'polarized' else None
+
         for psi in PSI:
             # Calculate 2 body Matrix
             psi.compute_2body(self.get('direct'))
-            # psi.compute_xc()
+            psi.compute_xc(beta_psi)
 
         while (iterations < self.get('maxiter') and
                np.abs(e_diff) > self.get('eps_e')):
@@ -196,38 +200,38 @@ class SCF(object):
                     # Calculate 2 body Matrix
                     with napmo.runtime.timeblock('2 body ints'):
                         psi.compute_2body(self.get('direct'))
-                        # psi.compute_xc()
+                        psi.compute_xc(beta_psi)
 
                     with napmo.runtime.timeblock('Coupling ints'):
                         psi.compute_coupling(PSI, direct=self.get('direct'))
                         # psi.compute_cor2species(PSI)
 
-            if case is 1:
-                for psi in PSI:
+            # if case is 1:
+            #     for psi in PSI:
 
-                    with napmo.runtime.timeblock('2 body ints'):
-                        psi.compute_2body(self.get('direct'))
-                        # psi.compute_xc()
+            #         with napmo.runtime.timeblock('2 body ints'):
+            #             psi.compute_2body(self.get('direct'))
+            #             psi.compute_xc(beta_psi)
 
-                    psi.build_fock()
+            #         psi.build_fock()
 
-                    # solve F C = e S C
-                    with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
-                        napmo.cext.wavefunction_iterate(byref(psi))
+            #         # solve F C = e S C
+            #         with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
+            #             napmo.cext.wavefunction_iterate(byref(psi))
 
-                    with napmo.runtime.timeblock('Coupling ints'):
-                        psi.compute_coupling(PSI, direct=self.get('direct'))
-                        # psi.compute_cor2species(PSI)
+            #         with napmo.runtime.timeblock('Coupling ints'):
+            #             psi.compute_coupling(PSI, direct=self.get('direct'))
+            #             # psi.compute_cor2species(PSI)
 
-                    self.single(psi, pprint=False)
+            #         self.single(psi, pprint=False)
 
-                    if self.get('debug'):
-                        print("Single particle energy for " +
-                              psi.symbol + ":", psi._energy + psi.pce)
+            #         if self.get('debug'):
+            #             print("Single particle energy for " +
+            #                   psi.symbol + ":", psi._energy + psi.pce)
 
-            if case is 2:
-                print('\n Calculation does not converge!')
-                return
+            # if case is 2:
+            #     print('\n Calculation does not converge!')
+            #     return
 
             self.compute_energy(PSI)
 
@@ -237,10 +241,10 @@ class SCF(object):
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f}'.
                       format(iterations, self._energy - self.pce, self._energy, e_diff))
 
-        if iterations >= self.get('maxiter'):
-            case += 1
-            self.multi(PSI, case=case)
-            return
+        # if iterations >= self.get('maxiter'):
+        #     case += 1
+        #     self.multi(PSI, case=case)
+        #     return
 
         print('{0:11s} {1:>12.7f}'.format("\nANALYTICAL ", self._energy))
 
@@ -456,10 +460,11 @@ class SCF(object):
 
         self._energy = 0.0
         self._coupling_energy = 0.0
+        self._xc_energy = 0.0
 
         for psi in PSI:
-            # Add independient particle energies
-            self._energy += (psi.D.T * (psi.H + (0.5 * psi.G))).sum()+psi._xc_energy
+            # Add independent particle energies
+            self._energy += (psi.D.T * (psi.H + (0.5 * psi.G))).sum()
 
             # Calculate coupling energy
             self._coupling_energy += 0.5 * (psi.D.T * psi.J).sum()
@@ -467,12 +472,17 @@ class SCF(object):
             if self.get('debug'):
                 print("coupling " + psi.symbol + ": ",
                       0.5 * (psi.D * psi.J).sum())
+            # Calculate XC energy
+            self._xc_energy += psi._xc_energy
 
         # Add point charges energy
         self._energy += self.pce
 
         # Add coupling Energy
         self._energy += self._coupling_energy
+
+        # Add XC energy
+        self._energy += self._xc_energy
 
     def compute_energy_components(self, PSI):
         """
@@ -578,13 +588,13 @@ Hartree-Fock Results:
            self._xc_energy,
            self._potential_energy))
 
-        for psi in PSI:
-            print("Orbitals: ", psi.symbol, "\n", psi.O, "\n")
-            print("Kinetic energy: ", psi.symbol, (psi.D * psi.T).sum())
-            print("Quantum-Point energy: ", psi.symbol, (psi.D * psi.V).sum())
-            print("Repulsion energy: ", psi.symbol, 0.5 * (psi.D * psi.G).sum())
-            print("Coupling energy: ", psi.symbol, 0.5 * (psi.D * psi.J).sum())
-            print("Exc. Corr. energy (fix): ", psi.symbol, psi._xc_energy, "\n")
+        # for psi in PSI:
+        #     print("Orbitals: ", psi.symbol, "\n", psi.O, "\n")
+        #     print("Kinetic energy: ", psi.symbol, (psi.D * psi.T).sum())
+        #     print("Quantum-Point energy: ", psi.symbol, (psi.D * psi.V).sum())
+        #     print("Repulsion energy: ", psi.symbol, 0.5 * (psi.D * psi.G).sum())
+        #     print("Coupling energy: ", psi.symbol, 0.5 * (psi.D * psi.J).sum())
+        #     print("Exc. Corr. energy (fix): ", psi.symbol, psi._xc_energy, "\n")
 
     def __repr__(self):
         out = ("""\nSCF setup:
@@ -599,7 +609,7 @@ E Tol NUM:   {5:<10.3e}
            self.get('kind'),
            str(self.get('direct')),
            self.get('eps_e'),
-           self.get('eps_d'), 
+           self.get('eps_d'),
            self.get('eps_n')
            ))
 

@@ -63,6 +63,7 @@ class PSIB(Structure):
         self._pce = 0.0
         self._energy = 0.0
         self._xc_energy = 0.0
+        self._xc_vrho = None
         self._tf = False
 
         self._x_factor = self._kappa/self._eta
@@ -74,12 +75,15 @@ class PSIB(Structure):
         self._method = self.options.get('method')
 
         if self._method is 'dft':
-            self._functional = napmo.Functional(
-                self.options['functional'][self.symbol], self.symbol
-            )
-
-            if (self._symbol == "e-"):
-                self._x_factor = self._functional.x_factor
+            if self.species.get('is_electron') and self.symbol != 'e-beta':
+                self._functional = napmo.Functional(
+                    self._symbol,
+                    self.options
+                )
+                # TODO: Fix this
+                # self._x_factor = self._functional.x_factor
+            self._x_factor = 0.0
+            # self._x_factor = self._kappa/self._eta
 
         if ndim is None:
             self._ndim = self.nbasis

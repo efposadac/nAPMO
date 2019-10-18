@@ -37,6 +37,7 @@ class BeckeGrid(object):
         centers = species.get('particles')
         ncenter = len(centers)
 
+        self._symbol = species.get('symbol')
         self._nrad = n_radial
         self._nang = n_angular
 
@@ -83,8 +84,8 @@ class BeckeGrid(object):
         """
         Prints information of the object.
         """
-        print("\nGrid Information:")
-        print("-----------------")
+        print("\nGrid Information:", self._symbol)
+        print("-"*(18+len(self._symbol)))
         print("Centers: ", self.ncenter)
         print("Size: ", self.size)
 

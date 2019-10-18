@@ -82,8 +82,7 @@ void nwavefunction_compute_2body_matrix_mol(WaveFunction *psi, BeckeGrid *grid,
 void nwavefunction_compute_coupling(WaveFunction *psi, BeckeGrid *grid,
                                     double *phi, double *other_J, double *res);
 
-void nwavefunction_compute_exccor_matrix(WaveFunction *psi, BeckeGrid *grid, double *phi,
-                                    double *rho, double *XC);
+void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid, double *phi, double *xc_vrho);
 
 void nwavefunction_compute_cor2species_matrix(WaveFunction *psi, WaveFunction *otherPsi, BeckeGrid *grid, double *phi,
 					      double *rho, double *otherRho, double *XC);

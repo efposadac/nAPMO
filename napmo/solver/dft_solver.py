@@ -19,10 +19,13 @@ class DFT(object):
         self.options = {'method': 'dft',
                         'kind': 'analytic',
                         'grid': [100, 110],
-                        'functional': {'e-': 'lda'}}
+                        'functional': {'e-': 'lda'}
+                        }
 
         if options:
             self.options.update(options)
+
+        self.options['spin'] = 'polarized' if system.open_shell else 'unpolarized'
 
         # Create grids for integration
         self._mgrid = []

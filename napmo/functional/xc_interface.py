@@ -1,3 +1,5 @@
+import numpy as np
+
 import pylibxc
 import napmo
 
@@ -7,7 +9,7 @@ class Functional(object):
     Electronic functionals provided by libxc
     ... complete
     """
-    def __init__(self, name, symbol):
+    def __init__(self, symbol, options={}):
         super(Functional, self).__init__()
 
         _database = {
@@ -15,14 +17,16 @@ class Functional(object):
         }
 
         self.options = {
-            'symbol': 'e-',
             'correlation': 'lda_c_vwn',
             'exchange': 'lda_x',
             'spin': 'unpolarized',
         }
 
+        self.options.update(options)
+        self.options.update(_database[options['functional']['e-']])
+
+        self._symbol = symbol
         self._x_factor = 0.0
-        self.options.update(_database[name])
 
         self._available = pylibxc.util.xc_available_functional_names()
         self._exchange = self.options.get('exchange')
@@ -38,17 +42,47 @@ class Functional(object):
         else:
             raise NotImplementedError(self.exchange+" Functional NOT available!")
 
+        self.show()
+
     def compute_correlation(self, rho):
         inp = {}
         inp['rho'] = rho
         ret = self._correlation.compute(inp)
+
+        if self.spin == 'polarized':
+            ret['vrho'] = self._reorder_vrho(ret['vrho'])
+
         return ret['zk'], ret['vrho']
 
     def compute_exchange(self, rho):
         inp = {}
         inp['rho'] = rho
         ret = self._exchange.compute(inp)
+
+        if self.spin == 'polarized':
+            ret['vrho'] = self._reorder_vrho(ret['vrho'])
+
         return ret['zk'], ret['vrho']
+
+    def show(self):
+        """
+        Prints information of the object.
+        """
+        print("\nFunctional Information:", self.symbol)
+        print("-"*(24+len(self.symbol)))
+        print(self.options)
+
+    def _reorder_vrho(self, vrho):
+        aux = np.zeros(vrho.shape)
+
+        aux[0, :] = np.hstack([vrho[0, ::2], vrho[1, ::2]])
+        aux[1, :] = np.hstack([vrho[0, 1::2], vrho[1, 1::2]])
+
+        return aux
+
+    @property
+    def symbol(self):
+        return self._symbol
 
     @property
     def correlation(self):
@@ -69,12 +103,3 @@ class Functional(object):
     @property
     def x_factor(self):
         return self._x_factor
-
-
-if __name__ == '__main__':
-    import numpy as np
-    rho = np.random.random((3))
-    func = Functional()
-    print(func.available)
-    cene, cpot = func.compute_correlation(rho)
-    eene, epot = func.compute_exchange(rho)

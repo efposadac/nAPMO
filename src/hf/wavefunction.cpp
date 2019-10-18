@@ -76,7 +76,6 @@ void wavefunction_iterate(WaveFunction *psi) {
   MMap L(psi->L, ndim, ndim);
   MMap G(psi->G, ndim, ndim);
   MMap J(psi->J, ndim, ndim);
-  MMap XC(psi->XC, ndim, ndim);
   MMap F(psi->F, ndim, ndim);
   VMap O(psi->O, ndim);
 
@@ -278,16 +277,3 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
   G += G.triangularView<Eigen::StrictlyUpper>().transpose();
 }
 
-// void wavefunction_compute_exccor_matrix(WaveFunction *psi) {
-
-//   using napmo::nthreads;
-
-//   set_nthreads();
-
-//   int ndim = psi->ndim;
-//   MMap D(psi->D, ndim, ndim);
-//   MMap XC(psi->XC, ndim, ndim);
-
-//   XC.setZero();
-
-// }

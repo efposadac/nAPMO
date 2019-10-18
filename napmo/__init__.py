@@ -181,9 +181,9 @@ cext.nwavefunction_compute_coupling.restype = None
 cext.nwavefunction_compute_coupling.argtypes = [
     c_void_p, c_void_p, a2df, a1df, a2df]
 
-cext.nwavefunction_compute_exccor_matrix.restype = None
-cext.nwavefunction_compute_exccor_matrix.argtypes = [
-    c_void_p, c_void_p, a2df, a1df, a1df]
+cext.nwavefunction_compute_xc_matrix.restype = None
+cext.nwavefunction_compute_xc_matrix.argtypes = [
+    c_void_p, c_void_p, a2df, a1df]
 
 cext.nwavefunction_compute_cor2species_matrix.restype = None
 cext.nwavefunction_compute_cor2species_matrix.argtypes = [
