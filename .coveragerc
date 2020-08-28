@@ -1,3 +1,3 @@
 [report] 
-omit = *numpy*, *ctypes*, *numbers*, *scipy*, scipy._lib.decorator, *json*, *PIL*, FIxTk, *matplotlib*, *decimal*, *csv*, *distutils*, *dateutil*, *gzip*, *PyQt5*, *cycler* 
+omit = *numpy*, *ctypes*, *numbers*, *scipy*, scipy._lib.decorator, *json*, *PIL*, FIxTk, *matplotlib*, *decimal*, *csv*, *distutils*, *dateutil*, *gzip*, *PyQt5*, *cycler*, *gi*, *_sysconfigdata__x86_64-linux-gnu*, *hmac*, *pathlib*, *secrets*, *uuid*, *cairo*, *six* 
 show_missing=True

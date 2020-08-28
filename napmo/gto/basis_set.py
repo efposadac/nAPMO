@@ -157,6 +157,21 @@ class BasisSet(dict):
 
         return output
 
+    def deriv(self, coord=np.zeros([1, 3], dtype=np.float64)):
+        """
+        Compute first derivative for the basis-set at given ``coord``.
+
+        Args:
+            coord (ndarray): coordinates in which the basis set will be
+                evaluated. Array shape should be (n, 3)
+
+        """
+        n_coord = coord.shape[0]
+        output = np.empty([n_coord, self.get('nbasis'), 3])
+        napmo.cext.BasisSet_deriv(self._this, coord, output, n_coord)
+
+        return output
+
     def _lmax(self):
         return np.max(np.array([cont.l.sum() for cont in self.get('cont')]))
 

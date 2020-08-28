@@ -82,6 +82,7 @@ basis_dir = os.path.join(os.path.dirname(__file__), 'data/basis')
 # Types for ctypes
 a1df = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
 a2df = npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
+a3df = npct.ndpointer(dtype=np.double, ndim=3, flags='CONTIGUOUS')
 a1di = npct.ndpointer(dtype=np.int32, ndim=1, flags='CONTIGUOUS')
 a1dli = npct.ndpointer(dtype=np.int64, ndim=1, flags='CONTIGUOUS')
 aptr = npct.ndpointer(c_void_p, flags="C_CONTIGUOUS")
@@ -249,6 +250,10 @@ cext.BasisSet_new.argtypes = [aptr, c_int]
 cext.BasisSet_compute.restype = None
 cext.BasisSet_compute.argtypes = [
     c_void_p, a2df, a2df, c_int]
+
+cext.BasisSet_deriv.restype = None
+cext.BasisSet_deriv.argtypes = [
+    c_void_p, a2df, a3df, c_int]
 
 cext.BasisSet_update.restype = None
 cext.BasisSet_update.argtypes = [
