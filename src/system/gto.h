@@ -11,8 +11,9 @@ efposadac@unal.edu.co*/
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector>
+
 #include <iostream>
+#include <vector>
 
 #include "../ints/overlap.h"
 #include "../utils/utils.h"
@@ -21,8 +22,7 @@ efposadac@unal.edu.co*/
 PrimitiveGaussian Class
 */
 struct PrimitiveGaussian {
-
-private:
+ private:
   int l[3];
   double origin[3];
   double zeta;
@@ -34,13 +34,14 @@ private:
   */
   void normalize();
 
-public:
+ public:
   PrimitiveGaussian() = default;
 
   PrimitiveGaussian(const PrimitiveGaussian &) = default;
 
   PrimitiveGaussian(PrimitiveGaussian &&other)
-      : zeta(std::move(other.zeta)), coeff(std::move(other.coeff)),
+      : zeta(std::move(other.zeta)),
+        coeff(std::move(other.coeff)),
         norma(std::move(other.norma)) {
     l[0] = std::move(other.l[0]);
     l[1] = std::move(other.l[1]);
@@ -73,6 +74,11 @@ public:
   Computes the value of the function at point ``r``.
   */
   double compute(double *r);
+
+  /*
+  Computes the derivative of the function at point ``r``.
+  */
+  std::vector<double> deriv(double *r);
 
   /*
   Calculate the overlap integral between two primitives
@@ -112,6 +118,9 @@ void PrimitiveGaussian_get_origin(PrimitiveGaussian *p, double *A);
 void PrimitiveGaussian_compute(PrimitiveGaussian *p, double *r, double *output,
                                int size);
 
+void PrimitiveGaussian_deriv(PrimitiveGaussian *p, double *r, double *output,
+                             int size);
+
 double PrimitiveGaussian_overlap(PrimitiveGaussian *p, PrimitiveGaussian *op);
 
 double PrimitiveGaussian_get_zeta(PrimitiveGaussian *p);
@@ -129,7 +138,7 @@ ContractedGaussian Class
 */
 
 struct ContractedGaussian {
-private:
+ private:
   int l[3];
   int nprim;
   double norma;
@@ -141,7 +150,7 @@ private:
   */
   void normalize();
 
-public:
+ public:
   ContractedGaussian() = default;
 
   ContractedGaussian(const ContractedGaussian &) = default;
@@ -154,6 +163,11 @@ public:
   Computes the value of the function at point ``r``.
   */
   double compute(double *r);
+
+  /*
+  Computes the value of the function derivate at point ``r``.
+  */
+  std::vector<double> deriv(double *r);
 
   /*
   Calculate the overlap integral between two contractions
@@ -193,6 +207,9 @@ void ContractedGaussian_get_origin(ContractedGaussian *c, double *A);
 
 void ContractedGaussian_compute(ContractedGaussian *c, double *r,
                                 double *output, int size);
+
+void ContractedGaussian_deriv(ContractedGaussian *c, double *r, double *output,
+                              int size);
 
 double ContractedGaussian_overlap(ContractedGaussian *c,
                                   ContractedGaussian *oc);

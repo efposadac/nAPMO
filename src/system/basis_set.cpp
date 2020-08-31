@@ -31,6 +31,17 @@ std::vector<double> BasisSet::compute(double *r) {
   return res;
 }
 
+std::vector<double> BasisSet::deriv(double *r) {
+
+  std::vector<double> res;
+
+  for (ContractedGaussian &c : cont) {
+    res.push_back(c.compute(r));
+  }
+
+  return res;
+}
+
 void BasisSet::update(BasisSet *other) {
 
   nbasis += other->get_nbasis();
@@ -64,6 +75,24 @@ void BasisSet_compute(BasisSet *basis, double *r, double *output, int size) {
     auto aux = basis->compute(&r[i * 3]);
     for (int j = 0; j < nbasis; ++j) {
       output[i * nbasis + j] = aux[j];
+    }
+  }
+}
+
+void BasisSet_deriv(BasisSet *basis, double *r, double *output, int size) {
+
+  int nbasis = basis->get_nbasis();
+
+#ifdef _OMP
+#pragma omp parallel for default(shared)
+#endif
+  for (int i = 0; i < size; ++i) {
+    auto aux = basis->compute(&r[i * 3]);
+    for (int j = 0; j < nbasis; ++j) {
+      for (int k = 0; k < 3; ++k)
+      {
+      output[(i * nbasis * 3) + (j * 3) + k] = aux[j * 3 + k];
+      }
     }
   }
 }

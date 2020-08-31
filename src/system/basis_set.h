@@ -30,6 +30,8 @@ public:
   ~BasisSet(){};
 
   std::vector<double> compute(double *r);
+  
+  std::vector<double> deriv(double *r);
 
   void update(BasisSet *other);
 
@@ -53,6 +55,8 @@ BasisSet *BasisSet_new_empty();
 BasisSet *BasisSet_new(ContractedGaussian **primitives, int n);
 
 void BasisSet_compute(BasisSet *basis, double *r, double *output, int size);
+
+void BasisSet_deriv(BasisSet *basis, double *r, double *output, int size);
 
 void BasisSet_update(BasisSet *basis, BasisSet *other);
 
