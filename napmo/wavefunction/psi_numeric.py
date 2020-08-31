@@ -53,7 +53,7 @@ class PSIN(napmo.PSIB):
         self.species = psix.species
         self._e = psix.O[:self.ndim].copy()
         self._total_mass = psix._total_mass
-        self._ecenergy = psix._ecenergy
+        self._xc_energy = psix._xc_energy
         self._energy = psix._energy
         self._tf = psix._tf
 
@@ -144,7 +144,7 @@ class PSIN(napmo.PSIB):
         # FELIX: add conditional for HF or hybrid
         if self.species.get('size') > 1:
             self._compute_2body_coulomb()
-            if self._exchangefactor != 0.0:
+            if self._x_factor != 0.0:
                 self._compute_2body_exchange()
 
             with napmo.runtime.timeblock('Numerical 2 body'):
@@ -193,7 +193,7 @@ class PSIN(napmo.PSIB):
 
     #     Args:
     #     """
-    #     self._ecenergy = 0.0
+    #     self._xc_energy = 0.0
     #     self.XC[:] = 0.0
     #     self.XCgrid[:] = 0.0
 
@@ -202,7 +202,7 @@ class PSIN(napmo.PSIB):
     #         byref(self), self._grid._this, self.psi, self.Dgrid.sum(axis=0), self.XCgrid)
 
     #     # print("\n XC Energy:" + self.symbol + ":")
-    #     # print(self._ecenergy)
+    #     # print(self._xc_energy)
 
     #     # print("\n XC Potential:" + self.symbol + ":")
     #     # print(self.XCgrid)
@@ -224,7 +224,7 @@ class PSIN(napmo.PSIB):
     #             )
 
     #     # print("\n XC Energy:" + self.symbol + ":")
-    #     # print(self._ecenergy)
+    #     # print(self._xc_energy)
 
     #     # print("\n XC Matrix:" + self.symbol + ": ")
     #     # print(self.XC)

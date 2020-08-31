@@ -137,7 +137,7 @@ class InputParser(object):
         data = re.sub('""".*\n?', '', data)
         data = re.sub('#.*\n?', '', data)
         data = re.sub('(?imu)^\s*\n', '', data)
-        data = data.replace('\t', '')
+        data = data.replace('\t', ' ')
 
         pos = 0
         while True:
@@ -379,7 +379,6 @@ class InputParser(object):
         aux = {}
 
         data = data.splitlines()
-        print(data)
         for line in data:
 
             line = line.strip().split(' ')

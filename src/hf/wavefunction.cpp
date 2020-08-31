@@ -184,8 +184,6 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
   // printf("exchange factor %f \n", factor);
 
   std::vector<Matrix> GB(nthreads, Matrix::Zero(ndim, ndim));
-  std::vector<Matrix> TEST(nthreads, Matrix::Zero(ndim, ndim));
-
 
   auto lambda = [&](unsigned int thread_id) {
     auto &g = GB[thread_id];

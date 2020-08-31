@@ -57,6 +57,8 @@ from napmo.solver.hf_solver import HF
 from napmo.solver.dft_solver import DFT
 
 from napmo.functional.xc_interface import Functional
+from napmo.functional.interspecies_correlation import isc_functional_selector
+from napmo.functional.interspecies_correlation import epc17_2
 
 from napmo.wavefunction.psi_base import PSIB
 from napmo.wavefunction.psi_analytic import PSIA

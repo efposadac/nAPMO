@@ -116,7 +116,7 @@ class PSIO(napmo.PSIB):
         self._compute_density()
         if self.species.get('size') > 0:
             self._compute_2body_coulomb()
-            if self._exchangefactor != 0.0:
+            if self._x_factor != 0.0:
                 self._compute_2body_exchange()
 
             with napmo.runtime.timeblock('Numerical G matrix'):
@@ -155,28 +155,29 @@ class PSIO(napmo.PSIB):
         # print("\n Coupling Matrix: ", self.symbol)
         # print(self.J)
 
-    def compute_exccor(self):
+    def compute_xc(self):
+        pass
         """
         Computes the exchange correlation matrix
 
         Args:
         """
-        self._ecenergy = 0.0
-        self.XC[:] = 0.0
-        self.XCgrid[:] = 0.0
+        # self._ecenergy = 0.0
+        # self.XC[:] = 0.0
+        # self.XCgrid[:] = 0.0
 
-        if (self.symbol == "e-"):
-            napmo.cext.nwavefunction_compute_exccor_matrix(
-                byref(self), self._grid._this, self.psi, self.Dgrid.sum(axis=0), self.XCgrid)
+        # if (self.symbol == "e-"):
+        #     napmo.cext.nwavefunction_compute_exccor_matrix(
+        #         byref(self), self._grid._this, self.psi, self.Dgrid.sum(axis=0), self.XCgrid)
 
-        # print("\n XC Energy:" + self.symbol + ":")
-        # print(self._ecenergy)
+        # # print("\n XC Energy:" + self.symbol + ":")
+        # # print(self._ecenergy)
 
-        # print("\n XC Potential:" + self.symbol + ":")
-        # print(self.XCgrid)
+        # # print("\n XC Potential:" + self.symbol + ":")
+        # # print(self.XCgrid)
 
-        # print("\n XC Matrix:" + self.symbol + ": ")
-        # print(self.XC)
+        # # print("\n XC Matrix:" + self.symbol + ": ")
+        # # print(self.XC)
 
     def compute_cor2species(self, other_psi):
         """

@@ -401,6 +401,103 @@ void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid,
 
 // }
 
+// void nwavefunction_compute_cor2species_matrix(WaveFunction *psi,
+//                                               WaveFunction *otherPsi,
+//                                               BeckeGrid *grid, double *phi,
+//                                               double *rho, double *otherRho,
+//                                               double *XC) {
+//   unsigned int n = grid->get_size();          // grid points
+//   unsigned int ndim = psi->ndim;              // number of orbitals
+//   unsigned int size = ndim * (ndim + 1) / 2;  // triangular matrix size
+
+//   // Creation of the required objects:
+
+//   // rho is density in grid
+
+//   // Orbitals in grid - organized
+//   MMap F(phi, ndim, grid->get_size());
+
+//   // Orbital products in grid - calculated
+//   Matrix Psi(size, grid->get_size());
+//   for (unsigned int i = 0; i < ndim; ++i) {
+//     for (unsigned int j = i; j < ndim; ++j) {
+//       Psi.row(INDEX(i, j)) = F.row(i).array() * F.row(j).array();
+//     }
+//   }
+
+//   // TODO: Density and orbitals gradients
+
+//   // Output: total exchange correlation energy for species
+//   // cor2speciesenergy = 0.0;
+//   // Output: exchange correlation matrix for species
+//   MMap exccor(psi->XC, ndim, ndim);
+//   // exccor.setZero();
+//   // Output: exchange correlation potential grid for species
+//   A1DMap P(XC, grid->get_size());
+
+//   // local variables to store the exchange and correlation contributions
+//   double *denominator;
+//   denominator = (double *)malloc(sizeof(double) * n);  // energy denominatior
+//   double *ene;
+//   ene = (double *)malloc(sizeof(double) * n);  // energy density
+//   // double *pot ;
+//   // pot = (double*)malloc(sizeof(double)*n); // density potential
+//   Array1D pot(n);  // auxiliary for integration
+
+//   // Energy and potential contributions
+
+//   // Parameters
+//   //   if(this%name .eq. "correlation:epc17-2" ) then
+//   // else if(this%name .eq. "correlation:epc17-1" ) then
+//   // STOP "The nuclear electron functional chosen is not implemented"
+//   double a = 2.35;
+//   double b = 2.4;
+//   double c = 6.6;
+
+//   for (unsigned int i = 0; i < n; ++i) {
+//     denominator[i] =
+//         a - b * sqrt(rho[i] * otherRho[i]) + c * rho[i] * otherRho[i];
+//     ene[i] = -rho[i] * otherRho[i] / denominator[i];
+//     pot[i] =
+//         (b * sqrt(rho[i]) * pow(otherRho[i], 3 / 2) - 2 * a * otherRho[i]) /
+//         pow(denominator[i], 2) / 2;
+//   }
+
+//   psi->xc_energy += grid->integrate(ene) / 2;
+
+//   // Potential
+//   for (unsigned int i = 0; i < n; ++i) {
+//     P[i] += pot[i];
+//   }
+
+//   // Matrix
+//   Array2D aux(ndim, ndim);
+//   Array1D buff(n);  // auxiliary for integration
+
+//   for (unsigned int i = 0; i < ndim; ++i) {
+//     for (unsigned int j = i; j < ndim; ++j) {
+//       Array1D buff = Psi.row(INDEX(i, j));
+
+//       buff *= pot;
+//       // for (unsigned int k = 0; i < n; ++i) {
+//       // 	buff[k]=Psi.row(INDEX(i, j))[k]*pot[k];
+//       // }
+
+//       aux(i, j) = grid->integrate(buff);
+//     }
+//   }
+
+//   for (unsigned int i = 0; i < ndim; ++i) {
+//     exccor(i, i) += aux(i, i);
+//     for (unsigned int j = i + 1; j < ndim; ++j) {
+//       exccor(i, j) += aux(i, j);
+//       exccor(j, i) += aux(i, j);
+//     }
+//   }
+// }
+
+
+
 void nwavefunction_compute_cor2species_matrix(WaveFunction *psi,
                                               WaveFunction *otherPsi,
                                               BeckeGrid *grid, double *phi,
@@ -450,6 +547,9 @@ void nwavefunction_compute_cor2species_matrix(WaveFunction *psi,
   //   if(this%name .eq. "correlation:epc17-2" ) then
   // else if(this%name .eq. "correlation:epc17-1" ) then
   // STOP "The nuclear electron functional chosen is not implemented"
+  /*
+  *******************************************************************************
+  IMPLEMENTED IN PYTHON
   double a = 2.35;
   double b = 2.4;
   double c = 6.6;
@@ -464,7 +564,9 @@ void nwavefunction_compute_cor2species_matrix(WaveFunction *psi,
   }
 
   psi->xc_energy += grid->integrate(ene) / 2;
-
+  
+  ********************************************************************************
+  */
   // Potential
   for (unsigned int i = 0; i < n; ++i) {
     P[i] += pot[i];
@@ -480,7 +582,7 @@ void nwavefunction_compute_cor2species_matrix(WaveFunction *psi,
 
       buff *= pot;
       // for (unsigned int k = 0; i < n; ++i) {
-      // 	buff[k]=Psi.row(INDEX(i, j))[k]*pot[k];
+      //  buff[k]=Psi.row(INDEX(i, j))[k]*pot[k];
       // }
 
       aux(i, j) = grid->integrate(buff);

@@ -42,7 +42,7 @@ class SCF(object):
         if options:
             self.options.update(options)
 
-        if self.get('kind') is 'numeric':
+        if self.get('kind') == 'numeric':
             self.options['print'] = False
 
         if pprint:
@@ -151,7 +151,7 @@ class SCF(object):
             pprint (bool): Whether to print or not the progress of the calculation.
         """
 
-        if pprint and case is 0:
+        if pprint and case == 0:
             print('\nStarting Multi SCF Calculation...')
             print('{0:5s}  {1:^10s} {2:>12s} {3:>12s}'
                   .format("\nIter", "Energy", "Total E", "Delta(E)"))
@@ -181,7 +181,7 @@ class SCF(object):
 
             e_last = self._energy
 
-            if case is 0:
+            if case == 0:
 
                 for psi in PSI:
                     psi.build_fock()
@@ -204,7 +204,7 @@ class SCF(object):
 
                     with napmo.runtime.timeblock('Coupling ints'):
                         psi.compute_coupling(PSI, direct=self.get('direct'))
-                        # psi.compute_cor2species(PSI)
+                        psi.compute_c_2species(PSI)
 
             # if case is 1:
             #     for psi in PSI:
@@ -246,7 +246,7 @@ class SCF(object):
         #     self.multi(PSI, case=case)
         #     return
 
-        print('{0:11s} {1:>12.7f}'.format("\nANALYTICAL ", self._energy))
+        print('{0:11s} {1:>16.10f}'.format("\nANALYTICAL ", self._energy))
 
         if self.get('debug'):
             for psi in PSI:

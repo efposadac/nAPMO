@@ -30,7 +30,6 @@ class DFT(object):
         # Create grids for integration
         self._mgrid = []
         for p, key in enumerate(system.keys()):
-
             particle = system.get(key, {})
             if particle.get('is_electron'):
                 key = 'e-'

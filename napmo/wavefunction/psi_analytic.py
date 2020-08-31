@@ -211,36 +211,59 @@ class PSIA(napmo.PSIB):
         # print("\n XC Matrix:" + self.symbol + ": ")
         # print_matrix(self.XC)
 
-    # def compute_cor2species(self, other_psi):
-    #     """
-    #     Computes the exchange correlation matrix - numerically
+    def compute_c_2species(self, other_psi):
+        """
+        Computes the exchange correlation matrix - numerically
 
-    #     Args:
-    #         other_psi (WaveFunction) : WaveFunction object for the other species.
-    #     """
+        Args:
+            other_psi (WaveFunction) : WaveFunction object for the other species.
+        """
 
-    #     # numerical wavefunction
-    #     # FELIX: TODO, use input grid
-    #     grid = napmo.BeckeGrid(self.species, 100, 110)
+        # # Exchange correlation potential in the grid - Probably it's not required in the analytical SCF
+        # XCgrid = np.zeros(grid.size)
 
-    #     # Atomic orbitals represented in the grid
-    #     gbasis = self.species.get('basis').compute(grid.points).T.copy()
+        for psi in other_psi:
+            if self.sid > psi.sid:
 
-    #     # Density in the grid
-    #     self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
+                # Get the functional name
+                key = ":".join([self._symbol, psi._symbol])
+                functional = self.options.get('functional').get(
+                    key, self.options.get('functional').get(":".join(key.split(":")[::-1])))
 
-    #     # Exchange correlation potential in the grid - Probably it's not required in the analytical SCF
-    #     XCgrid = np.zeros(grid.size)
+                if functional is not None:
+                    # Get the functional function
+                    functional = napmo.isc_functional_selector(functional)
 
-    #     for psi in other_psi:
-    #         if self.sid != psi.sid:
-    #             othergbasis = psi.species.get('basis').compute(grid.points).T.copy()
-    #             psi.Dgrid = psi._compute_density_from_dm(psi.D, othergbasis)
-    #             napmo.cext.nwavefunction_compute_cor2species_matrix(
-    #                 byref(self), byref(psi), grid._this, gbasis, self.Dgrid.sum(axis=0), psi.Dgrid.sum(axis=0), XCgrid)
+                    # Calculate densities
+                    rho = np.zeros(self._grid.size)
+                    other_rho = np.zeros(self._grid.size)
 
-        # print("\n XC Energy:" + self.symbol + ":")
-        # print(self._ecenergy)
+                    rho = (np.array([phi * self.D.dot(phi) for phi in self._gbasis.T]).T).sum(axis=0)
+
+                    # other_gbasis = psi.species.get('basis').compute(self._grid.points).T.copy()
+                    # other_rho = (np.array([phi * psi.D.dot(phi) for phi in other_gbasis.T]).T).sum(axis=0)
+                    other_rho = (np.array([phi * psi.D.dot(phi) for phi in psi._gbasis.T]).T).sum(axis=0)
+
+                    # Compute functional
+                    c_zk, c_vrho = functional(rho, other_rho)
+
+                    # Calculate XC Energy
+                    self._xc_energy += self._grid.integrate(c_zk) / 2.0
+
+                    # print(self._grid.integrate(c_zk) / 2.0)
+
+                    # Build the Matrix
+                    napmo.cext.nwavefunction_compute_cor2species_matrix(
+                        byref(self),
+                        byref(psi),
+                        self._grid._this,
+                        self._gbasis,
+                        rho, other_rho,
+                        c_vrho)
+
+                functional = None
+
+        print("XC Energy:" + self.symbol + ": ", self._xc_energy)
 
         # print("\n XC Matrix:" + self.symbol + ": ")
         # print(self.XC)
