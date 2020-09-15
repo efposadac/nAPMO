@@ -27,7 +27,7 @@ def isc_functional_selector(name):
         return functional
 
 
-def epc17_2(rho, n, other_rho, other_n):
+def epc17_2(rho, other_rho):
     """
     Calculates the epc17-2 interspecies functional by Hammes-Schiffer
     see http://dx.doi.org/10.1021/acs.jpclett.7b01442

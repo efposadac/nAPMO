@@ -18,7 +18,7 @@ class DFT(object):
 
         self.options = {'method': 'dft',
                         'kind': 'analytic',
-                        'grid': [100, 110],
+                        'grid': {'e-':{}},
                         'functional': {'e-': 'lda'}
                         }
 
