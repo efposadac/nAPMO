@@ -6,7 +6,6 @@ Version: 0.1
 efposadac@unal.edu.co*/
 
 #include "becke.h"
-#include <stdio.h>
 
 BeckeGrid::BeckeGrid(AtomicGrid **grids, const int n) {
 

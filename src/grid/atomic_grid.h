@@ -8,6 +8,8 @@ efposadac@unal.edu.co*/
 #ifndef ATOMIC_GRID_H
 #define ATOMIC_GRID_H
 
+#include <iostream>
+
 #include "angular.h"
 #include "radial.h"
 

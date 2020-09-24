@@ -201,7 +201,8 @@ class SCF(object):
                     with napmo.runtime.timeblock('2 body ints'):
                         psi.compute_2body(self.get('direct'))
                         psi.compute_xc(beta_psi)
-
+                        
+                for psi in PSI:
                     with napmo.runtime.timeblock('Coupling ints'):
                         psi.compute_coupling(PSI, direct=self.get('direct'))
                         psi.compute_c_2species(PSI)

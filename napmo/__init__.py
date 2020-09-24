@@ -32,6 +32,7 @@ from napmo.grids.extrapolation import PowerExtrapolation
 from napmo.grids.extrapolation import PotentialExtrapolation
 from napmo.grids.lebedev import lebedev_get_order
 from napmo.grids.poisson_solver import poisson_solver
+from napmo.grids.multi_grid import MultiGrid
 
 from napmo.utilities.cell import Cell
 from napmo.utilities.ode2 import solve_ode2
@@ -190,7 +191,7 @@ cext.nwavefunction_compute_xc_matrix.argtypes = [
 
 cext.nwavefunction_compute_cor2species_matrix.restype = None
 cext.nwavefunction_compute_cor2species_matrix.argtypes = [
-    c_void_p, c_void_p, c_void_p, a2df, a1df, a1df, a1df]
+    c_void_p, c_void_p, a2df, a1df]
 
 # PrimitiveGaussian
 cext.PrimitiveGaussian_new.restype = c_void_p
@@ -351,7 +352,7 @@ cext.AtomicGrid_get_weights.argtypes = [c_void_p]
 
 # Becke grid
 cext.BeckeGrid_new.restype = c_void_p
-cext.BeckeGrid_new.argtypes = [aptr]
+cext.BeckeGrid_new.argtypes = [aptr, c_int]
 
 cext.BeckeGrid_del.restype = None
 cext.BeckeGrid_del.argtypes = [c_void_p]
@@ -383,6 +384,25 @@ cext.BeckeGrid_get_becke_weights.argtypes = [c_void_p]
 cext.eval_decomposition_grid.restype = None
 cext.eval_decomposition_grid.argtypes = [
     aptr, a1df, a1df, a2df, c_void_p, c_long, c_long]
+
+# Multi grids
+cext.MultiGrid_new.restype = c_void_p
+cext.MultiGrid_new.argtypes = [c_int]
+
+cext.MultiGrid_del.restype = None
+cext.MultiGrid_del.argtypes = [c_void_p]
+
+cext.MultiGrid_get_common_index.restype = POINTER(c_int)
+cext.MultiGrid_get_common_index.argtypes = [c_void_p, c_int, c_int]
+
+cext.MultiGrid_get_ngrids.restype = c_int
+cext.MultiGrid_get_ngrids.argtypes = [c_void_p]
+
+cext.MultiGrid_get_nspecies.restype = c_int
+cext.MultiGrid_get_nspecies.argtypes = [c_void_p]
+
+cext.MultiGrid_add_grid.restype = c_int
+cext.MultiGrid_add_grid.argtypes = [c_void_p, c_void_p]
 
 # CubicSpline
 cext.CubicSpline_new.restype = c_void_p

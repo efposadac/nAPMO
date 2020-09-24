@@ -84,8 +84,7 @@ void nwavefunction_compute_coupling(WaveFunction *psi, BeckeGrid *grid,
 
 void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid, double *phi, double *xc_vrho);
 
-void nwavefunction_compute_cor2species_matrix(WaveFunction *psi, WaveFunction *otherPsi, BeckeGrid *grid, double *phi,
-					      double *rho, double *otherRho, double *XC);
+void nwavefunction_compute_cor2species_matrix(WaveFunction *psi, BeckeGrid *grid, double *phi, double *XC);
 
 #ifdef __cplusplus
 }

@@ -17,14 +17,24 @@ class RadialGrid(object):
     An integration grid for the radial component of a spherical coordinate system
     """
 
-    def __init__(self, size=2, atomic_symbol=None, rtransform=None):
+    def __init__(self, size=2, atomic_symbol="--", rtransform=None):
 
-        self._symbol = '--'
-        radii = 1.0
+        self._symbol = atomic_symbol
 
+        # Hydrogen by default
+        radii = napmo.AtomicElementsDatabase().get("H", {}).get(
+                'atomic_radii', 1.0)
+
+        # Isotopes case
+        aux = atomic_symbol.find("_")
+        if aux > 0:
+            atom = atomic_symbol[0:aux]
+            radii = napmo.AtomicElementsDatabase().get(atom, {}).get(
+                'atomic_radii', 1.0)    
+
+        # Atoms case
         if atomic_symbol in napmo.AtomicElementsDatabase():
 
-            self._symbol = atomic_symbol
             radii = napmo.AtomicElementsDatabase().get(atomic_symbol, {}).get(
                 'atomic_radii', 1.0)
 

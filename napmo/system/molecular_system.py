@@ -88,7 +88,7 @@ class MolecularSystem(dict):
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
         if units == 'ANGSTROMS':
-            origin *= napmo.ANGSTROM_TO_BOHR
+            origin /= napmo.BOHR_TO_ANGSTROM
 
         # Fetching information from data
         eparticle = napmo.ElementaryParticle(symbol, origin, 'BOHR')
@@ -164,7 +164,7 @@ class MolecularSystem(dict):
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
         if units == 'ANGSTROMS':
-            origin *= napmo.ANGSTROM_TO_BOHR
+            origin /= napmo.BOHR_TO_ANGSTROM
 
         # Fetching atom object
         nucleus = napmo.AtomicElement(symbol, origin, 'BOHR')

@@ -36,8 +36,9 @@ def epc17_2(rho, other_rho):
     b = 2.4
     c = 6.6
 
-    denominator = a - b * np.sqrt(rho * other_rho) + c * rho * other_rho
-    c_energy = - rho * other_rho / denominator
-    c_potential = (b * np.sqrt(rho) * other_rho**1.5 - 2.0 * a * other_rho) / denominator**2 / 2.0
+    denominator = a - b * np.sqrt(rho * other_rho) + (c * rho * other_rho)
+    c_energy = (-rho * other_rho) / denominator
+    c_potential = ((b * np.sqrt(rho) * other_rho**1.5 ) - (2.0 * a * other_rho)) / denominator**2 / 2.0
+    c_other_potential = ((b * np.sqrt(other_rho) * rho**1.5 ) - (2.0 * a * rho)) / denominator**2 / 2.0
 
-    return c_energy, c_potential
+    return c_energy, c_potential, c_other_potential

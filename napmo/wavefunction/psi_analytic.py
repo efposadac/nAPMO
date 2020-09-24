@@ -163,6 +163,9 @@ class PSIA(napmo.PSIB):
         """
         Computes the exchange correlation matrix - numerically
         """
+
+        self._xc_energy = 0.0
+
         if self._functional is not None:
 
             # Density in the grid
@@ -207,7 +210,7 @@ class PSIA(napmo.PSIB):
                     self._xc_vrho
                     )
 
-        # print("\n XC Energy: " + self.symbol + ":", self._xc_energy)
+        print("\n XC Energy: " + self.symbol + ":", self._xc_energy)
         # print("\n XC Matrix:" + self.symbol + ": ")
         # print_matrix(self.XC)
 
@@ -221,16 +224,19 @@ class PSIA(napmo.PSIB):
 
         # # Exchange correlation potential in the grid - Probably it's not required in the analytical SCF
         # XCgrid = np.zeros(grid.size)
-
+        aux = 0
         for psi in other_psi:
             if self.sid > psi.sid:
 
-                # Get the functional name
-                key = ":".join([self._symbol, psi._symbol])
-                functional = self.options.get('functional').get(
-                    key, self.options.get('functional').get(":".join(key.split(":")[::-1])))
+                functional = self.options.get('functional', None)
 
                 if functional is not None:
+                    
+                    # Get the functional name
+                    key = ":".join([self._symbol, psi._symbol])
+                    functional = functional.get(key, 
+                        self.options.get('functional').get(":".join(key.split(":")[::-1])))
+
                     # Get the functional function
                     functional = napmo.isc_functional_selector(functional)
 
@@ -240,30 +246,28 @@ class PSIA(napmo.PSIB):
 
                     rho = (np.array([phi * self.D.dot(phi) for phi in self._gbasis.T]).T).sum(axis=0)
 
-                    # other_gbasis = psi.species.get('basis').compute(self._grid.points).T.copy()
-                    # other_rho = (np.array([phi * psi.D.dot(phi) for phi in other_gbasis.T]).T).sum(axis=0)
-                    other_rho = (np.array([phi * psi.D.dot(phi) for phi in psi._gbasis.T]).T).sum(axis=0)
+                    other_gbasis = psi.species.get('basis').compute(self._grid.points).T.copy()
+                    other_rho = (np.array([phi * psi.D.dot(phi) for phi in other_gbasis.T]).T).sum(axis=0)
+                    # other_rho = (np.array([phi * psi.D.dot(phi) for phi in psi._gbasis.T]).T).sum(axis=0)
 
                     # Compute functional
-                    c_zk, c_vrho = functional(rho, other_rho)
+                    c_zk, c_vrho, c_other_vrho = functional(rho, other_rho)
 
                     # Calculate XC Energy
-                    self._xc_energy += self._grid.integrate(c_zk) / 2.0
+                    aux = self._grid.integrate(c_zk) / 2.0
+                    self._xc_energy += aux
+                    # psi._xc_energy += aux 
 
-                    # print(self._grid.integrate(c_zk) / 2.0)
-
-                    # Build the Matrix
-                    napmo.cext.nwavefunction_compute_cor2species_matrix(
-                        byref(self),
-                        byref(psi),
-                        self._grid._this,
-                        self._gbasis,
-                        rho, other_rho,
-                        c_vrho)
+                    # # Build the Matrix
+                    # napmo.cext.nwavefunction_compute_cor2species_matrix(
+                    #     byref(self),
+                    #     self._grid._this,
+                    #     self._gbasis,
+                    #     c_vrho)
 
                 functional = None
 
-        print("XC Energy:" + self.symbol + ": ", self._xc_energy)
+                print("\n XC Energy: " + self.symbol+"/"+psi.symbol + ": ", aux)
 
         # print("\n XC Matrix:" + self.symbol + ": ")
         # print(self.XC)
