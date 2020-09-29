@@ -27,7 +27,7 @@ def isc_functional_selector(name):
         return functional
 
 
-def epc17_2(rho, other_rho):
+def epc17_2(rhoE, rhoN):
     """
     Calculates the epc17-2 interspecies functional by Hammes-Schiffer
     see http://dx.doi.org/10.1021/acs.jpclett.7b01442
@@ -36,9 +36,17 @@ def epc17_2(rho, other_rho):
     b = 2.4
     c = 6.6
 
-    denominator = a - b * np.sqrt(rho * other_rho) + (c * rho * other_rho)
-    c_energy = (-rho * other_rho) / denominator
-    c_potential = ((b * np.sqrt(rho) * other_rho**1.5 ) - (2.0 * a * other_rho)) / denominator**2 / 2.0
-    c_other_potential = ((b * np.sqrt(other_rho) * rho**1.5 ) - (2.0 * a * rho)) / denominator**2 / 2.0
+    denominator = a - b * np.sqrt(rhoE * rhoN) + c * rhoE * rhoN
 
-    return c_energy, c_potential, c_other_potential
+    # c_ene = -rhoE * rhoN / denominator
+    c_ene = -rhoN / denominator
+
+    if np.any(np.abs(rhoE) < 1.0e-200) or np.any(np.abs(rhoN) < 1.0e-200):
+        print("USING OLD FUNCTIONAL")
+        c_pot_A = (b * np.sqrt(rhoE) * rhoN**(1.5) - 2.0 * a * rhoN) / denominator**2 / 2.0
+        c_pot_B = (b * np.sqrt(rhoN) * rhoE**(1.5) - 2.0 * a * rhoE) / denominator**2 / 2.0
+    else:
+        c_pot_A = (rhoE * rhoN * (c * rhoN - b * rhoN / (2.0 * np.sqrt(rhoE * rhoN))) - rhoN * denominator) / denominator**2
+        c_pot_B = (rhoN * rhoE * (c * rhoE - b * rhoE / (2.0 * np.sqrt(rhoE * rhoN))) - rhoE * denominator) / denominator**2
+
+    return c_ene, c_pot_A, c_pot_B

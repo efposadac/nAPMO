@@ -30,7 +30,7 @@ class PSIB(Structure):
         ("_L", POINTER(c_double)),  # Last Density
         ("_G", POINTER(c_double)),  # 2 Body
         ("_J", POINTER(c_double)),  # Coupling
-        ("_XC", POINTER(c_double)),  # Exchange Correlation Matrix
+        ("_XC", POINTER(c_double)), # Exchange Correlation Matrix
         ("_F", POINTER(c_double)),  # Fock
         ("_O", POINTER(c_double)),  # Orbitals
         ("_nbasis", c_int),
@@ -76,10 +76,7 @@ class PSIB(Structure):
 
         if self._method == 'dft':
             if self.species.get('is_electron') and self.symbol != 'e-beta':
-                self._functional = napmo.Functional(
-                    self._symbol,
-                    self.options
-                )
+                self._functional = napmo.Functional(self._symbol, self.options)
                 # TODO: Fix this
                 # self._x_factor = self._functional.x_factor
             self._x_factor = 0.0

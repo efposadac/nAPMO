@@ -58,6 +58,7 @@ class PSIA(napmo.PSIB):
 
         if grid is not None:
             self._gbasis = self.species.get('basis').compute(self._grid.points).T.copy()
+            self._xc_vrho = np.zeros(self._grid.size)
 
     def compute_overlap(self):
         """
@@ -94,7 +95,7 @@ class PSIA(napmo.PSIB):
         else:
             self.T /= self.species.get('mass')
 
-        # print("\n Kinetic Matrix (A): "+ self.symbol + ": ", self.T.sum())
+        # print("\n Kinetic Matrix (A): "+ self.symbol + ": ", self.T.sum(), self.species.get('mass'))
         # print(self.T)
 
     def compute_nuclear(self):
@@ -106,7 +107,8 @@ class PSIA(napmo.PSIB):
                 self._libint, 3, self.V)
 
         self.V *= -self.species.get('charge')
-        # print("\n Attraction Matrix" + self.symbol + ": ", self.V.sum())
+
+        # print("\n Attraction Matrix " + self.symbol + ": ", self.V.sum(), self.species.get('charge'))
         # print(self.V)
 
     def compute_2body(self, direct=False):
@@ -159,9 +161,9 @@ class PSIA(napmo.PSIB):
         # print("\n Coupling Matrix " + self.symbol + ": ", self.J.sum())
         # print(self.J)
 
-    def compute_xc(self, beta_psi=None):
+    def compute_xc_grid(self, beta_psi=None):
         """
-        Computes the exchange correlation matrix - numerically
+        Computes the exchange correlation - numerically
         """
 
         self._xc_energy = 0.0
@@ -173,14 +175,13 @@ class PSIA(napmo.PSIB):
             rho = np.zeros((ndim * self._grid.size))
 
             # Alpha set
-            alpha_rho = np.array([phi * self.D.dot(phi) for phi in self._gbasis.T]).T
-            rho[::ndim] = alpha_rho.sum(axis=0)
+            self.Dgrid = np.array([phi * self.D.dot(phi) for phi in self._gbasis.T]).T
+            rho[::ndim] = self.Dgrid.sum(axis=0)
 
             # Beta set
-            beta_rho = None
             if beta_psi is not None:
-                beta_rho = np.array([phi * beta_psi.D.dot(phi) for phi in beta_psi._gbasis.T]).T
-                rho[1::ndim] = beta_rho.sum(axis=0)
+                beta_psi.Dgrid = np.array([phi * beta_psi.D.dot(phi) for phi in beta_psi._gbasis.T]).T
+                rho[1::ndim] = beta_psi.Dgrid.sum(axis=0)
 
             # Compute functionals
             c_zk, c_vrho = self._functional.compute_correlation(rho)
@@ -201,20 +202,11 @@ class PSIA(napmo.PSIB):
             if beta_psi is not None:
                 beta_psi._xc_vrho = c_vrho[1, :] + x_vrho[1, :]
 
-        # Build Matrix
-        if self._xc_vrho is not None:
-            napmo.cext.nwavefunction_compute_xc_matrix(
-                    byref(self),
-                    self._grid._this,
-                    self._gbasis,
-                    self._xc_vrho
-                    )
 
-        print("\n XC Energy: " + self.symbol + ":", self._xc_energy)
-        # print("\n XC Matrix:" + self.symbol + ": ")
-        # print_matrix(self.XC)
+        # print("\n XC Energy: " + self.symbol + ":", self._xc_energy)
 
-    def compute_c_2species(self, other_psi):
+
+    def compute_c_2species_grid(self, other_psi):
         """
         Computes the exchange correlation matrix - numerically
 
@@ -222,12 +214,8 @@ class PSIA(napmo.PSIB):
             other_psi (WaveFunction) : WaveFunction object for the other species.
         """
 
-        # # Exchange correlation potential in the grid - Probably it's not required in the analytical SCF
-        # XCgrid = np.zeros(grid.size)
-        aux = 0
         for psi in other_psi:
-            if self.sid > psi.sid:
-
+            if self.sid < psi.sid:
                 functional = self.options.get('functional', None)
 
                 if functional is not None:
@@ -240,37 +228,57 @@ class PSIA(napmo.PSIB):
                     # Get the functional function
                     functional = napmo.isc_functional_selector(functional)
 
-                    # Calculate densities
-                    rho = np.zeros(self._grid.size)
-                    other_rho = np.zeros(self._grid.size)
+                    if functional is not None:
 
-                    rho = (np.array([phi * self.D.dot(phi) for phi in self._gbasis.T]).T).sum(axis=0)
+                        # Get common points index
+                        index = self.options.get('grids').get_common_points(self.symbol, psi.symbol)
 
-                    other_gbasis = psi.species.get('basis').compute(self._grid.points).T.copy()
-                    other_rho = (np.array([phi * psi.D.dot(phi) for phi in other_gbasis.T]).T).sum(axis=0)
-                    # other_rho = (np.array([phi * psi.D.dot(phi) for phi in psi._gbasis.T]).T).sum(axis=0)
+                        # Calculate densities
+                        self.Dgrid = np.array([phi * self.D.dot(phi) for phi in self._gbasis.T]).T
+                        psi.Dgrid = np.array([phi * psi.D.dot(phi) for phi in psi._gbasis.T]).T
 
-                    # Compute functional
-                    c_zk, c_vrho, c_other_vrho = functional(rho, other_rho)
 
-                    # Calculate XC Energy
-                    aux = self._grid.integrate(c_zk) / 2.0
-                    self._xc_energy += aux
-                    # psi._xc_energy += aux 
+                        # Build rho
+                        rho = np.take(self.Dgrid.sum(axis=0), index[:,0], axis=0)
+                        other_rho = np.take(psi.Dgrid.sum(axis=0), index[:,1], axis=0)
 
-                    # # Build the Matrix
-                    # napmo.cext.nwavefunction_compute_cor2species_matrix(
-                    #     byref(self),
-                    #     self._grid._this,
-                    #     self._gbasis,
-                    #     c_vrho)
+                        # Compute functional
+                        c_zk, c_vrho, c_other_vrho = functional(rho, other_rho)
 
-                functional = None
+                        # Calculate XC Energy (Can't use grid.integrate)
+                        aux = (psi._grid.becke_weights[index[:,1]] * psi._grid.weights[index[:,1]] * c_zk * rho).sum()
 
-                print("\n XC Energy: " + self.symbol+"/"+psi.symbol + ": ", aux)
+                        self._xc_energy += aux
+                        psi._xc_energy += aux
+
+                        # Update the potentials on grids
+                        self._xc_vrho[index[:,0]] += c_vrho
+                        psi._xc_vrho[index[:,1]] += c_other_vrho
+
+
+                        # print("\n XC Energy: " + self.symbol+"/"+psi.symbol + ": ", aux )
+
+                    functional = None
+
+
+    def compute_xc_matrix(self):
+        """
+        Builds the exchange-correlation matrix
+        """
+
+        if self._xc_vrho is not None:
+            napmo.cext.nwavefunction_compute_xc_matrix(
+                    byref(self),
+                    self._grid._this,
+                    self._gbasis,
+                    self._xc_vrho
+                    )
+
+            # reset the grid
+            self._xc_vrho[:] = 0.0
 
         # print("\n XC Matrix:" + self.symbol + ": ")
-        # print(self.XC)
+        # print_matrix(self.XC)
 
     def compute_hcore(self):
         """
@@ -286,10 +294,11 @@ class PSIA(napmo.PSIB):
         :math:`H C = e S C`
         """
         napmo.cext.wavefunction_guess_hcore(byref(self))
+
         # print("\n Coefficients Matrix" + self.symbol + ": ", self.C.sum())
         # print(self.C)
 
-        # print("\n Density Guess" + self.symbol + ": ", self.D.sum())
+        # print("\n Density Guess " + self.symbol + ": ", self.D.sum())
         # print(self.D)
 
     def build_fock(self):

@@ -28,7 +28,8 @@ class DFT(object):
         self.options['spin'] = 'polarized' if system.open_shell else 'unpolarized'
 
         # Create grids for integration
-        self._mgrid = []
+        mgrid = napmo.MultiGrid(self.system.size_species)
+
         for p, key in enumerate(system.keys()):
             particle = system.get(key, {})
             if particle.get('is_electron'):
@@ -42,19 +43,22 @@ class DFT(object):
                     "Grid specification not found!",
                     'Check the "grid" block in your input file ' + key + ' has not grid specifications')
 
-            self._mgrid.append(napmo.BeckeGrid(particle,
+            mgrid.add_grid(napmo.BeckeGrid(particle,
                                                aux.get('nrad', 100),
                                                aux.get('nang', 110),
-                                               rtransform=aux.get('rtransform', None)))
+                                               rtransform=aux.get('rtransform', None),
+                                               file=aux.get('file', None)))
 
             if pprint:
-                self._mgrid[-1].show()
+                mgrid.get_grid(key).show()
+
+        self.options["grids"] = mgrid
 
         # Analytic initialization
         self.PSI = [napmo.PSIA(self.system.get_species(i),
                                self.system.point_charges,
                                self.system.total_mass,
-                               grid=self._mgrid[i],
+                               grid=mgrid.get_grid(gid=i),
                                options=self.options)
                     for i in range(self.system.size_species)]
 
@@ -87,13 +91,13 @@ class DFT(object):
 
         #             if self.get('hybrid', {}).get(self.PSI[p].symbol, 'N') == 'N':
         #                 self.HPSI.append(napmo.PSIN(
-        #                     self.PSI[p], self._mgrid[0], debug=self.get('debug')))
+        #                     self.PSI[p], mgrid[0], debug=self.get('debug')))
 
         #             elif self.get('hybrid', {}).get(self.PSI[p].symbol, 'N') == 'A':
         #                 self.HPSI.append(napmo.PSIH(self.system.get_species(p),
         #                                             self.system.point_charges,
         #                                             self.system.total_mass,
-        #                                             self._mgrid[0],
+        #                                             mgrid[0],
         #                                             self.PSI[p]))
 
         #         else:

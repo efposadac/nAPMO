@@ -357,6 +357,9 @@ cext.BeckeGrid_new.argtypes = [aptr, c_int]
 cext.BeckeGrid_del.restype = None
 cext.BeckeGrid_del.argtypes = [c_void_p]
 
+cext.BeckeGrid_from_points.restype = c_void_p
+cext.BeckeGrid_from_points.argtypes = [a2df, c_int, c_int]
+
 cext.BeckeGrid_integrate.restype = c_double
 cext.BeckeGrid_integrate.argtypes = [c_void_p, a1df]
 
@@ -394,6 +397,9 @@ cext.MultiGrid_del.argtypes = [c_void_p]
 
 cext.MultiGrid_get_common_index.restype = POINTER(c_int)
 cext.MultiGrid_get_common_index.argtypes = [c_void_p, c_int, c_int]
+
+cext.MultiGrid_get_common_index_size.restype = c_int
+cext.MultiGrid_get_common_index_size.argtypes = [c_void_p, c_int, c_int]
 
 cext.MultiGrid_get_ngrids.restype = c_int
 cext.MultiGrid_get_ngrids.argtypes = [c_void_p]

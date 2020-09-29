@@ -251,7 +251,7 @@ void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid,
 
 
 void nwavefunction_compute_cor2species_matrix(WaveFunction *psi, BeckeGrid *grid, 
-                                              double *phi, double *XC) {
+                                              double *phi, double *xc_vrho) {
 
   unsigned int n = grid->get_size();          // grid points
   unsigned int ndim = psi->ndim;              // number of orbitals
@@ -270,8 +270,9 @@ void nwavefunction_compute_cor2species_matrix(WaveFunction *psi, BeckeGrid *grid
 
   // TODO: Density and orbitals gradients
 
-  A1DMap P(XC, n);
-
+  A1DMap P(xc_vrho, n);
+  MMap EC(psi->XC, ndim, ndim);
+  
   Matrix aux(ndim, ndim);
   aux.setZero();
 
@@ -287,7 +288,6 @@ void nwavefunction_compute_cor2species_matrix(WaveFunction *psi, BeckeGrid *grid
 
   aux += aux.triangularView<Eigen::StrictlyUpper>().transpose();
 
-  MMap EC(psi->XC, ndim, ndim);
   EC += aux;
 }
 

@@ -19,22 +19,21 @@ void wavefunction_guess_hcore(WaveFunction *psi) {
   MMap D(psi->D, ndim, ndim);
   VMap O(psi->O, ndim);
 
-  // std::cout<<ndim<<psi->occupation<<"\n";
-
   Eigen::GeneralizedSelfAdjointEigenSolver<Matrix> gen_eig_solver(H, S);
 
   O = gen_eig_solver.eigenvalues();
   C = gen_eig_solver.eigenvectors();
 
-  // std::cout << "\n\tC Matrix: " << "occupation: "<< psi->occupation<<"\n";
-  // std::cout << C << std::endl;
+  // std::cout << "\n\tHcore Matrix: " << "occupation: "<< psi->occupation<<" "<<psi->eta<<"\n";
+  // std::cout << H << std::endl;
 
   // compute density, D = C(occ) . C(occ)T
   auto C_occ = C.leftCols(psi->occupation);
   D = C_occ * C_occ.transpose();
   D *= psi->eta;
 
-  // std::cout << "\n\tDensity Matrix:\n";
+  // std::cout.precision(20);
+  // std::cout << "\n\tDensity Matrix: "<<D.sum()<<"\n";
   // std::cout << D << std::endl;
 }
 

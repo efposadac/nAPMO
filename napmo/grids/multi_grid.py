@@ -35,13 +35,21 @@ class MultiGrid(object):
 		self._grids[grid._symbol] = {"id": grid_id, "obj": grid}
 
 
-	def get_grid(self, symbol):
+	def get_grid(self, symbol="", gid=-1):
 		assert isinstance(symbol, str)
+		assert isinstance(gid, int)
 
+		# Symbol case
 		aux = self._grids.get(symbol, None)
-
 		if aux:
 			return aux.get('obj', None)
+
+		# Id case
+		for grid in self._grids.values():
+			if grid.get('id', -2) == gid:
+				return grid.get('obj', None)
+
+		# Default case
 		return aux
 
 	def get_grid_id(self, symbol):
@@ -63,11 +71,13 @@ class MultiGrid(object):
 		# Is the same grid
 		if idx_a == idx_b:
 			return np.arange(self.get_grid(symbol_a).size)
+		
 		# Uses C function
 		if idx_a != None and idx_b != None:
-			size = min(self.get_grid(symbol_a).size, self.get_grid(symbol_b).size)
 			ptr = napmo.cext.MultiGrid_get_common_index(self._this, idx_a, idx_b)
-			return np.ctypeslib.as_array(ptr, shape=(size,))
+			size = napmo.cext.MultiGrid_get_common_index_size(self._this, idx_a, idx_b)
+			return np.ctypeslib.as_array(ptr, shape=(size,2))
+
 		# No grids for such species (or one of them)
 		else:
 			return None
@@ -83,6 +93,7 @@ class MultiGrid(object):
 	@property
 	def nspecies(self):
 		return napmo.cext.MultiGrid_get_nspecies(self._this)
+
 
 	
 	

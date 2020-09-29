@@ -11,6 +11,7 @@ from __future__ import print_function
 import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
+from scipy.io import FortranFile
 
 import napmo
 
@@ -29,26 +30,37 @@ class BeckeGrid(object):
         n_angular (int, optional): Number of angular points. Default is 110
     """
 
-    def __init__(self, species, n_radial=40, n_angular=110, rtransform=None):
+    def __init__(self, species, n_radial=40, n_angular=110, rtransform=None, file=None):
         super(BeckeGrid, self).__init__()
 
         assert isinstance(species, dict)
 
         centers = species.get('particles')
         ncenter = len(centers)
-
         self._symbol = species.get('symbol')
-        self._nrad = n_radial
-        self._nang = n_angular
 
-        self.atgrids = [napmo.AtomicGrid(n_radial, n_angular, center.get(
-            'origin'), center.get('symbol'), rtransform=rtransform)
-            for center in centers]
+        if file is not None:
+            f = FortranFile( file, 'r' )
+            size = f.read_ints(dtype=np.int64)[0]
+            pw = f.read_reals(dtype=np.float64)
+            pw = pw.reshape(int(size/4), 4, order='F')
+            pw = np.asanyarray(pw, order='C')
+            size = pw.shape[0]
 
-        atgrids_ptr = np.array(
-            [atgrid._this for atgrid in self.atgrids], dtype=c_void_p)
+            self._this = napmo.cext.BeckeGrid_from_points(pw, size, ncenter)
+        else:
 
-        self._this = napmo.cext.BeckeGrid_new(atgrids_ptr, ncenter)
+            self._nrad = n_radial
+            self._nang = n_angular
+
+            self.atgrids = [napmo.AtomicGrid(n_radial, n_angular, center.get(
+                'origin'), center.get('symbol'), rtransform=rtransform)
+                for center in centers]
+
+            atgrids_ptr = np.array(
+                [atgrid._this for atgrid in self.atgrids], dtype=c_void_p)
+
+            self._this = napmo.cext.BeckeGrid_new(atgrids_ptr, ncenter)
 
     def evaluate_decomposition(self, atom, cubic_splines, output, cell=None):
         """

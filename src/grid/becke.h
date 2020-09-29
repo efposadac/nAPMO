@@ -42,6 +42,8 @@ private:
 public:
   BeckeGrid(AtomicGrid **grids, const int n);
 
+  BeckeGrid(double *p, const int sz, const int nc);
+
   BeckeGrid(const BeckeGrid &) = default;
 
   BeckeGrid();
@@ -79,6 +81,8 @@ extern "C" {
 #endif
 
 BeckeGrid *BeckeGrid_new(AtomicGrid **grids, int n);
+
+BeckeGrid * BeckeGrid_from_points(double *p, int sz, int nc);
 
 void BeckeGrid_del(BeckeGrid *grid);
 

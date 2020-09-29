@@ -341,6 +341,8 @@ class InputParser(object):
                     'Check the "grid" block in your input file ' + symbol + ' is undefined in "molecular" block')
 
             grid_spec = fix_casting(' '.join(line[1:]))
+            rtransform = None
+            file = None
 
             if len(grid_spec) == 4:
                 rtransform = napmo.PowerRadialTransform(
@@ -356,14 +358,19 @@ class InputParser(object):
                 nrad = grid_spec[1]
                 nang = grid_spec[2]
 
+            elif isinstance(grid_spec, dict):
+                nrad = None
+                nang = None
+                file = grid_spec.get('file')
+
             else:
-                rtransform = None
                 nrad = grid_spec[0]
                 nang = grid_spec[1]
 
             aux[symbol] = {'nrad': nrad,
                            'nang': nang,
-                           'rtransform': rtransform}
+                           'rtransform': rtransform, 
+                           'file': file}
 
         self.scf['grid'] = aux
 

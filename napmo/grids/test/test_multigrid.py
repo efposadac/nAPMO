@@ -35,15 +35,23 @@ grid {
 """)
 
     data = napmo.InputParser(file)
-    system = napmo.NAPMO(data)
-    solver = napmo.DFT(system.system, options=system.data.scf)
+    system = napmo.NAPMO(data, pprint=False)
 
-    # Create manager
+    # Create Manager
     mgrid = napmo.MultiGrid(system.system.size_species)
 
-    # Add grids to it
-    for psi in solver.PSI:
-        mgrid.add_grid(psi._grid)
+    for p, key in enumerate(system.system.keys()):
+        particle = system.system.get(key, {})
+        if particle.get('is_electron'):
+            key = 'e-'
+
+        aux = system.data.scf.get('grid').get(key, None)
+
+        # Add grids to it
+        mgrid.add_grid(napmo.BeckeGrid(particle,
+                                               aux.get('nrad', 100),
+                                               aux.get('nang', 110),
+                                               rtransform=aux.get('rtransform', None)))
 
     mgrid.show()
 
@@ -51,6 +59,7 @@ grid {
     assert mgrid.ngrids == 2
     assert mgrid.get_grid('x') == None
     assert mgrid.get_grid('e-')._symbol == 'e-'
+    assert mgrid.get_grid(gid=0)._symbol == 'e-'
     assert mgrid.get_grid_id('e-') == 0
     assert mgrid.get_grid_id('H_1') == 1
     assert mgrid.get_grid_id('x') == None
@@ -59,7 +68,7 @@ grid {
     assert mgrid.get_common_points('e-', 'X') == None
     cpoints = mgrid.get_common_points('e-', 'H_1')
     assert cpoints.shape[0] == 5500
-    assert np.allclose(cpoints, np.arange(5500, 11000, dtype=np.int))
+    assert np.allclose(cpoints[:,0], np.arange(5500, 11000, dtype=np.int))
 
 
 # if __name__ == '__main__':

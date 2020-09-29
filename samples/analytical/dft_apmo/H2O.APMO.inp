@@ -15,13 +15,13 @@ molecule {
 # basis = STO-3G
 
 basis {
-   e- STO-3G
-   H_1 DZSNB
+   e- CC-PVDZ
+   H_1 NAKAI-3-SP
 }
 
 functional {
 	e- lda
-	# e-:H abcd
+	e-:H_1 epc17-2
 }
 
 # SCF engine options the keyword means True even though you can
@@ -35,7 +35,7 @@ scf {
 }
 
 grid {
-    e- [96, 302]
+    e- [100, 110]
     H_1 [100, 110]
 }
 
@@ -45,7 +45,8 @@ grid {
 
 code {
 result = lambda x: print("PASS!") if abs(x) < 1e-6  else print("FAILED!")
-ref_energy = -74.921704947406
+ref_energy = -75.845763293121
 diff_energy = ref_energy - Energy
+print(diff_energy)
 result(diff_energy)
 }

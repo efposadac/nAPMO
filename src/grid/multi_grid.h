@@ -23,6 +23,7 @@ private:
   std::vector<int *> common_index;
   std::vector<BeckeGrid*> molgrid;
   std::vector<bool> index_calculated;
+  std::vector<int> index_size;
 
   int get_index(const int i, const int j);
 
@@ -39,6 +40,7 @@ public:
 
   int add_grid(BeckeGrid *grid);
   int * get_common_index(const int id_grid_a, const int id_grid_b);
+  int get_common_index_size(const int id_grid_a, const int id_grid_b);
   unsigned int get_ngrids() { return ngrids; };
   unsigned int get_nspecies() { return nspecies; };
 
@@ -55,6 +57,8 @@ void MultiGrid_del(MultiGrid *multi_grid);
 int MultiGrid_add_grid(MultiGrid *multi_grid, BeckeGrid* grid);
 
 int *MultiGrid_get_common_index(MultiGrid *multi_grid, int id_grid_a, int id_grid_b);
+
+int MultiGrid_get_common_index_size(MultiGrid *multi_grid, int id_grid_a, int id_grid_b);
 
 int MultiGrid_get_ngrids(MultiGrid *multi_grid);
 
