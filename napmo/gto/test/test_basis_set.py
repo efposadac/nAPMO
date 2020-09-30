@@ -2,9 +2,9 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
+# Version: 1.0
 
-# efposadac@unal.edu.co
+# fernando.posada@temple.edu.co
 
 import numpy as np
 from napmo.gto.basis_set import BasisSet

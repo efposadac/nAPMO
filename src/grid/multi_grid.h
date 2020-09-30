@@ -2,7 +2,7 @@
 nAPMO package
 Copyright (c) 2020, Edwin Fernando Posada
 All rights reserved.
-Version: 0.1
+Version: 1.0
 fernando.posada@temple.edu*/
 
 

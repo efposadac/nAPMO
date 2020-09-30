@@ -3,12 +3,11 @@ file: nwavefunction.cpp
 nAPMO package
 Copyright (c) 2016, Edwin Fernando Posada
 All rights reserved.
-Version: 0.1
-efposadac@unal.edu.co
+Version: 1.0
+fernando.posada@temple.edu.co
 */
 
 #include "wavefunction.h"
-#include "xc.h"
 
 #define INDEX(i, j) \
   ((i > j) ? (((i) * ((i) + 1) / 2) + (j)) : (((j) * ((j) + 1) / 2) + (i)))
