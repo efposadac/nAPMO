@@ -18,16 +18,15 @@ addons:
       - git
       - libmpfr-dev
       - libboost-all-dev
-install:
-  - conda update --yes conda
-  - conda create -n testenv --yes scipy numpy pip nose setuptools matplotlib
-  - source activate testenv
 before_install:
   - gcc --version
   - wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh
   - chmod +x miniconda.sh
   - ./miniconda.sh -b -p /home/travis/mc
   - export PATH=/home/travis/mc/bin:$PATH
+  - conda update --yes conda
+  - conda create -n testenv --yes scipy numpy pip nose setuptools matplotlib
+  - source activate testenv
   # Build Libint2
   - WORKDIR=$PWD
   # - git clone https://github.com/evaleev/libint.git
@@ -56,18 +55,18 @@ before_install:
   - cd libxc
   - git checkout 5.0.0
   - python setup.py install --user
-  - cmake . -Bobjdir -DCMAKE_INSTALL_PREFIX=$WORKDIR
-  - cd objdir
-  - make install -j 4
-  - cd ..
+  # - cmake . -Bobjdir -DCMAKE_INSTALL_PREFIX=$WORKDIR
+  # - cd objdir
+  # - make install -j 4
+  # - cd ..
   - cd ..
   # Setting up environment
   - export C_INCLUDE_PATH=$C_INCLUDE_PATH:$WORKDIR/include:$WORKDIR/include/libint2:/usr/include/eigen3
   - export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$WORKDIR/include:$WORKDIR/include/libint2:/usr/include/eigen3
   - export LIBRARY_PATH=$LIBRARY_PATH:$WORKDIR/lib
   - export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WORKDIR/lib
-before_script:
+install:
   - pip install coverage
-  - make
+  - make -j 4
 script:
   - nosetests --with-coverage --with-doctest
