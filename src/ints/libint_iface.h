@@ -5,7 +5,7 @@ Copyright(c) 2014, Edwin Fernando Posada
 All rights reserved.
 Version:
     0.1
-fernando.posada@temple.edu.co
+fernando.posada@temple.edu
 */
 
 #ifndef LIBINT_IFACE_H

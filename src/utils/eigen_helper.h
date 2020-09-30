@@ -3,7 +3,7 @@ nAPMO package
 Copyright (c) 2016, Edwin Fernando Posada
 All rights reserved.
 Version: 1.0
-fernando.posada@temple.edu.co*/
+fernando.posada@temple.edu*/
 
 #ifndef EIGEN_HELPER
 #define EIGEN_HELPER

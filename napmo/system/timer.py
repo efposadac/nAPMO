@@ -3,7 +3,7 @@
 # Copyright (c) 2016, Edwin Fernando Posada
 # All rights reserved.
 # Version: 1.0
-# fernando.posada@temple.edu.co
+# fernando.posada@temple.edu
 
 from contextlib import contextmanager
 import time

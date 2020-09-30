@@ -4,7 +4,7 @@
 # All rights reserved.
 # Version: 1.0
 
-# fernando.posada@temple.edu.co
+# fernando.posada@temple.edu
 
 import numpy as np
 from napmo.gto.basis_set import BasisSet

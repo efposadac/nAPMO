@@ -3,7 +3,7 @@
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
 # Version: 1.0
-# fernando.posada@temple.edu.co
+# fernando.posada@temple.edu
 
 from __future__ import division
 from __future__ import print_function
