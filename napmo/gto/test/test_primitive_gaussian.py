@@ -2,12 +2,12 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 
 import numpy as np
 
-from napmo.system.primitive_gaussian import PrimitiveGaussian
+from napmo.gto.primitive_gaussian import PrimitiveGaussian
 
 
 def test_primitive_gaussian_interface():

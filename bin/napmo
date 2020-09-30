@@ -1,5 +1,6 @@
 #!python3 -u
 
+
 from __future__ import print_function
 
 import argparse
@@ -43,11 +44,12 @@ def napmo_banner():
 
          NAPMO QUANTUM CHEMISTRY PACKAGE
 
-Posada E. F. Brandino G. Reyes A.
-National University of Colombia
+Posada E. F. Reyes A.
+Temple University
 International Centre for Theoretical Physics
-                                              2016
-efposadac@unal.edu.co
+National University of Colombia
+                                              2020
+fernando.posada@temple.edu
 --------------------------------------------------"""
     )
 

@@ -2,8 +2,8 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 
 import numpy as np
 import numpy.ctypeslib as npct

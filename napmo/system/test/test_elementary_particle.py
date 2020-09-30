@@ -2,11 +2,11 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 
 from napmo.system.elementary_particle import ElementaryParticle
-from napmo.system.basis_set import BasisSet
+from napmo.gto.basis_set import BasisSet
 
 
 def test_elementary_particle_interface():

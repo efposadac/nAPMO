@@ -1,0 +1,35 @@
+# Molecule definition:
+
+molecule [e-:0:1] {
+    H    0.000000  0.00000  0.367
+    H_1  0.000000  0.00000 -0.367
+}
+
+basis {
+   e- CC-PVDZ
+   H_1 NAKAI-3-SP
+}
+
+functional {
+	e- lda
+	e-:H_1 epc17-2
+}
+
+scf {
+    maxiter = 100
+    dft
+}
+
+grid {
+    e- [100,110]
+    H_1 [100,110]
+}
+
+
+code {
+result = lambda x: print("PASS!") if abs(x) < 1e-5  else print("FAILED!")
+ref_energy = -1.120811362249
+diff_energy = ref_energy - Energy
+print(diff_energy)
+result(diff_energy)    
+}

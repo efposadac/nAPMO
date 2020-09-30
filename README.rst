@@ -25,7 +25,6 @@ This program implements the  basis-set free  Hartree-Fock OMNE approach.
 
 **Compilation:**
 
-
 To compile and install the code use (it will install the package in ``$USER/.local``):
 
 ::
@@ -55,6 +54,5 @@ Any suggestion and help is more than welcome and appreciated.
 The code documentation can be found at http://efposadac.github.io/nAPMO/
 
 fernando.posada@temple.edu
-
 
 .. _libint: https://github.com/evaleev/libint

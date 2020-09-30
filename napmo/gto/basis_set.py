@@ -2,8 +2,8 @@
 # nAPMO package
 # Copyright (c) 2015, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 
 from __future__ import division
 from __future__ import print_function
@@ -157,6 +157,21 @@ class BasisSet(dict):
 
         return output
 
+    def deriv(self, coord=np.zeros([1, 3], dtype=np.float64)):
+        """
+        Compute first derivative for the basis-set at given ``coord``.
+
+        Args:
+            coord (ndarray): coordinates in which the basis set will be
+                evaluated. Array shape should be (n, 3)
+
+        """
+        n_coord = coord.shape[0]
+        output = np.empty([n_coord, self.get('nbasis'), 3])
+        napmo.cext.BasisSet_deriv(self._this, coord, output, n_coord)
+
+        return output
+
     def _lmax(self):
         return np.max(np.array([cont.l.sum() for cont in self.get('cont')]))
 
@@ -170,7 +185,6 @@ class BasisSet(dict):
 ==================================================
 Object: {0:9s}       Particle: {1:9s}
 --------------------------------------------------
-
 Name: {2:9s} Length: {3:5d}
 
   {4:<3s} {5:>13s} {6:>13s} {7:>13s}

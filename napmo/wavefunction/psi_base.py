@@ -2,8 +2,8 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 
 from __future__ import division
 from __future__ import print_function
@@ -30,6 +30,7 @@ class PSIB(Structure):
         ("_L", POINTER(c_double)),  # Last Density
         ("_G", POINTER(c_double)),  # 2 Body
         ("_J", POINTER(c_double)),  # Coupling
+        ("_XC", POINTER(c_double)), # Exchange Correlation Matrix
         ("_F", POINTER(c_double)),  # Fock
         ("_O", POINTER(c_double)),  # Orbitals
         ("_nbasis", c_int),
@@ -37,6 +38,8 @@ class PSIB(Structure):
         ("_occupation", c_int),
         ("_eta", c_double),
         ("_kappa", c_double),
+        ("_x_factor", c_double),  # Fraction of exchange
+        ("_xc_energy", c_double),  # Exchange Correlation Energy
         ("_energy", c_double),
         ("_rmsd", c_double)  # Root medium square deviation, for D matrix
     ]
@@ -52,19 +55,32 @@ class PSIB(Structure):
         self._occupation = species.get('occupation')
         self._eta = species.get('eta')
         self._kappa = species.get('kappa')
+        self._functional = None
         self._ints = None
         self._symbol = species.get('symbol')
         self._sid = species.get('id')
-        self._energy = 0.0
         self._rmsd = 1.0
         self._pce = 0.0
         self._energy = 0.0
-        self._pce = 0.0
+        self._xc_energy = 0.0
+        self._xc_vrho = None
         self._tf = False
 
-        if 'tf' in options:
+        self._x_factor = self._kappa/self._eta
+
+        if 'tf' in self.options:
             self._tf = True
             print("Using Translation-Free Correction!!!")
+
+        self._method = self.options.get('method')
+
+        if self._method == 'dft':
+            if self.species.get('is_electron') and self.symbol != 'e-beta':
+                self._functional = napmo.Functional(self._symbol, self.options)
+                # TODO: Fix this
+                # self._x_factor = self._functional.x_factor
+            self._x_factor = 0.0
+            # self._x_factor = self._kappa/self._eta
 
         if ndim is None:
             self._ndim = self.nbasis
@@ -102,6 +118,9 @@ class PSIB(Structure):
 
         self.J = np.zeros([self._ndim, self._ndim])
         self._J = self.J.ctypes.data_as(POINTER(c_double))
+
+        self.XC = np.zeros([self._ndim, self._ndim])
+        self._XC = self.XC.ctypes.data_as(POINTER(c_double))
 
         self.F = np.zeros([self._ndim, self._ndim])
         self._F = self.F.ctypes.data_as(POINTER(c_double))
@@ -156,7 +175,7 @@ class PSIB(Structure):
         """
         return self._sid
 
-    #### TEST ###
+    # ### TEST: DO NOT use this functions for real things ###
 
     def _compute_density_from_dm(self, dm, psi):
         """

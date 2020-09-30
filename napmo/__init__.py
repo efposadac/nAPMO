@@ -10,11 +10,12 @@ from napmo.system.input_parser import InputParser
 from napmo.system.input_parser import raise_exception
 from napmo.system.atomic_element import AtomicElement
 from napmo.system.elementary_particle import ElementaryParticle
-from napmo.system.primitive_gaussian import PrimitiveGaussian
-from napmo.system.contracted_gaussian import ContractedGaussian
-from napmo.system.basis_set import BasisSet
 from napmo.system.molecular_system import MolecularSystem
 from napmo.system.napmo_system import NAPMO
+
+from napmo.gto.basis_set import BasisSet
+from napmo.gto.primitive_gaussian import PrimitiveGaussian
+from napmo.gto.contracted_gaussian import ContractedGaussian
 
 from napmo.grids.radial import RadialGrid
 from napmo.grids.radial_transform import RadialTransform
@@ -31,6 +32,7 @@ from napmo.grids.extrapolation import PowerExtrapolation
 from napmo.grids.extrapolation import PotentialExtrapolation
 from napmo.grids.lebedev import lebedev_get_order
 from napmo.grids.poisson_solver import poisson_solver
+from napmo.grids.multi_grid import MultiGrid
 
 from napmo.utilities.cell import Cell
 from napmo.utilities.ode2 import solve_ode2
@@ -49,18 +51,27 @@ from napmo.data.constants import PROTON_MASS
 from napmo.data.constants import NEUTRON_MASS
 from napmo.data.constants import SPIN_ELECTRON
 
-from napmo.hf.psi_base import PSIB
-from napmo.hf.psi_analytic import PSIA
-from napmo.hf.psi_numeric import PSIN
-from napmo.hf.psi_hybrid import PSIH
-from napmo.hf.psi_optimization import PSIO
-from napmo.hf.nkinetic import compute_kinetic
-from napmo.hf.nnuclear import compute_nuclear
-from napmo.hf.ntwobody import compute_coulomb
-from napmo.hf.ndpsi import compute_dpsi
-from napmo.hf.hf_solver import HF
-from napmo.hf.scf import SCF
-from napmo.hf.convergence import Convergence
+from napmo.scf.convergence import Convergence
+from napmo.scf.scf import SCF
+
+from napmo.solver.hf_solver import HF
+from napmo.solver.dft_solver import DFT
+
+from napmo.functional.xc_interface import Functional
+from napmo.functional.interspecies_correlation import isc_functional_selector
+from napmo.functional.interspecies_correlation import epc17_2
+
+from napmo.wavefunction.psi_base import PSIB
+from napmo.wavefunction.psi_analytic import PSIA
+from napmo.wavefunction.psi_numeric import PSIN
+from napmo.wavefunction.psi_hybrid import PSIH
+from napmo.wavefunction.psi_optimization import PSIO
+from napmo.wavefunction.nkinetic import compute_kinetic
+from napmo.wavefunction.nnuclear import compute_nuclear
+from napmo.wavefunction.ntwobody import compute_coulomb
+from napmo.wavefunction.ndpsi import compute_dpsi
+# from napmo.wavefunction.nexccor import compute_exccor
+
 
 # OMP Threads
 threads = int(os.environ.get('OMP_NUM_THREADS', 1))
@@ -74,6 +85,7 @@ basis_dir = os.path.join(os.path.dirname(__file__), 'data/basis')
 # Types for ctypes
 a1df = npct.ndpointer(dtype=np.double, ndim=1, flags='CONTIGUOUS')
 a2df = npct.ndpointer(dtype=np.double, ndim=2, flags='CONTIGUOUS')
+a3df = npct.ndpointer(dtype=np.double, ndim=3, flags='CONTIGUOUS')
 a1di = npct.ndpointer(dtype=np.int32, ndim=1, flags='CONTIGUOUS')
 a1dli = npct.ndpointer(dtype=np.int64, ndim=1, flags='CONTIGUOUS')
 aptr = npct.ndpointer(c_void_p, flags="C_CONTIGUOUS")
@@ -152,6 +164,10 @@ cext.wavefunction_compute_2body_matrix.restype = None
 cext.wavefunction_compute_2body_matrix.argtypes = [
     c_void_p, c_void_p]
 
+# cext.wavefunction_compute_exccor_matrix.restype = None
+# cext.wavefunction_compute_exccor_matrix.argtypes = [
+#     c_void_p]
+
 # NWavefunction
 cext.nwavefunction_compute_density_from_dm.restype = None
 cext.nwavefunction_compute_density_from_dm.argtypes = [
@@ -168,6 +184,14 @@ cext.nwavefunction_compute_2body_matrix_mol.argtypes = [
 cext.nwavefunction_compute_coupling.restype = None
 cext.nwavefunction_compute_coupling.argtypes = [
     c_void_p, c_void_p, a2df, a1df, a2df]
+
+cext.nwavefunction_compute_xc_matrix.restype = None
+cext.nwavefunction_compute_xc_matrix.argtypes = [
+    c_void_p, c_void_p, a2df, a1df]
+
+cext.nwavefunction_compute_cor2species_matrix.restype = None
+cext.nwavefunction_compute_cor2species_matrix.argtypes = [
+    c_void_p, c_void_p, a2df, a1df]
 
 # PrimitiveGaussian
 cext.PrimitiveGaussian_new.restype = c_void_p
@@ -229,6 +253,10 @@ cext.BasisSet_new.argtypes = [aptr, c_int]
 cext.BasisSet_compute.restype = None
 cext.BasisSet_compute.argtypes = [
     c_void_p, a2df, a2df, c_int]
+
+cext.BasisSet_deriv.restype = None
+cext.BasisSet_deriv.argtypes = [
+    c_void_p, a2df, a3df, c_int]
 
 cext.BasisSet_update.restype = None
 cext.BasisSet_update.argtypes = [
@@ -324,10 +352,13 @@ cext.AtomicGrid_get_weights.argtypes = [c_void_p]
 
 # Becke grid
 cext.BeckeGrid_new.restype = c_void_p
-cext.BeckeGrid_new.argtypes = [aptr]
+cext.BeckeGrid_new.argtypes = [aptr, c_int]
 
 cext.BeckeGrid_del.restype = None
 cext.BeckeGrid_del.argtypes = [c_void_p]
+
+cext.BeckeGrid_from_points.restype = c_void_p
+cext.BeckeGrid_from_points.argtypes = [a2df, c_int, c_int]
 
 cext.BeckeGrid_integrate.restype = c_double
 cext.BeckeGrid_integrate.argtypes = [c_void_p, a1df]
@@ -356,6 +387,28 @@ cext.BeckeGrid_get_becke_weights.argtypes = [c_void_p]
 cext.eval_decomposition_grid.restype = None
 cext.eval_decomposition_grid.argtypes = [
     aptr, a1df, a1df, a2df, c_void_p, c_long, c_long]
+
+# Multi grids
+cext.MultiGrid_new.restype = c_void_p
+cext.MultiGrid_new.argtypes = [c_int]
+
+cext.MultiGrid_del.restype = None
+cext.MultiGrid_del.argtypes = [c_void_p]
+
+cext.MultiGrid_get_common_index.restype = POINTER(c_int)
+cext.MultiGrid_get_common_index.argtypes = [c_void_p, c_int, c_int]
+
+cext.MultiGrid_get_common_index_size.restype = c_int
+cext.MultiGrid_get_common_index_size.argtypes = [c_void_p, c_int, c_int]
+
+cext.MultiGrid_get_ngrids.restype = c_int
+cext.MultiGrid_get_ngrids.argtypes = [c_void_p]
+
+cext.MultiGrid_get_nspecies.restype = c_int
+cext.MultiGrid_get_nspecies.argtypes = [c_void_p]
+
+cext.MultiGrid_add_grid.restype = c_int
+cext.MultiGrid_add_grid.argtypes = [c_void_p, c_void_p]
 
 # CubicSpline
 cext.CubicSpline_new.restype = c_void_p

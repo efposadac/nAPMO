@@ -2,8 +2,8 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 
 import numpy as np
 from copy import deepcopy
@@ -11,7 +11,7 @@ import os
 
 from napmo.system.molecular_system import MolecularSystem
 from napmo.system.cext import *
-from napmo.hf.hf_solver import HF
+from napmo.solver.hf_solver import HF
 from napmo.grids.becke import BeckeGrid
 
 
@@ -64,6 +64,5 @@ def test_multicenter_integrator():
         np.testing.assert_allclose(integral, results[count], rtol=10e-6)
 
         count += 1
-
 
 # test_multicenter_integrator()

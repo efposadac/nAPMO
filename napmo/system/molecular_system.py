@@ -2,8 +2,8 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 
 from __future__ import division
 from __future__ import print_function
@@ -12,7 +12,8 @@ import numpy as np
 import copy
 
 import napmo
-import sys 
+import sys
+
 
 class MolecularSystem(dict):
 
@@ -45,7 +46,7 @@ class MolecularSystem(dict):
 
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
-        if units is 'ANGSTROMS':
+        if units == 'ANGSTROMS':
             origin /= napmo.BOHR_TO_ANGSTROM
 
         # Fetching atom database
@@ -86,8 +87,8 @@ class MolecularSystem(dict):
 
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
-        if units is 'ANGSTROMS':
-            origin *= napmo.ANGSTROM_TO_BOHR
+        if units == 'ANGSTROMS':
+            origin /= napmo.BOHR_TO_ANGSTROM
 
         # Fetching information from data
         eparticle = napmo.ElementaryParticle(symbol, origin, 'BOHR')
@@ -102,7 +103,7 @@ class MolecularSystem(dict):
         self[symbol].setdefault('is_electron', False)
 
         self[symbol].pop('origin')
-        
+
         if symbol == 'e-':
             self[symbol]['is_electron'] = True
 
@@ -162,8 +163,8 @@ class MolecularSystem(dict):
 
         # Converting to Bohr
         origin = np.array(origin, dtype=np.float64)
-        if units is 'ANGSTROMS':
-            origin *= napmo.ANGSTROM_TO_BOHR
+        if units == 'ANGSTROMS':
+            origin /= napmo.BOHR_TO_ANGSTROM
 
         # Fetching atom object
         nucleus = napmo.AtomicElement(symbol, origin, 'BOHR')
@@ -206,6 +207,8 @@ class MolecularSystem(dict):
 
         if not self.get(symbol).get('particles')[-1].is_quantum:
             self._point_charges.append(self.get(symbol).get('particles')[-1])
+
+        self.get(symbol)['symbol'] = symbol
 
     def set_charges(self, data, open_shell=False):
         """
@@ -268,6 +271,7 @@ Charges description:
                 self._abe = "\ne-alpha: {0:<3d} e-beta: {1:<3d}\n".format(alpha, beta)
 
                 if alpha != beta or open_shell:
+                    self.open_shell = True
                     for k in keys:
 
                         if keys[k] == 0:
@@ -293,6 +297,7 @@ Charges description:
                     self.get('e-')['size'] += charge
                     self.get('e-')['occupation'] = int(
                         self.get('e-')['size'] * self.get('e-')['particlesfraction'])
+                    self.open_shell = False
             else:
                 # TODO: Implement multiplicity for other species
 
@@ -304,7 +309,7 @@ Charges description:
                     self.get(key, {})['size'] * self.get(key, {})['particlesfraction'])
 
                 self._abe += "{0:<7s}: {1:<3d}\n".format(key, self.get(key, {})['size'])
-                        
+
         self._buff += "-----------------------"
         self._abe += "\n--------------------------------------------------"
 

@@ -2,13 +2,13 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 
 import numpy as np
 
 from napmo.system.atomic_element import AtomicElement
-from napmo.system.basis_set import BasisSet
+from napmo.gto.basis_set import BasisSet
 
 
 def test_atomic_element_interface():

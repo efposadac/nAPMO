@@ -2,8 +2,8 @@
 # nAPMO package
 # Copyright (c) 2016, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 
 from contextlib import contextmanager
 import time
@@ -18,7 +18,7 @@ class Timer(object):
 
     def __init__(self):
         super(Timer, self).__init__()
-        self._start = time.clock()
+        self._start = time.time()
         self._end = 0.0
         self._blocks = {}
 
@@ -28,11 +28,11 @@ class Timer(object):
         Calculates execution time for a context
         """
         self._blocks.setdefault(label, 0)
-        start = time.clock()
+        start = time.time()
         try:
             yield
         finally:
-            end = time.clock()
+            end = time.time()
             self._blocks[label] += (end - start) / napmo.threads
 
     def show_block(self, label):
@@ -61,7 +61,7 @@ Object:   {0:9s}
                 item[0],
                 item[1]))
 
-        self._end = time.clock()
+        self._end = time.time()
 
         print("""--------------------------------------------------
 {0:<36s} {1:<12.4f}

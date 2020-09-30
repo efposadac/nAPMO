@@ -3,8 +3,8 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 """
 Script for installation of the python module.
 
@@ -19,14 +19,15 @@ def read(fname):
     """Include README file in the package."""
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
+
 if __name__ == '__main__':
 
     setup(
         name="napmo",
-        version="0.1",
+        version="1.0",
         description="Numerical Any Particle Molecular Orbital",
         author="Fernando Posada",
-        author_email="eposada@sissa.it",
+        author_email="fernando.posada@temple.edu",
         url="http://efposadac.github.io/nAPMO/",
         packages=find_packages(),
         package_data={'': ['*.json', '*.dat', '*.so', 'data/basis/*']},

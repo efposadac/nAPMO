@@ -2,8 +2,8 @@
 nAPMO package
 Copyright (c) 2016, Edwin Fernando Posada
 All rights reserved.
-Version: 0.1
-efposadac@unal.edu.co
+Version: 1.0
+fernando.posada@temple.edu
 */
 
 #include "libint_iface.h"
@@ -568,14 +568,14 @@ Matrix LibintInterface::compute_2body_direct(const Matrix &D,
   std::vector<Matrix> G(nthreads, Matrix::Zero(n, n));
 
   const auto do_schwartz_screen = Schwartz.cols() != 0 && Schwartz.rows() != 0;
-  Matrix D_shblk_norm; // matrix of infty-norms of shell blocks
+  Matrix D_shblk_norm; // matrix of infinity-norms of shell blocks
   if (do_schwartz_screen) {
     D_shblk_norm = compute_shellblock_norm(D);
   }
 
   auto fock_precision = precision;
 
-  // engine precision controls primitive truncation, assume worst-casescenario
+  // engine precision controls primitive truncation, assume worst-case scenario
   // (all primitive combinations add up constructively)
   auto max_nprim4 = max_nprim * max_nprim * max_nprim * max_nprim;
   auto engine_precision = std::min(fock_precision / D_shblk_norm.maxCoeff(),
@@ -586,7 +586,7 @@ Matrix LibintInterface::compute_2body_direct(const Matrix &D,
   using libint2::Engine;
   std::vector<Engine> engines(nthreads);
   engines[0] = Engine(libint2::Operator::coulomb, max_nprim, max_l, 0);
-  engines[0].set_precision(engine_precision); // shellset-dependentprecision
+  engines[0].set_precision(engine_precision); // shell set-dependent precision
                                               // control will likely break
                                               // positive definiteness
                                               // stick with this simple recipe
@@ -732,7 +732,7 @@ Matrix LibintInterface::compute_2body_direct(const Matrix &D,
   for (auto &t : timers) {
     time_for_ints += t.read(0);
   }
-  std::cout << " Time for intras-pecies integrals = " << time_for_ints
+  std::cout << " Time for intra-species integrals = " << time_for_ints
             << std::endl;
   for (int t = 0; t != nthreads; ++t)
     engines[t].print_timers();
@@ -741,9 +741,8 @@ Matrix LibintInterface::compute_2body_direct(const Matrix &D,
   // std::cout << " Number of unique integrals for species: " << sID << "
   // = "
   //           << num_ints_computed << std::endl;
-  // symmetrize the result and return
-  // symmetrize the result and return
-
+  
+  // symmetrizing the result and return
   Matrix GG = 0.25 * (G[0] + G[0].transpose());
   return GG;
 }
@@ -1459,4 +1458,3 @@ void LibintInterface_diis(libint2::DIIS<Matrix> *diis, WaveFunction *psi) {
     psi->F[i] = F_diis.array()(i);
   }
 }
-

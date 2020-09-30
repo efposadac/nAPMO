@@ -2,8 +2,8 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 
 from __future__ import division
 from __future__ import print_function
@@ -11,6 +11,7 @@ from __future__ import print_function
 import numpy as np
 import numpy.ctypeslib as npct
 from ctypes import *
+from scipy.io import FortranFile
 
 import napmo
 
@@ -29,25 +30,37 @@ class BeckeGrid(object):
         n_angular (int, optional): Number of angular points. Default is 110
     """
 
-    def __init__(self, species, n_radial=40, n_angular=110, rtransform=None):
+    def __init__(self, species, n_radial=40, n_angular=110, rtransform=None, file=None):
         super(BeckeGrid, self).__init__()
 
         assert isinstance(species, dict)
 
         centers = species.get('particles')
         ncenter = len(centers)
+        self._symbol = species.get('symbol')
 
-        self._nrad = n_radial
-        self._nang = n_angular
+        if file is not None:
+            f = FortranFile( file, 'r' )
+            size = f.read_ints(dtype=np.int64)[0]
+            pw = f.read_reals(dtype=np.float64)
+            pw = pw.reshape(int(size/4), 4, order='F')
+            pw = np.asanyarray(pw, order='C')
+            size = pw.shape[0]
 
-        self.atgrids = [napmo.AtomicGrid(n_radial, n_angular, center.get(
-            'origin'), center.get('symbol'), rtransform=rtransform)
-            for center in centers]
+            self._this = napmo.cext.BeckeGrid_from_points(pw, size, ncenter)
+        else:
 
-        atgrids_ptr = np.array(
-            [atgrid._this for atgrid in self.atgrids], dtype=c_void_p)
+            self._nrad = n_radial
+            self._nang = n_angular
 
-        self._this = napmo.cext.BeckeGrid_new(atgrids_ptr, ncenter)
+            self.atgrids = [napmo.AtomicGrid(n_radial, n_angular, center.get(
+                'origin'), center.get('symbol'), rtransform=rtransform)
+                for center in centers]
+
+            atgrids_ptr = np.array(
+                [atgrid._this for atgrid in self.atgrids], dtype=c_void_p)
+
+            self._this = napmo.cext.BeckeGrid_new(atgrids_ptr, ncenter)
 
     def evaluate_decomposition(self, atom, cubic_splines, output, cell=None):
         """
@@ -83,8 +96,8 @@ class BeckeGrid(object):
         """
         Prints information of the object.
         """
-        print("\nGrid Information:")
-        print("-----------------")
+        print("\nGrid Information:", self._symbol)
+        print("-"*(18+len(self._symbol)))
         print("Centers: ", self.ncenter)
         print("Size: ", self.size)
 

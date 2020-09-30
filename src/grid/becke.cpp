@@ -2,11 +2,10 @@
 nAPMO package
 Copyright (c) 2015, Edwin Fernando Posada
 All rights reserved.
-Version: 0.1
-efposadac@unal.edu.co*/
+Version: 1.0
+fernando.posada@temple.edu*/
 
 #include "becke.h"
-#include <stdio.h>
 
 BeckeGrid::BeckeGrid(AtomicGrid **grids, const int n) {
 
@@ -49,6 +48,29 @@ BeckeGrid::BeckeGrid(AtomicGrid **grids, const int n) {
   }
 
   compute_weights();
+}
+
+// Compatibility mode for Lowdin2 grids
+BeckeGrid::BeckeGrid(double *p, const int sz, const int nc) {
+
+  size = sz;
+  ncenter = nc;
+
+  points = new double[size * 3];
+  weights = new double[size];
+  becke_weights = new double[size];
+
+  for (unsigned int i = 0; i < size; ++i) {
+    unsigned int idx = i * 3;
+    unsigned int idy = i * 4;
+
+    points[idx + 0]  = p[idy + 0];
+    points[idx + 1]  = p[idy + 1];
+    points[idx + 2]  = p[idy + 2];
+    becke_weights[i] = p[idy + 3];
+    weights[i] = 1.0;
+  }
+
 }
 
 void BeckeGrid::compute_weights() {
@@ -181,6 +203,10 @@ Python wrapper
 BeckeGrid *BeckeGrid_new(AtomicGrid **grids, int n) {
 
   return new BeckeGrid(grids, n);
+}
+
+BeckeGrid * BeckeGrid_from_points(double *p, int sz, int nc) {
+  return new BeckeGrid(p, sz, nc);
 }
 
 void BeckeGrid_del(BeckeGrid *grid) { return grid->~BeckeGrid(); }

@@ -2,8 +2,8 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 
 from napmo.system.input_parser import InputParser
 from napmo.system.napmo_system import NAPMO
@@ -138,5 +138,6 @@ diff_energy = ref_energy - Energy
 
     np.testing.assert_allclose(pe, e, rtol=10e-6)
 
-# test_napmo_single()
+
+test_napmo_single()
 # test_napmo_multi()

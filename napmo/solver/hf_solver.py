@@ -18,7 +18,7 @@ class HF(object):
 
         self.options = {'method': 'hf',
                         'kind': 'analytic',
-                        'grid': [50, 110]}
+                        'grid': [100, 110]}
 
         if options:
             self.options.update(options)
@@ -46,7 +46,7 @@ class HF(object):
         self.NPSI = []
         self.HPSI = []
 
-        if self.get('kind') is 'numeric':
+        if self.get('kind') == 'numeric':
 
             # Perform a single iteration (needed for numerical initialization)
             if len(self.PSI) > 1:
@@ -104,7 +104,7 @@ class HF(object):
         Args:
             pprint (bool): Whether to print or not the progress of the calculation.
         """
-        if self.get('kind') is 'numeric':
+        if self.get('kind') == 'numeric':
             if 'hybrid' in self.options:
                 self.compute_hybrid(pprint)
             else:

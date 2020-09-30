@@ -2,8 +2,8 @@
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 
 import napmo
 import numpy as np
@@ -124,19 +124,20 @@ class InputParser(object):
             'basis': self.load_basis,
             'scf': self.load_scf,
             'code': self.load_code,
-            'grid': self.load_grid
+            'grid': self.load_grid,
+            'functional': self.load_functional
         }
 
         self.code = ''  # code to execute at the end of the calculation
         self.data = {}  # data of the molecule
         self.charges = {}  # options for charges and multiplicity
         self.scf = {}  # options for SCF engine
-        self.grid = {}  # data for grids
 
         # remove all comments from data and blank lines
         data = re.sub('""".*\n?', '', data)
         data = re.sub('#.*\n?', '', data)
         data = re.sub('(?imu)^\s*\n', '', data)
+        data = data.replace('\t', ' ')
 
         pos = 0
         while True:
@@ -302,6 +303,7 @@ class InputParser(object):
         options = {'uhf': {'method': 'uhf'},
                    'hf': {'method': 'rhf'},
                    'rhf': {'method': 'rhf'},
+                   'dft': {'method': 'dft'},
                    'analytic': {'kind': 'analytic'},
                    'numeric': {'kind': 'numeric'},
                    'direct': {'direct': True},
@@ -326,8 +328,8 @@ class InputParser(object):
     def load_grid(self, data, group=True, options=None):
 
         aux = {}
-
         data = data.splitlines()
+
         for line in data:
             line = line.strip().split(' ')
             symbol = line[0].strip()
@@ -339,6 +341,8 @@ class InputParser(object):
                     'Check the "grid" block in your input file ' + symbol + ' is undefined in "molecular" block')
 
             grid_spec = fix_casting(' '.join(line[1:]))
+            rtransform = None
+            file = None
 
             if len(grid_spec) == 4:
                 rtransform = napmo.PowerRadialTransform(
@@ -354,16 +358,57 @@ class InputParser(object):
                 nrad = grid_spec[1]
                 nang = grid_spec[2]
 
+            elif isinstance(grid_spec, dict):
+                nrad = None
+                nang = None
+                file = grid_spec.get('file')
+
             else:
-                rtransform = None
                 nrad = grid_spec[0]
                 nang = grid_spec[1]
 
             aux[symbol] = {'nrad': nrad,
                            'nang': nang,
-                           'rtransform': rtransform}
+                           'rtransform': rtransform, 
+                           'file': file}
 
         self.scf['grid'] = aux
+
+    def load_functional(self, data, group=True, options=None):
+        """
+        Loads the functionals information for DFT calculations
+
+        Args:
+            data (str) : Relevant data from input corresponding to the keyword ``functional``
+            group (bool) : Whether the data is a group ie. ``{...}`` or just a variable ``functional = ...``
+        """
+
+        aux = {}
+
+        data = data.splitlines()
+        for line in data:
+
+            line = line.strip().split(' ')
+
+            symbol = line[0].strip()
+
+            for sym in symbol.split(':'):
+                if sym not in self.data and sym != 'e-':
+                    raise_exception(
+                        ValueError,
+                        "Particle not found!",
+                        'Check the "functional" block in your input file ' + sym + ' is undefined in "molecular" block')
+
+            if len(line) > 2:
+                raise_exception(
+                    ValueError,
+                    "There is an extra term in a functional line!",
+                    'Check the "functional" block in your input file')
+
+            functional = line[1].strip()
+            aux[symbol] = functional
+
+        self.scf['functional'] = aux
 
     def load_code(self, data, group=True, options=None):
         """

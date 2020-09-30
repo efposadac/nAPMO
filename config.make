@@ -2,8 +2,8 @@
 # nAPMO package 
 # Copyright (c) 2015, Edwin Fernando Posada
 # All rights reserved.
-# Version: 0.1
-# efposadac@unal.edu.co
+# Version: 1.0
+# fernando.posada@temple.edu
 
 # Comment and uncomment different options depending on the desired compilation.
 
@@ -29,7 +29,7 @@ endif
 #-----------------------
 CFLAGS := -Wall -O2 -fPIC -g -pg  
 # LDLIBS := -lgsl -lgslcblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lblas -lm -lint2
-LDLIBS := -lgsl -lgslcblas -lm -lint2 -lstdc++
+LDLIBS := -lgsl -lgslcblas -lm -lint2 -lstdc++ 
 # LDLIBS := /opt/local/lib/libgsl.19.dylib /opt/local/lib/libgslcblas.0.dylib -lm
 LDFLAGS +=  -shared
 

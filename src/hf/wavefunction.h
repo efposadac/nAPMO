@@ -3,8 +3,8 @@ file: wavefunction.h
 nAPMO package
 Copyright (c) 2016, Edwin Fernando Posada
 All rights reserved.
-Version: 0.1
-efposadac@unal.edu.co
+Version: 1.0
+fernando.posada@temple.edu
 */
 
 #ifndef WAVEFUNCTION_H
@@ -28,6 +28,7 @@ struct wf {
   double *L; // Last Density matrix
   double *G; // two-particle matrix
   double *J; // Coupling matrix
+  double *XC;// Exchange-Correlation matrix
   double *F; // Fock matrix
   double *O; // Orbitals energy
   // Convenience Variables
@@ -36,6 +37,8 @@ struct wf {
   int occupation;
   double eta;    // Constant of coupling
   double kappa;  // Constant of coupling
+  double x_factor; // Fraction of exchange
+  double xc_energy; // Exchange-Correlation Energy
   double energy; // HF Energy
   double rmsd;   // Density root-mean-square deviation
 };
@@ -62,6 +65,8 @@ void wavefunction_compute_energy(WaveFunction *psi);
 void wavefunction_compute_2body_matrix(WaveFunction *psi,
                                        std::vector<QuartetBuffer> *ints);
 
+/* void wavefunction_compute_exccor_matrix(WaveFunction *psi); */
+
 // nwavefunction
 
 void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
@@ -76,6 +81,10 @@ void nwavefunction_compute_2body_matrix_mol(WaveFunction *psi, BeckeGrid *grid,
 
 void nwavefunction_compute_coupling(WaveFunction *psi, BeckeGrid *grid,
                                     double *phi, double *other_J, double *res);
+
+void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid, double *phi, double *xc_vrho);
+
+void nwavefunction_compute_cor2species_matrix(WaveFunction *psi, BeckeGrid *grid, double *phi, double *XC);
 
 #ifdef __cplusplus
 }
