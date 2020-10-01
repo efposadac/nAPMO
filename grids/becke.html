@@ -1,57 +1,58 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>becke &mdash; nAPMO a1 documentation</title>
+  <title>becke &mdash; nAPMO v1.1 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
-        <link rel="up" title="Grids" href="grids.html"/>
-        <link rel="next" title="lebedev" href="lebedev.html"/>
-        <link rel="prev" title="atomic" href="atomic.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="cubic_spline" href="cubic_spline.html" />
+    <link rel="prev" title="atomic" href="atomic.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../index.html" class="icon icon-home"> nAPMO
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> nAPMO
           
 
           
@@ -61,7 +62,7 @@
             
             
               <div class="version">
-                1.0
+                1.1
               </div>
             
           
@@ -78,72 +79,103 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../system/system.html">System</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="grids.html">Grids</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="angular.html">angular</a></li>
 <li class="toctree-l3"><a class="reference internal" href="atomic.html">atomic</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">becke</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cubic_spline.html">cubic_spline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extrapolation.html">extrapolation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="lebedev.html">lebedev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="multi_grid.html">multi_grid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="poisson_solver.html">poisson_solver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="radial.html">radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="radial_transform.html">radial_transform</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../functional/functional.html">Functional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gto/gto.html">Gaussian Type Orbitals (GTO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../scf/scf.html">Self-Consistent Field (SCF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solver/solver.html">Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wavefunction/wavefunction.html">wavefunction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
 </ul>
-<ul class="simple">
-</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">nAPMO</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nAPMO</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
           <li><a href="../API.html">API</a> &raquo;</li>
-      
+        
           <li><a href="grids.html">Grids</a> &raquo;</li>
-      
-    <li>becke</li>
+        
+      <li>becke</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/grids/becke.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/grids/becke.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -151,75 +183,74 @@
             
   <div class="section" id="module-becke">
 <span id="becke"></span><h1>becke<a class="headerlink" href="#module-becke" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="becke.BeckeGrid">
-<em class="property">class </em><code class="descclassname">becke.</code><code class="descname">BeckeGrid</code><span class="sig-paren">(</span><em>species</em>, <em>n_radial=40</em>, <em>n_angular=110</em><span class="sig-paren">)</span><a class="headerlink" href="#becke.BeckeGrid" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">becke.</code><code class="sig-name descname">BeckeGrid</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">species</span></em>, <em class="sig-param"><span class="n">n_radial</span><span class="o">=</span><span class="default_value">40</span></em>, <em class="sig-param"><span class="n">n_angular</span><span class="o">=</span><span class="default_value">110</span></em>, <em class="sig-param"><span class="n">rtransform</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">file</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#becke.BeckeGrid" title="Permalink to this definition">¶</a></dt>
 <dd><p>This class creates the Becke grid.</p>
 <p class="rubric">References</p>
 <p>Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>species</strong> (<em>dict</em>) &#8211; Species to be calculated. see MolecularSystem</li>
-<li><strong>n_radial</strong> (<em>int, optional</em>) &#8211; Number of radial points. Default is 40</li>
-<li><strong>n_angular</strong> (<em>int, optional</em>) &#8211; Number of angular points. Default is 110</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>species</strong> (<em>dict</em>) – Species to be calculated. see MolecularSystem</p></li>
+<li><p><strong>n_radial</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of radial points. Default is 40</p></li>
+<li><p><strong>n_angular</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of angular points. Default is 110</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
-<dl class="method">
+</dd>
+</dl>
+<dl class="py method">
+<dt id="becke.BeckeGrid.becke_weights">
+<em class="property">property </em><code class="sig-name descname">becke_weights</code><a class="headerlink" href="#becke.BeckeGrid.becke_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the Becke weights <span class="math notranslate nohighlight">\(w(r)\)</span> for the entire grid as described in eq. 22 Becke, 1988.</p>
+<p class="rubric">References</p>
+<p>Becke, A. D. A multicenter numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The value of cell_function (eq. 13, Becke, 1988)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>P (ndarray)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="becke.BeckeGrid.evaluate_decomposition">
-<code class="descname">evaluate_decomposition</code><span class="sig-paren">(</span><em>atom</em>, <em>cubic_splines</em>, <em>output</em>, <em>cell=None</em><span class="sig-paren">)</span><a class="headerlink" href="#becke.BeckeGrid.evaluate_decomposition" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">evaluate_decomposition</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">atom</span></em>, <em class="sig-param"><span class="n">cubic_splines</span></em>, <em class="sig-param"><span class="n">output</span></em>, <em class="sig-param"><span class="n">cell</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#becke.BeckeGrid.evaluate_decomposition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Evaluate the spherical decomposition for a given atom in the molecular grid:</p>
-<p><span class="math">\(f(\theta, \varphi) = \sum_{\ell=0}^{\ell_{max}} \sum_{m=-\ell}^\ell f_{\ell m} \, Y_{\ell m}(\theta, \varphi)\)</span></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>atom</strong> (<em>int</em>) &#8211; Index of the atom.</li>
-<li><strong>cubic_splines</strong> (<em>list</em>) &#8211; List of CubicSpline objects with the spherical expansion.</li>
-<li><strong>output</strong> (<em>ndarray</em>) &#8211; array with the values of the approximated <span class="math">\(f(x)\)</span>.</li>
+<p><span class="math notranslate nohighlight">\(f(\theta, \varphi) = \sum_{\ell=0}^{\ell_{max}} \sum_{m=-\ell}^\ell f_{\ell m} \, Y_{\ell m}(\theta, \varphi)\)</span></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>atom</strong> (<em>int</em>) – Index of the atom.</p></li>
+<li><p><strong>cubic_splines</strong> (<em>list</em>) – List of CubicSpline objects with the spherical expansion.</p></li>
+<li><p><strong>output</strong> (<em>ndarray</em>) – array with the values of the approximated <span class="math notranslate nohighlight">\(f(x)\)</span>.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="becke.BeckeGrid.integrate">
-<code class="descname">integrate</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="headerlink" href="#becke.BeckeGrid.integrate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Perform an integration of function <span class="math">\(F(r)\)</span> using BeckeGrid.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> (<em>ndarray</em>) &#8211; array of F computed in all grid points.</td>
-</tr>
-</tbody>
-</table>
+<code class="sig-name descname">integrate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="headerlink" href="#becke.BeckeGrid.integrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform an integration of function <span class="math notranslate nohighlight">\(F(r)\)</span> using BeckeGrid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>f</strong> (<em>ndarray</em>) – array of F computed in all grid points.</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="becke.BeckeGrid.ncenter">
-<code class="descname">ncenter</code><a class="headerlink" href="#becke.BeckeGrid.ncenter" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">ncenter</code><a class="headerlink" href="#becke.BeckeGrid.ncenter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of particles of a given species in the molecular grid</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="becke.BeckeGrid.show">
-<code class="descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#becke.BeckeGrid.show" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">show</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#becke.BeckeGrid.show" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints information of the object.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="becke.BeckeGrid.size">
-<code class="descname">size</code><a class="headerlink" href="#becke.BeckeGrid.size" title="Permalink to this definition">¶</a></dt>
-<dd><p>Number of points in the grid</p>
 </dd></dl>
 
 </dd></dl>
@@ -228,15 +259,16 @@
 
 
            </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="lebedev.html" class="btn btn-neutral float-right" title="lebedev" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="cubic_spline.html" class="btn btn-neutral float-right" title="cubic_spline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="atomic.html" class="btn btn-neutral" title="atomic" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="atomic.html" class="btn btn-neutral float-left" title="atomic" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -245,11 +277,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015, Fernando Posada.
+        
+        &copy; Copyright 2015 - 2020, Fernando Posada
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -261,37 +301,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'a1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

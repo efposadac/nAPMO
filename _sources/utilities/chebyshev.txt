@@ -1,5 +1,0 @@
-chebyshev
-=========
-
-.. automodule:: chebyshev
-    :members:

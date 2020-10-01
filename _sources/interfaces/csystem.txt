@@ -1,6 +1,0 @@
-csystem
-========
-
-.. automodule:: csystem 
-.. autoclass:: CSystem
-    :members:

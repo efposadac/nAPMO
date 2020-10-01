@@ -1,57 +1,58 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>lebedev &mdash; nAPMO a1 documentation</title>
+  <title>lebedev &mdash; nAPMO v1.1 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
-        <link rel="up" title="Grids" href="grids.html"/>
-        <link rel="next" title="poisson_solver" href="poisson_solver.html"/>
-        <link rel="prev" title="becke" href="becke.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="multi_grid" href="multi_grid.html" />
+    <link rel="prev" title="extrapolation" href="extrapolation.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../index.html" class="icon icon-home"> nAPMO
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> nAPMO
           
 
           
@@ -61,7 +62,7 @@
             
             
               <div class="version">
-                1.0
+                1.1
               </div>
             
           
@@ -78,72 +79,103 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="../system/system.html">System</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="grids.html">Grids</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="angular.html">angular</a></li>
 <li class="toctree-l3"><a class="reference internal" href="atomic.html">atomic</a></li>
 <li class="toctree-l3"><a class="reference internal" href="becke.html">becke</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cubic_spline.html">cubic_spline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extrapolation.html">extrapolation</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">lebedev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="multi_grid.html">multi_grid</a></li>
 <li class="toctree-l3"><a class="reference internal" href="poisson_solver.html">poisson_solver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="radial.html">radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="radial_transform.html">radial_transform</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../functional/functional.html">Functional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gto/gto.html">Gaussian Type Orbitals (GTO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../scf/scf.html">Self-Consistent Field (SCF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solver/solver.html">Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wavefunction/wavefunction.html">wavefunction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
 </ul>
-<ul class="simple">
-</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">nAPMO</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nAPMO</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
           <li><a href="../API.html">API</a> &raquo;</li>
-      
+        
           <li><a href="grids.html">Grids</a> &raquo;</li>
-      
-    <li>lebedev</li>
+        
+      <li>lebedev</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/grids/lebedev.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/grids/lebedev.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -151,37 +183,37 @@
             
   <div class="section" id="module-lebedev">
 <span id="lebedev"></span><h1>lebedev<a class="headerlink" href="#module-lebedev" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="lebedev.lebedev_get_order">
-<code class="descclassname">lebedev.</code><code class="descname">lebedev_get_order</code><span class="sig-paren">(</span><em>n</em><span class="sig-paren">)</span><a class="headerlink" href="#lebedev.lebedev_get_order" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the order of the Lebedev quadrature from the number of points <code class="docutils literal"><span class="pre">n</span></code>.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>n</strong> (<em>int</em>) &#8211; number of points.</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">order of lebedev quadrature.</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+<code class="sig-prename descclassname">lebedev.</code><code class="sig-name descname">lebedev_get_order</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="headerlink" href="#lebedev.lebedev_get_order" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the order of the Lebedev quadrature from the number of points <code class="docutils literal notranslate"><span class="pre">n</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>n</strong> (<em>int</em>) – number of points.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>order of lebedev quadrature.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
 
 
            </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="poisson_solver.html" class="btn btn-neutral float-right" title="poisson_solver" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="multi_grid.html" class="btn btn-neutral float-right" title="multi_grid" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="becke.html" class="btn btn-neutral" title="becke" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="extrapolation.html" class="btn btn-neutral float-left" title="extrapolation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -190,11 +222,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015, Fernando Posada.
+        
+        &copy; Copyright 2015 - 2020, Fernando Posada
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -206,37 +246,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'a1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>basis_set &mdash; nAPMO v1.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="contracted_gaussian" href="contracted_gaussian.html" />
+    <link rel="prev" title="Gaussian Type Orbitals (GTO)" href="gto.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> nAPMO
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../system/system.html">System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grids/grids.html">Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../functional/functional.html">Functional</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="gto.html">Gaussian Type Orbitals (GTO)</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">basis_set</a></li>
+<li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../scf/scf.html">Self-Consistent Field (SCF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solver/solver.html">Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wavefunction/wavefunction.html">wavefunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nAPMO</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../API.html">API</a> &raquo;</li>
+        
+          <li><a href="gto.html">Gaussian Type Orbitals (GTO)</a> &raquo;</li>
+        
+      <li>basis_set</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/gto/basis_set.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-basis_set">
+<span id="basis-set"></span><h1>basis_set<a class="headerlink" href="#module-basis_set" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="basis_set.BasisSet">
+<em class="property">class </em><code class="sig-prename descclassname">basis_set.</code><code class="sig-name descname">BasisSet</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">basis_name</span></em>, <em class="sig-param"><span class="n">particle</span></em>, <em class="sig-param"><span class="n">origin</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">basis_file</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Basis-set interface. (dict)</p>
+<dl class="py method">
+<dt id="basis_set.BasisSet.compute">
+<code class="sig-name descname">compute</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coord</span><span class="o">=</span><span class="default_value">array([[0.0, 0.0, 0.0]])</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.compute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute all the basis-set functions at given <code class="docutils literal notranslate"><span class="pre">coord</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>coord</strong> (<em>ndarray</em>) – coordinates in which the basis set will be
+evaluated. Array shape should be (n, 3)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="basis_set.BasisSet.deriv">
+<code class="sig-name descname">deriv</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coord</span><span class="o">=</span><span class="default_value">array([[0.0, 0.0, 0.0]])</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.deriv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Compute first derivative for the basis-set at given <code class="docutils literal notranslate"><span class="pre">coord</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>coord</strong> (<em>ndarray</em>) – coordinates in which the basis set will be
+evaluated. Array shape should be (n, 3)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="basis_set.BasisSet.load_file">
+<code class="sig-name descname">load_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">particle</span></em>, <em class="sig-param"><span class="n">basis_file</span></em><span class="sig-paren">)</span><a class="headerlink" href="#basis_set.BasisSet.load_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load basis information from file with deMon2k basis-set format. See <a class="reference external" href="https://bse.pnl.gov/bse/portal">https://bse.pnl.gov/bse/portal</a>
+for further information.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>particle</strong> (<em>str</em>) – Symbol of the particle.</p></li>
+<li><p><strong>basis_file</strong> (<em>str</em>) – Path to the basis file.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><p>List of dicts with the basis-set data</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[{</span><span class="s1">&#39;angular&#39;</span><span class="p">:</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;cont&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.15432897</span><span class="p">,</span> <span class="mf">0.15432897</span><span class="p">,</span> <span class="mf">0.15432897</span><span class="p">],</span>
+<span class="s1">&#39;prim&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">3.42525091</span><span class="p">,</span> <span class="mf">3.42525091</span><span class="p">,</span> <span class="mf">3.42525091</span><span class="p">]}]</span>
+</pre></div>
+</div>
+</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>basis_data(list)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="basis_set.BasisSet.update">
+<code class="sig-name descname">update</code><span class="sig-paren">(</span><span class="optional">[</span><em class="sig-param">E</em>, <span class="optional">]</span><em class="sig-param">**F</em><span class="sig-paren">)</span> &#x2192; None.  Update D from dict/iterable E and F.<a class="headerlink" href="#basis_set.BasisSet.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>If E is present and has a .keys() method, then does:  for k in E: D[k] = E[k]
+If E is present and lacks a .keys() method, then does:  for k, v in E: D[k] = v
+In either case, this is followed by: for k in F:  D[k] = F[k]</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="contracted_gaussian.html" class="btn btn-neutral float-right" title="contracted_gaussian" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="gto.html" class="btn btn-neutral float-left" title="Gaussian Type Orbitals (GTO)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015 - 2020, Fernando Posada
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

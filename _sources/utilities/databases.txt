@@ -1,5 +1,0 @@
-databases
-=========
-
-.. automodule:: databases
-	:members:

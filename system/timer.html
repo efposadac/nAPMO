@@ -1,57 +1,58 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>timer &mdash; nAPMO a1 documentation</title>
+  <title>timer &mdash; nAPMO v1.1 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
-        <link rel="up" title="System" href="system.html"/>
-        <link rel="next" title="Grids" href="../grids/grids.html"/>
-        <link rel="prev" title="primitive_gaussian" href="primitive_gaussian.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Grids" href="../grids/grids.html" />
+    <link rel="prev" title="napmo" href="napmo_system.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../index.html" class="icon icon-home"> nAPMO
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> nAPMO
           
 
           
@@ -61,7 +62,7 @@
             
             
               <div class="version">
-                1.0
+                1.1
               </div>
             
           
@@ -78,75 +79,99 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="system.html">System</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
-<li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
-<li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
 <li class="toctree-l3"><a class="reference internal" href="input_parser.html">input_parser</a></li>
 <li class="toctree-l3"><a class="reference internal" href="molecular_system.html">molecular_system</a></li>
-<li class="toctree-l3"><a class="reference internal" href="napmo.html">napmo</a></li>
-<li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="napmo_system.html">napmo</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">timer</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../grids/grids.html">Grids</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../functional/functional.html">Functional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gto/gto.html">Gaussian Type Orbitals (GTO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../scf/scf.html">Self-Consistent Field (SCF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solver/solver.html">Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wavefunction/wavefunction.html">wavefunction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
 </ul>
-<ul class="simple">
-</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">nAPMO</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nAPMO</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
           <li><a href="../API.html">API</a> &raquo;</li>
-      
+        
           <li><a href="system.html">System</a> &raquo;</li>
-      
-    <li>timer</li>
+        
+      <li>timer</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/system/timer.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/system/timer.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -154,25 +179,25 @@
             
   <div class="section" id="module-timer">
 <span id="timer"></span><h1>timer<a class="headerlink" href="#module-timer" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="timer.Timer">
-<em class="property">class </em><code class="descclassname">timer.</code><code class="descname">Timer</code><a class="headerlink" href="#timer.Timer" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">timer.</code><code class="sig-name descname">Timer</code><a class="headerlink" href="#timer.Timer" title="Permalink to this definition">¶</a></dt>
 <dd><p>Manages the execution times by context and for the global calculation</p>
-<dl class="method">
+<dl class="py method">
 <dt id="timer.Timer.show_block">
-<code class="descname">show_block</code><span class="sig-paren">(</span><em>label</em><span class="sig-paren">)</span><a class="headerlink" href="#timer.Timer.show_block" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">show_block</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em><span class="sig-paren">)</span><a class="headerlink" href="#timer.Timer.show_block" title="Permalink to this definition">¶</a></dt>
 <dd><p>Print information about certain context</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="timer.Timer.show_summary">
-<code class="descname">show_summary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#timer.Timer.show_summary" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">show_summary</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#timer.Timer.show_summary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Prints all context</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="timer.Timer.timeblock">
-<code class="descname">timeblock</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwds</em><span class="sig-paren">)</span><a class="headerlink" href="#timer.Timer.timeblock" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">timeblock</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">label</span></em><span class="sig-paren">)</span><a class="headerlink" href="#timer.Timer.timeblock" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates execution time for a context</p>
 </dd></dl>
 
@@ -182,15 +207,16 @@
 
 
            </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../grids/grids.html" class="btn btn-neutral float-right" title="Grids" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="../grids/grids.html" class="btn btn-neutral float-right" title="Grids" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="primitive_gaussian.html" class="btn btn-neutral" title="primitive_gaussian" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="napmo_system.html" class="btn btn-neutral float-left" title="napmo" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -199,11 +225,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015, Fernando Posada.
+        
+        &copy; Copyright 2015 - 2020, Fernando Posada
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -215,37 +249,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'a1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

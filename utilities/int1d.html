@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>int1d &mdash; nAPMO v1.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ode2" href="ode2.html" />
+    <link rel="prev" title="cell" href="cell.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> nAPMO
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../system/system.html">System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../grids/grids.html">Grids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../functional/functional.html">Functional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gto/gto.html">Gaussian Type Orbitals (GTO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../scf/scf.html">Self-Consistent Field (SCF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solver/solver.html">Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wavefunction/wavefunction.html">wavefunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="utilities.html">Utilitites</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="cell.html">cell</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">int1d</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ode2.html">ode2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nAPMO</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../API.html">API</a> &raquo;</li>
+        
+          <li><a href="utilities.html">Utilitites</a> &raquo;</li>
+        
+      <li>int1d</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/utilities/int1d.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-int1d">
+<span id="int1d"></span><h1>int1d<a class="headerlink" href="#module-int1d" title="Permalink to this headline">¶</a></h1>
+<p>1D integration algorithms</p>
+<dl class="py class">
+<dt id="int1d.Integrator1D">
+<em class="property">class </em><code class="sig-prename descclassname">int1d.</code><code class="sig-name descname">Integrator1D</code><a class="headerlink" href="#int1d.Integrator1D" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="int1d.Integrator1D.get_weights">
+<code class="sig-name descname">get_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">npoint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#int1d.Integrator1D.get_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return integration weights for linear grid.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="int1d.Integrator1D.npoint_min">
+<code class="sig-name descname">npoint_min</code><em class="property"> = None</em><a class="headerlink" href="#int1d.Integrator1D.npoint_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for integration algorithms</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="int1d.StubIntegrator1D">
+<em class="property">class </em><code class="sig-prename descclassname">int1d.</code><code class="sig-name descname">StubIntegrator1D</code><a class="headerlink" href="#int1d.StubIntegrator1D" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="int1d.StubIntegrator1D.get_weights">
+<code class="sig-name descname">get_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">npoint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#int1d.StubIntegrator1D.get_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return integration weights for linear grid.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="int1d.StubIntegrator1D.npoint_min">
+<code class="sig-name descname">npoint_min</code><em class="property"> = 0</em><a class="headerlink" href="#int1d.StubIntegrator1D.npoint_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ordinary integration algorithm</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="int1d.TrapezoidIntegrator1D">
+<em class="property">class </em><code class="sig-prename descclassname">int1d.</code><code class="sig-name descname">TrapezoidIntegrator1D</code><a class="headerlink" href="#int1d.TrapezoidIntegrator1D" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="int1d.TrapezoidIntegrator1D.get_weights">
+<code class="sig-name descname">get_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">npoint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#int1d.TrapezoidIntegrator1D.get_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return integration weights for linear grid.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="int1d.TrapezoidIntegrator1D.npoint_min">
+<code class="sig-name descname">npoint_min</code><em class="property"> = 2</em><a class="headerlink" href="#int1d.TrapezoidIntegrator1D.npoint_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trapezoid rule integration algorithm</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="int1d.CubicIntegrator1D">
+<em class="property">class </em><code class="sig-prename descclassname">int1d.</code><code class="sig-name descname">CubicIntegrator1D</code><a class="headerlink" href="#int1d.CubicIntegrator1D" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="int1d.CubicIntegrator1D.get_weights">
+<code class="sig-name descname">get_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">npoint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#int1d.CubicIntegrator1D.get_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return integration weights for linear grid.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="int1d.CubicIntegrator1D.npoint_min">
+<code class="sig-name descname">npoint_min</code><em class="property"> = 2</em><a class="headerlink" href="#int1d.CubicIntegrator1D.npoint_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Cubic spline integration algorithm</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="int1d.SimpsonIntegrator1D">
+<em class="property">class </em><code class="sig-prename descclassname">int1d.</code><code class="sig-name descname">SimpsonIntegrator1D</code><a class="headerlink" href="#int1d.SimpsonIntegrator1D" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="py method">
+<dt id="int1d.SimpsonIntegrator1D.get_weights">
+<code class="sig-name descname">get_weights</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">npoint</span></em><span class="sig-paren">)</span><a class="headerlink" href="#int1d.SimpsonIntegrator1D.get_weights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return integration weights for linear grid.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="int1d.SimpsonIntegrator1D.npoint_min">
+<code class="sig-name descname">npoint_min</code><em class="property"> = 8</em><a class="headerlink" href="#int1d.SimpsonIntegrator1D.npoint_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Composite Simpson’s rule integration algorithm</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="ode2.html" class="btn btn-neutral float-right" title="ode2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cell.html" class="btn btn-neutral float-left" title="cell" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015 - 2020, Fernando Posada
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

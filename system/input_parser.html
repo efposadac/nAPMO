@@ -1,57 +1,58 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>input_parser &mdash; nAPMO a1 documentation</title>
+  <title>input_parser &mdash; nAPMO v1.1 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
-        <link rel="up" title="System" href="system.html"/>
-        <link rel="next" title="molecular_system" href="molecular_system.html"/>
-        <link rel="prev" title="elementary_particle" href="elementary_particle.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="molecular_system" href="molecular_system.html" />
+    <link rel="prev" title="elementary_particle" href="elementary_particle.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../index.html" class="icon icon-home"> nAPMO
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> nAPMO
           
 
           
@@ -61,7 +62,7 @@
             
             
               <div class="version">
-                1.0
+                1.1
               </div>
             
           
@@ -78,75 +79,99 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="system.html">System</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
-<li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
-<li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">input_parser</a></li>
 <li class="toctree-l3"><a class="reference internal" href="molecular_system.html">molecular_system</a></li>
-<li class="toctree-l3"><a class="reference internal" href="napmo.html">napmo</a></li>
-<li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="napmo_system.html">napmo</a></li>
 <li class="toctree-l3"><a class="reference internal" href="timer.html">timer</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../grids/grids.html">Grids</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../functional/functional.html">Functional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gto/gto.html">Gaussian Type Orbitals (GTO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../scf/scf.html">Self-Consistent Field (SCF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solver/solver.html">Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wavefunction/wavefunction.html">wavefunction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
 </ul>
-<ul class="simple">
-</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">nAPMO</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nAPMO</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
           <li><a href="../API.html">API</a> &raquo;</li>
-      
+        
           <li><a href="system.html">System</a> &raquo;</li>
-      
-    <li>input_parser</li>
+        
+      <li>input_parser</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/system/input_parser.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/system/input_parser.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -154,35 +179,31 @@
             
   <div class="section" id="module-input_parser">
 <span id="input-parser"></span><h1>input_parser<a class="headerlink" href="#module-input_parser" title="Permalink to this headline">¶</a></h1>
-<dl class="function">
+<dl class="py function">
 <dt id="input_parser.extract_keywork">
-<code class="descclassname">input_parser.</code><code class="descname">extract_keywork</code><span class="sig-paren">(</span><em>data</em>, <em>beg=0</em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.extract_keywork" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract keywords from the input file starting in <code class="docutils literal"><span class="pre">beg</span></code> position</p>
+<code class="sig-prename descclassname">input_parser.</code><code class="sig-name descname">extract_keywork</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">beg</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.extract_keywork" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extract keywords from the input file starting in <code class="docutils literal notranslate"><span class="pre">beg</span></code> position</p>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">molecule</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span> <span class="n">molecule</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">keyword</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">molecule</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span> <span class="n">molecule</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">keyword</span>
 <span class="n">basis</span> <span class="o">=</span> <span class="o">...</span> <span class="n">basis</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">keyword</span>
 </pre></div>
 </div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>data</strong> (<em>str</em>) &#8211; the input as string</li>
-<li><strong>beg</strong> (<em>int</em>) &#8211; the starting position</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>str</em>) – the input as string</p></li>
+<li><p><strong>beg</strong> (<em>int</em>) – the starting position</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="input_parser.fix_casting">
-<code class="descclassname">input_parser.</code><code class="descname">fix_casting</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.fix_casting" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">input_parser.</code><code class="sig-name descname">fix_casting</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">item</span></em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.fix_casting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a string in its corresponding data type.</p>
 <p>Example:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">napmo.system.input_parser</span> <span class="k">import</span> <span class="n">fix_casting</span>
+<div class="highlight-pycon3 notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">napmo.system.input_parser</span> <span class="k">import</span> <span class="n">fix_casting</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fix_casting</span><span class="p">(</span><span class="s1">&#39;2&#39;</span><span class="p">)</span>
 <span class="go">2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">fix_casting</span><span class="p">(</span><span class="s1">&#39;2.0&#39;</span><span class="p">)</span>
@@ -195,77 +216,76 @@
 </div>
 </dd></dl>
 
-<dl class="class">
+<dl class="py class">
 <dt id="input_parser.InputParser">
-<em class="property">class </em><code class="descclassname">input_parser.</code><code class="descname">InputParser</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.InputParser" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">input_parser.</code><code class="sig-name descname">InputParser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.InputParser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Input parser class</p>
-<dl class="method">
+<dl class="py method">
 <dt id="input_parser.InputParser.load_basis">
-<code class="descname">load_basis</code><span class="sig-paren">(</span><em>data</em>, <em>group=True</em>, <em>options=None</em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.InputParser.load_basis" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_basis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">group</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.InputParser.load_basis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads the basis keyword</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>data</strong> (<em>str</em>) &#8211; Relevant data from input corresponding to the keyword <code class="docutils literal"><span class="pre">basis</span></code></li>
-<li><strong>group</strong> (<em>bool</em>) &#8211; Whether the data is a group ie. <code class="docutils literal"><span class="pre">{...}</span></code> or just a variable <code class="docutils literal"><span class="pre">basis</span> <span class="pre">=</span> <span class="pre">...</span></code></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>str</em>) – Relevant data from input corresponding to the keyword <code class="docutils literal notranslate"><span class="pre">basis</span></code></p></li>
+<li><p><strong>group</strong> (<em>bool</em>) – Whether the data is a group ie. <code class="docutils literal notranslate"><span class="pre">{...}</span></code> or just a variable <code class="docutils literal notranslate"><span class="pre">basis</span> <span class="pre">=</span> <span class="pre">...</span></code></p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="input_parser.InputParser.load_code">
-<code class="descname">load_code</code><span class="sig-paren">(</span><em>data</em>, <em>group=True</em>, <em>options=None</em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.InputParser.load_code" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_code</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">group</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.InputParser.load_code" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads the code keyword</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>str</em>) &#8211; Relevant data from input corresponding to the keyword <code class="docutils literal"><span class="pre">code</span></code></td>
-</tr>
-</tbody>
-</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>str</em>) – Relevant data from input corresponding to the keyword <code class="docutils literal notranslate"><span class="pre">code</span></code></p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
+<dt id="input_parser.InputParser.load_functional">
+<code class="sig-name descname">load_functional</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">group</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.InputParser.load_functional" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads the functionals information for DFT calculations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>str</em>) – Relevant data from input corresponding to the keyword <code class="docutils literal notranslate"><span class="pre">functional</span></code></p></li>
+<li><p><strong>group</strong> (<em>bool</em>) – Whether the data is a group ie. <code class="docutils literal notranslate"><span class="pre">{...}</span></code> or just a variable <code class="docutils literal notranslate"><span class="pre">functional</span> <span class="pre">=</span> <span class="pre">...</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt id="input_parser.InputParser.load_molecule">
-<code class="descname">load_molecule</code><span class="sig-paren">(</span><em>data</em>, <em>group=True</em>, <em>options=None</em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.InputParser.load_molecule" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_molecule</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">group</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.InputParser.load_molecule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load Molecule information from the input file (Only Cartesian coordinates for now)</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>data</strong> (<em>str</em>) &#8211; Relevant data from input corresponding to the keyword <code class="docutils literal"><span class="pre">molecule</span></code></li>
-<li><strong>group</strong> (<em>bool</em>) &#8211; Whether the data is a group ie. <code class="docutils literal"><span class="pre">{...}</span></code> or just a variable</li>
-<li><strong>options</strong> (<em>str</em>) &#8211; Additional options for the group <code class="docutils literal"><span class="pre">[...]</span></code> besides molecule</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>str</em>) – Relevant data from input corresponding to the keyword <code class="docutils literal notranslate"><span class="pre">molecule</span></code></p></li>
+<li><p><strong>group</strong> (<em>bool</em>) – Whether the data is a group ie. <code class="docutils literal notranslate"><span class="pre">{...}</span></code> or just a variable</p></li>
+<li><p><strong>options</strong> (<em>str</em>) – Additional options for the group <code class="docutils literal notranslate"><span class="pre">[...]</span></code> besides molecule</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="input_parser.InputParser.load_scf">
-<code class="descname">load_scf</code><span class="sig-paren">(</span><em>data</em>, <em>group=True</em>, <em>options=None</em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.InputParser.load_scf" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">load_scf</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">group</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#input_parser.InputParser.load_scf" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads the scf keyword</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>data</strong> (<em>str</em>) &#8211; Relevant data from input corresponding to the keyword <code class="docutils literal"><span class="pre">scf</span></code></li>
-<li><strong>group</strong> (<em>bool</em>) &#8211; Whether the data is a group ie. <code class="docutils literal"><span class="pre">{...}</span></code> or just a variable <code class="docutils literal"><span class="pre">scf</span> <span class="pre">=</span> <span class="pre">...</span></code></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>str</em>) – Relevant data from input corresponding to the keyword <code class="docutils literal notranslate"><span class="pre">scf</span></code></p></li>
+<li><p><strong>group</strong> (<em>bool</em>) – Whether the data is a group ie. <code class="docutils literal notranslate"><span class="pre">{...}</span></code> or just a variable <code class="docutils literal notranslate"><span class="pre">scf</span> <span class="pre">=</span> <span class="pre">...</span></code></p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>
@@ -274,15 +294,16 @@
 
 
            </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="molecular_system.html" class="btn btn-neutral float-right" title="molecular_system" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="molecular_system.html" class="btn btn-neutral float-right" title="molecular_system" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="elementary_particle.html" class="btn btn-neutral" title="elementary_particle" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="elementary_particle.html" class="btn btn-neutral float-left" title="elementary_particle" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -291,11 +312,19 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015, Fernando Posada.
+        
+        &copy; Copyright 2015 - 2020, Fernando Posada
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -307,37 +336,15 @@
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'a1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

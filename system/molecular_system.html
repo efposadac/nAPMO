@@ -1,57 +1,58 @@
 
 
 <!DOCTYPE html>
-<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<html class="writer-html5" lang="en" >
 <head>
   <meta charset="utf-8">
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>molecular_system &mdash; nAPMO a1 documentation</title>
+  <title>molecular_system &mdash; nAPMO v1.1 documentation</title>
   
 
   
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
   
 
   
-
-  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
     
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
 
-  
-
-  
-  
-    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-  
-
-  
-
-  
-    <link rel="top" title="nAPMO a1 documentation" href="../index.html"/>
-        <link rel="up" title="System" href="system.html"/>
-        <link rel="next" title="primitive_gaussian" href="primitive_gaussian.html"/>
-        <link rel="prev" title="elementary_particle" href="elementary_particle.html"/> 
-
-  
-  <script src="../_static/js/modernizr.min.js"></script>
-
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="napmo" href="napmo_system.html" />
+    <link rel="prev" title="input_parser" href="input_parser.html" /> 
 </head>
 
-<body class="wy-body-for-nav" role="document">
+<body class="wy-body-for-nav">
 
+   
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
-            <a href="../index.html" class="icon icon-home"> nAPMO
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> nAPMO
           
 
           
@@ -61,7 +62,7 @@
             
             
               <div class="version">
-                1.0
+                1.1
               </div>
             
           
@@ -78,72 +79,99 @@
           
         </div>
 
+        
         <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
           
             
             
-                <ul class="current">
+              
+            
+            
+              <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="system.html">System</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="atomic_element.html">atomic_element</a></li>
-<li class="toctree-l3"><a class="reference internal" href="basis_set.html">basis_set</a></li>
-<li class="toctree-l3"><a class="reference internal" href="contracted_gaussian.html">contracted_gaussian</a></li>
 <li class="toctree-l3"><a class="reference internal" href="elementary_particle.html">elementary_particle</a></li>
+<li class="toctree-l3"><a class="reference internal" href="input_parser.html">input_parser</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">molecular_system</a></li>
-<li class="toctree-l3"><a class="reference internal" href="primitive_gaussian.html">primitive_gaussian</a></li>
+<li class="toctree-l3"><a class="reference internal" href="napmo_system.html">napmo</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timer.html">timer</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../grids/grids.html">Grids</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../hf/hf.html">Hartree-Fock</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../functional/functional.html">Functional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gto/gto.html">Gaussian Type Orbitals (GTO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../scf/scf.html">Self-Consistent Field (SCF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solver/solver.html">Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wavefunction/wavefunction.html">wavefunction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
 </ul>
 </li>
 </ul>
-<ul class="simple">
-</ul>
 
             
           
         </div>
+        
       </div>
     </nav>
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
 
       
-      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
-        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-        <a href="../index.html">nAPMO</a>
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nAPMO</a>
+        
       </nav>
 
 
-      
       <div class="wy-nav-content">
+        
         <div class="rst-content">
+        
           
 
- 
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div role="navigation" aria-label="breadcrumbs navigation">
+
   <ul class="wy-breadcrumbs">
-    <li><a href="../index.html">Docs</a> &raquo;</li>
-      
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
           <li><a href="../API.html">API</a> &raquo;</li>
-      
+        
           <li><a href="system.html">System</a> &raquo;</li>
-      
-    <li>molecular_system</li>
+        
+      <li>molecular_system</li>
+    
+    
       <li class="wy-breadcrumbs-aside">
         
-          
-            <a href="../_sources/system/molecular_system.txt" rel="nofollow"> View page source</a>
+            
+            <a href="../_sources/system/molecular_system.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
+    
   </ul>
+
+  
   <hr/>
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
@@ -151,169 +179,128 @@
             
   <div class="section" id="module-molecular_system">
 <span id="molecular-system"></span><h1>molecular_system<a class="headerlink" href="#module-molecular_system" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
+<dl class="py class">
 <dt id="molecular_system.MolecularSystem">
-<em class="property">class </em><code class="descclassname">molecular_system.</code><code class="descname">MolecularSystem</code><a class="headerlink" href="#molecular_system.MolecularSystem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Defines a molecular system, containing different kinds of quantum &#8216;species&#8217;
+<em class="property">class </em><code class="sig-prename descclassname">molecular_system.</code><code class="sig-name descname">MolecularSystem</code><a class="headerlink" href="#molecular_system.MolecularSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Defines a molecular system, containing different kinds of quantum ‘species’
 i.e. atoms, muon, positrons, etc. (dict)</p>
-<dl class="method">
+<dl class="py method">
 <dt id="molecular_system.MolecularSystem.add_atom">
-<code class="descname">add_atom</code><span class="sig-paren">(</span><em>symbol</em>, <em>origin</em>, <em>units='ANGSTROMS'</em>, <em>quantum=False</em>, <em>basis_name=None</em>, <em>basis_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.add_atom" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_atom</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">symbol</span></em>, <em class="sig-param"><span class="n">origin</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">'ANGSTROMS'</span></em>, <em class="sig-param"><span class="n">quantum</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">basis_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">basis_file</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.add_atom" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds an atom to the molecular system.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol of the atom.</li>
-<li><strong>origin</strong> (<em>ndarray</em>) &#8211; Origin of the atom (Cartesian coordinates)</li>
-<li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are
-&#8216;ANGSTROMS&#8217; or &#8216;BOHR&#8217;</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – Symbol of the atom.</p></li>
+<li><p><strong>origin</strong> (<em>ndarray</em>) – Origin of the atom (Cartesian coordinates)</p></li>
+<li><p><strong>units</strong> (<em>str</em><em>, </em><em>optional</em>) – Units of the origin, valid values are
+‘ANGSTROMS’ or ‘BOHR’</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="molecular_system.MolecularSystem.add_elementary_particle">
-<code class="descname">add_elementary_particle</code><span class="sig-paren">(</span><em>symbol</em>, <em>origin</em>, <em>units='ANGSTROMS'</em>, <em>size=1</em>, <em>basis_name=None</em>, <em>basis_file=None</em>, <em>basis_set=None</em>, <em>particle=None</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.add_elementary_particle" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_elementary_particle</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">symbol</span></em>, <em class="sig-param"><span class="n">origin</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">'ANGSTROMS'</span></em>, <em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">basis_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">basis_file</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">basis_set</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">particle</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.add_elementary_particle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds an elementary particle into the molecular system.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol of the elementary particle.</li>
-<li><strong>origin</strong> (<em>ndarray</em>) &#8211; Origin of the elementary particle
-(Cartesian coordinates)</li>
-<li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are
-&#8216;ANGSTROMS&#8217; or &#8216;Bohr&#8217;</li>
-<li><strong>size</strong> (<em>int</em>) &#8211; Number of elementary particle to be added.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – Symbol of the elementary particle.</p></li>
+<li><p><strong>origin</strong> (<em>ndarray</em>) – Origin of the elementary particle
+(Cartesian coordinates)</p></li>
+<li><p><strong>units</strong> (<em>str</em><em>, </em><em>optional</em>) – Units of the origin, valid values are
+‘ANGSTROMS’ or ‘Bohr’</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – Number of elementary particle to be added.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="molecular_system.MolecularSystem.add_nucleus">
-<code class="descname">add_nucleus</code><span class="sig-paren">(</span><em>symbol</em>, <em>origin</em>, <em>units='ANGSTROMS'</em>, <em>size=1</em>, <em>basis_name=None</em>, <em>basis_file=None</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.add_nucleus" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">add_nucleus</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">symbol</span></em>, <em class="sig-param"><span class="n">origin</span></em>, <em class="sig-param"><span class="n">units</span><span class="o">=</span><span class="default_value">'ANGSTROMS'</span></em>, <em class="sig-param"><span class="n">size</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">basis_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">basis_file</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.add_nucleus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds a nucleus to the molecular system.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>symbol</strong> (<em>str</em>) &#8211; Symbol of the nucleus ie. H_2 (Deuterium).</li>
-<li><strong>origin</strong> (<em>ndarray</em>) &#8211; Origin of the nucleus (Cartesian coordinates)</li>
-<li><strong>units</strong> (<em>str, optional</em>) &#8211; Units of the origin, valid values are
-&#8216;ANGSTROMS&#8217; or &#8216;BOHR&#8217;</li>
-<li><strong>size</strong> (<em>int</em>) &#8211; Number of particles to be added.</li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – Symbol of the nucleus ie. H_2 (Deuterium).</p></li>
+<li><p><strong>origin</strong> (<em>ndarray</em>) – Origin of the nucleus (Cartesian coordinates)</p></li>
+<li><p><strong>units</strong> (<em>str</em><em>, </em><em>optional</em>) – Units of the origin, valid values are
+‘ANGSTROMS’ or ‘BOHR’</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – Number of particles to be added.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="molecular_system.MolecularSystem.get_basis">
-<code class="descname">get_basis</code><span class="sig-paren">(</span><em>symbol</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.get_basis" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the basis set of the system of a given <code class="docutils literal"><span class="pre">symbol</span></code> particle.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">basis set</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">napmo.BasisSet</td>
-</tr>
-</tbody>
-</table>
+<code class="sig-name descname">get_basis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">symbol</span></em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.get_basis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the basis set of the system of a given <code class="docutils literal notranslate"><span class="pre">symbol</span></code> particle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>basis set</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>napmo.BasisSet</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
-<dt id="molecular_system.MolecularSystem.get_basis_as_cstruct">
-<code class="descname">get_basis_as_cstruct</code><span class="sig-paren">(</span><em>symbol</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.get_basis_as_cstruct" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the basis set of the system of a given <code class="docutils literal"><span class="pre">symbol</span></code> particle as a
-CTYPES structure.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">basis set CTYPES structure</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">napmo.BasisSet_C</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="method">
+<dl class="py method">
 <dt id="molecular_system.MolecularSystem.get_species">
-<code class="descname">get_species</code><span class="sig-paren">(</span><em>sid</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.get_species" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a list with the species <code class="docutils literal"><span class="pre">symbol</span></code> or <cite>sid</cite></p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>symbol</strong> (<em>str</em>) &#8211; symbol of the species. ie. <code class="docutils literal"><span class="pre">e-</span></code>, <code class="docutils literal"><span class="pre">e+</span></code>, etc. Default <code class="docutils literal"><span class="pre">None</span></code></li>
-<li><strong>sid</strong> (<em>int</em>) &#8211; the species if. sid &gt; 0. Default <code class="docutils literal"><span class="pre">None</span></code></li>
+<code class="sig-name descname">get_species</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">sid</span></em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.get_species" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list with the species <code class="docutils literal notranslate"><span class="pre">symbol</span></code> or <cite>sid</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>symbol</strong> (<em>str</em>) – symbol of the species. ie. <code class="docutils literal notranslate"><span class="pre">e-</span></code>, <code class="docutils literal notranslate"><span class="pre">e+</span></code>, etc. Default <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+<li><p><strong>sid</strong> (<em>int</em>) – the species if. sid &gt; 0. Default <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="molecular_system.MolecularSystem.point_charges">
-<code class="descname">point_charges</code><a class="headerlink" href="#molecular_system.MolecularSystem.point_charges" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">point_charges</code><a class="headerlink" href="#molecular_system.MolecularSystem.point_charges" title="Permalink to this definition">¶</a></dt>
 <dd><p>List with the point charges in the molecule</p>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="molecular_system.MolecularSystem.set_charges">
-<code class="descname">set_charges</code><span class="sig-paren">(</span><em>data</em>, <em>open_shell=False</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.set_charges" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adds new particles to the existent species in the system. If electrons, split the species <code class="docutils literal"><span class="pre">e-</span></code>
-into <code class="docutils literal"><span class="pre">e-alpha</span></code> and <code class="docutils literal"><span class="pre">e-beta</span></code> electrons accordingly to the given charge and multiplicity.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>data</strong> (<em>dict</em>) &#8211; information with charge and multiplicity for each species</li>
-<li><strong>open_shell</strong> (<em>bool</em>) &#8211; whether the electrons should be split or not.</li>
+<code class="sig-name descname">set_charges</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data</span></em>, <em class="sig-param"><span class="n">open_shell</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.set_charges" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds new particles to the existent species in the system. If electrons, split the species <code class="docutils literal notranslate"><span class="pre">e-</span></code>
+into <code class="docutils literal notranslate"><span class="pre">e-alpha</span></code> and <code class="docutils literal notranslate"><span class="pre">e-beta</span></code> electrons accordingly to the given charge and multiplicity.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<em>dict</em>) – information with charge and multiplicity for each species</p></li>
+<li><p><strong>open_shell</strong> (<em>bool</em>) – whether the electrons should be split or not.</p></li>
 </ul>
-</td>
-</tr>
-</tbody>
-</table>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="method">
+<dl class="py method">
 <dt id="molecular_system.MolecularSystem.size_particles">
-<code class="descname">size_particles</code><span class="sig-paren">(</span><em>symbol</em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.size_particles" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the number of particles of a given species <code class="docutils literal"><span class="pre">symbol</span></code> in the object.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Number of particles of the species <code class="docutils literal"><span class="pre">symbol</span></code></td>
-</tr>
-<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
-</tr>
-</tbody>
-</table>
+<code class="sig-name descname">size_particles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">symbol</span></em><span class="sig-paren">)</span><a class="headerlink" href="#molecular_system.MolecularSystem.size_particles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the number of particles of a given species <code class="docutils literal notranslate"><span class="pre">symbol</span></code> in the object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Number of particles of the species <code class="docutils literal notranslate"><span class="pre">symbol</span></code></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
 </dd></dl>
 
-<dl class="attribute">
+<dl class="py method">
 <dt id="molecular_system.MolecularSystem.size_species">
-<code class="descname">size_species</code><a class="headerlink" href="#molecular_system.MolecularSystem.size_species" title="Permalink to this definition">¶</a></dt>
+<em class="property">property </em><code class="sig-name descname">size_species</code><a class="headerlink" href="#molecular_system.MolecularSystem.size_species" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the number of quantum species in the system.</p>
 </dd></dl>
 
@@ -323,15 +310,16 @@ into <code class="docutils literal"><span class="pre">e-alpha</span></code> and 
 
 
            </div>
+           
           </div>
           <footer>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="primitive_gaussian.html" class="btn btn-neutral float-right" title="primitive_gaussian" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="napmo_system.html" class="btn btn-neutral float-right" title="napmo" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="elementary_particle.html" class="btn btn-neutral" title="elementary_particle" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="input_parser.html" class="btn btn-neutral float-left" title="input_parser" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -340,11 +328,19 @@ into <code class="docutils literal"><span class="pre">e-alpha</span></code> and 
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2015, Fernando Posada.
+        
+        &copy; Copyright 2015 - 2020, Fernando Posada
 
     </p>
   </div>
-  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
 
 </footer>
 
@@ -356,37 +352,15 @@ into <code class="docutils literal"><span class="pre">e-alpha</span></code> and 
   </div>
   
 
-
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../',
-            VERSION:'a1',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true
-        };
-    </script>
-      <script type="text/javascript" src="../_static/jquery.js"></script>
-      <script type="text/javascript" src="../_static/underscore.js"></script>
-      <script type="text/javascript" src="../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  
-  
-    <script type="text/javascript" src="../_static/js/theme.js"></script>
-  
-
-  
-  
   <script type="text/javascript">
       jQuery(function () {
-          SphinxRtdTheme.StickyNav.enable();
+          SphinxRtdTheme.Navigation.enable(true);
       });
   </script>
+
+  
+  
+    
    
 
 </body>

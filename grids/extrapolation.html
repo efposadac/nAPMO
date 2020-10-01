@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>extrapolation &mdash; nAPMO v1.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="lebedev" href="lebedev.html" />
+    <link rel="prev" title="cubic_spline" href="cubic_spline.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> nAPMO
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../system/system.html">System</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="grids.html">Grids</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="angular.html">angular</a></li>
+<li class="toctree-l3"><a class="reference internal" href="atomic.html">atomic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="becke.html">becke</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cubic_spline.html">cubic_spline</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">extrapolation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lebedev.html">lebedev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="multi_grid.html">multi_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="poisson_solver.html">poisson_solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="radial.html">radial</a></li>
+<li class="toctree-l3"><a class="reference internal" href="radial_transform.html">radial_transform</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../functional/functional.html">Functional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gto/gto.html">Gaussian Type Orbitals (GTO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../scf/scf.html">Self-Consistent Field (SCF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solver/solver.html">Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wavefunction/wavefunction.html">wavefunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nAPMO</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../API.html">API</a> &raquo;</li>
+        
+          <li><a href="grids.html">Grids</a> &raquo;</li>
+        
+      <li>extrapolation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/grids/extrapolation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-extrapolation">
+<span id="extrapolation"></span><h1>extrapolation<a class="headerlink" href="#module-extrapolation" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="extrapolation.Extrapolation">
+<em class="property">class </em><code class="sig-prename descclassname">extrapolation.</code><code class="sig-name descname">Extrapolation</code><a class="headerlink" href="#extrapolation.Extrapolation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Python interface to the Extrapolation C++ class:</p>
+<p>Given a set of points, can calculate the adjacent points by extrapolation.</p>
+<dl class="py method">
+<dt id="extrapolation.Extrapolation.to_string">
+<code class="sig-name descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#extrapolation.Extrapolation.to_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an extrapolation object in string respresentation</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="extrapolation.CuspExtrapolation">
+<em class="property">class </em><code class="sig-prename descclassname">extrapolation.</code><code class="sig-name descname">CuspExtrapolation</code><a class="headerlink" href="#extrapolation.CuspExtrapolation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extrapolation of the form <span class="math notranslate nohighlight">\(a \exp^x\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="extrapolation.PowerExtrapolation">
+<em class="property">class </em><code class="sig-prename descclassname">extrapolation.</code><code class="sig-name descname">PowerExtrapolation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">power</span></em><span class="sig-paren">)</span><a class="headerlink" href="#extrapolation.PowerExtrapolation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extrapolation of the form <span class="math notranslate nohighlight">\(a x^n\)</span></p>
+<dl class="py method">
+<dt id="extrapolation.PowerExtrapolation.to_string">
+<code class="sig-name descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#extrapolation.PowerExtrapolation.to_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an extrapolation object in string respresentation</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="extrapolation.PotentialExtrapolation">
+<em class="property">class </em><code class="sig-prename descclassname">extrapolation.</code><code class="sig-name descname">PotentialExtrapolation</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">l</span></em><span class="sig-paren">)</span><a class="headerlink" href="#extrapolation.PotentialExtrapolation" title="Permalink to this definition">¶</a></dt>
+<dd><p>An extrapolation suitable for solutions of the Poisson equation.</p>
+<p>The prefactor of the left and right polynomial are such that the function remains
+continuous at the last grid point of the spline. The power of R on the left and right
+side is consistent with the boundary conditions of the solutions of the Poisson
+equation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>l</strong> (<em>int</em>) – The angular momentum for which the potential is computed.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="extrapolation.PotentialExtrapolation.to_string">
+<code class="sig-name descname">to_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#extrapolation.PotentialExtrapolation.to_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an extrapolation object in string respresentation</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="lebedev.html" class="btn btn-neutral float-right" title="lebedev" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="cubic_spline.html" class="btn btn-neutral float-left" title="cubic_spline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015 - 2020, Fernando Posada
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,5 +1,0 @@
-lebedev
-=======
-
-.. automodule:: lebedev
-    :members:

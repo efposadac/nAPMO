@@ -1,0 +1,290 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>radial_transform &mdash; nAPMO v1.1 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+        <script async="async" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Functional" href="../functional/functional.html" />
+    <link rel="prev" title="radial" href="radial.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home" alt="Documentation Home"> nAPMO
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.1
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../system/system.html">System</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="grids.html">Grids</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="angular.html">angular</a></li>
+<li class="toctree-l3"><a class="reference internal" href="atomic.html">atomic</a></li>
+<li class="toctree-l3"><a class="reference internal" href="becke.html">becke</a></li>
+<li class="toctree-l3"><a class="reference internal" href="cubic_spline.html">cubic_spline</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extrapolation.html">extrapolation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="lebedev.html">lebedev</a></li>
+<li class="toctree-l3"><a class="reference internal" href="multi_grid.html">multi_grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="poisson_solver.html">poisson_solver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="radial.html">radial</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">radial_transform</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../functional/functional.html">Functional</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../gto/gto.html">Gaussian Type Orbitals (GTO)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../scf/scf.html">Self-Consistent Field (SCF)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../solver/solver.html">Solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../wavefunction/wavefunction.html">wavefunction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data/data.html">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../utilities/utilities.html">Utilitites</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">nAPMO</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../API.html">API</a> &raquo;</li>
+        
+          <li><a href="grids.html">Grids</a> &raquo;</li>
+        
+      <li>radial_transform</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/grids/radial_transform.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-radial_transform">
+<span id="radial-transform"></span><h1>radial_transform<a class="headerlink" href="#module-radial_transform" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="radial_transform.RadialTransform">
+<em class="property">class </em><code class="sig-prename descclassname">radial_transform.</code><code class="sig-name descname">RadialTransform</code><a class="headerlink" href="#radial_transform.RadialTransform" title="Permalink to this definition">¶</a></dt>
+<dd><p>A definition of (radial) grid points by means of a transformation.</p>
+<p>The definition starts from a uniform 1D grid with spacing 1 and starting
+point 0: 0, 1, 2, 3, … npoint-1. These values are defined on the
+so-called t-axis. The transformation is a function r=f(t) that defines
+the actual grid points on the r-axis: f(0), f(1), f(2), … f(npoint-1).
+Different implementation for the function f are available.</p>
+<p>Abstract class for radial transformation. Not use it directly</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="radial_transform.IndentityRadialTransform">
+<em class="property">class </em><code class="sig-prename descclassname">radial_transform.</code><code class="sig-name descname">IndentityRadialTransform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="headerlink" href="#radial_transform.IndentityRadialTransform" title="Permalink to this definition">¶</a></dt>
+<dd><p>For testing only</p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="radial_transform.PowerRadialTransform">
+<em class="property">class </em><code class="sig-prename descclassname">radial_transform.</code><code class="sig-name descname">PowerRadialTransform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">rmin</span></em>, <em class="sig-param"><span class="n">rmax</span></em>, <em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="headerlink" href="#radial_transform.PowerRadialTransform" title="Permalink to this definition">¶</a></dt>
+<dd><p>A power grid.</p>
+<p>The grid points are distributed as follows:</p>
+<p><span class="math notranslate nohighlight">\(r_i = r_0 i^{\alpha}\)</span></p>
+<p>with</p>
+<p><span class="math notranslate nohighlight">\(\alpha = \dfrac{\ln r_{N-1} - \ln r_0}{\ln N-1}\)</span></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="radial_transform.ChebyshevRadialTransform">
+<em class="property">class </em><code class="sig-prename descclassname">radial_transform.</code><code class="sig-name descname">ChebyshevRadialTransform</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">radii</span></em>, <em class="sig-param"><span class="n">size</span></em><span class="sig-paren">)</span><a class="headerlink" href="#radial_transform.ChebyshevRadialTransform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radial grid for multi-center molecular integration.</p>
+<p>This grid is based on Becke’s paper, the transformation requires the covalent radius <code class="docutils literal notranslate"><span class="pre">radii</span></code> of a given atom, such that;</p>
+<p><span class="math notranslate nohighlight">\(r = radii \dfrac{1+x}{1-x}\)</span></p>
+<p class="rubric">References</p>
+<p>Becke, A. D. A multi-center numerical integration scheme for polyatomic molecules. J. Chem. Phys. 88, 2547 (1988).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radii</strong> (<em>float</em>) – Atomic radii for the grid.</p></li>
+<li><p><strong>size</strong> (<em>int</em>) – Number of grid points</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../functional/functional.html" class="btn btn-neutral float-right" title="Functional" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="radial.html" class="btn btn-neutral float-left" title="radial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2015 - 2020, Fernando Posada
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
