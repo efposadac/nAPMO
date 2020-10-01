@@ -5,12 +5,11 @@ molecule [e-:0:2]{
 
 # basis-set specification
 basis {
-    e- 6-31G
+    e- CC-PVDZ
 }
 
 functional {
 	e- lda
-	# e-:H abcd
 }
 
 # scf options
@@ -19,12 +18,13 @@ scf {
 }
 
 grid {
-    e- [96, 302]
+    e- [50, 110]
+    #e- file:E-ALPHA.grid
 }
 
 code {
 result = lambda x: print("PASS!") if abs(x) < 1e-3  else print("FAILED!")
-ref_energy = -7.3407476355
+ref_energy = -7.342919404650
 diff_energy = ref_energy - Energy
 result(diff_energy)   
 }

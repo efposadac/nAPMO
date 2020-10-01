@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     setup(
         name="napmo",
-        version="1.0",
+        version="1.1",
         description="Numerical Any Particle Molecular Orbital",
         author="Fernando Posada",
         author_email="fernando.posada@temple.edu",

@@ -109,7 +109,6 @@ class SCF(object):
             if other_psi is not None:
                 with napmo.runtime.timeblock('Coupling ints'):
                     psi.compute_coupling(other_psi, direct=self.get('direct'))
-                    # psi.compute_cor2species(other_psi)
 
             psi.build_fock()
 
@@ -185,7 +184,6 @@ class SCF(object):
             psi.compute_xc_matrix()
             psi.build_fock()
             # self.compute_energy_single(psi, show=True)
-
 
         # raise SystemExit
 

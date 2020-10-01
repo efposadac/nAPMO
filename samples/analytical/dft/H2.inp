@@ -7,12 +7,10 @@ molecule [e-:0:1]{
 # basis-set specification
 basis {
     e- 6-31G
-    #e- AUG-CC-PVQZ
 }
 
 functional {
 	e- lda
-	# e-:H abcd
 }
 
 # scf options
@@ -21,7 +19,7 @@ scf {
 }
 
 grid {
-    e- [96, 302]
+    e- [50, 110]
 }
 
 code {

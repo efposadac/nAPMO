@@ -53,7 +53,7 @@ before_install:
   # Build libxc
   - git clone https://gitlab.com/libxc/libxc.git
   - cd libxc
-  - git checkout 5.0.0
+  - git checkout 4.3.4
   - python setup.py install --user
   # - cmake . -Bobjdir -DCMAKE_INSTALL_PREFIX=$WORKDIR
   # - cd objdir
@@ -69,4 +69,4 @@ install:
   - pip install coverage
   - make -j 4
 script:
-  - nosetests --with-coverage --with-doctest
+  - nosetests --with-coverage --with-doctest --cover-package=napmo
