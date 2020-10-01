@@ -16,7 +16,8 @@ class MultiGrid(object):
 	Sometimes it is important to know the common points between molecular grids
 	specifically in the case of multi-species calculations.
 
-	arguments:
+	Args:
+		nspecies (int): Total number of unique species in the system
 
 	"""
 	def __init__(self, nspecies):
@@ -28,6 +29,12 @@ class MultiGrid(object):
 		self._this = napmo.cext.MultiGrid_new(nspecies)
 
 	def add_grid(self, grid):
+		"""
+		Adds a grid to the class
+
+		Args:
+			grid (BeckeGrid): Grid to be added, must be of the type of ``BeckeGrid``.
+		"""
 		assert isinstance(grid, napmo.BeckeGrid)
 		
 		# append grid
@@ -36,6 +43,17 @@ class MultiGrid(object):
 
 
 	def get_grid(self, symbol="", gid=-1):
+		"""
+		Returns the grid with a specific symbol or ID
+
+		Args:
+			symbol (str): Symbol of the desired grid
+			gid (int): ID of the grid
+
+		Notes: 
+			One of the two arguments have to be provided, ``symbol`` has priority over ``gid``
+			if both are provided.
+		"""
 		assert isinstance(symbol, str)
 		assert isinstance(gid, int)
 
@@ -53,6 +71,12 @@ class MultiGrid(object):
 		return aux
 
 	def get_grid_id(self, symbol):
+		"""
+		Returns the ID for a given grid
+
+		Args:
+			symbol (str): Symbol of the desired grid
+		"""
 		assert isinstance(symbol, str)
 
 		aux = self._grids.get(symbol, None)
@@ -62,6 +86,18 @@ class MultiGrid(object):
 		return aux		
 
 	def get_common_points(self, symbol_a, symbol_b):
+		"""
+		Returns the points with same coordinates between two grids.
+
+		Args:
+			symbol_a (str): Symbol of the species ``a``.
+			symbol_b (str): Symbol of the species ``b``.
+
+		Returns:
+			output (ndarray): Array with the index in which the cartesian points are the same.
+			The size of the array is the number of common points ``n`` with the shape ``(n, 2)``
+			in which ``[:,0]`` corresponds to de index for ``a`` while ``[:,1]`` are the index for ``b``.
+		"""
 		assert isinstance(symbol_a, str)
 		assert isinstance(symbol_b, str)
 
@@ -83,15 +119,24 @@ class MultiGrid(object):
 			return None
 
 	def show(self):
+		"""
+		Shown information about the object
+		"""
 		print("\nNumber of Grids: ", self.ngrids)
 		print("Object Information: ", self._grids)
 
 	@property
 	def ngrids(self):
+		"""
+		Returns the number of the grids in the object
+		"""
 		return napmo.cext.MultiGrid_get_ngrids(self._this)
 
 	@property
 	def nspecies(self):
+		"""
+		Returns the number of species used to create the object
+		"""
 		return napmo.cext.MultiGrid_get_nspecies(self._this)
 
 

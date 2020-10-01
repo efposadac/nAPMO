@@ -13,11 +13,35 @@ Grids:
 
    grids/grids
 
-Hartree-Fock:
+Functionals:
 
 .. toctree::
 
-   hf/hf
+   functional/functional
+
+GTO:
+
+.. toctree::
+
+   gto/gto
+
+SCF:
+
+.. toctree::
+
+   scf/scf
+
+Solvers:
+
+.. toctree::
+
+   solver/solver
+
+WaveFunctions:
+
+.. toctree::
+
+   wavefunction/wavefunction
 
 Data:
 

@@ -1,4 +1,4 @@
-SCF
+scf
 ===
 
 .. automodule:: scf

@@ -13,8 +13,16 @@ import napmo
 
 class Functional(object):
     """
-    Electronic functionals provided by libxc
-    ... complete
+    Electronic functionals provided by LibXC: This uses the pylibxc Python extension 
+    provided by LibXC library.
+
+    References:
+        Susi Lehtola, Conrad Steigemann, Micael J.T. Oliveira, and Miguel A.L. Marques, Recent developments in Libxc - A comprehensive library of functionals for density functional theory, Software X 7, 1 (2018)
+
+    Args:
+        symbol (str): Symbol of the species "e-" default.
+        optios (dict): information related to the functional to be used
+
     """
     def __init__(self, symbol, options={}):
         super(Functional, self).__init__()
@@ -52,6 +60,12 @@ class Functional(object):
         self.show()
 
     def compute_correlation(self, rho):
+        """
+        Computes the densitiy correlation energy and potential
+
+        Args:
+            rho (ndarray): Density on the grid
+        """
         inp = {}
         inp['rho'] = rho
         ret = self._correlation.compute(inp)
@@ -62,6 +76,12 @@ class Functional(object):
         return ret['zk'], ret['vrho']
 
     def compute_exchange(self, rho):
+        """
+        Computes the densitiy exchange energy and potential
+
+        Args:
+            rho (ndarray): Density on the grid
+        """
         inp = {}
         inp['rho'] = rho
         ret = self._exchange.compute(inp)
