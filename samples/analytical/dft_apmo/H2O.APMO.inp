@@ -44,7 +44,7 @@ grid {
 # and plot some graphics:
 
 code {
-result = lambda x: print("PASS!") if abs(x) < 1e-6  else print("FAILED!")
+result = lambda x: print("PASS!") if abs(x) < 1e-4  else print("FAILED!")
 ref_energy = -75.845763293121
 diff_energy = ref_energy - Energy
 print(diff_energy)

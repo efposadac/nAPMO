@@ -13,18 +13,21 @@ def isc_functional_selector(name):
     """
     Returns the function for a given functional name
     """
-    assert isinstance(name, str)
+    if name is not None:
+        assert isinstance(name, str)
 
-    database = {
-        'epc17-2': napmo.epc17_2
-    }
+        database = {
+            'epc17-2': napmo.epc17_2
+        }
 
-    functional = database.get(name)
+        functional = database.get(name)
 
-    if functional is None:
-        raise NotImplementedError(name+" Functional NOT available!")
+        if functional is None:
+            raise NotImplementedError(name+" Functional NOT available!")
+        else:
+            return functional
     else:
-        return functional
+        return None
 
 
 def epc17_2(rhoE, rhoN):

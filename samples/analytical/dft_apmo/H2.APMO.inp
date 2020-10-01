@@ -27,7 +27,7 @@ grid {
 
 
 code {
-result = lambda x: print("PASS!") if abs(x) < 1e-5  else print("FAILED!")
+result = lambda x: print("PASS!") if abs(x) < 1e-4  else print("FAILED!")
 ref_energy = -1.120811362249
 diff_energy = ref_energy - Energy
 print(diff_energy)

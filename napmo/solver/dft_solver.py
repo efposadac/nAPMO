@@ -50,7 +50,7 @@ class DFT(object):
                                                file=aux.get('file', None)))
 
             if pprint:
-                mgrid.get_grid(key).show()
+                mgrid.get_grid(particle.get('symbol')).show()
 
         self.options["grids"] = mgrid
 

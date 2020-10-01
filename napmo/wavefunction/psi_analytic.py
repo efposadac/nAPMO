@@ -163,12 +163,14 @@ class PSIA(napmo.PSIB):
 
     def compute_xc_grid(self, beta_psi=None):
         """
-        Computes the exchange correlation - numerically
+        Computes the exchange correlation - numerically only electrons
         """
 
-        self._xc_energy = 0.0
+        if self._symbol != "e-beta":
+            self._xc_energy = 0.0
 
         if self._functional is not None:
+            
 
             # Density in the grid
             ndim = 2 if beta_psi else 1
@@ -203,7 +205,10 @@ class PSIA(napmo.PSIB):
                 beta_psi._xc_vrho = c_vrho[1, :] + x_vrho[1, :]
 
 
-        # print("\n XC Energy: " + self.symbol + ":", self._xc_energy)
+            # print("\n XC Energy: " + self.symbol + ":", self._xc_energy)
+
+            # if beta_psi is not None:
+            #     print("\n XC Energy: " + beta_psi.symbol + ":", beta_psi._xc_energy)
 
 
     def compute_c_2species_grid(self, other_psi):
