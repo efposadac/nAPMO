@@ -17,7 +17,7 @@ def compute_kinetic(grid, psi, lmax):
     """
     Computes the action of the Kinetic operator on a trial function
 
-    :math:`-\dfrac{1}{2} \nabla^{2} \phi_{i}`
+    :math:`\dfrac{1}{2} \\nabla^{2} \phi_{i}`
 
     Args:
         grid (BeckeGrid): Molecular grid
@@ -25,7 +25,7 @@ def compute_kinetic(grid, psi, lmax):
         lmax (int): Size of the spherical expansion
 
     Return:
-        T (ndaray): Action of :math:`-\dfrac{1}{2} \nabla^2` over ``psi``
+        T (ndaray): Action of :math:`-\dfrac{1}{2} \\nabla^2` over ``psi``
     """
     T = []
     for i, ag in enumerate(grid.atgrids):

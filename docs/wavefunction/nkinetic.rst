@@ -1,0 +1,5 @@
+nkinetic
+========
+
+.. automodule:: nkinetic
+    :members:

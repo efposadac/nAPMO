@@ -12,6 +12,9 @@ import numpy as np
 def isc_functional_selector(name):
     """
     Returns the function for a given functional name
+
+    Args:
+        name (str): Functional name
     """
     if name is not None:
         assert isinstance(name, str)
@@ -33,7 +36,17 @@ def isc_functional_selector(name):
 def epc17_2(rhoE, rhoN):
     """
     Calculates the epc17-2 interspecies functional by Hammes-Schiffer
-    see http://dx.doi.org/10.1021/acs.jpclett.7b01442
+
+    references:
+        http://dx.doi.org/10.1021/acs.jpclett.7b01442
+
+    Args:
+        rhoE (ndarray): Density on the grid for electrons
+        rhoN (ndarray): Density on the grid for nuclei
+
+    Notes:
+        the dimesions of ``rhoE`` and ``rhoN`` must be the same, you have to choose the common points
+        between the grids or calculate the extrapolation between them.
     """
     a = 2.35
     b = 2.4
