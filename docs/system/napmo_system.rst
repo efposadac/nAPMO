@@ -1,7 +1,7 @@
 napmo
 =====
 
-.. automodule:: napmo
+.. automodule:: napmo_system
  
 .. autoclass:: NAPMO
     :members:

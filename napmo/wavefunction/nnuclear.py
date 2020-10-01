@@ -17,6 +17,7 @@ def compute_nuclear(grid, point_charges):
     Computes the Nuclear attraction repulsion operator on the grid
 
     :math:`\sum_{A} \dfrac{Z_{A}}{|r_i -R_A|}`
+    
 
     Args:
         grid (BeckeGrid) : The Molecular grid

@@ -160,11 +160,12 @@ class PowerRadialTransform(RadialTransform):
 
     The grid points are distributed as follows:
 
-    :math:`r_i = r_0 i^{\alpha}`
+    :math:`r_i = r_0 i^{\\alpha}`
 
     with
 
-    :math:`\alpha = \frac{\ln r_{N-1} - \ln r_0}{\ln N-1}`
+    :math:`\\alpha = \dfrac{\ln r_{N-1} - \ln r_0}{\ln N-1}`
+
     """
 
     def __init__(self, rmin, rmax, size):
