@@ -1,4 +1,4 @@
-wavefunction
+WaveFunction
 ============
 
 .. toctree::
