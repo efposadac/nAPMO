@@ -10,6 +10,7 @@ fernando.posada@temple.edu*/
 #include <math.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <complex> 
 
 #include <gsl/gsl_sf_legendre.h>
 #include <gsl/gsl_vector.h>
@@ -24,6 +25,9 @@ extern "C" {
 
 void spherical_harmonics_real(int l, int m, double *theta, double *phi,
                               double *output, int size);
+
+std::complex<double> spherical_harmonics_complex(int l, int m, double theta,
+                                                 double phi);
 
 #ifdef __cplusplus
 }

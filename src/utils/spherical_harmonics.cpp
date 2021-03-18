@@ -24,3 +24,23 @@ void spherical_harmonics_real(int l, int m, double *theta, double *phi,
     }
   }
 };
+
+std::complex<double> spherical_harmonics_complex(int l, int m, double theta,
+                                                 double phi) {
+
+  // printf("spherical_harmonics: l: %d m: %d\n", l, m);
+  
+  std::complex<double> result(cos(abs(m) * phi), sin(abs(m) * phi));
+
+  double x = cos(theta);
+  double p = gsl_sf_legendre_sphPlm(l, abs(m), x);
+
+  result *= p;
+
+  if (m < 0.0) {
+    double sign = (m % 2) ? -1.0 : 1.0;
+    result = sign * std::conj(result);
+  }
+
+  return result;
+}

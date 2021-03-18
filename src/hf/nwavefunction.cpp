@@ -12,7 +12,7 @@ fernando.posada@temple.edu
 #define INDEX(i, j) \
   ((i > j) ? (((i) * ((i) + 1) / 2) + (j)) : (((j) * ((j) + 1) / 2) + (i)))
 
-void nwavefunction_compute_2body_matrix_atm(WaveFunction *psi, BeckeGrid *grid,
+void nwavefunction_compute_2body_matrix(WaveFunction *psi, BeckeGrid *grid,
                                             double *phi, double *J, double *K) {
   unsigned int ndim = psi->ndim;
   double factor = psi->x_factor;
@@ -61,63 +61,6 @@ void nwavefunction_compute_2body_matrix_atm(WaveFunction *psi, BeckeGrid *grid,
 
     exchange += exchange.triangularView<Eigen::StrictlyUpper>().transpose();
     exchange *= factor;
-  }
-
-  // std::cout<<exchange<<std::endl;
-
-  MMap G(psi->G, ndim, ndim);
-
-  G = coulomb + exchange;
-}
-
-void nwavefunction_compute_2body_matrix_mol(WaveFunction *psi, BeckeGrid *grid,
-                                            double *phi, double *J, double *K) {
-  unsigned int ndim = psi->ndim;
-  double factor = psi->x_factor;
-  unsigned int size = ndim * (ndim + 1) / 2;
-
-  // Precompute Psi
-  MMap F(phi, ndim, grid->get_size());
-  Matrix Psi(size, grid->get_size());
-
-  for (unsigned int i = 0; i < ndim; ++i) {
-    for (unsigned int j = i; j < ndim; ++j) {
-      Psi.row(INDEX(i, j)) = F.row(i).array() * F.row(j).array();
-    }
-  }
-
-  // Compute coulomb
-  A1DMap C(J, grid->get_size());
-  Matrix coulomb(ndim, ndim);
-  coulomb.setZero();
-
-  for (unsigned int i = 0; i < ndim; ++i) {
-    for (unsigned int j = i; j < ndim; ++j) {
-      Array1D buff = Psi.row(INDEX(i, j));
-      buff *= C;
-
-      coulomb(i, j) = grid->integrate(buff);
-    }
-  }
-
-  coulomb += coulomb.triangularView<Eigen::StrictlyUpper>().transpose();
-
-  MMap E(K, ndim, grid->get_size());
-  Matrix exchange(ndim, ndim);
-  exchange.setZero();
-
-  // FELIX: add conditional for HF or hybrid functionals
-  if (factor != 0.0) {
-    for (unsigned int i = 0; i < ndim; ++i) {
-      for (unsigned int j = i; j < ndim; ++j) {
-        Array1D buff = F.row(i).array() * E.row(j).array();
-
-        exchange(i, j) = grid->integrate(buff);
-      }
-    }
-
-    exchange += exchange.triangularView<Eigen::StrictlyUpper>().transpose();
-    exchange *= factor * psi->eta;
   }
 
   // std::cout<<exchange<<std::endl;
@@ -246,48 +189,6 @@ void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid,
   // tests
   // std::cout << "\n\t EC:\n";
   // std::cout << EC << std::endl;
-}
-
-
-void nwavefunction_compute_cor2species_matrix(WaveFunction *psi, BeckeGrid *grid, 
-                                              double *phi, double *xc_vrho) {
-
-  unsigned int n = grid->get_size();          // grid points
-  unsigned int ndim = psi->ndim;              // number of orbitals
-  unsigned int size = ndim * (ndim + 1) / 2;  // triangular matrix size
-
-  // Orbitals in grid - organized
-  MMap PHI(phi, ndim, n);
-  Matrix Psi(size, n);
-
-  // Orbital products in grid - calculated
-  for (unsigned int i = 0; i < ndim; ++i) {
-    for (unsigned int j = i; j < ndim; ++j) {
-      Psi.row(INDEX(i, j)) = PHI.row(i).array() * PHI.row(j).array();
-    }
-  }
-
-  // TODO: Density and orbitals gradients
-
-  A1DMap P(xc_vrho, n);
-  MMap EC(psi->XC, ndim, ndim);
-  
-  Matrix aux(ndim, ndim);
-  aux.setZero();
-
-  // Matrix
-  for (unsigned int i = 0; i < ndim; ++i) {
-    for (unsigned int j = i; j < ndim; ++j) {
-      Array1D buff = Psi.row(INDEX(i, j));
-
-      buff *= P;
-      aux(i, j) = grid->integrate(buff);
-    }
-  }
-
-  aux += aux.triangularView<Eigen::StrictlyUpper>().transpose();
-
-  EC += aux;
 }
 
 
