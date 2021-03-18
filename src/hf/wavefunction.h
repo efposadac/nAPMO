@@ -65,18 +65,13 @@ void wavefunction_compute_energy(WaveFunction *psi);
 void wavefunction_compute_2body_matrix(WaveFunction *psi,
                                        std::vector<QuartetBuffer> *ints);
 
-/* void wavefunction_compute_exccor_matrix(WaveFunction *psi); */
-
 // nwavefunction
 
 void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
                                            double *dm, double *output,
                                            double epsilon, double *dmmaxrow);
 
-void nwavefunction_compute_2body_matrix_atm(WaveFunction *psi, BeckeGrid *grid,
-                                            double *phi, double *J, double *K);
-
-void nwavefunction_compute_2body_matrix_mol(WaveFunction *psi, BeckeGrid *grid,
+void nwavefunction_compute_2body_matrix(WaveFunction *psi, BeckeGrid *grid,
                                             double *phi, double *J, double *K);
 
 void nwavefunction_compute_coupling(WaveFunction *psi, BeckeGrid *grid,
@@ -84,7 +79,6 @@ void nwavefunction_compute_coupling(WaveFunction *psi, BeckeGrid *grid,
 
 void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid, double *phi, double *xc_vrho);
 
-void nwavefunction_compute_cor2species_matrix(WaveFunction *psi, BeckeGrid *grid, double *phi, double *XC);
 
 #ifdef __cplusplus
 }

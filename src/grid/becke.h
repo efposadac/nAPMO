@@ -27,8 +27,6 @@ private:
   double *weights;       // weights of the grid
   double *becke_weights; // Becke weights
 
-  std::vector<AtomicGrid> atgrid;
-
   /*
   Calculates the becke weights for a given ``BeckeGrid`` grid
   as described in eq. 22 Becke, 1988.
@@ -40,6 +38,8 @@ private:
   void compute_weights();
 
 public:
+  std::vector<AtomicGrid> atgrid;
+
   BeckeGrid(AtomicGrid **grids, const int n);
 
   BeckeGrid(double *p, const int sz, const int nc);

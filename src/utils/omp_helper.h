@@ -1,4 +1,4 @@
-/*file: omp_helper.c
+/*file: omp_helper.h
 nAPMO package
 Copyright (c) 2016, Edwin Fernando Posada
 All rights reserved.

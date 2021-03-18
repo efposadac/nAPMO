@@ -27,8 +27,9 @@ def compute_nuclear(grid, point_charges):
     Return:
         V (ndarray) : :math:`\sum_{A} \dfrac{Z_{A}}{|r_i -R_A|}` for all points in the grid.
     """
+
     V = np.array([np.array([
-        point.get('atomic_number', point.get('charge')) /
+        point.get('atomic_number', None) /
         np.sqrt(((point.get('origin') - r)**2).sum())
         for point in point_charges]).sum()
         for r in grid.points])

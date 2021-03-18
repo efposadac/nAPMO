@@ -173,12 +173,8 @@ cext.nwavefunction_compute_density_from_dm.restype = None
 cext.nwavefunction_compute_density_from_dm.argtypes = [
     c_void_p, c_void_p, a2df, a1df, c_double, a1df]
 
-cext.nwavefunction_compute_2body_matrix_atm.restype = None
-cext.nwavefunction_compute_2body_matrix_atm.argtypes = [
-    c_void_p, c_void_p, a2df, a1df, a2df]
-
-cext.nwavefunction_compute_2body_matrix_mol.restype = None
-cext.nwavefunction_compute_2body_matrix_mol.argtypes = [
+cext.nwavefunction_compute_2body_matrix.restype = None
+cext.nwavefunction_compute_2body_matrix.argtypes = [
     c_void_p, c_void_p, a2df, a1df, a2df]
 
 cext.nwavefunction_compute_coupling.restype = None
@@ -187,10 +183,6 @@ cext.nwavefunction_compute_coupling.argtypes = [
 
 cext.nwavefunction_compute_xc_matrix.restype = None
 cext.nwavefunction_compute_xc_matrix.argtypes = [
-    c_void_p, c_void_p, a2df, a1df]
-
-cext.nwavefunction_compute_cor2species_matrix.restype = None
-cext.nwavefunction_compute_cor2species_matrix.argtypes = [
     c_void_p, c_void_p, a2df, a1df]
 
 # PrimitiveGaussian
@@ -409,6 +401,11 @@ cext.MultiGrid_get_nspecies.argtypes = [c_void_p]
 
 cext.MultiGrid_add_grid.restype = c_int
 cext.MultiGrid_add_grid.argtypes = [c_void_p, c_void_p]
+
+# Auxiliary Basis
+cext.auxiliary_orbitals.restype = None
+cext.auxiliary_orbitals.argtypes = [c_void_p, c_int, c_int]
+
 
 # CubicSpline
 cext.CubicSpline_new.restype = c_void_p

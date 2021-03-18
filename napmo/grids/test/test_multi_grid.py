@@ -1,4 +1,4 @@
-# file: test_multigrid.py
+# file: test_multi_grid.py
 # nAPMO package
 # Copyright (c) 2014, Edwin Fernando Posada
 # All rights reserved.
@@ -9,7 +9,7 @@ import napmo
 import numpy as np
 
 
-def test_napmo_multigrid():
+def test_napmo_multi_grid():
     file = ("""
 # Molecule definition:
 
@@ -72,4 +72,4 @@ grid {
 
 
 # if __name__ == '__main__':
-#     test_napmo_multigrid()
+#     test_napmo_multi_grid()

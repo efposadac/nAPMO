@@ -9,6 +9,9 @@ fernando.posada@temple.edu*/
 
 AtomicGrid::AtomicGrid(AngularGrid *angular, RadialGrid *radial, double *R) {
 
+  ang_grid = angular;
+  rad_grid = radial;
+
   size = radial->get_size() * angular->get_lorder();
   radii = radial->get_radii();
 

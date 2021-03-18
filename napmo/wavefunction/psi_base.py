@@ -205,20 +205,24 @@ class PSIB(Structure):
 
         return index
 
-    def plot_dens(self, grid=None, kind=''):
+    def plot_dens(self, psi=None, grid=None, kind='', marker="-", xlim=None, ylim=None):
         print("Plotting Density...", end=' ')
+
 
         if grid is not None:
             self._grid = grid
-            gbasis = self.species.get('basis').compute(
-                self._grid.points).T.copy()
-            self.Dgrid = self._compute_density_from_dm(self.D, gbasis)
 
-        self.plot_obj(self.Dgrid.sum(axis=0), "rho" + self.symbol + kind)
+        if psi is None:
+            gbasis = self.species.get('basis').compute(self._grid.points).T.copy()
+            Dgrid = self._compute_density_from_dm(self.D, gbasis)
+        else:
+            Dgrid = psi**2 * self._eta
+
+        self.plot_obj(Dgrid.sum(axis=0), label="rho" + self.symbol + kind, marker=marker, xlim=xlim, ylim=ylim)
 
         print("Done!")
 
-    def plot_obj(self, obj, label, marker="-"):
+    def plot_obj(self, obj, label, marker="-", xlim=None, ylim=None):
         """
         Computes the density in the grid for each orbital from density matrix.
         Includes virtual orbitals.
@@ -237,10 +241,15 @@ class PSIB(Structure):
         np.savetxt(
             label + '.txt', np.stack([bwa[:, 0], bwa[:, 1]]).T, delimiter='\t', fmt=['%.12f', '%.12f'])
 
-        # plt.plot(bwa[:, 0] * napmo.BOHR_TO_ANGSTROM,
-        #          bwa[:, 1], marker, label=label)
-        # plt.xlabel("z")
-        # plt.ylabel("obj")
-        # plt.legend()
-        # plt.xlim(-2, 2)
-        # # plt.ylim(0, 0.4)
+        plt.plot(bwa[:, 0] * napmo.BOHR_TO_ANGSTROM,
+                 bwa[:, 1], marker, label=label)
+        plt.xlabel("z")
+        plt.ylabel("obj")
+        plt.legend()
+
+        if xlim is not None:
+            plt.xlim(xlim[0], xlim[1])
+
+        if ylim is not None:
+            plt.ylim(ylim[0], ylim[1])
+

@@ -177,15 +177,24 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
   MMap D(psi->D, ndim, ndim);
   MMap G(psi->G, ndim, ndim);
 
+  Matrix C(ndim,ndim);
+  Matrix K(ndim,ndim);
+
   G.setZero();
+  C.setZero();
+  K.setZero();
 
   // FELIX: add a conditional for HF or hybrid functionals
   // printf("exchange factor %f \n", factor);
 
   std::vector<Matrix> GB(nthreads, Matrix::Zero(ndim, ndim));
+  std::vector<Matrix> CB(nthreads, Matrix::Zero(ndim, ndim));
+  std::vector<Matrix> KB(nthreads, Matrix::Zero(ndim, ndim));
 
   auto lambda = [&](unsigned int thread_id) {
     auto &g = GB[thread_id];
+    auto &c = CB[thread_id];
+    auto &k = KB[thread_id];
 
     for (unsigned int i = 0; i < ints->at(thread_id).p.size(); i++) {
 
@@ -197,24 +206,29 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
 
       // std::cout << p << " " << q << " " << r << " " << s << " " << val << std::endl;
 
-      auto coulomb = D(r, s) * val;
 
       // Adds coulomb operator contributions
-
+      auto coulomb = D(r, s) * val;
       if (p == r && q == s) {
-        g(p, q) = g(p, q) + coulomb;
+        g(p, q) += coulomb;
+        c(p, q) += coulomb;
         if (r != s) {
-          g(p, q) = g(p, q) + coulomb;
+          g(p, q) += coulomb;
+          c(p, q) += coulomb;
         }
       } else {
-        g(p, q) = g(p, q) + coulomb;
+        g(p, q) += coulomb;
+        c(p, q) += coulomb;
         if (r != s) {
-          g(p, q) = g(p, q) + coulomb;
+          g(p, q) += coulomb;
+          c(p, q) += coulomb;
         }
         coulomb = D(p, q) * val;
-        g(r, s) = g(r, s) + coulomb;
+        g(r, s) += coulomb;
+        c(r, s) += coulomb;
         if (p != q) {
-          g(r, s) = g(r, s) + coulomb;
+          g(r, s) += coulomb;
+          c(r, s) += coulomb;
         }
       }
 
@@ -224,39 +238,45 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
         if (r != s) {
           exchange = D(q, s) * val * factor;
           g(p, r) += exchange;
-
+          k(p, r) += exchange;
           if (p == r && q != s) {
             g(p, r) += exchange;
+            k(p, r) += exchange;
           }
         }
         if (p != q) {
           exchange = D(p, r) * val * factor;
           if (q > s) {
             g(s, q) += exchange;
+            k(s, q) += exchange;
           } else {
             g(q, s) += exchange;
-
+            k(q, s) += exchange;
             if (q == s && p != r) {
               g(q, s) += exchange;
+              k(q, s) += exchange;
             }
           }
           if (r != s) {
             exchange = D(p, s) * val * factor;
             if (q <= r) {
               g(q, r) += exchange;
+              k(q, r) += exchange;
               if (q == r) {
                 g(q, r) += exchange;
+                k(q, r) += exchange;
               }
             } else {
               g(r, q) += exchange;
+              k(r, q) += exchange;
               if (p == r && s == q)
                 continue;
             }
           }
         }
-
         exchange = D(q, r) * val * factor;
         g(p, s) += exchange;
+        k(p, s) += exchange;
       }
     }
   }; // end lambda
@@ -266,11 +286,33 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
   // accumulate contributions from all threads
   for (size_t i = 1; i < nthreads; ++i) {
     GB[0] += GB[i];
+    CB[0] += CB[i];
+    KB[0] += KB[i];
   }
 
   // Make symmetric
   GB[0] += GB[0].triangularView<Eigen::StrictlyLower>().transpose();
   G = GB[0].triangularView<Eigen::Upper>();
   G += G.triangularView<Eigen::StrictlyUpper>().transpose();
+
+  CB[0] += CB[0].triangularView<Eigen::StrictlyLower>().transpose();
+  C = CB[0].triangularView<Eigen::Upper>();
+  C += C.triangularView<Eigen::StrictlyUpper>().transpose();
+
+
+  KB[0] += KB[0].triangularView<Eigen::StrictlyLower>().transpose();
+  K = KB[0].triangularView<Eigen::Upper>();
+  K += K.triangularView<Eigen::StrictlyUpper>().transpose();
+
+  auto ec = D.cwiseProduct(0.5 * C).sum();
+  auto kc = D.cwiseProduct(0.5 * K).sum();
+
+  std::cout<<"J Matrix: \n"<<C<< std::endl;
+  std::cout<<"K Matrix: \n"<<K<< std::endl;
+
+
+  std::cout<<"J: "<<ec<< std::endl;
+  std::cout<<"K: "<<kc<< std::endl;
 }
+
 

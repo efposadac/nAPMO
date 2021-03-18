@@ -15,6 +15,12 @@ fernando.posada@temple.edu*/
 extern "C" {
 #endif
 
+/* DGEEV prototype */
+void dgeev_( char* jobvl, char* jobvr, int* n, double* a,
+              int* lda, double* wr, double* wi, double* vl, int* ldvl,
+              double* vr, int* ldvr, double* work, int* lwork, int* info );
+
+
 int utils_factorial2(const int n);
 
 void utils_multiply_segmented_array(const int size, const int segments,

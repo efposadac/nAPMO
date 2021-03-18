@@ -1,11 +1,11 @@
 # Molecule definition
-molecule [e-:0:1]{
-    He  0.000   0.000   0.000
+molecule {
+Be  0.000   0.000   0.000
 }
 
 # basis-set specification
 basis {
-    e- CC-PVQZ
+    e- CC-PVDZ
 }
 
 # scf options

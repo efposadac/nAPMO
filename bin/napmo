@@ -17,17 +17,24 @@ def napmo_cli():
     parser = argparse.ArgumentParser()
     parser.add_argument("input", help="The input file")
     parser.add_argument("-o", "--output", help="The output file")
+    parser.add_argument("-t", "--type", help="Input is string or file")
     args = parser.parse_args()
 
     path = os.getcwd()
-    fin = os.path.join(path, args.input)
     fout = args.output
+    ftype = args.type
+
+    if ftype != "string":
+        fin = os.path.join(path, args.input)
+    else:
+        fin = args.input
 
     if fout:
         fout = os.path.join(path, fout)
         sys.stdout = open(fout, 'w')
 
-    return fin, fout
+
+    return fin, fout, ftype
 
 
 def napmo_banner():
@@ -54,9 +61,14 @@ fernando.posada@temple.edu
     )
 
 
-def napmo_loadInput(file):
-    with open(file, 'r') as f:
-        data = f.read()
+
+def napmo_loadInput(file, type):
+
+    if type != "string":
+        with open(file, 'r') as f:
+            data = f.read()
+    else:
+        data = file
 
     print(
         """
@@ -71,13 +83,13 @@ NAPMO is working with the following input file:
 if __name__ == '__main__':
 
     # Parse cli arguments
-    fin, fout = napmo_cli()
+    fin, fout, ftype = napmo_cli()
 
     # Show banner
     napmo_banner()
 
     # Load input file
-    data = napmo_loadInput(fin)
+    data = napmo_loadInput(fin, ftype)
     data = napmo.InputParser(data)
 
     # Build NAPMO system

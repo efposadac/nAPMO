@@ -25,6 +25,9 @@ private:
   double *weights;   // weights of the grid
 
 public:
+  AngularGrid * ang_grid;
+  RadialGrid * rad_grid;
+
   AtomicGrid() = default;
 
   AtomicGrid(const AtomicGrid &) = default;
