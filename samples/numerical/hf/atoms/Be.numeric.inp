@@ -1,31 +1,26 @@
 # Molecule definition
-molecule [e-:0:1]{
-    H  0.000   0.000   0.382
-    H  0.000   0.000   -0.382
+molecule {
+Be  0.000   0.000   0.000
 }
 
 # basis-set specification
 basis {
-    e- 6-31G
-}
-
-functional {
-	e- lda
+    e- STO-3G
 }
 
 # scf options
 scf {
-    dft
-    #debug=True
+    hf
+    numeric
 }
 
 grid {
-    e- [50, 110]
+    e- [50, 6]
 }
 
 code {
 result = lambda x: print("PASS!") if abs(x) < 1e-4  else print("FAILED!")
-ref_energy = -1.1330423560
+ref_energy = -14.573066
 diff_energy = ref_energy - Energy
-result(diff_energy)   
+result(diff_energy)    
 }

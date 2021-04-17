@@ -33,6 +33,7 @@ from napmo.grids.extrapolation import PotentialExtrapolation
 from napmo.grids.lebedev import lebedev_get_order
 from napmo.grids.poisson_solver import poisson_solver
 from napmo.grids.multi_grid import MultiGrid
+from napmo.grids.auxiliary_basis import AuxiliaryBasis
 
 from napmo.utilities.cell import Cell
 from napmo.utilities.ode2 import solve_ode2
@@ -304,6 +305,9 @@ cext.RadialGrid_del.argtypes = [c_void_p]
 cext.RadialGrid_integrate.restype = c_double
 cext.RadialGrid_integrate.argtypes = [c_void_p, c_int, a1df]
 
+cext.RadialGrid_deriv2.restype = POINTER(c_double)
+cext.RadialGrid_deriv2.argtypes = [c_void_p, a1df]
+
 cext.RadialGrid_get_size.restype = c_int
 cext.RadialGrid_get_size.argtypes = [c_void_p]
 
@@ -403,9 +407,17 @@ cext.MultiGrid_add_grid.restype = c_int
 cext.MultiGrid_add_grid.argtypes = [c_void_p, c_void_p]
 
 # Auxiliary Basis
-cext.auxiliary_orbitals.restype = None
-cext.auxiliary_orbitals.argtypes = [c_void_p, c_int, c_int]
+cext.AuxiliaryBasis_new.restype = c_void_p
+cext.AuxiliaryBasis_new.argtypes = [c_void_p, c_int]
 
+cext.AuxiliaryBasis_del.restype = None
+cext.AuxiliaryBasis_del.argtypes = [c_void_p]
+
+cext.AuxiliaryBasis_get_aobasis.restype = POINTER(c_double)
+cext.AuxiliaryBasis_get_aobasis.argtypes = [c_void_p]
+
+cext.AuxiliaryBasis_get_nao.restype = c_int
+cext.AuxiliaryBasis_get_nao.argtypes = [c_void_p]
 
 # CubicSpline
 cext.CubicSpline_new.restype = c_void_p

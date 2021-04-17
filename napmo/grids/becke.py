@@ -40,10 +40,10 @@ class BeckeGrid(object):
         self._symbol = species.get('symbol')
 
         if file is not None:
-            f = FortranFile( file, 'r' )
+            f = FortranFile(file, 'r')
             size = f.read_ints(dtype=np.int64)[0]
             pw = f.read_reals(dtype=np.float64)
-            pw = pw.reshape(int(size/4), 4, order='F')
+            pw = pw.reshape(int(size / 4), 4, order='F')
             pw = np.asanyarray(pw, order='C')
             size = pw.shape[0]
 
@@ -97,7 +97,7 @@ class BeckeGrid(object):
         Prints information of the object.
         """
         print("\nGrid Information:", self._symbol)
-        print("-"*(18+len(self._symbol)))
+        print("-" * (18 + len(self._symbol)))
         print("Centers: ", self.ncenter)
         print("Size: ", self.size)
 
@@ -152,3 +152,7 @@ class BeckeGrid(object):
     @property
     def nang(self):
         return self._nang
+
+    @property
+    def symbol(self):
+        return self._symbol

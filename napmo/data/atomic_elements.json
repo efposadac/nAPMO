@@ -164,7 +164,7 @@
         "is_quantum": false,
         "atomic_number": 2,
         "atomic_radii": 0.5291233174979506,
-        "atomic_radii_2": 0.2645616587489753,
+        "atomic_radii_2": 0.5291233174979506,
         "boiling_point": 4.216,
         "density": 0.1785,
         "electron_affinity": 21,

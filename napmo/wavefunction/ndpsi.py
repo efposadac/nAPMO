@@ -12,7 +12,7 @@ import numpy as np
 import napmo
 
 
-def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_tot, mass_inv, charge):
+def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_tot, mass_inv):
     """
     Computes \Delta \psi from Becke's paper
 
@@ -59,8 +59,7 @@ def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_tot, mass_inv, charge):
                 aux = np.array(sph_expansion[:, idx])
 
                 # Build b
-                mu = napmo.CubicSpline(aux,
-                                       rtransform=atgrid.radial_grid.rtransform)
+                mu = napmo.CubicSpline(aux, rtransform=rft)
 
                 fy = -2.0 / mass_inv * mu.y
                 fd = -2.0 / mass_inv * mu.dx

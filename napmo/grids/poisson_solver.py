@@ -49,16 +49,20 @@ def poisson_solver(grid, _dens, lmax, sph_exp=None):
 
         result = []
         idx = 0
+
+        rgrid = atgrid.radial_grid
+        rtf = rgrid.rtransform
+        radii = rtf.radius_all()
+
+        b = napmo.CubicSpline(2 / radii, -2 / radii**2, rtf)
+
         for l in range(lmax + 1):
             for m in range(-l, l + 1):
                 aux = np.array(sph_expansion[:, idx])
 
                 # Build b
-                rho = napmo.CubicSpline(aux,
-                                        rtransform=atgrid.radial_grid.rtransform)
-                rtf = rho.rtransform
-                rgrid = napmo.RadialGrid(rtransform=rtf)
-                radii = rtf.radius_all()
+                rho = napmo.CubicSpline(aux, rtransform=rtf)
+
                 # The approach followed here is obtained after substitution of
                 # u = r*V in Eq. (21) in Becke's paper. After this transformation,
                 # the boundary conditions can be implemented such that the output
@@ -66,9 +70,7 @@ def poisson_solver(grid, _dens, lmax, sph_exp=None):
                 fy = -4 * np.pi * rho.y
                 fd = -4 * np.pi * rho.dx
                 f = napmo.CubicSpline(fy, fd, rtf)
-                b = napmo.CubicSpline(2 / radii, -2 / radii**2, rtf)
-                a = napmo.CubicSpline(-l * (l + 1) * radii ** -2,
-                                      2 * l * (l + 1) * radii ** -3, rtf)
+
                 # Derivation of boundary condition at rmax:
                 # Multiply differential equation with r**l and integrate. Using
                 # partial integration and the fact that V(r)=A/r**(l+1) for large
@@ -76,15 +78,23 @@ def poisson_solver(grid, _dens, lmax, sph_exp=None):
                 # V(rmax) = A/rmax**(l+1) = integrate(r**l
                 # rho(r))/(2l+1)/rmax**(l+1)
                 V_rmax = rgrid.integrate(
-                    rho.y * radii**l, 1) / radii[-1]**(l + 1) / (2 * l + 1)
+                    rho.y * radii**l, 1
+                ) / radii[-1]**(l + 1) / (2 * l + 1)
+
                 # Derivation of boundary condition at rmin:
                 # Same as for rmax, but multiply differential equation with r**(-l-1)
                 # and assume that V(r)=B*r**l for small r.
-                V_rmin = rgrid.integrate(rho.y * radii**(-l - 1),
-                                         1) * radii[0]**(l) / (2 * l + 1)
+                V_rmin = rgrid.integrate(
+                    rho.y * radii**(-l - 1), 1
+                ) * radii[0]**(l) / (2 * l + 1)
 
                 bcs = (V_rmin, None, V_rmax, None)
 
+                # Build a
+                a = napmo.CubicSpline(
+                    -l * (l + 1) * radii ** -2, 2 * l * (l + 1) * radii** -3, rtf)
+
+                # Solve the differential equation
                 v = napmo.solve_ode2(
                     b, a, f, bcs, napmo.PotentialExtrapolation(l))
 

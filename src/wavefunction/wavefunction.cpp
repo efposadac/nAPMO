@@ -112,6 +112,9 @@ void wavefunction_iterate(WaveFunction *psi) {
   auto ehf = D.cwiseProduct(H + (0.5 * G) + J).sum() + xc_energy ;
   psi->energy = ehf;
   psi->rmsd = (D - L).norm();
+
+  // std::cout << "Energy: " << ehf << std::endl;
+  // std::cout << "RSMD: " << psi->rmsd << std::endl;
 }
 
 void wavefunction_compute_coefficients(WaveFunction *psi) {
@@ -304,15 +307,15 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
   K = KB[0].triangularView<Eigen::Upper>();
   K += K.triangularView<Eigen::StrictlyUpper>().transpose();
 
-  auto ec = D.cwiseProduct(0.5 * C).sum();
-  auto kc = D.cwiseProduct(0.5 * K).sum();
+  // auto ec = D.cwiseProduct(0.5 * C).sum();
+  // auto kc = D.cwiseProduct(0.5 * K).sum();
 
-  std::cout<<"J Matrix: \n"<<C<< std::endl;
-  std::cout<<"K Matrix: \n"<<K<< std::endl;
+  // std::cout<<"J Matrix: \n"<<C<< std::endl;
+  // std::cout<<"K Matrix: \n"<<K<< std::endl;
 
 
-  std::cout<<"J: "<<ec<< std::endl;
-  std::cout<<"K: "<<kc<< std::endl;
+  // std::cout<<"J: "<<ec<< std::endl;
+  // std::cout<<"K: "<<kc<< std::endl;
 }
 
 

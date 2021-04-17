@@ -56,4 +56,6 @@ def test_coulomb_H():
     # print(integral)
     assert np.allclose(integral, 0.77461)
 
-# test_coulomb_H()
+
+if __name__ == '__main__':
+    test_coulomb_H()

@@ -23,14 +23,14 @@ class RadialGrid(object):
 
         # Hydrogen by default
         radii = napmo.AtomicElementsDatabase().get("H", {}).get(
-                'atomic_radii', 1.0)
+            'atomic_radii_2', 1.0)
 
         # Isotopes case
         aux = atomic_symbol.find("_")
         if aux > 0:
             atom = atomic_symbol[0:aux]
             radii = napmo.AtomicElementsDatabase().get(atom, {}).get(
-                'atomic_radii', 1.0)    
+                'atomic_radii', 1.0)
 
         # Atoms case
         if atomic_symbol in napmo.AtomicElementsDatabase():
@@ -39,6 +39,8 @@ class RadialGrid(object):
                 'atomic_radii', 1.0)
 
         self._rtransform = rtransform
+
+        print("Radii used for " + atomic_symbol + ": ", radii)
 
         if rtransform is None:
             self._rtransform = napmo.ChebyshevRadialTransform(radii, size)
@@ -50,6 +52,13 @@ class RadialGrid(object):
         Perform integration on the radial grid.
         """
         return napmo.cext.RadialGrid_integrate(self._this, segments, f)
+
+    def deriv2(self, f):
+        """
+        Perform integration on the radial grid.
+        """
+        ptr = napmo.cext.RadialGrid_deriv2(self._this, f)
+        return np.ctypeslib.as_array(ptr, shape=(self.size,))
 
     @property
     def size(self):

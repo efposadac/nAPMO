@@ -30,7 +30,7 @@ class PSIB(Structure):
         ("_L", POINTER(c_double)),  # Last Density
         ("_G", POINTER(c_double)),  # 2 Body
         ("_J", POINTER(c_double)),  # Coupling
-        ("_XC", POINTER(c_double)), # Exchange Correlation Matrix
+        ("_XC", POINTER(c_double)),  # Exchange Correlation Matrix
         ("_F", POINTER(c_double)),  # Fock
         ("_O", POINTER(c_double)),  # Orbitals
         ("_nbasis", c_int),
@@ -66,7 +66,7 @@ class PSIB(Structure):
         self._xc_vrho = None
         self._tf = False
 
-        self._x_factor = self._kappa/self._eta
+        self._x_factor = self._kappa / self._eta
 
         if 'tf' in self.options:
             self._tf = True
@@ -135,12 +135,13 @@ class PSIB(Structure):
         """
         Calculates the total point charges energy for the system
         """
-        output = [pa.get('charge') * pb.get('charge') /
-                  np.sqrt(((pa.get('origin') - pb.get('origin'))**2).sum())
-                  for i, pa in enumerate(self.species.get('particles'))
-                  for j, pb in enumerate(self.species.get('particles'))
-                  if j > i and not pa.is_quantum and not pb.is_quantum
-                  ]
+        output = [
+            pa.get('charge') * pb.get('charge') /
+            np.sqrt(((pa.get('origin') - pb.get('origin'))**2).sum())
+            for i, pa in enumerate(self.species.get('particles'))
+            for j, pb in enumerate(self.species.get('particles'))
+            if j > i and not pa.is_quantum and not pb.is_quantum
+        ]
         return sum(output)
 
     @property
@@ -175,6 +176,18 @@ class PSIB(Structure):
         """
         return self._sid
 
+    @property
+    def energy(self):
+        return self._energy
+
+    @property
+    def xc_energy(self):
+        return self._xc_energy
+
+    @property
+    def occupation(self):
+        return self._occupation
+
     # ### TEST: DO NOT use this functions for real things ###
 
     def _compute_density_from_dm(self, dm, psi):
@@ -207,7 +220,6 @@ class PSIB(Structure):
 
     def plot_dens(self, psi=None, grid=None, kind='', marker="-", xlim=None, ylim=None):
         print("Plotting Density...", end=' ')
-
 
         if grid is not None:
             self._grid = grid
@@ -252,4 +264,3 @@ class PSIB(Structure):
 
         if ylim is not None:
             plt.ylim(ylim[0], ylim[1])
-

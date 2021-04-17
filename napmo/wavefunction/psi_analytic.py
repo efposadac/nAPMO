@@ -65,6 +65,7 @@ class PSIA(napmo.PSIB):
         Computes the overlap matrix
         """
         napmo.cext.LibintInterface_compute_1body_ints(self._libint, 1, self.S)
+
         # print("\n Overlap Matrix:" + self.symbol + ": ", self.S.sum())
         # print(self.S)
 
@@ -80,6 +81,7 @@ class PSIA(napmo.PSIB):
         self.O[:] = tmp[0]
         self.X[:] = tmp[1]
         napmo.cext.wavefunction_transformation_matrix(byref(self))
+
         # print("\n Transformation Matrix:" + self.symbol + ": ", self.X.sum())
         # print(self.X)
 
@@ -170,7 +172,6 @@ class PSIA(napmo.PSIB):
             self._xc_energy = 0.0
 
         if self._functional is not None:
-            
 
             # Density in the grid
             ndim = 2 if beta_psi else 1
@@ -198,18 +199,15 @@ class PSIA(napmo.PSIB):
             # Save potentials
 
             # Alpha set
-            self._xc_vrho = c_vrho[0, :] + x_vrho[0, :]
+            self._xc_vrho[:] = c_vrho[0, :] + x_vrho[0, :]
 
             # Beta set
             if beta_psi is not None:
-                beta_psi._xc_vrho = c_vrho[1, :] + x_vrho[1, :]
-
+                beta_psi._xc_vrho[:] = c_vrho[1, :] + x_vrho[1, :]
 
             # print("\n XC Energy: " + self.symbol + ":", self._xc_energy)
-
             # if beta_psi is not None:
             #     print("\n XC Energy: " + beta_psi.symbol + ":", beta_psi._xc_energy)
-
 
     def compute_c_2species_grid(self, other_psi):
         """
@@ -224,11 +222,11 @@ class PSIA(napmo.PSIB):
                 functional = self.options.get('functional', None)
 
                 if functional is not None:
-                    
+
                     # Get the functional name
                     key = ":".join([self._symbol, psi._symbol])
-                    functional = functional.get(key, 
-                        self.options.get('functional').get(":".join(key.split(":")[::-1])))
+                    functional = functional.get(key,
+                                                self.options.get('functional').get(":".join(key.split(":")[::-1])))
 
                     # Get the functional function
                     functional = napmo.isc_functional_selector(functional)
@@ -242,29 +240,26 @@ class PSIA(napmo.PSIB):
                         self.Dgrid = np.array([phi * self.D.dot(phi) for phi in self._gbasis.T]).T
                         psi.Dgrid = np.array([phi * psi.D.dot(phi) for phi in psi._gbasis.T]).T
 
-
                         # Build rho
-                        rho = np.take(self.Dgrid.sum(axis=0), index[:,0], axis=0)
-                        other_rho = np.take(psi.Dgrid.sum(axis=0), index[:,1], axis=0)
+                        rho = np.take(self.Dgrid.sum(axis=0), index[:, 0], axis=0)
+                        other_rho = np.take(psi.Dgrid.sum(axis=0), index[:, 1], axis=0)
 
                         # Compute functional
                         c_zk, c_vrho, c_other_vrho = functional(rho, other_rho)
 
                         # Calculate XC Energy (Can't use grid.integrate)
-                        aux = (psi._grid.becke_weights[index[:,1]] * psi._grid.weights[index[:,1]] * c_zk * rho).sum()
+                        aux = (psi._grid.becke_weights[index[:, 1]] * psi._grid.weights[index[:, 1]] * c_zk * rho).sum()
 
                         self._xc_energy += aux
                         psi._xc_energy += aux
 
                         # Update the potentials on grids
-                        self._xc_vrho[index[:,0]] += c_vrho
-                        psi._xc_vrho[index[:,1]] += c_other_vrho
+                        self._xc_vrho[index[:, 0]] += c_vrho
+                        psi._xc_vrho[index[:, 1]] += c_other_vrho
 
-
-                        # print("\n XC Energy: " + self.symbol+"/"+psi.symbol + ": ", aux )
+                        # print("\n XC Energy: " + self.symbol + "/" + psi.symbol + ": ", aux)
 
                     functional = None
-
 
     def compute_xc_matrix(self):
         """
@@ -273,11 +268,11 @@ class PSIA(napmo.PSIB):
 
         if self._xc_vrho is not None:
             napmo.cext.nwavefunction_compute_xc_matrix(
-                    byref(self),
-                    self._grid._this,
-                    self._gbasis,
-                    self._xc_vrho
-                    )
+                byref(self),
+                self._grid._this,
+                self._gbasis,
+                self._xc_vrho
+            )
 
             # reset the grid
             self._xc_vrho[:] = 0.0
@@ -290,7 +285,8 @@ class PSIA(napmo.PSIB):
         Builds the Hcore matrix
         """
         self.H[:] = self.T + self.V
-        # print("\n hcore Matrix" + self.symbol + ": " , self.H.sum())
+
+        # print("\n hcore Matrix" + self.symbol + ": ", self.H.sum())
         # print(self.H)
 
     def compute_guess(self):
@@ -312,5 +308,6 @@ class PSIA(napmo.PSIB):
         """
 
         self.F[:] = self.H + self.G + self.J + self.XC
+
         # print("\n Fock Matrix:" + self.symbol + ": ", self.F.sum())
         # print(self.F)
