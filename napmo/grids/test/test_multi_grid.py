@@ -30,7 +30,7 @@ scf {
 
 grid {
     e- [50, 110]
-    H_1 [50, 110] 
+    H_1 [50, 110]
 }
 """)
 
@@ -49,27 +49,27 @@ grid {
 
         # Add grids to it
         mgrid.add_grid(napmo.BeckeGrid(particle,
-                                               aux.get('nrad', 100),
-                                               aux.get('nang', 110),
-                                               rtransform=aux.get('rtransform', None)))
+                                       aux.get('nrad', 100),
+                                       aux.get('nang', 110),
+                                       rtransform=aux.get('rtransform', None)))
 
     mgrid.show()
 
     # Sanity checks
     assert mgrid.ngrids == 2
-    assert mgrid.get_grid('x') == None
+    assert mgrid.get_grid('x') is None
     assert mgrid.get_grid('e-')._symbol == 'e-'
     assert mgrid.get_grid(gid=0)._symbol == 'e-'
     assert mgrid.get_grid_id('e-') == 0
     assert mgrid.get_grid_id('H_1') == 1
-    assert mgrid.get_grid_id('x') == None
+    assert mgrid.get_grid_id('x') is None
 
     # common points
-    assert mgrid.get_common_points('e-', 'X') == None
+    assert mgrid.get_common_points('e-', 'X') is None
     cpoints = mgrid.get_common_points('e-', 'H_1')
     assert cpoints.shape[0] == 5500
-    assert np.allclose(cpoints[:,0], np.arange(5500, 11000, dtype=np.int))
+    assert np.allclose(cpoints[:, 0], np.arange(5500, 11000, dtype=np.int))
 
 
-# if __name__ == '__main__':
-#     test_napmo_multi_grid()
+if __name__ == '__main__':
+    test_napmo_multi_grid()

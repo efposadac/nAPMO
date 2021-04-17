@@ -179,7 +179,6 @@ void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid,
     for (unsigned int j = i; j < ndim; ++j) {
       Array1D buff = Psi.row(INDEX(i, j));
       buff *= P;
-
       EC(i, j) = grid->integrate(buff);
     }
   }

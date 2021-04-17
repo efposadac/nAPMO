@@ -10,7 +10,7 @@ include $(TOPDIR)/config.make
 
 LIBRARY = libnapmo.so
 
-VPATH = grid horton ints system utils hf
+VPATH = grid horton ints system utils wavefunction
 OBJ = $(foreach file, $(VPATH), $(patsubst %.c,%.o,$(wildcard $(file)/*.c)))
 OBJ += $(foreach file, $(VPATH), $(patsubst %.cpp,%.o,$(wildcard $(file)/*.cpp)))
 NVOBJ = $(foreach file, $(VPATH), $(patsubst %.cu,%.cuda.o,$(wildcard $(file)/*.cu)))

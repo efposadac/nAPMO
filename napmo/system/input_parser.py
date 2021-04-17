@@ -369,7 +369,7 @@ class InputParser(object):
 
             aux[symbol] = {'nrad': nrad,
                            'nang': nang,
-                           'rtransform': rtransform, 
+                           'rtransform': rtransform,
                            'file': file}
 
         self.scf['grid'] = aux

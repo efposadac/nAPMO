@@ -13,7 +13,7 @@ import napmo
 
 class Functional(object):
     """
-    Electronic functionals provided by LibXC: This uses the pylibxc Python extension 
+    Electronic functionals provided by LibXC: This uses the pylibxc Python extension
     provided by LibXC library.
 
     References:
@@ -24,7 +24,8 @@ class Functional(object):
         optios (dict): information related to the functional to be used
 
     """
-    def __init__(self, symbol, options={}):
+
+    def __init__(self, symbol, options={'functional': {'e-': 'lda'}}):
         super(Functional, self).__init__()
 
         _database = {
@@ -50,12 +51,12 @@ class Functional(object):
         if self.correlation in self.available:
             self._correlation = pylibxc.LibXCFunctional(self.options.get('correlation'), self._spin)
         else:
-            raise NotImplementedError(self.correlation+" Functional NOT available!")
+            raise NotImplementedError(self.correlation + " Functional NOT available!")
 
         if self.exchange in self.available:
             self._exchange = pylibxc.LibXCFunctional(self.options.get('exchange'), self._spin)
         else:
-            raise NotImplementedError(self.exchange+" Functional NOT available!")
+            raise NotImplementedError(self.exchange + " Functional NOT available!")
 
         self.show()
 
@@ -96,7 +97,7 @@ class Functional(object):
         Prints information of the object.
         """
         print("\nFunctional Information:", self.symbol)
-        print("-"*(24+len(self.symbol)))
+        print("-" * (24 + len(self.symbol)))
         print(self.options)
 
     def _reorder_vrho(self, vrho):

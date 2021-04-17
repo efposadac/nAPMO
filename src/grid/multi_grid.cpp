@@ -106,7 +106,7 @@ Python wrapper
 
 MultiGrid *MultiGrid_new(int ns) { return new MultiGrid(ns); }
 
-void MultiGrid_del(MultiGrid *multi_grid) { return multi_grid->~MultiGrid(); }
+void MultiGrid_del(MultiGrid *multi_grid) { multi_grid->~MultiGrid(); }
 
 int *MultiGrid_get_common_index(MultiGrid *multi_grid, int id_grid_a,
                                 int id_grid_b) {

@@ -1,4 +1,4 @@
-/*file: eigen_helper.c
+/*file: eigen_helper.h
 nAPMO package
 Copyright (c) 2016, Edwin Fernando Posada
 All rights reserved.
@@ -10,8 +10,13 @@ fernando.posada@temple.edu*/
 
 // Eigen matrix algebra library
 
+#define EIGEN_MATRIXBASE_PLUGIN "utils/eigen_plugins.h"
+
+#include <Eigen/Core>
+#include <Eigen/StdVector>
 #include <Eigen/Dense>
 #include <Eigen/Eigenvalues>
+#include "utils.h"
 
 /*
 Type definitions
@@ -50,5 +55,69 @@ typedef Eigen::Map<Vector> VMap;
 typedef Eigen::Map<Array2D> A2DMap;
 
 typedef Eigen::Map<Array1D> A1DMap;
+
+
+/*
+ * Compute the eigenvectors and eigenvalues, sorted
+ */
+template <class Derived>
+template <class MATRIX1, class VECTOR1>
+EIGEN_STRONG_INLINE void Eigen::MatrixBase<Derived>::eigenVectorsVec(MATRIX1& eVecs, VECTOR1& eVals) const {
+
+  // Eigen::SelfAdjointEigenSolver<Derived> es(*this);
+  // eVecs = es.eigenvectors().real(); // Keep only the real part of complex matrix
+  // eVals = es.eigenvalues().real();  // Keep only the real part of complex matrix
+
+  // Calculate using LAPACK
+  int N = this->cols();  // Number of columns of A
+
+  // Making A Lapack compatible
+  MATRIX1 A = *this;
+  A.transposeInPlace(); // for most symmetric matrices this has no effect
+
+  double WORKDUMMY;
+  int LWORK = -1;  // Request optimum work size.
+  int INFO = 0;
+
+  VECTOR1 WI(N);
+  MATRIX1 VL(N, N);
+
+  // Get the optimum work size.
+  char* NN = (char*)"N";
+  char* VV = (char*)"V";
+
+  dgeev_(NN, VV, &N, A.data(), &N, eVals.data(), WI.data(), VL.data(), &N,
+         eVecs.data(), &N, &WORKDUMMY, &LWORK, &INFO);
+
+  LWORK = int(WORKDUMMY);
+  Vector WORK(LWORK);
+
+  // Calculate
+  dgeev_(NN, VV, &N, A.data(), &N, eVals.data(), WI.data(), VL.data(), &N,
+         eVecs.data(), &N, WORK.data(), &LWORK, &INFO);
+
+  // back to C++
+  eVecs.transposeInPlace();
+
+  // Sort by ascending eigenvalues:
+  std::vector<std::pair<Scalar, Index> > D;
+  D.reserve(eVals.size());
+
+  for (Index i = 0; i < eVals.size(); i++) {
+    D.push_back(std::make_pair(eVals.coeff(i, 0), i));
+  }
+
+  std::sort(D.begin(), D.end());
+  MATRIX1 sortedEigs;
+  sortedEigs.resizeLike(eVecs);
+
+  for (int i = 0; i < eVals.size(); i++) {
+    eVals.coeffRef(i, 0) = D[i].first;
+    double m = eVecs.col(D[i].second)[0] > 0 ? 1.0 : -1.0;
+    sortedEigs.col(i) = eVecs.col(D[i].second) * m;
+  }
+
+  eVecs = sortedEigs;
+}
 
 #endif

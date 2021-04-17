@@ -10,6 +10,7 @@ fernando.posada@temple.edu*/
 
 #include "../horton/rtransform.h"
 #include "../utils/utils.h"
+#include "../utils/eigen_helper.h"
 #include <math.h>
 #include <stdlib.h>
 
@@ -34,12 +35,12 @@ public:
     delete[] weights;
   };
 
-  double integrate(const int segments, double *f);
-
   unsigned int get_size() { return size; };
+  double integrate(const int segments, double *f);
   double get_radii() { return radii; };
   double *get_points() { return points; };
   double *get_weights() { return weights; };
+  double *deriv2(double *f);
 };
 
 #ifdef __cplusplus
@@ -51,6 +52,7 @@ RadialGrid *RadialGrid_new(RTransform *rtf, double rad);
 void RadialGrid_del(RadialGrid *grid);
 
 double RadialGrid_integrate(RadialGrid *grid, int segments, double *f);
+double *RadialGrid_deriv2(RadialGrid *grid, double *f);
 
 int RadialGrid_get_size(RadialGrid *grid);
 
