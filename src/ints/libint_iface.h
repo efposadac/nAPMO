@@ -11,7 +11,7 @@ fernando.posada@temple.edu
 #ifndef LIBINT_IFACE_H
 #define LIBINT_IFACE_H
 
-#include "../hf/wavefunction.h"
+#include "../wavefunction/wavefunction.h"
 #include "../system/basis_set.h"
 #include "ints.h"
 #include "iterators.h"

@@ -49,31 +49,10 @@ class AtomicGrid(object):
             raise ValueError('lmax can not be negative.')
 
         lsize = (lmax + 1) * (lmax + 1)
-        output = np.zeros([self.radial_grid.size, lsize], dtype=np.float64)
 
-        segments = np.zeros(self.radial_grid.size, dtype=np.int64)
-        segments[:] = self.angular_grid.lorder
+        ptr = napmo.cext.AtomicGrid_spherical_expansion(self._this, f, lmax)
 
-        f *= self.weights
-        f = f.reshape([1, f.size])
-
-        fpp = (f.__array_interface__['data'][
-               0] + np.arange(f.shape[0]) * f.strides[0]).astype(np.uintp)
-
-        napmo.cext.dot_multi_moments(f.size, 1, fpp, self.points,
-                                     self.origin, lmax, 4, segments, output, lsize)
-
-        output /= self.integrate(segmented=True).reshape(-1, 1)
-
-        counter = 0
-
-        for l in range(0, lmax + 1):
-            for m in range(-l, l + 1):
-                # proper norm for spherical harmonics
-                output[:, counter] *= np.sqrt(4 * np.pi * (2 * l + 1))
-                counter += 1
-
-        return output
+        return np.ctypeslib.as_array(ptr, shape=(self.radial_grid.size, lsize))
 
     def evaluate_expansion(self, lmax, expansion):
         """

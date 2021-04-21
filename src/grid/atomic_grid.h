@@ -13,6 +13,8 @@ fernando.posada@temple.edu*/
 #include "angular.h"
 #include "radial.h"
 
+#include "../horton/dot_multi.h"
+#include "../utils/eigen_helper.h"
 #include "../utils/omp_helper.h"
 
 struct AtomicGrid {
@@ -25,8 +27,8 @@ private:
   double *weights;   // weights of the grid
 
 public:
-  AngularGrid * ang_grid;
-  RadialGrid * rad_grid;
+  AngularGrid *ang_grid;
+  RadialGrid *rad_grid;
 
   AtomicGrid() = default;
 
@@ -53,6 +55,8 @@ public:
   double *integrate(const unsigned int nfunc, const unsigned int segments,
                     const unsigned int size, double *f);
 
+  double *spherical_expansion(double *f, int lmax);
+
   unsigned int get_size() { return size; };
   double get_radii() { return radii; };
   double *get_origin() { return origin; };
@@ -70,6 +74,8 @@ void AtomicGrid_del(AtomicGrid *grid);
 
 double *AtomicGrid_integrate(AtomicGrid *grid, int nfunc, int segments,
                              int size, double *f);
+
+double *AtomicGrid_spherical_expansion(AtomicGrid *grid, double *f, int lmax);
 
 int AtomicGrid_get_size(AtomicGrid *grid);
 

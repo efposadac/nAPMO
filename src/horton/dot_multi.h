@@ -36,12 +36,12 @@ fernando.posada@temple.edu*/
 extern "C" {
 #endif
 
-void dot_multi(long npoint, long nvector, double **data, long *segments,
+void dot_multi(long npoint, long nvector, double *data, long *segments,
                double *output);
-void dot_multi_moments_cube(long nvector, double **data, UniformGrid *ugrid,
+void dot_multi_moments_cube(long nvector, double *data, UniformGrid *ugrid,
                             double *center, long lmax, long mtype,
                             double *output, long nmoment);
-void dot_multi_moments(long npoint, long nvector, double **data, double *points,
+void dot_multi_moments(long npoint, long nvector, double *data, double *points,
                        double *center, long lmax, long mtype, long *segments,
                        double *output, long nmoment);
 

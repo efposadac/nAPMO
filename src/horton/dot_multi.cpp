@@ -40,10 +40,13 @@ fernando.posada@temple.edu*/
     Internal functions
 */
 
-double data_product(long ipoint, long nvector, double **data) {
-  double result = data[nvector - 1][ipoint];
-  for (long ivector = nvector - 2; ivector >= 0; ivector--)
-    result *= data[ivector][ipoint];
+double data_product(long ipoint, long nvector, double *data, long npoint) {
+  long idx = (nvector - 1) * npoint + ipoint;
+  double result = data[idx];
+  for (long ivector = nvector - 2; ivector >= 0; ivector--) {
+    long idx = ivector * npoint + ipoint;
+    result *= data[idx];
+  }
   return result;
 }
 
@@ -86,7 +89,7 @@ void fill_polynomials_wrapper(double *work, double *delta, long lmax,
     Public stuff
 */
 
-void dot_multi(long npoint, long nvector, double **data, long *segments,
+void dot_multi(long npoint, long nvector, double *data, long *segments,
                double *output) {
   long segment_end = *segments;
   for (long ipoint = 0; ipoint < npoint; ipoint++) {
@@ -94,7 +97,7 @@ void dot_multi(long npoint, long nvector, double **data, long *segments,
     shift_segment(ipoint, segments, segment_end, output, 1);
 
     // add product to output
-    *output += data_product(ipoint, nvector, data);
+    *output += data_product(ipoint, nvector, data, npoint);
 #ifdef DEBUG
     printf("*output=%f; ipoint=%i; segment_end=%i\n", *output, ipoint,
            segment_end);
@@ -102,7 +105,7 @@ void dot_multi(long npoint, long nvector, double **data, long *segments,
   }
 }
 
-void dot_multi_moments_cube(long nvector, double **data, UniformGrid *ugrid,
+void dot_multi_moments_cube(long nvector, double *data, UniformGrid *ugrid,
                             double *center, long lmax, long mtype,
                             double *output, long nmoment) {
   Cell *cell = ugrid->get_cell();
@@ -124,7 +127,7 @@ void dot_multi_moments_cube(long nvector, double **data, UniformGrid *ugrid,
   Cube3Iterator c3i = Cube3Iterator(NULL, ugrid->shape);
   for (long ipoint = c3i.get_npoint() - 1; ipoint >= 0; ipoint--) {
     // do the usual product of integranda
-    double term = data_product(ipoint, nvector, data);
+    double term = data_product(ipoint, nvector, data, c3i.get_npoint());
     output[0] += term;
 
     if (lmax > 0) {
@@ -149,7 +152,7 @@ void dot_multi_moments_cube(long nvector, double **data, UniformGrid *ugrid,
   }
 }
 
-void dot_multi_moments(long npoint, long nvector, double **data, double *points,
+void dot_multi_moments(long npoint, long nvector, double *data, double *points,
                        double *center, long lmax, long mtype, long *segments,
                        double *output, long nmoment) {
 
@@ -166,7 +169,7 @@ void dot_multi_moments(long npoint, long nvector, double **data, double *points,
     shift_segment(ipoint, segments, segment_end, output, nmoment);
 
     // do the usual product of integranda
-    double term = data_product(ipoint, nvector, data);
+    double term = data_product(ipoint, nvector, data, npoint);
 
     output[0] += term;
 

@@ -14,7 +14,7 @@ AuxiliaryBasis::AuxiliaryBasis(BeckeGrid *grid, const int lm) {
   lindep = 1.0e-6;  // Threshold for linear dependency
   lcenter.reserve(ncenter);
 
-  halflmax = 1.0; //lmax / 2.0;
+  halflmax = 0; //lmax / 2.0;
 
   printf("L max for Auxiliary Basis: %d %d\n", lmax, halflmax);
   printf("Linear Dependency Tolerance: %12.9E\n", lindep);
