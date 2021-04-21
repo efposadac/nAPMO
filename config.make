@@ -22,7 +22,8 @@ ifeq ($(strip $(CXX)),)
 CXX := g++
 endif
 
-# CC := icc
+CC := gcc
+CXX := g++
 
 #-----------------------
 # Initial configuration

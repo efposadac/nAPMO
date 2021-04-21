@@ -61,6 +61,8 @@ public:
 
   double integrate(Array1D &f);
 
+  // double *poisson_solver(double *rho, int lmax);
+
   int get_ncenter() { return ncenter; };
 
   int get_size() { return size; };

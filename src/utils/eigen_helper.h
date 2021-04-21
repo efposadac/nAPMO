@@ -44,6 +44,7 @@ typedef Eigen::Array<double, Eigen::Dynamic, Eigen::Dynamic> Array2D;
 Array 1D
 */
 typedef Eigen::Array<double, Eigen::Dynamic, 1> Array1D;
+typedef Eigen::Array<long int, Eigen::Dynamic, 1> Array1Dld;
 
 /*
 Types to work with raw buffers, for vectors and matrices

@@ -7,17 +7,21 @@
 
 import napmo
 import numpy as np
+import pathlib
 
 
 def test_xc_interface_polarized():
+    pwd = pathlib.Path(__file__).parent.absolute()
+    print(pwd)
+
     f = napmo.Functional('Li')
-    rho = np.fromfile('rho.txt', sep=" ")
+    rho = np.fromfile(str(pwd)+'/rho.txt', sep=" ")
 
-    c_zk_ref = np.fromfile('c_zk.txt', sep=" ").reshape(1, 22000)
-    c_vrho_ref = np.fromfile('c_vrho.txt', sep=" ").reshape(1, 22000)
+    c_zk_ref = np.fromfile(str(pwd)+'/c_zk.txt', sep=" ").reshape(1, 22000)
+    c_vrho_ref = np.fromfile(str(pwd)+'/c_vrho.txt', sep=" ").reshape(1, 22000)
 
-    x_zk_ref = np.fromfile('x_zk.txt', sep=" ")
-    x_vrho_ref = np.fromfile('x_vrho.txt', sep=" ")
+    x_zk_ref = np.fromfile(str(pwd)+'/x_zk.txt', sep=" ")
+    x_vrho_ref = np.fromfile(str(pwd)+'/x_vrho.txt', sep=" ")
 
     c_zk, c_vrho = f.compute_correlation(rho)
     assert(np.allclose(c_zk, c_zk_ref))

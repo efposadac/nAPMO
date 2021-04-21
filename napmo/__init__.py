@@ -331,6 +331,9 @@ cext.AtomicGrid_del.argtypes = [c_void_p]
 cext.AtomicGrid_integrate.restype = POINTER(c_double)
 cext.AtomicGrid_integrate.argtypes = [c_void_p, c_int, c_int, c_int, a1df]
 
+cext.AtomicGrid_spherical_expansion.restype = POINTER(c_double)
+cext.AtomicGrid_spherical_expansion.argtypes = [c_void_p, a1df, c_int]
+
 cext.AtomicGrid_get_size.restype = c_int
 cext.AtomicGrid_get_size.argtypes = [c_void_p]
 
@@ -570,4 +573,4 @@ cext.build_ode2.argtypes = [
 # Multipolar expansion
 cext.dot_multi_moments.restype = None
 cext.dot_multi_moments.argtypes = [
-    c_long, c_long, d1pp, a2df, a1df, c_long, c_long, a1dli, a2df, c_long]
+    c_long, c_long, a1df, a2df, a1df, c_long, c_long, a1dli, a2df, c_long]
