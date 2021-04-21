@@ -83,6 +83,7 @@ def test_spherical_decomposition_hydrogen_1pz():
 
     assert abs(sa_fns[:, 4] - sa_check).max() < 1e-10  # 6 or 4???
 
-test_spherical_average_H1s()
-test_spherical_decomposition_hydrogen_1s()
-test_spherical_decomposition_hydrogen_1pz()
+
+# test_spherical_average_H1s()
+# test_spherical_decomposition_hydrogen_1s()
+# test_spherical_decomposition_hydrogen_1pz()

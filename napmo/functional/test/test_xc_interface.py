@@ -32,5 +32,5 @@ def test_xc_interface_polarized():
     assert(np.allclose(x_vrho, x_vrho_ref))
 
 
-if __name__ == '__main__':
-    test_xc_interface_polarized()
+# if __name__ == '__main__':
+#     test_xc_interface_polarized()
