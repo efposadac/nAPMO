@@ -25,9 +25,8 @@ def test_auxiliary_basis():
     grid = napmo.BeckeGrid(molecule.get('e-'), radialPoints, angularPoints)
 
     with napmo.runtime.timeblock('C'):
-        aobasis = napmo.AuxiliaryBasis(grid, lmax)
+        aobasis = napmo.AuxiliaryBasis(grid)
 
-    assert(aobasis.lmax == lmax)
     assert(aobasis.ncenter == 1)
     assert(aobasis.nao == 9)
     assert(aobasis.basis.shape == (9, grid.size))

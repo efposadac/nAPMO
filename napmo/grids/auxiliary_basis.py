@@ -20,16 +20,14 @@ class AuxiliaryBasis(object):
 
     """
 
-    def __init__(self, grid, lmax):
+    def __init__(self, grid):
         super(AuxiliaryBasis, self).__init__()
 
         assert isinstance(grid, napmo.BeckeGrid)
-        assert isinstance(lmax, int)
 
         self._grid = grid
-        self._lmax = lmax
         self._ncenter = grid.ncenter
-        self._this = napmo.cext.AuxiliaryBasis_new(self.grid._this, self.lmax)
+        self._this = napmo.cext.AuxiliaryBasis_new(self.grid._this)
         self._nao = napmo.cext.AuxiliaryBasis_get_nao(self._this)
 
     @property
@@ -39,10 +37,6 @@ class AuxiliaryBasis(object):
         """
         ptr = napmo.cext.AuxiliaryBasis_get_aobasis(self._this)
         return np.ctypeslib.as_array(ptr, shape=(self.grid.size, self.nao)).T
-
-    @property
-    def lmax(self):
-        return self._lmax
 
     @property
     def ncenter(self):

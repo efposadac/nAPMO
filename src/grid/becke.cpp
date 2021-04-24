@@ -7,9 +7,11 @@ fernando.posada@temple.edu*/
 
 #include "becke.h"
 
-BeckeGrid::BeckeGrid(AtomicGrid **grids, const int n) {
-
+BeckeGrid::BeckeGrid(AtomicGrid **grids, const int n, const int l,
+                     const double ld) {
   ncenter = n;
+  abldep = ld;
+  ablmax = l;
 
   size = 0;
   for (unsigned int i = 0; i < ncenter; ++i) {
@@ -51,9 +53,10 @@ BeckeGrid::BeckeGrid(AtomicGrid **grids, const int n) {
 
 // Compatibility mode for Lowdin2 grids
 BeckeGrid::BeckeGrid(double *p, const int sz, const int nc) {
-
   size = sz;
   ncenter = nc;
+  abldep = 1.0e-6;
+  ablmax = 1;
 
   points = new double[size * 3];
   weights = new double[size];
@@ -72,7 +75,6 @@ BeckeGrid::BeckeGrid(double *p, const int sz, const int nc) {
 }
 
 void BeckeGrid::compute_weights() {
-
   int asize = (ncenter * (ncenter + 1)) / 2;
 
   // Calculate internuclear distance
@@ -91,7 +93,6 @@ void BeckeGrid::compute_weights() {
   offset = 0;
   for (unsigned int iatom = 0; iatom < ncenter; iatom++) {
     for (unsigned int jatom = 0; jatom <= iatom; jatom++) {
-
       // Eq. A6
       double aux =
           (radii[iatom] - radii[jatom]) / (radii[iatom] + radii[jatom]);
@@ -118,20 +119,16 @@ void BeckeGrid::compute_weights() {
   unsigned int npoint = size / ncenter;
 
   for (unsigned int atom = 0; atom < ncenter; ++atom) {
-
 #ifdef _OPENMP
 #pragma omp parallel for default(shared)                                       \
     firstprivate(atom, npoint) private(offset)
 #endif
     for (unsigned int point = 0; point < npoint; ++point) {
-
       double sum = 0.0;
       double aux = 0.0;
       for (unsigned int iatom = 0; iatom < ncenter; ++iatom) {
-
         double p = 1.0;
         for (unsigned int jatom = 0; jatom < ncenter; ++jatom) {
-
           if (iatom == jatom)
             continue;
 
@@ -177,7 +174,6 @@ void BeckeGrid::compute_weights() {
 }
 
 double BeckeGrid::integrate(double *f) {
-
   A1DMap BW(becke_weights, size);
   A1DMap W(weights, size);
   A1DMap F(f, size);
@@ -186,7 +182,6 @@ double BeckeGrid::integrate(double *f) {
 }
 
 double BeckeGrid::integrate(Array1D &f) {
-
   A1DMap BW(becke_weights, size);
   A1DMap W(weights, size);
 
@@ -199,88 +194,116 @@ double BeckeGrid::integrate(Array1D &f) {
 
 //   Array1D dens(size) = Ri * Wi;
 
+//   int lsize = (lmax + 1) * (lmax + 1);
 //   int offset = 0;
+
 //   // U = []
+
 //   for (int center = 0; center < ncenter; ++center) {
-//     Array1D p(atgrid[center].size) = dens [offset:offset + atgrid[center].size];
+//     Array1D p(atgrid[center].size) = dens.segment(offset,
+//     atgrid[center].size);
+
+//     // Convenience array/object handling
+//     RadialGrid *rgrid = atgrid[center].rad_grid;
+//     int rsize = rgrid->get_size();
+//     A1DMap radii(rgrid->get_points(), rsize);
+//     RTransform *rtf = rgrid->get_rtransform();
+
+//     // Derivate radial quadrature
+//     Array1D Dradii(rsize);
+//     Dradii.setZero();
+//     rtf->deriv_array(radii.data(), Dradii.data(), rsize);
+
+//     Array1D D2radii(rsize);
+//     D2radii.setZero();
+//     rtf->deriv2_array(radii.data(), Dradii.data(), rsize);
+
+//     Array1D D3radii(rsize);
+//     D3radii.setZero();
+//     rtf->deriv3_array(radii.data(), Dradii.data(), rsize);
 
 //     // Spherical expansion
-//     if not sph_exp:
-//             sph_expansion = atgrid.spherical_expansion(lmax, p)
-//         else:
-//             sph_expansion = sph_exp[i]
+//     A2DMap sph_expansion(atgrid[center].spherical_expansion(p.data(), lmax),
+//                          lsize, rsize);
 
-//         result = []
-//         idx = 0
+//     // Build b for the FD equation
+//     CuspExtrapolation extrapolation;
+//     CubicSpline b((2.0 / radii).data(), (-2.0 / radii * radii *
+//     Dradii).data(),
+//                   extrapolation, rtf, rsize);
 
-//         rgrid = atgrid.radial_grid
-//         rtf = rgrid.rtransform
-//         radii = rtf.radius_all()
+//     // result = []
+//     int idx = 0;
+//     for (int l = 0; l <= lmax; ++l) {
+//       for (int m = -l; m <= l; ++m) {
+//         Array1D aux(rsize) = sph_expansion.col(idx);
 
-//         b = napmo.CubicSpline(2 / radii, -2 / radii**2, rtf)
+//         // Build rho
+//         Array1D Daux(rsize);
+//         Daux.setZero();
+//         solve_cubic_spline_system(aux.data(), Daux.data(), rsize);
+//         CubicSpline rho(aux.data(), Daux.data(), extrapolation, rtf, rsize);
 
-//         for l in range(lmax + 1):
-//             for m in range(-l, l + 1):
-//                 aux = np.array(sph_expansion[:, idx])
+//         // The approach followed here is obtained after substitution of
+//         // u = r * V in Eq.(21)in Becke's paper. After this transformation,
+//         // the boundary conditions can be implemented such that the output
+//         // is more accurate.
+//         Array1D fy(rsize) = -4.0 * M_PI * aux;
+//         Array1D fd(rsize) = -4.0 * M_PI * Daux;
+//         CubicSpline f(fy.data(), fd.data(), extrapolation, rtf, rsize);
 
-// #Build b
-//                 rho = napmo.CubicSpline(aux, rtransform=rtf)
+//         // Derivation of boundary condition at rmax:
+//         // Multiply differential equation with r **l and integrate.Using
+//         // partial integration and the fact that V(r) = A / r^(l + 1) for
+//         // large r, we find - (2l + 1) A = -4pi * int_0 ^ infty r^2 r^l
+//         // rho(r) and so V(rmax) = A / rmax * *(l + 1) = integrate(r^l
+//         // rho(r)) / (2l + 1) / rmax^(l + 1)
+//         double V_rmax =
+//             rgrid->integrate((aux * Eigen::exp(radii, l)).data(), 1) /
+//             std::exp(radii(rsize - 1), (l + 1)) / (2 * l + 1);
 
-// #The approach followed here is obtained after substitution of
-// #u = r * V in Eq.(21)in Becke's paper. After this transformation,
-// #the boundary conditions can be implemented such that the output
-// #is more accurate.
-//                 fy = -4 * np.pi * rho.y
-//                 fd = -4 * np.pi * rho.dx
-//                 f = napmo.CubicSpline(fy, fd, rtf)
+//         // Derivation of boundary condition at rmin:
+//         // Same as for rmax, but multiply differential equation with r **(-l
+//         -
+//         // 1) and assume that V(r) = B * r * *l for small r.
+//         double V_rmin =
+//             rgrid->integrate((aux * Eigen::exp(radii, (-l - 1))).data(), 1) *
+//             std::exp(radii[0], l) / (2 * l + 1);
 
-// #Derivation of boundary condition at rmax:
-// #Multiply differential equation with r **l and integrate.Using
-// #partial integration and the fact that V(r) = A / r * *(l + 1) for large
-// #r, we find - (2l + 1) A = -4pi * int_0 ^ infty r * *2 r * *l rho(r) and so
-// #V(rmax) = A / rmax * *(l + 1) = integrate(r * *l
-// #rho(r)) / (2l + 1) / rmax **(l + 1)
-//                 V_rmax = rgrid.integrate(
-//                     rho.y * radii**l, 1
-//                 ) / radii[-1]**(l + 1) / (2 * l + 1)
+//         bcs = (V_rmin, None, V_rmax, None);
 
-// #Derivation of boundary condition at rmin:
-// #Same as for rmax, but multiply differential equation with r **(-l - 1)
-// #and assume that V(r) = B * r * *l for small r.
-//                 V_rmin = rgrid.integrate(
-//                     rho.y * radii**(-l - 1), 1
-//                 ) * radii[0]**(l) / (2 * l + 1)
+//         // Build a
+//         Array1D Da(rsize), Da.setZero();
+//         solve_cubic_spline_system(
+//             (2 * l * (l + 1) * Eigen::exp(radii, -3)).data(), Da.data(),
+//             rsize);
+//         CubicSpline a((-l * (l + 1) * Eigen::exp(radii, -2)).data(),
+//         Da.data(),
+//                       extrapolation, rtf, rsize);
 
-//                 bcs = (V_rmin, None, V_rmax, None)
+//         // Solve the differential equation
+//         v = napmo.solve_ode2(b, a, f, bcs, napmo.PotentialExtrapolation(l));
 
-// #Build a
-//                 a = napmo.CubicSpline(
-//                     -l * (l + 1) * radii ** -2, 2 * l * (l + 1) * radii** -3, rtf)
+//         // v = napmo.solve_ode2(
+//         // b, a, f, bcs, napmo.PowerExtrapolation(-l - 1))
 
-// #Solve the differential equation
-//                 v = napmo.solve_ode2(
-//                     b, a, f, bcs, napmo.PotentialExtrapolation(l))
+//         result.append(v);
+//         idx += 1;
+//       }
+//     }
 
-// #v = napmo.solve_ode2(
-// #b, a, f, bcs, napmo.PowerExtrapolation(-l - 1))
+//     offset += atgrid.size;
+//     U.append(result);
 
-//                 result.append(v)
-//                 idx += 1
-
-//         offset += atgrid.size
-//         U.append(result)
-
-//     return U
+//     return U;
 //   }
-// }
 
 /*
 Python wrapper
 */
 
-BeckeGrid *BeckeGrid_new(AtomicGrid **grids, int n) {
-
-  return new BeckeGrid(grids, n);
+BeckeGrid *BeckeGrid_new(AtomicGrid **grids, int n, int l, double ld) {
+  return new BeckeGrid(grids, n, l, ld);
 }
 
 BeckeGrid *BeckeGrid_from_points(double *p, int sz, int nc) {

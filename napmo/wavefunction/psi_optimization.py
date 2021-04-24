@@ -57,6 +57,7 @@ class PSIO(napmo.PSIN):
 
         # Symmetrizing Fock
         self.asymmetry = (np.abs(self.F - self.F.T)).max()
+
         if self.iterations == 1:
             print("Asymmetry in Fock Matrix:", self.asymmetry)
             print("Warning: Fock Matrix symmetrized!")
@@ -64,11 +65,6 @@ class PSIO(napmo.PSIN):
         self.F[:] = (self.F + self.F.T) / 2.0
 
         napmo.cext.wavefunction_compute_coefficients(byref(self))
-
-        # self.next_psi = np.array(
-        #     [(self.psi.T * self.C[:, j]).T.sum(axis=0) for j in range(self.ndim)])
-
-        # assert(self.C.shape[0] == self.ndim)
 
         # New Orbitals
         self.next_psi = self.compute_psi_from_cm(self.C, self.psi)

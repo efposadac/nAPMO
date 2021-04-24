@@ -40,6 +40,7 @@ public:
   double get_radii() { return radii; };
   double *get_points() { return points; };
   double *get_weights() { return weights; };
+  RTransform *get_rtransform() { return rtf; };
   double *deriv2(double *f);
 };
 
@@ -52,6 +53,7 @@ RadialGrid *RadialGrid_new(RTransform *rtf, double rad);
 void RadialGrid_del(RadialGrid *grid);
 
 double RadialGrid_integrate(RadialGrid *grid, int segments, double *f);
+
 double *RadialGrid_deriv2(RadialGrid *grid, double *f);
 
 int RadialGrid_get_size(RadialGrid *grid);
