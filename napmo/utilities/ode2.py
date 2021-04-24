@@ -39,7 +39,7 @@ from ctypes import *
 import napmo
 
 
-def solve_ode2(b, a, f, bcs, extrapolation=None):
+def solve_ode2(b, a, f, bcs, extrapolation=None, j1=None, j2=None, j3=None):
     """
     Solve a second order ODE.
 
@@ -70,9 +70,15 @@ def solve_ode2(b, a, f, bcs, extrapolation=None):
         raise ValueError('The RTransform objects of b and f do not match.')
 
     # Transform the given functions to the linear coordinate.
-    j1 = rtf.deriv_all()
-    j2 = rtf.deriv2_all()
-    j3 = rtf.deriv3_all()
+    if j1 is None:
+        j1 = rtf.deriv_all()
+
+    if j2 is None:
+        j2 = rtf.deriv2_all()
+
+    if j3 is None:
+        j3 = rtf.deriv3_all()
+
     j1sq = j1 * j1
 
     by_new = j1 * b.y - j2 / j1
@@ -92,6 +98,8 @@ def solve_ode2(b, a, f, bcs, extrapolation=None):
 
     # Prepare data
     npoint = by_new.shape[0]
+    npoint2 = npoint * 2
+
     b = merge(by_new, bd_new)
     a = merge(ay_new, ad_new)
     f = merge(fy_new, fd_new)
@@ -101,8 +109,8 @@ def solve_ode2(b, a, f, bcs, extrapolation=None):
                       for bcs in new_bcs], dtype=np.float64)
 
     # prepare output
-    coeffs = np.zeros((2 * npoint, 2 * npoint), dtype=np.float64)
-    rhs = np.zeros(2 * npoint, dtype=np.float64)
+    coeffs = np.zeros((npoint2, npoint2), dtype=np.float64)
+    rhs = np.zeros(npoint2, dtype=np.float64)
 
     # call c routine
     with napmo.runtime.timeblock('Prepare ODE'):
@@ -111,11 +119,7 @@ def solve_ode2(b, a, f, bcs, extrapolation=None):
     with napmo.runtime.timeblock('Solve ODE'):
         solution = spsolve(csc_matrix(coeffs), rhs)
 
-    uy_new = solution[::2]
-    ud_new = solution[1::2]
-
-    # Transform solution back to the original coordinate.
-    uy_orig = uy_new.copy()  # A copy of is needed to obtain contiguous arrays.
-    ud_orig = ud_new / j1
+    uy_orig = (solution[::2]).copy()
+    ud_orig = solution[1::2] / j1
 
     return napmo.CubicSpline(uy_orig, ud_orig, rtf, extrapolation)

@@ -77,7 +77,7 @@ class PSIN(napmo.PSIB):
         self.initialize()
 
         # Calculate Aux Basis
-        self._aobasis = napmo.AuxiliaryBasis(self.grid, self.lmax)
+        self._aobasis = napmo.AuxiliaryBasis(self.grid)
         self._optimize = napmo.PSIO(self, self.aobasis.basis, ndim=self.aobasis.nao)
 
     def initialize(self):

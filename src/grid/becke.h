@@ -11,8 +11,10 @@ fernando.posada@temple.edu*/
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../utils/utils.h"
+#include "../horton/cubic_spline.h"
+#include "../horton/extrapolation.h"
 #include "../utils/eigen_helper.h"
+#include "../utils/utils.h"
 #include "atomic_grid.h"
 
 struct BeckeGrid {
@@ -26,6 +28,8 @@ private:
   double *points;        // points of the grid
   double *weights;       // weights of the grid
   double *becke_weights; // Becke weights
+  double abldep;         // linear dependency tolerance por grid-based basis
+  double ablmax;         // maximum l for grid-based basis
 
   /*
   Calculates the becke weights for a given ``BeckeGrid`` grid
@@ -40,7 +44,7 @@ private:
 public:
   std::vector<AtomicGrid> atgrid;
 
-  BeckeGrid(AtomicGrid **grids, const int n);
+  BeckeGrid(AtomicGrid **grids, const int n, const int l, const double ld);
 
   BeckeGrid(double *p, const int sz, const int nc);
 
@@ -56,7 +60,6 @@ public:
     delete[] becke_weights;
   };
 
-
   double integrate(double *f);
 
   double integrate(Array1D &f);
@@ -66,6 +69,10 @@ public:
   int get_ncenter() { return ncenter; };
 
   int get_size() { return size; };
+
+  int get_ablmax() { return ablmax; };
+
+  double get_abldep() { return abldep; };
 
   double *get_radii() { return radii; };
 
@@ -82,9 +89,9 @@ public:
 extern "C" {
 #endif
 
-BeckeGrid *BeckeGrid_new(AtomicGrid **grids, int n);
+BeckeGrid *BeckeGrid_new(AtomicGrid **grids, int n, int l, double ld);
 
-BeckeGrid * BeckeGrid_from_points(double *p, int sz, int nc);
+BeckeGrid *BeckeGrid_from_points(double *p, int sz, int nc);
 
 void BeckeGrid_del(BeckeGrid *grid);
 

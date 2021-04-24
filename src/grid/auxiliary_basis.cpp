@@ -7,21 +7,20 @@ fernando.posada@temple.edu*/
 
 #include "auxiliary_basis.h"
 
-AuxiliaryBasis::AuxiliaryBasis(BeckeGrid *grid, const int lm) {
+AuxiliaryBasis::AuxiliaryBasis(BeckeGrid *grid) {
   molgrid = grid;
   ncenter = molgrid->get_ncenter();
-  lmax = lm;
-  lindep = 1.0e-6;  // Threshold for linear dependency
+  abldep = molgrid->get_abldep(); // Threshold for linear dependency
   lcenter.reserve(ncenter);
 
-  halflmax = 0; //lmax / 2.0;
+  ablmax = molgrid->get_ablmax();
 
-  printf("L max for Auxiliary Basis: %d %d\n", lmax, halflmax);
-  printf("Linear Dependency Tolerance: %12.9E\n", lindep);
+  printf("L max for Auxiliary Basis: %d\n", ablmax);
+  printf("Linear Dependency Tolerance: %12.9E\n", abldep);
   printf("Number of Centers: %d\n", ncenter);
 
-  max_rad = 0;  // largest radial quadrature
-  max_atm = 0;  // largest atomic grid
+  max_rad = 0; // largest radial quadrature
+  max_atm = 0; // largest atomic grid
 
   for (int center = 0; center < ncenter; ++center) {
     max_rad = std::max(molgrid->atgrid[center].rad_grid->get_size(), max_rad);
@@ -34,7 +33,7 @@ AuxiliaryBasis::AuxiliaryBasis(BeckeGrid *grid, const int lm) {
 void AuxiliaryBasis::compute_aobasis() {
   // Determine exponents of the Slater-type auxiliary basis functions
   // s-, p-, d-, ..., AG-type real Cartesian Slater-spherical harmonics
-  
+
   std::vector<int> nbas(ncenter);
   std::vector<Array2D> aoexp(ncenter, Vector(max_rad));
   std::vector<Matrix> C(ncenter, Matrix(max_rad, max_rad));
@@ -80,7 +79,7 @@ void AuxiliaryBasis::compute_aobasis() {
     // canonical orthogonalization
     nbas[ip] = 0;
     for (unsigned int i = 0; i < rsize; ++i) {
-      if (eigenvalues(i) > lindep) {
+      if (eigenvalues(i) > abldep) {
         C[ip].col(nbas[ip]) = eigenvectors.col(i) / std::sqrt(eigenvalues(i));
         nbas[ip]++;
       }
@@ -98,7 +97,7 @@ void AuxiliaryBasis::compute_aobasis() {
   std::complex<double> ylm1;
   std::complex<double> ylm2;
   std::vector<Matrix> aotemp(
-      ncenter, Matrix(max_atm, int(nbastotal * std::pow(halflmax + 1, 2))));
+      ncenter, Matrix(max_atm, int(nbastotal * std::pow(ablmax + 1, 2))));
 
   for (int ip = 0; ip < ncenter; ++ip) {
     AtomicGrid *atgrid_i = &molgrid->atgrid[ip];
@@ -123,8 +122,8 @@ void AuxiliaryBasis::compute_aobasis() {
     }
 
     // Populate p-type and higher AO
-    if (halflmax > 0) {
-      for (int l = 1; l <= halflmax; ++l) {
+    if (ablmax > 0) {
+      for (int l = 1; l <= ablmax; ++l) {
         for (int jp = 0; jp < ncenter; ++jp) {
           AtomicGrid *atgrid_j = &molgrid->atgrid[jp];
 
@@ -192,7 +191,7 @@ void AuxiliaryBasis::compute_aobasis() {
   int n = 0;
   for (int i = 0; i < norb; ++i) {
     // remove linear dependencies
-    if (eigenvalues(i) > lindep) {
+    if (eigenvalues(i) > abldep) {
       for (int j = 0; j < norb; ++j) {
         aux(j, n) = eigenvectors(j, i) / sqrt(eigenvalues(i));
       }
@@ -200,9 +199,8 @@ void AuxiliaryBasis::compute_aobasis() {
     }
   }
 
-
-  printf("Number of Linear Dependencies (LMAX: %d): %d\n", halflmax, norb - n);
-  printf("Number of Auxiliary Functions (LMAX: %d): %d\n", halflmax, n);
+  printf("Number of Linear Dependencies (LMAX: %d): %d\n", ablmax, norb - n);
+  printf("Number of Auxiliary Functions (LMAX: %d): %d\n", ablmax, n);
 
   nao = n;
   aobasis = new double[ncenter * max_atm * nao];
@@ -265,8 +263,8 @@ void AuxiliaryBasis::rylm(Array1D dest, Array1D orig, int l, int m,
   *r = std::sqrt((r_orig_dest * r_orig_dest).sum());
 
   // get spherical coordinates
-  double t = std::acos(r_orig_dest(2) / *r);              // theta
-  double p = std::atan2(r_orig_dest(1), r_orig_dest(0));  // phi
+  double t = std::acos(r_orig_dest(2) / *r);             // theta
+  double p = std::atan2(r_orig_dest(1), r_orig_dest(0)); // phi
 
   *ylm = spherical_harmonics_complex(l, m, t, p);
 }
@@ -274,8 +272,8 @@ void AuxiliaryBasis::rylm(Array1D dest, Array1D orig, int l, int m,
 /*
 Python wrapper
 */
-AuxiliaryBasis *AuxiliaryBasis_new(BeckeGrid *grid, int lm) {
-  return new AuxiliaryBasis(grid, lm);
+AuxiliaryBasis *AuxiliaryBasis_new(BeckeGrid *grid) {
+  return new AuxiliaryBasis(grid);
 }
 
 void AuxiliaryBasis_del(AuxiliaryBasis *auxiliary_basis) {

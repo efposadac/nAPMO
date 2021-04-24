@@ -33,7 +33,7 @@ class CubicSpline(object):
             CuspExtrapolation() is used.
     """
 
-    def __init__(self, y, dx=None, rtransform=None, extrapolation=None):
+    def __init__(self, y, dx=None, rtransform=None, extrapolation=None, v=None):
         super(CubicSpline, self).__init__()
 
         self._y = y
@@ -47,7 +47,9 @@ class CubicSpline(object):
             assert rtransform.size == n
 
         # use given derivatives or construct new ones.
-        v = self._rtransform.deriv_all()
+        if v is None:
+            v = self._rtransform.deriv_all()
+
         if dx is None:
             self._dt = np.zeros(n, np.float64)
             napmo.cext.solve_cubic_spline_system(self._y, self._dt, n)

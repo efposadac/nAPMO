@@ -30,7 +30,7 @@ class BeckeGrid(object):
         n_angular (int, optional): Number of angular points. Default is 110
     """
 
-    def __init__(self, species, n_radial=40, n_angular=110, rtransform=None, file=None):
+    def __init__(self, species, n_radial=40, n_angular=110, rtransform=None, file=None, ablmax=None, abldep=None):
         super(BeckeGrid, self).__init__()
 
         assert isinstance(species, dict)
@@ -50,6 +50,12 @@ class BeckeGrid(object):
             self._this = napmo.cext.BeckeGrid_from_points(pw, size, ncenter)
         else:
 
+            if ablmax is None:
+                ablmax = 0
+
+            if abldep is None:
+                abldep = 1.0e-6
+
             self._nrad = n_radial
             self._nang = n_angular
 
@@ -60,7 +66,7 @@ class BeckeGrid(object):
             atgrids_ptr = np.array(
                 [atgrid._this for atgrid in self.atgrids], dtype=c_void_p)
 
-            self._this = napmo.cext.BeckeGrid_new(atgrids_ptr, ncenter)
+            self._this = napmo.cext.BeckeGrid_new(atgrids_ptr, ncenter, ablmax, abldep)
 
     def evaluate_decomposition(self, atom, cubic_splines, output, cell=None):
         """

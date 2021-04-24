@@ -14,27 +14,26 @@ fernando.posada@temple.edu*/
 #include "becke.h"
 
 struct AuxiliaryBasis {
- private:
+private:
   int ncenter;
   int nao;
-  int lmax;
-  int halflmax;
+  int ablmax;
   unsigned int max_rad;
   unsigned int max_atm;
-  double lindep;
-  double * aobasis;
+  double abldep;
+  double *aobasis;
   std::vector<int> lcenter;
-  BeckeGrid * molgrid;
+  BeckeGrid *molgrid;
 
   void gram_schmidt(Matrix *M);
 
   void rylm(Array1D dest, Array1D orig, int l, int m, std::complex<double> *ylm,
             double *r);
 
- public:
+public:
   AuxiliaryBasis() = default;
 
-  AuxiliaryBasis(BeckeGrid *grid, const int lm);
+  AuxiliaryBasis(BeckeGrid *grid);
 
   ~AuxiliaryBasis() {
     ncenter = 0;
@@ -51,7 +50,7 @@ struct AuxiliaryBasis {
 #ifdef __cplusplus
 extern "C" {
 #endif
-AuxiliaryBasis *AuxiliaryBasis_new(BeckeGrid* grid, int lm);
+AuxiliaryBasis *AuxiliaryBasis_new(BeckeGrid *grid);
 
 void AuxiliaryBasis_del(AuxiliaryBasis *auxiliary_basis);
 

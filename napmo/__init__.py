@@ -351,7 +351,7 @@ cext.AtomicGrid_get_weights.argtypes = [c_void_p]
 
 # Becke grid
 cext.BeckeGrid_new.restype = c_void_p
-cext.BeckeGrid_new.argtypes = [aptr, c_int]
+cext.BeckeGrid_new.argtypes = [aptr, c_int, c_int, c_double]
 
 cext.BeckeGrid_del.restype = None
 cext.BeckeGrid_del.argtypes = [c_void_p]
@@ -411,7 +411,7 @@ cext.MultiGrid_add_grid.argtypes = [c_void_p, c_void_p]
 
 # Auxiliary Basis
 cext.AuxiliaryBasis_new.restype = c_void_p
-cext.AuxiliaryBasis_new.argtypes = [c_void_p, c_int]
+cext.AuxiliaryBasis_new.argtypes = [c_void_p]
 
 cext.AuxiliaryBasis_del.restype = None
 cext.AuxiliaryBasis_del.argtypes = [c_void_p]
