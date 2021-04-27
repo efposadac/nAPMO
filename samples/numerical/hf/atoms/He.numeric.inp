@@ -15,7 +15,7 @@ scf {
 }
 
 grid {
-    e- [50, 110]
+    e- [50, 14]; ablmax: 0; abldep: 1.0e-6
 }
 
 code {

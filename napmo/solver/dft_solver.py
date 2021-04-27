@@ -43,11 +43,16 @@ class DFT(object):
                     "Grid specification not found!",
                     'Check the "grid" block in your input file ' + key + ' has not grid specifications')
 
-            mgrid.add_grid(napmo.BeckeGrid(particle,
-                                           aux.get('nrad', 100),
-                                           aux.get('nang', 110),
-                                           rtransform=aux.get('rtransform', None),
-                                           file=aux.get('file', None)))
+            mgrid.add_grid(
+                napmo.BeckeGrid(particle,
+                    aux.get('nrad', 100),
+                    aux.get('nang', 110),
+                    rtransform=aux.get('rtransform', None),
+                    file=aux.get('file', None),
+                    ablmax=aux.get('ablmax', None),
+                    abldep=aux.get('abldep', None)
+                )
+            )
 
             if pprint:
                 mgrid.get_grid(particle.get('symbol')).show()

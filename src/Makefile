@@ -26,7 +26,7 @@ $(BUILD): $$(OBJ)
 	cp $(LIBRARY) $(TOPDIR)/napmo/utilities
 
 %.o: %.cpp
-	$(CXX) -c $(CFLAGS) -std=c++11 $< -o $@
+	$(CXX) -I. -c $(CFLAGS) -std=c++11 $< -o $@
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) $< -o $@
