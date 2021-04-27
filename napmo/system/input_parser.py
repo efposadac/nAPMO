@@ -340,37 +340,36 @@ class InputParser(object):
                     "Particle not found!",
                     'Check the "grid" block in your input file ' + symbol + ' is undefined in "molecular" block')
 
-            grid_spec = fix_casting(' '.join(line[1:]))
+
+            props = ' '.join(line[1:]).split(';')
+            aux[symbol] = {}
             rtransform = None
-            file = None
+            nrad = 50
+            nang = 14
+            for prop in props:
+                grid_spec = fix_casting(prop)
+                if len(grid_spec) == 4:
+                    rtransform = napmo.PowerRadialTransform(
+                        grid_spec[0], grid_spec[1], grid_spec[2])
 
-            if len(grid_spec) == 4:
-                rtransform = napmo.PowerRadialTransform(
-                    grid_spec[0], grid_spec[1], grid_spec[2])
+                    nrad = grid_spec[2]
+                    nang = grid_spec[3]
 
-                nrad = grid_spec[2]
-                nang = grid_spec[3]
+                elif len(grid_spec) == 3:
+                    rtransform = napmo.ChebyshevRadialTransform(
+                        grid_spec[0], grid_spec[1])
 
-            elif len(grid_spec) == 3:
-                rtransform = napmo.ChebyshevRadialTransform(
-                    grid_spec[0], grid_spec[1])
+                    nrad = grid_spec[1]
+                    nang = grid_spec[2]
 
-                nrad = grid_spec[1]
-                nang = grid_spec[2]
+                elif isinstance(grid_spec, dict):
+                    aux[symbol].update(grid_spec)
 
-            elif isinstance(grid_spec, dict):
-                nrad = None
-                nang = None
-                file = grid_spec.get('file')
+                else:
+                    nrad = grid_spec[0]
+                    nang = grid_spec[1]
 
-            else:
-                nrad = grid_spec[0]
-                nang = grid_spec[1]
-
-            aux[symbol] = {'nrad': nrad,
-                           'nang': nang,
-                           'rtransform': rtransform,
-                           'file': file}
+            aux[symbol].update({'nrad': nrad, 'nang': nang})
 
         self.scf['grid'] = aux
 

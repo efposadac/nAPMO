@@ -14,7 +14,7 @@ fernando.posada@temple.edu*/
 #include "radial.h"
 
 #include "../horton/dot_multi.h"
-#include "../utils/eigen_helper.h"
+// #include "../utils/eigen_helper.h"
 #include "../utils/omp_helper.h"
 
 struct AtomicGrid {
