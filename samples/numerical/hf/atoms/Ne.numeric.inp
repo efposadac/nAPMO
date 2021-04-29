@@ -12,13 +12,10 @@ basis {
 scf {
     hf
     numeric
-    # for auxiliary basis
-    #lmax = 1
-    #lindep = 1.0e-6
 }
 
 grid {
-   e- [50, 110]
+   e- [50, 14]; ablmax: 1; abldep: 1.0e-6
 }
 
 code {
