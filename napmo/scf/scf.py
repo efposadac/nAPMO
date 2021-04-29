@@ -29,9 +29,9 @@ class SCF(object):
     def __init__(self, options=None, pce=0.0, pprint=True):
         super(SCF, self).__init__()
         self.options = {'maxiter': 100,
-                        'eps_e': 1e-8,
-                        'eps_n': 1e-8,
-                        'eps_d': 1e-8,
+                        'eps_e': 1e-7,
+                        'eps_n': 1e-7,
+                        'eps_d': 1e-7,
                         'method': 'hf',
                         'kind': 'analytic',
                         'direct': False,
@@ -135,8 +135,8 @@ class SCF(object):
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12.7f}'.
                       format(iterations, psi._energy, self._energy, e_diff, psi._rmsd))
 
+        # Debug info
         if self.get('debug') and not isinstance(psi, napmo.PSIO):
-
             if not isinstance(psi, napmo.PSIO):
                 grid = napmo.BeckeGrid(psi.species, 500, 110)
                 psi.plot_dens(grid=grid, kind="anal")
@@ -185,8 +185,6 @@ class SCF(object):
             psi.build_fock()
             # self.compute_energy_single(psi, show=True)
 
-        # raise SystemExit
-
         while (iterations < self.get('maxiter') and
                np.abs(e_diff) > self.get('eps_e')):
 
@@ -224,7 +222,6 @@ class SCF(object):
                 for psi in PSI:
                     psi.compute_xc_matrix()
 
-
             # if case is 1:
             #     for psi in PSI:
 
@@ -260,16 +257,14 @@ class SCF(object):
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f}'.
                       format(iterations, self._energy - self.pce, self._energy, e_diff))
 
-            # raise SystemExit
-
         # if iterations >= self.get('maxiter'):
         #     case += 1
         #     self.multi(PSI, case=case)
         #     return
 
-        print('{0:11s} {1:>16.10f}'.format("\nANALYTICAL ", self._energy))
-
+        # Debug
         if self.get('debug'):
+            print('{0:11s} {1:>16.10f}'.format("\nANALYTICAL ", self._energy))
             for psi in PSI:
                 grid = napmo.BeckeGrid(psi.species, 100, 110)
                 psi.plot_dens(grid, kind="anal")
@@ -334,6 +329,7 @@ class SCF(object):
 
             iterations += 1
 
+        # Debug
         if self.get('debug') and not isinstance(psi, napmo.PSIO):
             if not isinstance(psi, napmo.PSIO):
                 psi.plot_dens(kind="num")
@@ -346,8 +342,8 @@ class SCF(object):
 
         if pprint:
             print('\nStarting Multi NSCF Calculation...')
-            print('{0:5s}  {1:^10s} {2:>12s} {3:>12s} {4:>12s}'
-                  .format("\nIter", "Energy", "Total E", "Delta(E)", "Delta orb"))
+            print('{0:5s}  {1:^10s} {2:>12s} {3:>12s}'
+                  .format("\nIter", "Energy", "Total E", "Delta(E)"))
 
         iterations = 1
         e_diff = 1
@@ -356,14 +352,15 @@ class SCF(object):
 
             e_last = self._energy
 
-            if iterations > 1:
-                for psi in PSI:
-                    psi.optimize_psi(self, PSI)
-
             for psi in PSI:
 
+                if iterations > 1:
+                    # Compute new psi
+                    with napmo.runtime.timeblock('PSI optimization'):
+                        psi.optimize_psi(other_psi=PSI)
+
                 # Calculate 2 body Matrix
-                with napmo.runtime.timeblock('2 body ints'):
+                with napmo.runtime.timeblock('Numerical 2 body'):
                     psi.compute_2body(self.get('direct'))
                     # psi.compute_xc()
 
@@ -378,6 +375,7 @@ class SCF(object):
                 with napmo.runtime.timeblock('Self-Adjoint eigen solver'):
                     napmo.cext.wavefunction_iterate(byref(psi))
 
+            for psi in PSI:
                 with napmo.runtime.timeblock('Coupling ints'):
                     psi.compute_coupling(PSI, direct=self.get('direct'))
                     # psi.compute_cor2species(PSI)
@@ -391,9 +389,8 @@ class SCF(object):
             e_diff = self._energy - e_last
 
             if pprint:
-                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7g} {4:>12s}'.
-                      format(iterations, self._energy - self.pce, self._energy, e_diff,
-                             str([str(psi._res) for psi in PSI])))
+                print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f}'.
+                      format(iterations, self._energy - self.pce, self._energy, e_diff))
 
             if iterations > self.get('maxiter') or np.abs(e_diff) < self.get('eps_n'):
                 if iterations > 1:
@@ -401,11 +398,11 @@ class SCF(object):
 
             iterations += 1
 
-        # if self.get('debug'):
-        # for psi in PSI:
-        #     psi.plot_dens(kind="num")
-            # plt.show()
-            # plt.savefig('numeric_dens.png')
+        if self.get('debug'):
+            for psi in PSI:
+                psi.plot_dens(kind="num")
+                plt.show()
+                plt.savefig('numeric_dens.png')
 
     def hmulti(self, PSI, pprint=True):
         """
@@ -474,7 +471,6 @@ class SCF(object):
                 # plt.show()
                 # plt.savefig('numeric_dens.png')
 
-
     def compute_energy_single(self, psi, show=False):
         """
         Computes the total energy for a multi-species system.
@@ -492,7 +488,6 @@ class SCF(object):
             print("Total E : {0:>18.14f}".format(energy))
 
         return energy
-
 
     def compute_energy(self, PSI):
         """

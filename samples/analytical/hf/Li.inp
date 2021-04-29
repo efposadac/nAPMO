@@ -5,7 +5,7 @@ Li  0.000   0.000   0.000
 
 # basis-set specification
 basis {
-    e- CC-PVTZ
+    e- STO-3G
 }
 
 # scf options

@@ -75,6 +75,7 @@ class PSIN(napmo.PSIB):
 
         # Start WF calculation
         self.initialize()
+        self.Cgrid = 0.0
 
         # Calculate Aux Basis
         self._aobasis = napmo.AuxiliaryBasis(self.grid)
@@ -218,15 +219,10 @@ class PSIN(napmo.PSIB):
         for psi in other_psi:
             if self.sid != psi.sid:
 
-                psi.Cgrid = napmo.compute_coulomb(
-                    psi._grid, psi.Dgrid.sum(axis=0), psi.lmax)
-
-                psi.Cgrid *= psi.species.get('charge')
-
                 napmo.cext.nwavefunction_compute_coupling(
-                    byref(self), self.grid._this, self.psi, psi.Cgrid, aux)
+                    byref(self), self.grid._this, self.psi, psi.Jpot, aux)
 
-                self.J += aux
+                self.J += (aux * psi.species.get('charge'))
 
         # TODO: Check if J is multiplied many times by the charge when there are three species
         self.J *= self.species.get('charge')
@@ -346,7 +342,7 @@ class PSIN(napmo.PSIB):
         """
         Builds the Fock matrix expanded on the grid.
         """
-        self.Fgrid = self.Hgrid + self.Jgrid + self.Kgrid
+        self.Fgrid = self.Hgrid + self.Jgrid + self.Kgrid + self.Cgrid
 
     def compute_density(self):
         """
@@ -385,11 +381,11 @@ class PSIN(napmo.PSIB):
 
         return res
 
-    def optimize_psi(self):
+    def optimize_psi(self, other_psi=None):
         """
         Uses the auxiliary basis to calculate an optimized version of the orbitals.
         """
-        self._psi[:] = self.optimize.optimize(self.Dgrid, self.psi)[:self.ndim]
+        self._psi[:] = self.optimize.optimize(self.Dgrid, self.psi, other_psi=other_psi)[:self.ndim]
         self.normalize()
         self.compute_1body()
 

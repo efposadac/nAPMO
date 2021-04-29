@@ -36,14 +36,18 @@ class PSIO(napmo.PSIN):
 
         # psi here is the auxiliary basis.
         self._psi = psi
+        self.Cgrid = 0.0
 
-    def optimize(self, rho, prev_psi):
+    def optimize(self, rho, prev_psi, other_psi=None):
         """
         Calculates next psi on the auxiliary basis, it uses the (i-1)th rho (density)
         and orbitals to calculate the new ones.
         """
         self.Dgrid = rho
         self.prev_psi = prev_psi
+
+        if other_psi is not None:
+            self.compute_coupling_operator(other_psi)
 
         # Compute Fock
         if self.iterations == 1:
@@ -92,6 +96,24 @@ class PSIO(napmo.PSIN):
                 ]).sum(axis=0)
                 for v in range(self.ndim)
             ]) * self.species.get('charge')
+
+    def compute_coupling_operator(self, other_psi):
+        """
+        Computes the two-body coupling matrix
+
+        Args:
+            other_psi (WaveFunction) : WaveFunction object for the other species.
+        """
+        aux = np.array([
+            psi.Jpot
+            for psi in other_psi
+            if psi.sid != self.sid
+        ]).sum(axis=0)
+
+        self.Cgrid = np.array([
+            aux * self.psi[k]
+            for k in range(self.ndim)
+        ])
 
     def build_fock(self):
         """

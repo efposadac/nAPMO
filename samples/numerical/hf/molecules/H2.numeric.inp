@@ -6,7 +6,7 @@ molecule [e-:0:1]{
 
 # basis-set specification
 basis {
-    e- AUG-CC-PVDZ
+    e- STO-3G
 }
 
 # scf options
@@ -17,7 +17,7 @@ scf {
 }
 
 grid {
-    e- [100, 110]
+    e- [50, 14]
 }
 
 code {
