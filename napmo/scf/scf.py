@@ -11,7 +11,7 @@ from __future__ import print_function
 from ctypes import *
 import numpy as np
 import napmo
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 import sys
 from scipy import linalg as SLA
@@ -134,6 +134,8 @@ class SCF(object):
             if pprint:
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12.7f}'.
                       format(iterations, psi._energy, self._energy, e_diff, psi._rmsd))
+
+        print('{0:11s} {1:>16.10f}'.format("ANALYTICAL ", self._energy))
 
         # Debug info
         if self.get('debug') and not isinstance(psi, napmo.PSIO):
@@ -333,7 +335,7 @@ class SCF(object):
         if self.get('debug') and not isinstance(psi, napmo.PSIO):
             if not isinstance(psi, napmo.PSIO):
                 psi.plot_dens(kind="num")
-                plt.show()
+                # plt.show()
 
     def nmulti(self, PSI, pprint=True):
         """
@@ -401,8 +403,8 @@ class SCF(object):
         if self.get('debug'):
             for psi in PSI:
                 psi.plot_dens(kind="num")
-                plt.show()
-                plt.savefig('numeric_dens.png')
+                # plt.show()
+                # plt.savefig('numeric_dens.png')
 
     def hmulti(self, PSI, pprint=True):
         """
@@ -473,10 +475,10 @@ class SCF(object):
 
     def compute_energy_single(self, psi, show=False):
         """
-        Computes the total energy for a multi-species system.
+        Computes the total energy for a single species system.
         """
 
-        energy = (psi.D.T * (psi.H + 0.5 * psi.G + psi.J)).sum() + psi._xc_energy
+        energy = (psi.D.T * (psi.H + 0.5 * psi.G + psi.J)).sum() + psi._xc_energy + self.pce
 
         if show:
             print("Symbol  :", psi.symbol)

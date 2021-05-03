@@ -8,7 +8,7 @@
 
 import numpy as np
 import napmo
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
 def test_spherical_average_H1s():

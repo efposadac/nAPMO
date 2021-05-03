@@ -8,7 +8,7 @@
 from __future__ import print_function
 
 import napmo
-import matplotlib.pylab as plt
+# import matplotlib.pylab as plt
 
 import sys
 
@@ -99,7 +99,8 @@ class NAPMO(object):
         """
         print('\n--------------------------------------------------')
 
-        g = {'plt': plt, 'print:': print}
+        # g = {'plt': plt, 'print:': print}
+        g = {'print:': print}
 
         l = {"Energy": self._energy,
              "D": [psi.D for psi in self.solver.PSI],

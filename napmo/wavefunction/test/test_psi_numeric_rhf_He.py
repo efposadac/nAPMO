@@ -9,10 +9,10 @@ import napmo
 import numpy as np
 
 from ctypes import *
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
-def test_psi_numeric_hf_s(basis='STO-3G'):
+def test_psi_numeric_rhf_He(basis='STO-3G'):
     """
     * Closed shell
     * Single center
@@ -182,11 +182,11 @@ def analyse_psi(psi):
 
 
 if __name__ == '__main__':
-    test_psi_numeric_hf_s()
+    test_psi_numeric_rhf_He()
     # energies = []
     # basis_list = ['STO-3G', 'CC-PVDZ', 'CC-PVTZ', 'CC-PVQZ', 'CC-PV5Z', 'CC-PV6Z']
     # for basis in basis_list:
-    #     energies.append(test_psi_numeric_hf_s(basis))
+    #     energies.append(test_psi_numeric_rhf_He(basis))
 
     # for basis, energy in zip(basis_list, energies):
     #     print("Basis: %10s  Energy: %20.15f" % (basis, energy))

@@ -1,4 +1,4 @@
-# file: test_psi_numeric_xc.py
+# file: test_psi_numeric_rhf_Be.py
 # nAPMO package
 # Copyright (c) 2021, Edwin Fernando Posada
 # All rights reserved.
@@ -9,10 +9,10 @@ import napmo
 import numpy as np
 
 from ctypes import *
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
-def test_psi_numeric_xc(basis="STO-3G"):
+def test_psi_numeric_rhf_Be(basis="STO-3G"):
     """
     * K (exchange) included
     * Closed shell
@@ -176,11 +176,11 @@ def analyse_psi(psi):
 
 
 if __name__ == '__main__':
-    test_psi_numeric_xc()
+    test_psi_numeric_rhf_Be()
     # energies = []
     # basis_list = ['STO-3G', 'CC-PVDZ', 'CC-PVTZ', 'CC-PVQZ', 'CC-PV5Z']
     # for basis in basis_list:
-    #     energies.append(test_psi_numeric_xc(basis))
+    #     energies.append(test_psi_numeric_rhf_Be(basis))
 
     # for basis, energy in zip(basis_list, energies):
     #     print("Basis: %10s  Energy: %20.15f" % (basis, energy))

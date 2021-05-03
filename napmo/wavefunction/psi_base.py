@@ -12,7 +12,7 @@ from ctypes import *
 import numpy as np
 import napmo
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
 class PSIB(Structure):
@@ -253,14 +253,14 @@ class PSIB(Structure):
         np.savetxt(
             label + '.txt', np.stack([bwa[:, 0], bwa[:, 1]]).T, delimiter='\t', fmt=['%.12f', '%.12f'])
 
-        plt.plot(bwa[:, 0] * napmo.BOHR_TO_ANGSTROM,
-                 bwa[:, 1], marker, label=label)
-        plt.xlabel("z")
-        plt.ylabel("obj")
-        plt.legend()
+        # plt.plot(bwa[:, 0] * napmo.BOHR_TO_ANGSTROM,
+        #          bwa[:, 1], marker, label=label)
+        # plt.xlabel("z")
+        # plt.ylabel("obj")
+        # plt.legend()
 
-        if xlim is not None:
-            plt.xlim(xlim[0], xlim[1])
+        # if xlim is not None:
+        #     plt.xlim(xlim[0], xlim[1])
 
-        if ylim is not None:
-            plt.ylim(ylim[0], ylim[1])
+        # if ylim is not None:
+        #     plt.ylim(ylim[0], ylim[1])

@@ -70,7 +70,8 @@ class HF(object):
                         'Check the "grid" block in your input file ' + key + ' has not grid specifications')
 
                 self._mgrid.append(
-                    napmo.BeckeGrid(particle,
+                    napmo.BeckeGrid(
+                        particle,
                         aux.get('nrad', 100),
                         aux.get('nang', 110),
                         rtransform=aux.get('rtransform', None),
