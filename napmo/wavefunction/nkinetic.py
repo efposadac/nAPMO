@@ -34,12 +34,11 @@ def compute_kinetic(grid, psi, lmax):
         # Calculate spherical expansion
         rtf = ag.radial_grid.rtransform
 
-        r = rtf.radius_all()
+        r = ag.radial_grid.points
         r2 = r * r
-        rinv = 1.0 / r
         r2inv = 1.0 / r2
 
-        _psi = psi[start:end].copy()
+        _psi = psi[start:end].copy() * grid.becke_weights[start:end]
         sph_exp = ag.spherical_expansion(lmax, _psi)
 
         idx = 0

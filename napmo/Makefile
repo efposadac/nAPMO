@@ -5,7 +5,7 @@
 # Version: 1.0
 # fernando.posada@temple.edu
 
-SUBDIRS = data grids system utilities
+SUBDIRS = data grids system utilities functional gto solver wavefunction scf
 
 default::
 

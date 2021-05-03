@@ -49,6 +49,7 @@ void AuxiliaryBasis::compute_aobasis() {
     unsigned int asize = atgrid->get_size();
     A2DMap apoints(atgrid->get_points(), 3, asize);
     A1DMap aweights(atgrid->get_weights(), asize);
+    A1DMap origin(atgrid->get_origin(), 3);
 
     unsigned int rsize = atgrid->rad_grid->get_size();
     A1DMap rpoints(atgrid->rad_grid->get_points(), rsize);
@@ -58,9 +59,13 @@ void AuxiliaryBasis::compute_aobasis() {
     aoexp[ip] = log_2 / rpoints;
 
     // Build overlap matrix
+    Array2D aux(3, asize);
+    for (unsigned int i = 0; i < asize; ++i) {
+      aux.col(i) = apoints.col(i) - origin;
+    }
+
     Vector RR(asize);
-    // auto aux = apoints - atgrid->get_origin();
-    RR = Eigen::sqrt((apoints * apoints).colwise().sum());
+    RR = Eigen::sqrt((aux * aux).colwise().sum());
     Matrix A(rsize, rsize);
     A.setZero();
     for (unsigned int i = 0; i < asize; ++i) {
@@ -110,16 +115,20 @@ void AuxiliaryBasis::compute_aobasis() {
       unsigned int size_j = atgrid_j->get_size();
       A2DMap points_j(atgrid_j->get_points(), 3, size_j);
 
+      Array2D aux(3, size_j);
+      for (unsigned int i = 0; i < size_j; ++i) {
+        aux.col(i) = points_j.col(i) - origin_i;
+      }
+
       Vector RR_j(size_j);
-      // auto aux = points_j - origin_i;
-      RR_j = Eigen::sqrt((points_j * points_j).colwise().sum());
+      RR_j = Eigen::sqrt((aux * aux).colwise().sum());
 
       for (unsigned int i = 0; i < size_j; ++i) {
         Vector tmp = Eigen::exp(-aoexp[ip] * RR_j(i));
         aotemp[jp].block(i, norb, 1, nbas[ip]) = tmp.transpose() * C[ip];
       }
-      norb += nbas[ip];
     }
+    norb += nbas[ip];
 
     // Populate p-type and higher AO
     if (ablmax > 0) {
@@ -137,8 +146,8 @@ void AuxiliaryBasis::compute_aobasis() {
             aotemp[jp].block(k, norb, 1, nbas[ip]) =
                 aotemp[jp].block(k, 0, 1, nbas[ip]) * factor;
           }
-          norb += nbas[ip];
         }
+        norb += nbas[ip];
         for (int m = 1; m <= l; ++m) {
           double sign = (m % 2) ? -1.0 : 1.0;
           for (int jp = 0; jp < ncenter; ++jp) {
@@ -160,8 +169,8 @@ void AuxiliaryBasis::compute_aobasis() {
               aotemp[jp].block(k, norb + nbas[ip], 1, nbas[ip]) =
                   aotemp[jp].block(k, 0, 1, nbas[ip]) * factor2;
             }
-            norb += nbas[ip] * 2;
           }
+          norb += nbas[ip] * 2;
         }
       }
     }
