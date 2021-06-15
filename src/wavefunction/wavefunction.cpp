@@ -1,9 +1,9 @@
 /*
 file: wavefunction.cpp
 nAPMO package
-Copyright (c) 2016, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
+Version: 2.0
 fernando.posada@temple.edu
 */
 
@@ -24,8 +24,8 @@ void wavefunction_guess_hcore(WaveFunction *psi) {
   O = gen_eig_solver.eigenvalues();
   C = gen_eig_solver.eigenvectors();
 
-  // std::cout << "\n\tHcore Matrix: " << "occupation: "<< psi->occupation<<" "<<psi->eta<<"\n";
-  // std::cout << H << std::endl;
+  // std::cout << "\n\tHcore Matrix: " << "occupation: "<< psi->occupation<<"
+  // "<<psi->eta<<"\n"; std::cout << H << std::endl;
 
   // compute density, D = C(occ) . C(occ)T
   auto C_occ = C.leftCols(psi->occupation);
@@ -59,9 +59,7 @@ void wavefunction_transformation_matrix(WaveFunction *psi) {
   // cout << X.sum() << " "<< eig_vec.sum()<< endl;
 
   X *= eig_vec.transpose();
-
 }
-
 
 void wavefunction_iterate(WaveFunction *psi) {
 
@@ -109,7 +107,7 @@ void wavefunction_iterate(WaveFunction *psi) {
   // std::cout << D << std::endl;
 
   // compute HF energy
-  auto ehf = D.cwiseProduct(H + (0.5 * G) + J).sum() + xc_energy ;
+  auto ehf = D.cwiseProduct(H + (0.5 * G) + J).sum() + xc_energy;
   psi->energy = ehf;
   psi->rmsd = (D - L).norm();
 
@@ -180,8 +178,8 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
   MMap D(psi->D, ndim, ndim);
   MMap G(psi->G, ndim, ndim);
 
-  Matrix C(ndim,ndim);
-  Matrix K(ndim,ndim);
+  Matrix C(ndim, ndim);
+  Matrix K(ndim, ndim);
 
   G.setZero();
   C.setZero();
@@ -207,8 +205,8 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
       auto s = ints->at(thread_id).p[i];
       auto val = ints->at(thread_id).val[i];
 
-      // std::cout << p << " " << q << " " << r << " " << s << " " << val << std::endl;
-
+      // std::cout << p << " " << q << " " << r << " " << s << " " << val <<
+      // std::endl;
 
       // Adds coulomb operator contributions
       auto coulomb = D(r, s) * val;
@@ -302,7 +300,6 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
   C = CB[0].triangularView<Eigen::Upper>();
   C += C.triangularView<Eigen::StrictlyUpper>().transpose();
 
-
   KB[0] += KB[0].triangularView<Eigen::StrictlyLower>().transpose();
   K = KB[0].triangularView<Eigen::Upper>();
   K += K.triangularView<Eigen::StrictlyUpper>().transpose();
@@ -313,9 +310,6 @@ void wavefunction_compute_2body_matrix(WaveFunction *psi,
   // std::cout<<"J Matrix: \n"<<C<< std::endl;
   // std::cout<<"K Matrix: \n"<<K<< std::endl;
 
-
   // std::cout<<"J: "<<ec<< std::endl;
   // std::cout<<"K: "<<kc<< std::endl;
 }
-
-

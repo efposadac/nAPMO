@@ -1,8 +1,9 @@
-/*file: libint_iface.cpp
+/*
+file: libint_iface.cpp
 nAPMO package
-Copyright (c) 2016, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
+Version: 2.0
 fernando.posada@temple.edu
 */
 
@@ -192,8 +193,8 @@ std::vector<QuartetBuffer> *
 LibintInterface::compute_2body_ints(const Matrix &D, const Matrix &Schwartz,
                                     double precision) {
 
-  using napmo::nthreads;
   using libint2::Engine;
+  using napmo::nthreads;
 
   const auto nshells = shells.size();
 
@@ -247,7 +248,6 @@ LibintInterface::compute_2body_ints(const Matrix &D, const Matrix &Schwartz,
   auto shell2bf = map_shell_to_basis_function();
 
   auto lambda = [&](unsigned int thread_id) {
-
     auto &engine = engines[thread_id];
 
     buffers->at(thread_id).p.resize(n);
@@ -353,7 +353,6 @@ LibintInterface::compute_2body_ints(const Matrix &D, const Matrix &Schwartz,
     buffers->at(thread_id).r.shrink_to_fit();
     buffers->at(thread_id).s.shrink_to_fit();
     buffers->at(thread_id).val.shrink_to_fit();
-
   }; // end of lambda
 
   napmo::parallel_do(lambda);
@@ -369,7 +368,8 @@ LibintInterface::compute_2body_ints(const Matrix &D, const Matrix &Schwartz,
     engines[t].print_timers();
 #endif
 
-  // std::cout << " Number of unique integrals for species: " << sID << " = " << num_ints_computed << std::endl;
+  // std::cout << " Number of unique integrals for species: " << sID << " = " <<
+  // num_ints_computed << std::endl;
 
   return buffers;
 }
@@ -424,7 +424,6 @@ void LibintInterface::compute_2body_disk(const char *filename, const Matrix &D,
   auto shell2bf = map_shell_to_basis_function();
 
   auto lambda = [&](unsigned int thread_id) {
-
     std::string file = std::to_string(thread_id);
     file += filename;
 
@@ -537,7 +536,6 @@ void LibintInterface::compute_2body_disk(const char *filename, const Matrix &D,
     buffer.p[counter] = -1;
     write_buffer(buffer, outfile);
     outfile.close();
-
   }; // end of lambda
 
   napmo::parallel_do(lambda);
@@ -608,7 +606,6 @@ Matrix LibintInterface::compute_2body_direct(const Matrix &D,
   auto shell2bf = map_shell_to_basis_function();
 
   auto lambda = [&](unsigned int thread_id) {
-
     auto &engine = engines[thread_id];
     auto &g = G[thread_id];
     const auto &buf = engines[thread_id].results();
@@ -717,7 +714,6 @@ Matrix LibintInterface::compute_2body_direct(const Matrix &D,
         }
       }
     }
-
   }; // end of lambda
 
   napmo::parallel_do(lambda);
@@ -741,7 +737,7 @@ Matrix LibintInterface::compute_2body_direct(const Matrix &D,
   // std::cout << " Number of unique integrals for species: " << sID << "
   // = "
   //           << num_ints_computed << std::endl;
-  
+
   // symmetrizing the result and return
   Matrix GG = 0.25 * (G[0] + G[0].transpose());
   return GG;
@@ -799,7 +795,6 @@ void LibintInterface::compute_coupling_disk(LibintInterface &other,
   auto oshell2bf = other.map_shell_to_basis_function();
 
   auto lambda = [&](unsigned int thread_id) {
-
     std::string file = std::to_string(thread_id);
     file += filename;
 
@@ -902,7 +897,6 @@ void LibintInterface::compute_coupling_disk(LibintInterface &other,
     buffer.p[counter] = -1;
     write_buffer(buffer, outfile);
     outfile.close();
-
   }; // end of lambda
 
   napmo::parallel_do(lambda);
@@ -977,7 +971,6 @@ Matrix LibintInterface::compute_coupling_direct(LibintInterface &other,
   auto oshell2bf = other.map_shell_to_basis_function();
 
   auto lambda = [&](unsigned int thread_id) {
-
     auto &engine = engines[thread_id];
     const auto &buf = engines[thread_id].results();
     auto &b = B[thread_id];
@@ -1008,7 +1001,7 @@ Matrix LibintInterface::compute_coupling_direct(LibintInterface &other,
             auto obf2_first = oshell2bf[os2];
             auto on2 = oshells[os2].size();
 
-// printf("(%d %d | %d %d) \n", s1, s2, os1, os2);
+            // printf("(%d %d | %d %d) \n", s1, s2, os1, os2);
 
 #if defined(REPORT_INTEGRAL_TIMINGS)
             timer.start(0);
@@ -1079,8 +1072,7 @@ Matrix LibintInterface::compute_coupling_direct(LibintInterface &other,
         }
       }
     } // end shells loop
-
-  }; // end of lambda
+  };  // end of lambda
 
   napmo::parallel_do(lambda);
 
@@ -1100,7 +1092,8 @@ Matrix LibintInterface::compute_coupling_direct(LibintInterface &other,
     engines[t].print_timers();
 #endif
 
-  // std::cout << " Number of unique integrals for species: " << sID << " / " << other.get_sID() << " = " << num_ints_computed << std::endl;
+  // std::cout << " Number of unique integrals for species: " << sID << " / " <<
+  // other.get_sID() << " = " << num_ints_computed << std::endl;
 
   return B[0];
 }
@@ -1142,7 +1135,6 @@ shellpair_list_t compute_shellpair_list(const std::vector<libint2::Shell> &bs1,
   std::mutex mx;
 
   auto compute = [&](unsigned int thread_id) {
-
     auto &engine = engines[thread_id];
     const auto &buf = engines[thread_id].results();
 
@@ -1219,9 +1211,8 @@ Matrix compute_schwartz_ints(
 
   // !!! very important: cannot screen primitives in Schwartz computation !!!
   auto epsilon = 0.;
-  engines[0] = Engine(
-      Kernel, std::max(max_nprim(bs1), max_nprim(bs2)),
-      std::max(max_l(bs1), max_l(bs2)), 0, epsilon, params);
+  engines[0] = Engine(Kernel, std::max(max_nprim(bs1), max_nprim(bs2)),
+                      std::max(max_l(bs1), max_l(bs2)), 0, epsilon, params);
 
   for (size_t i = 1; i != nthreads; ++i) {
     engines[i] = engines[0];
@@ -1285,24 +1276,24 @@ __inline__ void write_buffer(const QuartetBuffer &buffer,
                 STACK_SIZE * sizeof(double));
 }
 
-size_t nbasis(const std::vector<libint2::Shell>& shells) {
+size_t nbasis(const std::vector<libint2::Shell> &shells) {
   size_t n = 0;
-  for (const auto& shell: shells)
+  for (const auto &shell : shells)
     n += shell.size();
   return n;
 }
 
-size_t max_nprim(const std::vector<libint2::Shell>& shells) {
+size_t max_nprim(const std::vector<libint2::Shell> &shells) {
   size_t n = 0;
-  for (auto shell: shells)
+  for (auto shell : shells)
     n = std::max(shell.nprim(), n);
   return n;
 }
 
-int max_l(const std::vector<libint2::Shell>& shells) {
+int max_l(const std::vector<libint2::Shell> &shells) {
   int l = 0;
-  for (auto shell: shells)
-    for (auto c: shell.contr)
+  for (auto shell : shells)
+    for (auto c : shell.contr)
       l = std::max(c.l, l);
   return l;
 }

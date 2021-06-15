@@ -1,9 +1,11 @@
-/*file: spherical_harmonics.c
+/*
+file: spherical_harmonics.cpp
 nAPMO package
-Copyright (c) 2015, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
 
 #include "spherical_harmonics.h"
 
@@ -29,7 +31,7 @@ std::complex<double> spherical_harmonics_complex(int l, int m, double theta,
                                                  double phi) {
 
   // printf("spherical_harmonics: l: %d m: %d\n", l, m);
-  
+
   std::complex<double> result(cos(abs(m) * phi), sin(abs(m) * phi));
 
   double x = cos(theta);

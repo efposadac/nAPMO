@@ -1,8 +1,8 @@
-# file: test_psi_numeric_rhf_Be.py
+# file: test_psi_numeric_ab_Be.py
 # nAPMO package
-# Copyright (c) 2021, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 import napmo
@@ -12,9 +12,9 @@ from ctypes import *
 # import matplotlib.pyplot as plt
 
 
-def test_psi_numeric_rhf_Be(basis="STO-3G"):
+def test_psi_numeric_ab_Be(basis="STO-3G"):
     """
-    * K (exchange) included
+    test_psi_numeric_ab_Be
     * Closed shell
     * Single center
     * two orbitals
@@ -37,10 +37,13 @@ def test_psi_numeric_rhf_Be(basis="STO-3G"):
     maxiter = 100
     hf
     numeric
+    aux_basis
+    aux_basis_ldep = 1.0e-6
+    aux_basis_lmax = 0
   }
 
   grid {
-    e- [50, 110]
+    e- [150, 38]
   }
   """)
 
@@ -176,11 +179,11 @@ def analyse_psi(psi):
 
 
 if __name__ == '__main__':
-    test_psi_numeric_rhf_Be()
+    test_psi_numeric_ab_Be()
     # energies = []
     # basis_list = ['STO-3G', 'CC-PVDZ', 'CC-PVTZ', 'CC-PVQZ', 'CC-PV5Z']
     # for basis in basis_list:
-    #     energies.append(test_psi_numeric_rhf_Be(basis))
+    #     energies.append(test_psi_numeric_ab_Be(basis))
 
     # for basis, energy in zip(basis_list, energies):
     #     print("Basis: %10s  Energy: %20.15f" % (basis, energy))

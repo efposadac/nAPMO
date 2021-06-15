@@ -1,8 +1,8 @@
 # file: convergence.py
 # nAPMO package
-# Copyright (c) 2017, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 from __future__ import division
@@ -19,6 +19,7 @@ class Convergence(object):
     """
     Implements several converge algorithms
     """
+
     def __init__(self, F, D):
         super(Convergence, self).__init__()
 

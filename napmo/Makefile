@@ -1,11 +1,11 @@
 # file: Makefile
 # nAPMO package 
-# Copyright (c) 2015, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
-SUBDIRS = data grids system utilities functional gto solver wavefunction scf
+SUBDIRS = data functional grids gto scf solver system utilities wavefunction 
 
 default::
 

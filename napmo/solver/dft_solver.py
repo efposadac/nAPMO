@@ -1,3 +1,10 @@
+# file: dft_solver.py
+# nAPMO package
+# Copyright © 2021, Edwin Fernando Posada
+# All rights reserved.
+# Version: 2.0
+# fernando.posada@temple.edu
+
 from __future__ import division
 from __future__ import print_function
 
@@ -45,13 +52,13 @@ class DFT(object):
 
             mgrid.add_grid(
                 napmo.BeckeGrid(particle,
-                    aux.get('nrad', 100),
-                    aux.get('nang', 110),
-                    rtransform=aux.get('rtransform', None),
-                    file=aux.get('file', None),
-                    ablmax=aux.get('ablmax', None),
-                    abldep=aux.get('abldep', None)
-                )
+                                aux.get('nrad', 100),
+                                aux.get('nang', 110),
+                                rtransform=aux.get('rtransform', None),
+                                file=aux.get('file', None),
+                                ablmax=aux.get('ablmax', None),
+                                abldep=aux.get('abldep', None)
+                                )
             )
 
             if pprint:

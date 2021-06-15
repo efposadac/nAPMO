@@ -1,3 +1,10 @@
+# file: hf_solver.py
+# nAPMO package
+# Copyright © 2021, Edwin Fernando Posada
+# All rights reserved.
+# Version: 2.0
+# fernando.posada@temple.edu
+
 from __future__ import division
 from __future__ import print_function
 
@@ -76,8 +83,8 @@ class HF(object):
                         aux.get('nang', 110),
                         rtransform=aux.get('rtransform', None),
                         file=aux.get('file', None),
-                        ablmax=aux.get('ablmax', None),
-                        abldep=aux.get('abldep', None)
+                        ablmax=self.get('aux_basis_lmax', None),
+                        abldep=self.get('aux_basis_ldep', None)
                     )
                 )
 
@@ -100,7 +107,10 @@ class HF(object):
                 else:
                     if self.get('hybrid', {}).get(self.PSI[p].symbol, 'N') == 'N':
                         self.NPSI.append(napmo.PSIN(
-                            self.PSI[p], self._mgrid[-1], debug=self.get('debug')))
+                            self.PSI[p], self._mgrid[-1],
+                            debug=self.get('debug'),
+                            aux_basis=self.get('aux_basis', False)
+                        ))
 
         self._energy = 0.0
 

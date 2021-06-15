@@ -1,9 +1,11 @@
-/*file: auxiliary_basis.cpp
+/*
+file: auxiliary_basis.cpp
 nAPMO package
-Copyright (c) 2021, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
 
 #include "auxiliary_basis.h"
 

@@ -1,8 +1,8 @@
 # file: psi_base.py
 # nAPMO package
-# Copyright (c) 2014, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 from __future__ import division
@@ -20,28 +20,28 @@ class PSIB(Structure):
     Defines the Fock operator for a Hartree-Fock Calculation.
     """
     _fields_ = [
-        ("_S", POINTER(c_double)),  # Overlap
-        ("_X", POINTER(c_double)),  # Transformation
-        ("_T", POINTER(c_double)),  # Kinetic
-        ("_V", POINTER(c_double)),  # Nuclear
-        ("_H", POINTER(c_double)),  # Hcore
-        ("_C", POINTER(c_double)),  # Coefficients
-        ("_D", POINTER(c_double)),  # Density
-        ("_L", POINTER(c_double)),  # Last Density
-        ("_G", POINTER(c_double)),  # 2 Body
-        ("_J", POINTER(c_double)),  # Coupling
+        ("_S", POINTER(c_double)),   # Overlap
+        ("_X", POINTER(c_double)),   # Transformation
+        ("_T", POINTER(c_double)),   # Kinetic
+        ("_V", POINTER(c_double)),   # Nuclear
+        ("_H", POINTER(c_double)),   # Hcore
+        ("_C", POINTER(c_double)),   # Coefficients
+        ("_D", POINTER(c_double)),   # Density
+        ("_L", POINTER(c_double)),   # Last Density
+        ("_G", POINTER(c_double)),   # 2 Body
+        ("_J", POINTER(c_double)),   # Coupling
         ("_XC", POINTER(c_double)),  # Exchange Correlation Matrix
-        ("_F", POINTER(c_double)),  # Fock
-        ("_O", POINTER(c_double)),  # Orbitals
+        ("_F", POINTER(c_double)),   # Fock
+        ("_O", POINTER(c_double)),   # Orbitals
         ("_nbasis", c_int),
         ("_ndim", c_int),
         ("_occupation", c_int),
         ("_eta", c_double),
         ("_kappa", c_double),
-        ("_x_factor", c_double),  # Fraction of exchange
-        ("_xc_energy", c_double),  # Exchange Correlation Energy
+        ("_x_factor", c_double),      # Fraction of exchange
+        ("_xc_energy", c_double),     # Exchange Correlation Energy
         ("_energy", c_double),
-        ("_rmsd", c_double)  # Root medium square deviation, for D matrix
+        ("_rmsd", c_double)           # Root medium square deviation, for D matrix
     ]
 
     def __init__(self, species, ndim=None, options={}):

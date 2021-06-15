@@ -1,9 +1,10 @@
 # file: poisson_solver.py
 # nAPMO package
-# Copyright (c) 2014, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
+
 from __future__ import print_function
 
 from scipy.sparse.linalg import spsolve

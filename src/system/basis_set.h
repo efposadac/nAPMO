@@ -1,9 +1,11 @@
-/*file: basis.h
+/*
+file: basis_set.h
 nAPMO package
-Copyright (c) 2015, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
 
 #ifndef BASIS_SET_H
 #define BASIS_SET_H
@@ -30,7 +32,7 @@ public:
   ~BasisSet(){};
 
   std::vector<double> compute(double *r);
-  
+
   std::vector<double> deriv(double *r);
 
   void update(BasisSet *other);

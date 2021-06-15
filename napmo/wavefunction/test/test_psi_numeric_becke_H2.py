@@ -1,8 +1,8 @@
-# file: test_psi_numeric_rhf_H2.py
+# file: test_psi_numeric_becke_H2.py
 # nAPMO package
-# Copyright (c) 2021, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 import napmo
@@ -11,13 +11,13 @@ import numpy as np
 from ctypes import *
 
 
-def test_psi_numeric_rhf_H2(basis="STO-3G"):
+def test_psi_numeric_becke_H2(basis="STO-3G"):
     """
-    * Open shell
-    * Single center
+    test_psi_numeric_becke_H2
+    * Closed shell
     * GTO: -1.117506 (CCCBDB, R=0.7122)
     * Limit: -1.133630
-    * GRID: -1.13324462203 (50x14)
+    * GRID: -1.1330638522586503 (100x110)
     * BASIS: STO-3G
     """
     file = ("""
@@ -39,7 +39,7 @@ def test_psi_numeric_rhf_H2(basis="STO-3G"):
   }
 
   grid {
-    e- [100, 110]; ablmax: 2; abldep: 1.0e-6
+    e- [100, 110]
   }
   """)
 
@@ -56,7 +56,7 @@ def test_psi_numeric_rhf_H2(basis="STO-3G"):
     ene_a = solver.scf.compute_energy_single(psi_a, show=True)
 
     # Compare to CCCBDB (GTO-based result)
-    # assert np.allclose(ene_a, -1.117506, rtol=1e-5)
+    assert np.allclose(ene_a, -1.117506, rtol=1e-5)
     print("Energy GTO : {0:>18.14f}".format(ene_a))
 
     print("\n*** Grid-Based initialization")
@@ -84,7 +84,7 @@ def test_psi_numeric_rhf_H2(basis="STO-3G"):
     Fgrid = analyse_psi(psi_n)
 
     # Aux basis
-    E_tot = aux_basis(psi_n)
+    E_tot = psi_optimization(psi_n, psi_a)
     # assert np.allclose(E_tot, -1.133630, rtol=1e-4)
 
     # psi_n.plot_dens(psi=psi_n.psi, kind="GRID-BASED-" + basis, xlim=[-1.0, 1.0], marker='--')
@@ -92,8 +92,8 @@ def test_psi_numeric_rhf_H2(basis="STO-3G"):
     return 0.0  # E_tot
 
 
-def aux_basis(psi):
-    print("\n*** Aux Basis Test")
+def psi_optimization(psi, psi_a):
+    print("\n*** Becke Opt Test")
 
     print("\n--- Convergence Test", psi._eta)
 
@@ -101,6 +101,7 @@ def aux_basis(psi):
     E_prev = 0.0
     it = 1
     psi._debug = False
+    prev_orb = psi_a.O
     while not converged:
         psi.optimize_psi()
         psi.compute_2body()
@@ -109,10 +110,12 @@ def aux_basis(psi):
         napmo.cext.wavefunction_iterate(byref(psi))
 
         E_tot = psi.energy + psi.pce
+        E_diff = np.abs(E_tot - E_prev)
 
-        print(it, E_tot)
+        print("{0:>4d} {1:>18.14f} {2:>18.14f} {3:>18.14f} {4:>18.14f}".format(
+            it, E_tot, E_diff, psi._optimize.delta_e.sum(), psi._optimize.delta_orb.sum()))
 
-        if np.abs(E_tot - E_prev) < 1.0e-8:
+        if E_diff < 1.0e-7:
             converged = True
 
         E_prev = E_tot
@@ -176,11 +179,11 @@ def analyse_psi(psi):
 
 
 if __name__ == '__main__':
-    test_psi_numeric_rhf_H2()
+    test_psi_numeric_becke_H2()
     # energies = []
     # basis_list = ['STO-3G', 'CC-PVDZ', 'CC-PVTZ', 'CC-PVQZ', 'CC-PV5Z']
     # for basis in basis_list:
-    #     energies.append(test_psi_numeric_rhf_H2(basis))
+    #     energies.append(test_psi_numeric_becke_H2(basis))
 
     # for basis, energy in zip(basis_list, energies):
     #     print("Basis: %10s  Energy: %20.15f" % (basis, energy))

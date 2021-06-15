@@ -1,8 +1,8 @@
 # file:  databases.py
 # nAPMO package
-# Copyright (c) 2014,  Edwin Fernando Posada
+# Copyright (c) 2021,  Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 import json

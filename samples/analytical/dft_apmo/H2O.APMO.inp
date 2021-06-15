@@ -20,8 +20,8 @@ basis {
 }
 
 functional {
-	e- lda
-	e-:H_1 epc17-2
+    e- lda
+    e-:H_1 epc17-2
 }
 
 # SCF engine options the keyword means True even though you can

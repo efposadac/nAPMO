@@ -14,10 +14,13 @@ scf {
     hf
     numeric
     debug=False
+    aux_basis
+    aux_basis_ldep = 1.0e-5
+    aux_basis_lmax = 1
 }
 
 grid {
-    e- [100, 110]
+    e- [50, 26]
 }
 
 code {

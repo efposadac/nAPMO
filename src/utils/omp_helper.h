@@ -1,9 +1,11 @@
-/*file: omp_helper.h
+/*
+file: omp_helper.h
 nAPMO package
-Copyright (c) 2016, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
 
 #ifndef OMP_HELPER
 #define OMP_HELPER
@@ -43,7 +45,7 @@ template <typename Lambda> void parallel_do(Lambda &lambda) {
     threads[thread_id].join();
 #endif
 }
-} // end namespace
+} // namespace napmo
 
 __inline void set_nthreads() {
   {

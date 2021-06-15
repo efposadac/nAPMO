@@ -1,9 +1,11 @@
-/*file: gto.h
+/*
+file: gto.h
 nAPMO package
-Copyright (c) 2015, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
 
 #ifndef GTO_H
 #define GTO_H
@@ -22,7 +24,7 @@ fernando.posada@temple.edu*/
 PrimitiveGaussian Class
 */
 struct PrimitiveGaussian {
- private:
+private:
   int l[3];
   double origin[3];
   double zeta;
@@ -34,14 +36,13 @@ struct PrimitiveGaussian {
   */
   void normalize();
 
- public:
+public:
   PrimitiveGaussian() = default;
 
   PrimitiveGaussian(const PrimitiveGaussian &) = default;
 
   PrimitiveGaussian(PrimitiveGaussian &&other)
-      : zeta(std::move(other.zeta)),
-        coeff(std::move(other.coeff)),
+      : zeta(std::move(other.zeta)), coeff(std::move(other.coeff)),
         norma(std::move(other.norma)) {
     l[0] = std::move(other.l[0]);
     l[1] = std::move(other.l[1]);
@@ -138,7 +139,7 @@ ContractedGaussian Class
 */
 
 struct ContractedGaussian {
- private:
+private:
   int l[3];
   int nprim;
   double norma;
@@ -150,7 +151,7 @@ struct ContractedGaussian {
   */
   void normalize();
 
- public:
+public:
   ContractedGaussian() = default;
 
   ContractedGaussian(const ContractedGaussian &) = default;

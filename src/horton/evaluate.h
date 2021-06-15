@@ -1,11 +1,3 @@
-/*file: evaluate.h
-nAPMO package
-Copyright (c) 2014, Edwin Fernando Posada
-All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu
-*/
-
 // HORTON: Helpful Open-source Research TOol for N-fermion systems.
 // Copyright (C) 2011-2015 The HORTON Development Team
 //
@@ -31,10 +23,10 @@ fernando.posada@temple.edu
 #ifndef EVALUATE_H
 #define EVALUATE_H
 
+#include "../utils/omp_helper.h"
 #include "cell.h"
 #include "cubic_spline.h"
 #include "uniform.h"
-#include "../utils/omp_helper.h"
 
 #include <vector>
 

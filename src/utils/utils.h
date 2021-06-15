@@ -1,9 +1,11 @@
-/*file: utils.h
+/*
+file: utils.h
 nAPMO package
-Copyright (c) 2015, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
 
 #ifndef UTILS_H
 #define UTILS_H
@@ -16,10 +18,9 @@ extern "C" {
 #endif
 
 /* DGEEV prototype */
-void dgeev_( char* jobvl, char* jobvr, int* n, double* a,
-              int* lda, double* wr, double* wi, double* vl, int* ldvl,
-              double* vr, int* ldvr, double* work, int* lwork, int* info );
-
+void dgeev_(char *jobvl, char *jobvr, int *n, double *a, int *lda, double *wr,
+            double *wi, double *vl, int *ldvl, double *vr, int *ldvr,
+            double *work, int *lwork, int *info);
 
 int utils_factorial2(const int n);
 

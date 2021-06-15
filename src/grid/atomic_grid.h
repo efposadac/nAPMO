@@ -1,9 +1,11 @@
-/*file: grid.h
+/*
+file: atomic_grid.h
 nAPMO package
-Copyright (c) 2015, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
 
 #ifndef ATOMIC_GRID_H
 #define ATOMIC_GRID_H

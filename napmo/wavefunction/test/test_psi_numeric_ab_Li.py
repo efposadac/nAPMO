@@ -1,8 +1,8 @@
-# file: test_psi_numeric_uhf.py
+# file: test_psi_numeric_ab_Li.py
 # nAPMO package
-# Copyright (c) 2021, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 import napmo
@@ -11,12 +11,13 @@ import numpy as np
 from ctypes import *
 
 
-def test_psi_numeric_uhf(basis="STO-3G"):
+def test_psi_numeric_ab_Li(basis="STO-3G"):
     """
+    test_psi_numeric_ab_Li
     * Open shell
     * Single center
     * GTO: -7.315526 (CCCBDB)
-    * HF CBSE: -7.432720586
+    * HF CBSE: -7.432720216
     * GRID: -7.4327362568583855 (50x14)
     * BASIS: STO-3G
     """
@@ -35,6 +36,9 @@ def test_psi_numeric_uhf(basis="STO-3G"):
     maxiter = 100
     hf
     numeric
+    aux_basis
+    aux_basis_ldep = 1.0e-6
+    aux_basis_lmax = 0
   }
 
   grid {
@@ -160,11 +164,11 @@ def compute_energy(PSI):
 
 
 if __name__ == '__main__':
-    test_psi_numeric_uhf()
+    test_psi_numeric_ab_Li()
     # energies = []
     # basis_list = ['STO-3G', 'CC-PVDZ', 'CC-PVTZ', 'CC-PVQZ', 'CC-PV5Z']
     # for basis in basis_list:
-    #     energies.append(test_psi_numeric_uhf(basis))
+    #     energies.append(test_psi_numeric_ab_Li(basis))
 
     # for basis, energy in zip(basis_list, energies):
     #     print("Basis: %10s  Energy: %20.15f" % (basis, energy))

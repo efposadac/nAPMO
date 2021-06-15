@@ -1,8 +1,8 @@
 # file: psi_numeric.py
 # nAPMO package
-# Copyright (c) 2021, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 from __future__ import division
@@ -33,7 +33,7 @@ class PSIN(napmo.PSIB):
         psi_grid (ndarray) : Wavefunction expanded on the grid
     """
 
-    def __init__(self, psix, grid, ndim=None, debug=False):
+    def __init__(self, psix, grid, ndim=None, debug=False, aux_basis=False):
 
         # Initialize base class
         if ndim:
@@ -60,6 +60,7 @@ class PSIN(napmo.PSIB):
 
         self._xc_energy = psix._xc_energy
         self._energy = psix._energy
+        self._prev_O = psix.O
 
         self._grid = grid
         self._lmax = int(napmo.lebedev_get_order(self.grid.nang) / 2)
@@ -78,8 +79,10 @@ class PSIN(napmo.PSIB):
         self.Cgrid = 0.0
 
         # Calculate Aux Basis
-        self._aobasis = napmo.AuxiliaryBasis(self.grid)
-        self._optimize = napmo.PSIO(self, self.aobasis.basis, ndim=self.aobasis.nao)
+        if aux_basis:
+            self._optimize = napmo.PSIO_SO(self)
+        else:
+            self._optimize = napmo.PSIO_BECKE(self)
 
     def initialize(self):
         """
@@ -176,7 +179,7 @@ class PSIN(napmo.PSIB):
     def compute_exchange_potential(self):
         """
         Computes the exchange potential solving Poisson's equation
-        following the procedure of Shiozaki, T., & Hirata, S. (2007).
+        following the procedure of Shiozaki, T., & Hirata, S. (2017).
         Grid-based numerical Hartree-Fock solutions of polyatomic molecules.
         Physical Review A - Atomic, Molecular, and Optical Physics, 76(4), 040503.
         http://doi.org/10.1103/PhysRevA.76.040503
@@ -312,7 +315,7 @@ class PSIN(napmo.PSIB):
     def compute_exchange_operator(self):
         """
         Computes the exchange potential on the grid solving Poisson's equation
-        following the procedure of Shiozaki, T., & Hirata, S. (2007).
+        following the procedure of Shiozaki, T., & Hirata, S. (2017).
         Grid-based numerical Hartree-Fock solutions of polyatomic molecules.
         Physical Review A - Atomic, Molecular, and Optical Physics, 76(4), 040503.
         http://doi.org/10.1103/PhysRevA.76.040503
@@ -385,7 +388,7 @@ class PSIN(napmo.PSIB):
         """
         Uses the auxiliary basis to calculate an optimized version of the orbitals.
         """
-        self._psi[:] = self.optimize.optimize(self.Dgrid, self.psi, other_psi=other_psi)[:self.ndim]
+        self._psi[:] = self.optimize.optimize(self, other_psi=other_psi)[:self.ndim]
         self.normalize()
         self.compute_1body()
 
@@ -424,10 +427,6 @@ class PSIN(napmo.PSIB):
     @property
     def lmax(self):
         return self._lmax
-
-    @property
-    def aobasis(self):
-        return self._aobasis
 
     @property
     def optimize(self):

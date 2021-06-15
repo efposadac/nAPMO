@@ -1,9 +1,11 @@
-/*file: basis_set.cu
+/*
+file: basis_set.cu
 nAPMO package
-Copyright (c) 2015, Edwin Fernando Posada
+Copyright (c) 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
 
 #define THREADS_PER_BLOCK 64
 

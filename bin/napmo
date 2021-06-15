@@ -1,5 +1,11 @@
 #!python3 -u
 
+# file: napmo
+# nAPMO package
+# Copyright © 2021, Edwin Fernando Posada
+# All rights reserved.
+# Version: 2.0
+# fernando.posada@temple.edu
 
 from __future__ import print_function
 

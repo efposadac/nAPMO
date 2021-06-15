@@ -1,8 +1,8 @@
 # file: npsi.py
 # nAPMO package
-# Copyright (c) 2016, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 from __future__ import division
@@ -44,29 +44,30 @@ def compute_dpsi(grid, lmax, phi, doi, oi, ri, V_tot, mass_inv):
         V_sph = atgrid.spherical_average(
             V_tot[offset:offset + atgrid.size] * grid.becke_weights[offset:offset + atgrid.size])
 
-        rtf = atgrid.radial_grid.rtransform
+        rgrid = atgrid.radial_grid
+        r = rgrid.points
+        rtf = rgrid.rtransform
 
-        r = rtf.radius_all()
         r2 = r * r
         rinv = 1.0 / r
         r2inv = 1.0 / r2
 
         res = []
         idx = 0
+        b = napmo.CubicSpline(2.0 * rinv, -2.0 * r2inv, rtf)
+
         for l in range(lmax + 1):
             for m in range(-l, l + 1):
 
                 aux = np.array(sph_expansion[:, idx])
 
                 # Build b
-                mu = napmo.CubicSpline(aux, rtransform=rft)
+                mu = napmo.CubicSpline(aux, rtransform=rtf)
 
                 fy = -2.0 / mass_inv * mu.y
                 fd = -2.0 / mass_inv * mu.dx
 
                 f = napmo.CubicSpline(fy, fd, rtf)
-
-                b = napmo.CubicSpline(2.0 * rinv, -2.0 * r2inv, rtf)
 
                 a = napmo.CubicSpline(-2.0 / mass_inv * ((l * (l + 1.0) * r2inv) + (V_sph - oi - doi)), rtransform=rtf)
 
