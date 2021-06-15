@@ -1,8 +1,8 @@
 # file: nnuclear.py
 # nAPMO package
-# Copyright (c) 2016, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 from __future__ import division
@@ -17,7 +17,7 @@ def compute_nuclear(grid, point_charges):
     Computes the Nuclear attraction repulsion operator on the grid
 
     :math:`\sum_{A} \dfrac{Z_{A}}{|r_i -R_A|}`
-    
+
 
     Args:
         grid (BeckeGrid) : The Molecular grid

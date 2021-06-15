@@ -1,18 +1,17 @@
-/*file:
-    libint_iface.h
+/*
+file: libint_iface.h
 nAPMO package
-Copyright(c) 2014, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version:
-    0.1
+Version: 2.0
 fernando.posada@temple.edu
 */
 
 #ifndef LIBINT_IFACE_H
 #define LIBINT_IFACE_H
 
-#include "../wavefunction/wavefunction.h"
 #include "../system/basis_set.h"
+#include "../wavefunction/wavefunction.h"
 #include "ints.h"
 #include "iterators.h"
 #include <libint2.hpp>
@@ -21,7 +20,6 @@ fernando.posada@temple.edu
 #define STACK_SIZE 30000
 
 using shellpair_list_t = std::unordered_map<size_t, std::vector<size_t>>;
-
 
 /*
 Auxiliary functions

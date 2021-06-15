@@ -1,8 +1,8 @@
 # file: input_parser.py
 # nAPMO package
-# Copyright (c) 2014, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 import napmo
@@ -307,7 +307,8 @@ class InputParser(object):
                    'analytic': {'kind': 'analytic'},
                    'numeric': {'kind': 'numeric'},
                    'direct': {'direct': True},
-                   'tf': {'tf': True}
+                   'tf': {'tf': True},
+                   'aux_basis': {'aux_basis': True}
                    }
 
         aux = {}
@@ -339,7 +340,6 @@ class InputParser(object):
                     ValueError,
                     "Particle not found!",
                     'Check the "grid" block in your input file ' + symbol + ' is undefined in "molecular" block')
-
 
             props = ' '.join(line[1:]).split(';')
             aux[symbol] = {}

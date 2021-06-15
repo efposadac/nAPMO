@@ -14,7 +14,9 @@ basis {
 scf {
     hf
     numeric
-    #debug=True
+    aux_basis
+    aux_basis_ldep = 1.0e-7
+    aux_basis_lmax = 1
 }
 
 grid {
@@ -23,7 +25,7 @@ grid {
 
 code {
 result = lambda x: print("PASS!") if abs(x) < 1e-2  else print("FAILED!")
-ref_energy = -1.299698
+ref_energy = -1.300410
 diff_energy = ref_energy - Energy
 result(diff_energy)   
 }

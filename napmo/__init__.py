@@ -1,3 +1,10 @@
+# file: __init__.py
+# nAPMO package
+# Copyright © 2021, Edwin Fernando Posada
+# All rights reserved.
+# Version: 2.0
+# fernando.posada@temple.edu
+
 import os
 import numpy as np
 import numpy.ctypeslib as npct
@@ -67,6 +74,8 @@ from napmo.wavefunction.psi_analytic import PSIA
 from napmo.wavefunction.psi_numeric import PSIN
 from napmo.wavefunction.psi_hybrid import PSIH
 from napmo.wavefunction.psi_optimization import PSIO
+from napmo.wavefunction.psi_optimization import PSIO_SO
+from napmo.wavefunction.psi_optimization import PSIO_BECKE
 from napmo.wavefunction.nkinetic import compute_kinetic
 from napmo.wavefunction.nnuclear import compute_nuclear
 from napmo.wavefunction.ntwobody import compute_coulomb

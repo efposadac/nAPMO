@@ -1,9 +1,11 @@
-/*file: becke.cu
+/*
+file: becke.cu
 nAPMO package
-Copyright (c) 2015, Edwin Fernando Posada
+Copyright (c) 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
 
 extern "C" {
 #include "include/becke.h"

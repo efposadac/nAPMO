@@ -1,19 +1,19 @@
 /*
 file: nwavefunction.cpp
 nAPMO package
-Copyright (c) 2016, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
+Version: 2.0
 fernando.posada@temple.edu
 */
 
 #include "wavefunction.h"
 
-#define INDEX(i, j) \
+#define INDEX(i, j)                                                            \
   ((i > j) ? (((i) * ((i) + 1) / 2) + (j)) : (((j) * ((j) + 1) / 2) + (i)))
 
 void nwavefunction_compute_2body_matrix(WaveFunction *psi, BeckeGrid *grid,
-                                            double *phi, double *J, double *K) {
+                                        double *phi, double *J, double *K) {
   unsigned int ndim = psi->ndim;
   double factor = psi->x_factor;
   unsigned int size = ndim * (ndim + 1) / 2;
@@ -125,7 +125,8 @@ void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
       rho_upper *= nbasis * absmax_basis;
 
       // if the upper bound is too low, do not compute density.
-      if (rho_upper < epsilon) return;
+      if (rho_upper < epsilon)
+        return;
 
       // modify epsilon to avoid recomputation
       epsilon /= absmax_basis * nbasis * nbasis;
@@ -138,7 +139,8 @@ void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
       // epsilon/nbasis, skipt
       // it.
       if (epsilon > 0) {
-        if (fabs(aux[i]) * dmmaxrow[i] < epsilon) continue;
+        if (fabs(aux[i]) * dmmaxrow[i] < epsilon)
+          continue;
       }
 
       double tmp = 0;
@@ -154,9 +156,9 @@ void nwavefunction_compute_density_from_dm(BasisSet *basis, BeckeGrid *grid,
 
 void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid,
                                      double *phi, double *xc_vrho) {
-  unsigned int n = grid->get_size();          // grid points
-  unsigned int ndim = psi->ndim;              // number of orbitals
-  unsigned int size = ndim * (ndim + 1) / 2;  // triangular matrix size
+  unsigned int n = grid->get_size();         // grid points
+  unsigned int ndim = psi->ndim;             // number of orbitals
+  unsigned int size = ndim * (ndim + 1) / 2; // triangular matrix size
 
   MMap PHI(phi, ndim, n);
   Matrix Psi(size, n);
@@ -189,7 +191,6 @@ void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid,
   // std::cout << "\n\t EC:\n";
   // std::cout << EC << std::endl;
 }
-
 
 // void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid,
 // double *phi,
@@ -438,8 +439,6 @@ void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid,
 //   }
 // }
 
-
-
 // void nwavefunction_compute_cor2species_matrix(WaveFunction *psi,
 //                                               WaveFunction *otherPsi,
 //                                               BeckeGrid *grid, double *phi,
@@ -481,7 +480,8 @@ void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid,
 
 //   // local variables to store the exchange and correlation contributions
 //   // double *denominator;
-//   // denominator = (double *)malloc(sizeof(double) * n);  // energy denominatior
+//   // denominator = (double *)malloc(sizeof(double) * n);  // energy
+//   denominatior
 //   // double *ene;
 //   // ene = (double *)malloc(sizeof(double) * n);  // energy density
 //   // double *pot ;
@@ -511,7 +511,7 @@ void nwavefunction_compute_xc_matrix(WaveFunction *psi, BeckeGrid *grid,
 //   }
 
 //   psi->xc_energy += grid->integrate(ene) / 2;
-  
+
 //   ********************************************************************************
 //   */
 //   // Potential

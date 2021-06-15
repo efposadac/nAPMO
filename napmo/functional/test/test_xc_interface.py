@@ -1,8 +1,8 @@
 # file: test_xc_interface.py
 # nAPMO package
-# Copyright (c) 2021, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 import napmo
@@ -15,13 +15,13 @@ def test_xc_interface_polarized():
     print(pwd)
 
     f = napmo.Functional('Li')
-    rho = np.fromfile(str(pwd)+'/rho.txt', sep=" ")
+    rho = np.fromfile(str(pwd) + '/rho.txt', sep=" ")
 
-    c_zk_ref = np.fromfile(str(pwd)+'/c_zk.txt', sep=" ").reshape(1, 22000)
-    c_vrho_ref = np.fromfile(str(pwd)+'/c_vrho.txt', sep=" ").reshape(1, 22000)
+    c_zk_ref = np.fromfile(str(pwd) + '/c_zk.txt', sep=" ").reshape(1, 22000)
+    c_vrho_ref = np.fromfile(str(pwd) + '/c_vrho.txt', sep=" ").reshape(1, 22000)
 
-    x_zk_ref = np.fromfile(str(pwd)+'/x_zk.txt', sep=" ")
-    x_vrho_ref = np.fromfile(str(pwd)+'/x_vrho.txt', sep=" ")
+    x_zk_ref = np.fromfile(str(pwd) + '/x_zk.txt', sep=" ")
+    x_vrho_ref = np.fromfile(str(pwd) + '/x_vrho.txt', sep=" ")
 
     c_zk, c_vrho = f.compute_correlation(rho)
     assert(np.allclose(c_zk, c_zk_ref))

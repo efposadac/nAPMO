@@ -1,8 +1,8 @@
 # file: interspecies_correlation.py
 # nAPMO package
-# Copyright (c) 2020, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 import napmo
@@ -26,7 +26,7 @@ def isc_functional_selector(name):
         functional = database.get(name)
 
         if functional is None:
-            raise NotImplementedError(name+" Functional NOT available!")
+            raise NotImplementedError(name + " Functional NOT available!")
         else:
             return functional
     else:

@@ -1,10 +1,3 @@
-/*file: sphere_lebedev_rule.h
-nAPMO package
-Copyright (c) 2015, Edwin Fernando Posada
-All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
-
 #include "sphere_lebedev_rule.h"
 
 #define NMAX 65

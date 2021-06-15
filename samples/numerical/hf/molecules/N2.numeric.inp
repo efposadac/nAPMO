@@ -18,3 +18,10 @@ scf {
 grid {
     e- [100, 110]
 }
+
+code {
+result = lambda x: print("PASS!") if abs(x) < 1e-2  else print("FAILED!")
+ref_energy = -1.300410
+diff_energy = ref_energy - Energy
+result(diff_energy)   
+}

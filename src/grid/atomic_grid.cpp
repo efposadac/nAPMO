@@ -1,9 +1,11 @@
-/*file: atomic_grid.c
+/*
+file: atomic_grid.cpp
 nAPMO package
-Copyright (c) 2015, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
 
 #include "atomic_grid.h"
 

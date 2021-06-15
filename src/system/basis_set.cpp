@@ -1,9 +1,11 @@
-/*file: basis_set.cpp
+/*
+file: basis_set.cpp
 nAPMO package
-Copyright (c) 2015, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
 
 #include "basis_set.h"
 
@@ -89,9 +91,8 @@ void BasisSet_deriv(BasisSet *basis, double *r, double *output, int size) {
   for (int i = 0; i < size; ++i) {
     auto aux = basis->compute(&r[i * 3]);
     for (int j = 0; j < nbasis; ++j) {
-      for (int k = 0; k < 3; ++k)
-      {
-      output[(i * nbasis * 3) + (j * 3) + k] = aux[j * 3 + k];
+      for (int k = 0; k < 3; ++k) {
+        output[(i * nbasis * 3) + (j * 3) + k] = aux[j * 3 + k];
       }
     }
   }

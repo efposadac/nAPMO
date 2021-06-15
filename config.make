@@ -1,8 +1,8 @@
 # file: config.mk
 # nAPMO package 
-# Copyright (c) 2015, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 # Comment and uncomment different options depending on the desired compilation.
@@ -28,7 +28,7 @@ CXX := g++
 #-----------------------
 # Initial configuration
 #-----------------------
-CFLAGS := -Wall -O2 -fPIC -g -pg 
+CFLAGS := -Wall -O2 -fPIC
 # LDLIBS := -lgsl -lgslcblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lblas -lm -lint2
 LDLIBS := -lgsl -lgslcblas -lm -lint2 -lstdc++ -llapack
 # LDLIBS := /opt/local/lib/libgsl.19.dylib /opt/local/lib/libgslcblas.0.dylib -lm

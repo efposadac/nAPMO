@@ -1,37 +1,42 @@
 #!/usr/bin/env python3
 # file: setup.py
 # nAPMO package
-# Copyright (c) 2014, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 """
 Script for installation of the python module.
 
 Info:
-    The C extension is builded outside this script, be sure to make it before this one!
+    The C extension is builded outside this script, be sure to make it before running this one!
 """
-from setuptools import find_packages, Extension, setup, Command
-import os
+from setuptools import find_packages, setup
+import pathlib
+
+here = pathlib.Path(__file__).parent.resolve()
+
+# Get the long description from the README file
+long_description = (here / 'README.rst').read_text(encoding='utf-8')
 
 
-def read(fname):
-    """Include README file in the package."""
-    return open(os.path.join(os.path.dirname(__file__), fname)).read()
-
-
-if __name__ == '__main__':
-
-    setup(
-        name="napmo",
-        version="1.1",
-        description="Numerical Any Particle Molecular Orbital",
-        author="Fernando Posada",
-        author_email="fernando.posada@temple.edu",
-        url="http://efposadac.github.io/nAPMO/",
-        packages=find_packages(),
-        package_data={'': ['*.json', '*.dat', '*.so', 'data/basis/*']},
-        long_description=read('README.rst')
-    )
-
-    exit(0)
+setup(
+    name="napmo",
+    version="2.0.0",
+    author="Fernando Posada",
+    author_email="fernando.posada@temple.edu",
+    description="Numerical Any Particle Molecular Orbital",
+    long_description=long_description,
+    long_description_content_type="text/x-rst",
+    url="http://efposadac.github.io/nAPMO/",
+    license='GNU General Public License v3 (GPLv3)',
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+        "Operating System :: OS Independent",
+    ],
+    packages=find_packages(),
+    package_data={'': ['*.json', '*.dat', '*.so', 'data/basis/*']},
+    python_requires=">=3.6",
+    install_requires=['numpy', 'scipy', 'matplotlib'],
+)

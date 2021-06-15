@@ -1,11 +1,3 @@
-/*file: cubic_spline.h
-nAPMO package
-Copyright (c) 2014, Edwin Fernando Posada
-All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu
-*/
-
 // HORTON: Helpful Open-source Research TOol for N-fermion systems.
 // Copyright (C) 2011-2015 The HORTON Development Team
 //
@@ -62,7 +54,7 @@ public:
 
   CubicSpline(double *y, double *dt, Extrapolation *extrapolation,
               RTransform *rtf, int n);
-  void eval(const double* new_x, double* new_y, int new_n);
+  void eval(const double *new_x, double *new_y, int new_n);
   void eval_deriv(double *new_x, double *new_dx, int new_n);
   RTransform *get_rtransform() { return rtf; }
   // position of first (transformed) grid point

@@ -15,7 +15,7 @@ scf {
 
 code {
 result = lambda x: print("PASS!") if abs(x) < 1e-5  else print("FAILED!")
-ref_energy = -7.432702
+ref_energy = -7.315526
 diff_energy = ref_energy - Energy
 result(diff_energy)    
 }

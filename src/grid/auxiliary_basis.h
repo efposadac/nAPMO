@@ -1,9 +1,11 @@
-/*file: auxiliary_basis.h
+/*
+file: auxiliary_basis.h
 nAPMO package
-Copyright (c) 2020, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
 
 #ifndef AUXILIARY_BASIS_H
 #define AUXILIARY_BASIS_H

@@ -1,8 +1,8 @@
-# file: napmo.py
+# file: napmo_system.py
 # nAPMO package
-# Copyright (c) 2016, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 from __future__ import print_function
@@ -79,16 +79,16 @@ class NAPMO(object):
         Executes the tasks to be performed
         """
         methods = {
-           'uhf': napmo.HF,
-           'hf':  napmo.HF,
-           'rhf': napmo.HF,
-           'dft': napmo.DFT
+            'uhf': napmo.HF,
+            'hf': napmo.HF,
+            'rhf': napmo.HF,
+            'dft': napmo.DFT
         }
 
         method = methods.get(self.data.scf.get('method', 'rhf'), None)
 
         if method is None:
-            raise NotImplementedError(self.data.scf.get('method', 'rhf')+" method Not Implemented")
+            raise NotImplementedError(self.data.scf.get('method', 'rhf') + " method Not Implemented")
         else:
             self.solver = method(self.system, options=self.data.scf)
             self._energy = self.solver.compute()

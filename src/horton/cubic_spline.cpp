@@ -1,11 +1,3 @@
-/*file: cubic_spline.cpp
-nAPMO package
-Copyright (c) 2014, Edwin Fernando Posada
-All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu
-*/
-
 // HORTON: Helpful Open-source Research TOol for N-fermion systems.
 // Copyright (C) 2011-2015 The HORTON Development Team
 //
@@ -176,10 +168,8 @@ void CubicSpline::eval(const double *new_x, double *new_y, int new_n) {
       // 3) do the interpolation
       double u = t - j;
       double z = y[j + 1] - y[j];
-      *new_y = y[j] +
-               u * (dt[j] +
-                    u * (3 * z - 2 * dt[j] - dt[j + 1] +
-                         u * (-2 * z + dt[j] + dt[j + 1])));
+      *new_y = y[j] + u * (dt[j] + u * (3 * z - 2 * dt[j] - dt[j + 1] +
+                                        u * (-2 * z + dt[j] + dt[j + 1])));
 
     } else {
       // Right extrapolation
@@ -206,13 +196,12 @@ void CubicSpline::eval_deriv(double *new_x, double *new_dx, int new_n) {
 
       if (j < 0)
         j = 0;
-      
+
       // 3) do the interpolation
       double u = t - j;
       double z = y[j + 1] - y[j];
-      *new_dx = dt[j] +
-                u * (6 * z - 4 * dt[j] - 2 * dt[j + 1] +
-                     u * (-6 * z + 3 * dt[j] + 3 * dt[j + 1]));
+      *new_dx = dt[j] + u * (6 * z - 4 * dt[j] - 2 * dt[j + 1] +
+                             u * (-6 * z + 3 * dt[j] + 3 * dt[j + 1]));
       // 4) transform the derivative, from dy/dt to dy/dr
       *new_dx /= rtf->deriv(t);
     } else {

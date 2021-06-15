@@ -1,16 +1,19 @@
-/*file: spherical_harmonics.h
+/*
+file: spherical_harmonics.h
 nAPMO package
-Copyright (c) 2015, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
+
 #ifndef SPHERICAL_HARMONICS_H
 #define SPHERICAL_HARMONICS_H
 
+#include <complex>
 #include <math.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include <complex> 
 
 #include <gsl/gsl_sf_legendre.h>
 #include <gsl/gsl_vector.h>

@@ -1,10 +1,3 @@
-/*file: dot_multi.cpp
-nAPMO package
-Copyright (c) 2016, Edwin Fernando Posada
-All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
-
 // HORTON: Helpful Open-source Research TOol for N-fermion systems.
 // Copyright (C) 2011-2016 The HORTON Development Team
 //

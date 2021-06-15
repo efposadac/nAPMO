@@ -1,9 +1,11 @@
-/*file: gto.cpp
+/*
+file: gto.cpp
 nAPMO package
-Copyright (c) 2015, Edwin Fernando Posada
+Copyright © 2021, Edwin Fernando Posada
 All rights reserved.
-Version: 1.0
-fernando.posada@temple.edu*/
+Version: 2.0
+fernando.posada@temple.edu
+*/
 
 #include "gto.h"
 
@@ -86,7 +88,6 @@ std::vector<double> PrimitiveGaussian::deriv(double *r) {
       output[di] += factor * l[di];
       output[di] *= coeff * norma * exponential;
     }
-    
   }
 
   return output;

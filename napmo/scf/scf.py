@@ -1,8 +1,8 @@
 # file: scf.py
 # nAPMO package
-# Copyright (c) 2014, Edwin Fernando Posada
+# Copyright © 2021, Edwin Fernando Posada
 # All rights reserved.
-# Version: 1.0
+# Version: 2.0
 # fernando.posada@temple.edu
 
 from __future__ import division
@@ -285,7 +285,7 @@ class SCF(object):
         if pprint:
             print('\nStarting Single NSCF Calculation...')
             print('{0:5s}  {1:^10s} {2:>12s} {3:>12s} {4:>12s}'
-                  .format("\nIter", "E (" + psi.symbol + ")", "Total E", "Delta(E)", "RMS(D)"))
+                  .format("\nIter", "E (" + psi.symbol + ")", "Total E", "Delta(E)", "Delta(Orb)"))
 
         iterations = 1
         e_diff = 1.0
@@ -297,9 +297,10 @@ class SCF(object):
 
             e_last = psi._energy
 
-            with napmo.runtime.timeblock('PSI optimization'):
-                # Compute new psi
-                psi.optimize_psi()
+            if iterations > 1:
+                with napmo.runtime.timeblock('PSI optimization'):
+                    # Compute new psi
+                    psi.optimize_psi()
 
             with napmo.runtime.timeblock('Numerical 2 body'):
                 psi.compute_2body(self.get('direct'))
@@ -323,7 +324,7 @@ class SCF(object):
             # print results
             if pprint:
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12.7f}'.
-                      format(iterations, psi._energy, self._energy, e_diff, psi._rmsd))
+                      format(iterations, psi._energy, self._energy, e_diff, psi._optimize.delta_orb.sum()))
 
             if iterations > self.get('maxiter') or np.abs(e_diff) < self.get('eps_n'):
                 if iterations > 1:
