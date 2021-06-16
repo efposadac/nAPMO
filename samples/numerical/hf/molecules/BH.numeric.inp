@@ -13,13 +13,13 @@ basis {
 scf {
     hf
     numeric
-    aux_basis
-    aux_basis_ldep = 1.0e-5
-    aux_basis_lmax = 1
+    #aux_basis
+    #aux_basis_ldep = 1.0e-6
+    #aux_basis_lmax = 2
 }
 
 grid {
-    e- [100, 26]
+    e- [100, 110]
 }
 
 code {

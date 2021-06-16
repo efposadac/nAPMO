@@ -8,5 +8,6 @@
 default :: 
 
 clean:
+	rm -rf *.so
 	rm -rf *.pyc
 	rm -rf __pycache__

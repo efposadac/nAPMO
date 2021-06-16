@@ -11,3 +11,10 @@ include setup.py
 
 # Include the data files
 recursive-include napmo *
+
+# Include samples
+recursive-include samples *
+
+# Include source for extension
+include config.make
+recursive-include src *
