@@ -72,5 +72,5 @@ setup(
     packages=find_packages(),
     package_data={'': ['*.json', '*.dat', '*.so', 'data/basis/*']},
     python_requires=">=3.6",
-    install_requires=['numpy', 'scipy', 'matplotlib', 'pylibxc'],
+    install_requires=['numpy', 'scipy', 'matplotlib'],
 )
