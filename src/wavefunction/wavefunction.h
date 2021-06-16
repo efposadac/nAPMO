@@ -1,7 +1,7 @@
 /*
 file: wavefunction.h
 nAPMO package
-Copyright © 2021, Edwin Fernando Posada
+Copyright (c) 2021, Edwin Fernando Posada
 All rights reserved.
 Version: 2.0
 fernando.posada@temple.edu
