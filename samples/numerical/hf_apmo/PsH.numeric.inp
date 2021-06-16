@@ -12,7 +12,6 @@ scf {
     maxiter = 100
     hf
     numeric
-    debug=True
 }
 
 grid {
