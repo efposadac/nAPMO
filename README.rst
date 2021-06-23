@@ -49,7 +49,6 @@ This version contains:
 * Grid-based RHF/UHF 
 * Grid-based APMO-RHF/APMO-UHF
 * GTO-based RKS/UKS (LDA)
-* GTO-based APMO-RKS/APMO-UKS (LDA:EPC17-2)
 
 Any suggestion and help is more than welcome and appreciated. 
 

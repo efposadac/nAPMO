@@ -17,4 +17,5 @@ recursive-include samples *
 
 # Include source for extension
 include config.make
+include Makefile
 recursive-include src *
