@@ -17,7 +17,7 @@ def test_psi_numeric_becke_H2(basis="STO-3G"):
     * Closed shell
     * GTO: -1.117506 (CCCBDB, R=0.7122)
     * Limit: -1.133630
-    * GRID: -1.1330638522586503 (100x110)
+    * GRID: -1.13306385225865 (100x110)
     * BASIS: STO-3G
     """
     file = ("""
@@ -85,11 +85,11 @@ def test_psi_numeric_becke_H2(basis="STO-3G"):
 
     # Aux basis
     E_tot = psi_optimization(psi_n, psi_a)
-    # assert np.allclose(E_tot, -1.133630, rtol=1e-4)
+    assert np.allclose(E_tot, -1.133630, rtol=1e-2)
 
     # psi_n.plot_dens(psi=psi_n.psi, kind="GRID-BASED-" + basis, xlim=[-1.0, 1.0], marker='--')
 
-    return 0.0  # E_tot
+    return E_tot
 
 
 def psi_optimization(psi, psi_a):

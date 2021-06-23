@@ -204,6 +204,7 @@ class MolecularSystem(dict):
         self.get(symbol)['spin'] = nucleus.get('spin', 1)
         self.get(symbol)['mass'] = nucleus.get('mass', 1)
         self.get(symbol)['particles'].append(nucleus)
+        self.get(symbol)['is_nuclei'] = True
 
         if not self.get(symbol).get('particles')[-1].is_quantum:
             self._point_charges.append(self.get(symbol).get('particles')[-1])

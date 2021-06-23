@@ -95,8 +95,8 @@ class SCF(object):
         e_diff = 1
 
         while (iterations < self.get('maxiter') and
-               np.abs(e_diff) > self.get('eps_e') or
-               np.abs(psi._rmsd) > self.get('eps_d')):
+               (np.abs(e_diff) > self.get('eps_e') or
+               np.abs(psi._rmsd) > self.get('eps_d'))):
 
             iterations += 1
             e_last = psi._energy
@@ -135,11 +135,10 @@ class SCF(object):
                 print('{0:<4d} {1:>12.7f} {2:>12.7f} {3:>12.7f} {4:>12.7f}'.
                       format(iterations, psi._energy, self._energy, e_diff, psi._rmsd))
 
-        print('{0:11s} {1:>16.10f}'.format("ANALYTICAL ", self._energy))
-
         # Debug info
         if self.get('debug') and not isinstance(psi, napmo.PSIO):
             if not isinstance(psi, napmo.PSIO):
+                print('{0:11s} {1:>16.10f}'.format("ANALYTICAL ", self._energy))
                 grid = napmo.BeckeGrid(psi.species, 500, 110)
                 psi.plot_dens(grid=grid, kind="anal")
                 # plt.show()

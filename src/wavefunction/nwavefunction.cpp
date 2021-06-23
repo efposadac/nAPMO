@@ -44,6 +44,9 @@ void nwavefunction_compute_2body_matrix(WaveFunction *psi, BeckeGrid *grid,
 
   coulomb += coulomb.triangularView<Eigen::StrictlyUpper>().transpose();
 
+  // std::cout<<"Coulomb"<<std::endl;
+  // std::cout<<coulomb<<std::endl;
+  
   // Compute exchange
   MMap E(K, ndim, grid->get_size());
   Matrix exchange(ndim, ndim);
@@ -63,6 +66,7 @@ void nwavefunction_compute_2body_matrix(WaveFunction *psi, BeckeGrid *grid,
     exchange *= factor;
   }
 
+  // std::cout<<"Exchange"<<std::endl;
   // std::cout<<exchange<<std::endl;
 
   MMap G(psi->G, ndim, ndim);

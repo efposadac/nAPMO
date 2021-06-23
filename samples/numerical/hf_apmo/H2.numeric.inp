@@ -1,8 +1,8 @@
 # Molecule definition:
 
 molecule [e-:0]{
-    H_1  0.000000  0.00000  0.367
-    H  0.000000  0.00000 -0.367
+    H  0.000000  0.00000  0.367
+    H_1  0.000000  0.00000 -0.367
 }
 
 basis {
@@ -13,9 +13,25 @@ basis {
 scf {
     hf
     numeric
+    aux_basis
+    aux_basis_ldep = 1.0e-7
+    aux_basis_lmax = 1
 }
 
 grid {
-    e-  [100, 110]
+    e- [100, 110]
     H_1 [100, 110]
 }
+
+# Auxiliary basis: -1.09181494624
+# Becke: -1.09232488141
+# Reference is CBSE:
+
+code {
+result = lambda x: print("PASS!") if abs(x) < 1e-5  else print("FAILED!")
+ref_energy = -1.09232488141
+diff_energy = ref_energy - Energy
+print(diff_energy)
+result(diff_energy)   
+}
+

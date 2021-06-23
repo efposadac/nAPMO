@@ -19,7 +19,7 @@ def test_psi_numeric_becke_He(basis='STO-3G'):
     * Single center
     * Single orbital
     * GTO: -2.807784 (CCCBDB)
-    * GRID: -2.861679541872 (50x110)
+    * GRID: -2.86165379510810 (300x110)
     * BASIS: STO-3G
     """
     file = ("""
@@ -121,7 +121,6 @@ def psi_optimization(psi, psi_a):
 
         print("{0:>4d} {1:>18.14f} {2:>18.14f} {3:>18.14f} {4:>18.14f}".format(
             it, E_tot, E_diff, psi._optimize.delta_e.sum(), psi._optimize.delta_orb.sum()))
-        # print(it, E_tot, E_diff)
 
         if E_diff < 1.0e-8:
             converged = True
