@@ -14,15 +14,22 @@ basis {
 scf {
     hf
     numeric
+    aux_basis
+    aux_basis_ldep = 1.0e-7
+    aux_basis_lmax = 1
 }
 
 grid {
-    e- [50, 110]
+    e- [100, 50]
 }
+
+# Auxiliary basis: -76.03185940163
+# Becke: -76.15416701080
+# Reference is CBSE:
 
 code {
 result = lambda x: print("PASS!") if abs(x) < 1e-5  else print("FAILED!")
-ref_energy = -100.0690743
+ref_energy = -76.15416701080
 diff_energy = ref_energy - Energy
 print(diff_energy)
 result(diff_energy)   

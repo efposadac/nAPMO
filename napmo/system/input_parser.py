@@ -334,7 +334,6 @@ class InputParser(object):
         for line in data:
             line = line.strip().split(' ')
             symbol = line[0].strip()
-
             if symbol not in self.data and symbol != 'e-':
                 raise_exception(
                     ValueError,
@@ -347,7 +346,7 @@ class InputParser(object):
             nrad = 50
             nang = 14
             for prop in props:
-                grid_spec = fix_casting(prop)
+                grid_spec = fix_casting(prop.strip())
                 if len(grid_spec) == 4:
                     rtransform = napmo.PowerRadialTransform(
                         grid_spec[0], grid_spec[1], grid_spec[2])

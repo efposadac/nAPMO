@@ -29,9 +29,7 @@ CXX := g++
 # Initial configuration
 #-----------------------
 CFLAGS := -Wall -O2 -fPIC
-# LDLIBS := -lgsl -lgslcblas -lumfpack -lamd -lcholmod -lcolamd -lsuitesparseconfig -lblas -lm -lint2
-LDLIBS := -lgsl -lgslcblas -lm -lint2 -lstdc++ -llapack
-# LDLIBS := /opt/local/lib/libgsl.19.dylib /opt/local/lib/libgslcblas.0.dylib -lm
+LDLIBS := -lgsl -lgslcblas -lint2
 LDFLAGS +=  -shared
 
 #-----------------------
@@ -47,7 +45,7 @@ LDFLAGS +=  -shared
 
 # GCC
 #-------
-OMP: CFLAGS +=  -fopenmp -D_OMP
+OMP: CFLAGS += -fopenmp -D_OMP
 OMP: LDLIBS += -lgomp 
 
 #----------------

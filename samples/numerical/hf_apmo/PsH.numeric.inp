@@ -12,6 +12,9 @@ scf {
     maxiter = 100
     hf
     numeric
+    #aux_basis
+    #aux_basis_ldep = 1.0e-8
+    #aux_basis_lmax = 0
 }
 
 grid {
@@ -19,3 +22,14 @@ grid {
     E+ [0.5858151015155881, 100, 110]
 }
 
+# Auxiliary basis: -0.66695836370
+# Becke: -0.66695610227
+# Reference is (CBSSE): -0.667085
+
+code {
+result = lambda x: print("PASS!") if abs(x) < 1e-2  else print("FAILED!")
+ref_energy = -0.667085
+diff_energy = ref_energy - Energy
+print(diff_energy)
+result(diff_energy)   
+}

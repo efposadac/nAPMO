@@ -37,13 +37,13 @@ class PSIN(napmo.PSIB):
 
         # Initialize base class
         if ndim:
-            self._aux_ndim = ndim
+            self._ndim = ndim
         elif psix.species.get('occupation') == 0:
-            self._aux_ndim = 1
+            self._ndim = 1
         else:
-            self._aux_ndim = psix.species.get('occupation')
+            self._ndim = psix.species.get('occupation')
 
-        super(PSIN, self).__init__(psix.species, ndim=self._aux_ndim)
+        super(PSIN, self).__init__(psix.species, ndim=self.ndim)
 
         # Initialization
         self._debug = debug
@@ -76,13 +76,20 @@ class PSIN(napmo.PSIB):
 
         # Start WF calculation
         self.initialize()
-        self.Cgrid = 0.0
+        self.Cgrid = np.zeros(self.grid.size)
+        self.Jpot = np.zeros(self.grid.size)
+        self.Kpot = np.zeros(self.grid.size)
+
+        # Calculate two-body
+        self.calculate_2body = self.species.get('size') > 0 or (
+            self.species.get('is_electron') and self.species.get('size') > 0)
 
         # Calculate Aux Basis
         if aux_basis:
             self._optimize = napmo.PSIO_SO(self)
         else:
             self._optimize = napmo.PSIO_BECKE(self)
+
 
     def initialize(self):
         """
@@ -148,7 +155,7 @@ class PSIN(napmo.PSIB):
         """
 
         # FELIX: add conditional for HF or hybrid
-        if self.species.get('size') > 1 or self.species.get('is_electron'):
+        if self.calculate_2body:
 
             self.compute_coulomb_potential(update_rho=update_rho)
 
@@ -217,7 +224,7 @@ class PSIN(napmo.PSIB):
         """
 
         # TODO: check Cgrid for more than one species
-        aux = np.zeros([self._aux_ndim, self._aux_ndim])
+        aux = np.zeros([self.ndim, self.ndim])
         self.J[:] = 0.0
         for psi in other_psi:
             if self.sid != psi.sid:
@@ -300,13 +307,15 @@ class PSIN(napmo.PSIB):
         Computes coulomb potential solving Poisson's equation
         following Becke procedure using the current density
         """
-        self.compute_coulomb_potential(update_rho=update_rho)
 
-        with napmo.runtime.timeblock('Numerical coulomb'):
+        if self.calculate_2body:
+            self.compute_coulomb_potential(update_rho=update_rho)
 
-            self.Jgrid = np.array([
-                psi * self.Jpot for psi in self.psi[:self.ndim]]
-            )
+            with napmo.runtime.timeblock('Numerical coulomb'):
+
+                self.Jgrid = np.array([
+                    psi * self.Jpot for psi in self.psi[:self.ndim]]
+                )
 
         # Debug information
         # print("Coulomb energy " + self.symbol + ": ", 0.5 *
@@ -321,16 +330,17 @@ class PSIN(napmo.PSIB):
         http://doi.org/10.1103/PhysRevA.76.040503
 
         """
-        with napmo.runtime.timeblock('Numerical exchange'):
-            self.Kgrid = np.array([
-                np.array([
-                    self.psi[s] * napmo.compute_coulomb(
-                        self.grid, self.psi[s] * self.psi[v], self.lmax
-                    )
-                    for s in range(self.ndim)
-                ]).sum(axis=0)
-                for v in range(self.ndim)
-            ]) * self.species.get('charge')
+        if self.calculate_2body:
+            with napmo.runtime.timeblock('Numerical exchange'):
+                self.Kgrid = np.array([
+                    np.array([
+                        self.psi[s] * napmo.compute_coulomb(
+                            self.grid, self.psi[s] * self.psi[v], self.lmax
+                        )
+                        for s in range(self.ndim)
+                    ]).sum(axis=0)
+                    for v in range(self.ndim)
+                ])
 
     def compute_hcore_operator(self):
         """
@@ -345,13 +355,14 @@ class PSIN(napmo.PSIB):
         """
         Builds the Fock matrix expanded on the grid.
         """
-        self.Fgrid = self.Hgrid + self.Jgrid + self.Kgrid + self.Cgrid
+
+        self.Fgrid = self.Hgrid + self.Jgrid - self.Kgrid + self.Cgrid
 
     def compute_density(self):
         """
         Compute the density on the grid
         """
-        self.Dgrid[:] = self.psi * self.psi * self._eta
+        self.Dgrid = self.psi * self.psi * self._eta
 
         # Debug information (Suppose to be the # of e-)
         # print('\nDENS on numeric. Number of ' + self.symbol

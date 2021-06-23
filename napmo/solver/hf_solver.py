@@ -65,6 +65,7 @@ class HF(object):
             for p, key in enumerate(system.keys()):
 
                 particle = system.get(key, {})
+
                 if particle.get('is_electron'):
                     key = 'e-'
 
@@ -76,17 +77,30 @@ class HF(object):
                         "Grid specification not found!",
                         'Check the "grid" block in your input file ' + key + ' has not grid specifications')
 
-                self._mgrid.append(
-                    napmo.BeckeGrid(
-                        particle,
-                        aux.get('nrad', 100),
-                        aux.get('nang', 110),
-                        rtransform=aux.get('rtransform', None),
-                        file=aux.get('file', None),
-                        ablmax=self.get('aux_basis_lmax', None),
-                        abldep=self.get('aux_basis_ldep', None)
+                if not particle.get('is_nuclei', False):
+                    self._mgrid.append(
+                        napmo.BeckeGrid(
+                            particle,
+                            aux.get('nrad', 100),
+                            aux.get('nang', 110),
+                            rtransform=aux.get('rtransform', None),
+                            file=aux.get('file', None),
+                            ablmax=self.get('aux_basis_lmax', None),
+                            abldep=self.get('aux_basis_ldep', None)
+                        )
                     )
-                )
+
+                    if particle.get('is_electron'):
+                        electronic_grid = self._mgrid[-1]
+                else:
+                    if isinstance(electronic_grid, napmo.BeckeGrid):
+                        self._mgrid.append(electronic_grid)
+                        self._mgrid[-1]._symbol = particle.get('symbol')
+                    else:
+                        napmo.raise_exception(
+                            ValueError,
+                            "Grid specification not found!",
+                            'Check the "Geometry" block in your input file and define electrons before nuclei')
 
                 if pprint:
                     self._mgrid[-1].show()

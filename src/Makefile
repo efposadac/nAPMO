@@ -8,6 +8,10 @@
 TOPDIR=..
 include $(TOPDIR)/config.make
 
+ifeq ($(strip $(EXTDIR)),)
+EXTDIR := $(TOPDIR)
+endif
+
 LIBRARY = libnapmo.so
 
 VPATH = grid horton ints system utils wavefunction
@@ -19,10 +23,11 @@ CUDA: OBJ += $(NVOBJ)
 
 .SECONDEXPANSION:
 
-default: SERIAL
+default: OMP
 
 $(BUILD): $$(OBJ)
-	$(CXX) -o $(LIBRARY) $(LDFLAGS) $^ $(LDLIBS) -lint2
+	$(CXX) -o $(LIBRARY) $(LDFLAGS) $^ $(LDLIBS)
+	cp $(LIBRARY) $(EXTDIR)/napmo/utilities
 	cp $(LIBRARY) $(TOPDIR)/napmo/utilities
 
 %.o: %.cpp

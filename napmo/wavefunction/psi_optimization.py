@@ -46,6 +46,11 @@ class PSIO(napmo.PSIN):
             self._psi = psi
 
         self.Cgrid = 0.0
+        self.other_Jpot = 0.0
+        self.Jgrid = np.zeros(self.grid.size)
+        self.Kgrid = np.zeros(self.grid.size)
+
+        self.calculate_2body = psin.calculate_2body
 
     def compute_coupling_operator(self, other_psi):
         """
@@ -54,16 +59,11 @@ class PSIO(napmo.PSIN):
         Args:
             other_psi (WaveFunction) : WaveFunction object for the other species.
         """
-        aux = np.array([
-            psi.Jpot
-            for psi in other_psi
-            if psi.sid != self.sid
-        ]).sum(axis=0)
 
         self.Cgrid = np.array([
-            aux * self.psi[k]
+            self.other_Jpot * self.psi[k]
             for k in range(self.ndim)
-        ])
+        ]) * self.species.get('charge')
 
     def build_fock(self):
         """
@@ -133,9 +133,18 @@ class PSIO_BECKE(PSIO):
         super(PSIO_BECKE, self).__init__(psin, ndim=psin.ndim * 2)
         self.prev_O = psin._prev_O
         self.delta_orb = np.zeros(self.ndim)
+        self.delta_e = np.zeros(self.ndim)
         self.scf = napmo.SCF({"print": True})
 
     def optimize(self, psi, other_psi=None):
+
+        if other_psi is not None:
+            self.other_Jpot = np.array([
+                psi.Jpot * psi.species.get('charge')
+                for psi in other_psi
+                if psi.sid != self.sid
+            ]).sum(axis=0)
+
         self.compute_potential(psi)
         self.compute_residual(psi)
         self.compute_energy_correction(psi)
@@ -145,14 +154,15 @@ class PSIO_BECKE(PSIO):
         self._psi = np.vstack([psi.psi, self.delta_psi])
         self.Dgrid = psi.Dgrid
 
-        if other_psi is not None:
-            self.compute_coupling_operator(other_psi)
-
         # Compute Fock
         self.compute_overlap()
         self.compute_1body_operator()
         self.compute_coulomb_operator(update_rho=False)
         self.compute_exchange_operator()
+
+        if other_psi is not None:
+            self.compute_coupling_operator(other_psi)
+
         self.build_fock_operator()
         self.build_fock()
 
@@ -166,7 +176,9 @@ class PSIO_BECKE(PSIO):
         self.F[:] = (self.F + self.F.T) / 2.0
 
         napmo.cext.wavefunction_iterate(byref(self))
-        # self.scf.single(self, pprint=True)
+
+        # self.scf.compute_energy_single(self, show=True)
+
         self.compute_delta_orb(psi)
 
         # New Orbitals
@@ -178,8 +190,8 @@ class PSIO_BECKE(PSIO):
 
     def compute_potential(self, psi):
         self.V_tot = np.array([
-            v + (p * psi.Jpot) + (k * psi._x_factor)
-            for t, v, p, k in zip(psi.Tgrid, psi.Vgrid, psi.psi, psi.Kpot)
+            v + (p * psi.Jpot) + (k * psi._x_factor) + (p * self.other_Jpot * psi.species.get('charge'))
+            for v, p, k in zip(psi.Vgrid, psi.psi, psi.Kpot)
         ])
 
     def compute_residual(self, psi):
@@ -203,10 +215,10 @@ class PSIO_BECKE(PSIO):
 
     def compute_delta_orb(self, psi):
         self.delta_orb = self.O[:psi.ndim] - psi.O
-        # print(np.array([
+        # self.delta_orb = np.array([
         #     np.sqrt(psi.grid.integrate(p * p))
         #     for p in self.delta_psi
-        # ]))
+        # ])[:psi.ndim]
 
 
 class PSIO_SO(PSIO):
@@ -224,6 +236,13 @@ class PSIO_SO(PSIO):
         Calculates next psi on the auxiliary basis, it uses the (i-1)th rho (density)
         and orbitals to calculate the new ones.
         """
+        if other_psi is not None:
+            self.other_Jpot = np.array([
+                psi.Jpot * psi.species.get('charge')
+                for psi in other_psi
+                if psi.sid != self.sid
+            ]).sum(axis=0)
+
         self.Dgrid = psi.Dgrid
         self.prev_psi = psi.psi
 
@@ -266,16 +285,17 @@ class PSIO_SO(PSIO):
         Physical Review A - Atomic, Molecular, and Optical Physics, 76(4), 040503.
         http://doi.org/10.1103/PhysRevA.76.040503
         """
-        with napmo.runtime.timeblock('Numerical exchange opt'):
-            self.Kgrid = np.array([
-                np.array([
-                    self.prev_psi[s] * napmo.compute_coulomb(
-                        self.grid, self.prev_psi[s] * self.psi[v], self.lmax
-                    )
-                    for s in range(self.occupation)
-                ]).sum(axis=0)
-                for v in range(self.ndim)
-            ]) * self.species.get('charge')
+        if self.calculate_2body:
+            with napmo.runtime.timeblock('Numerical exchange opt'):
+                self.Kgrid = np.array([
+                    np.array([
+                        self.prev_psi[s] * napmo.compute_coulomb(
+                            self.grid, self.prev_psi[s] * self.psi[v], self.lmax
+                        )
+                        for s in range(self.occupation)
+                    ]).sum(axis=0)
+                    for v in range(self.ndim)
+                ])
 
     @property
     def aobasis(self):

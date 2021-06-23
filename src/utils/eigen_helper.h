@@ -68,41 +68,40 @@ EIGEN_STRONG_INLINE void
 Eigen::MatrixBase<Derived>::eigenVectorsVec(MATRIX1 &eVecs,
                                             VECTOR1 &eVals) const {
 
-  // Eigen::SelfAdjointEigenSolver<Derived> es(*this);
-  // eVecs = es.eigenvectors().real(); // Keep only the real part of complex
-  // matrix eVals = es.eigenvalues().real();  // Keep only the real part of
-  // complex matrix
+  Eigen::SelfAdjointEigenSolver<Derived> es(*this);
+  eVecs = es.eigenvectors().real(); // Keep only the real part of complex
+  eVals = es.eigenvalues().real();  // Keep only the real part of
+  
+  // // Calculate using LAPACK
+  // int N = this->cols(); // Number of columns of A
 
-  // Calculate using LAPACK
-  int N = this->cols(); // Number of columns of A
+  // // Making A Lapack compatible
+  // MATRIX1 A = *this;
+  // A.transposeInPlace(); // for most symmetric matrices this has no effect
 
-  // Making A Lapack compatible
-  MATRIX1 A = *this;
-  A.transposeInPlace(); // for most symmetric matrices this has no effect
+  // double WORKDUMMY;
+  // int LWORK = -1; // Request optimum work size.
+  // int INFO = 0;
 
-  double WORKDUMMY;
-  int LWORK = -1; // Request optimum work size.
-  int INFO = 0;
+  // VECTOR1 WI(N);
+  // MATRIX1 VL(N, N);
 
-  VECTOR1 WI(N);
-  MATRIX1 VL(N, N);
+  // // Get the optimum work size.
+  // char *NN = (char *)"N";
+  // char *VV = (char *)"V";
 
-  // Get the optimum work size.
-  char *NN = (char *)"N";
-  char *VV = (char *)"V";
+  // dgeev_(NN, VV, &N, A.data(), &N, eVals.data(), WI.data(), VL.data(), &N,
+  //        eVecs.data(), &N, &WORKDUMMY, &LWORK, &INFO);
 
-  dgeev_(NN, VV, &N, A.data(), &N, eVals.data(), WI.data(), VL.data(), &N,
-         eVecs.data(), &N, &WORKDUMMY, &LWORK, &INFO);
+  // LWORK = int(WORKDUMMY);
+  // Vector WORK(LWORK);
 
-  LWORK = int(WORKDUMMY);
-  Vector WORK(LWORK);
+  // // Calculate
+  // dgeev_(NN, VV, &N, A.data(), &N, eVals.data(), WI.data(), VL.data(), &N,
+  //        eVecs.data(), &N, WORK.data(), &LWORK, &INFO);
 
-  // Calculate
-  dgeev_(NN, VV, &N, A.data(), &N, eVals.data(), WI.data(), VL.data(), &N,
-         eVecs.data(), &N, WORK.data(), &LWORK, &INFO);
-
-  // back to C++
-  eVecs.transposeInPlace();
+  // // back to C++
+  // eVecs.transposeInPlace();
 
   // Sort by ascending eigenvalues:
   std::vector<std::pair<Scalar, Index>> D;

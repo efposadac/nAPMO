@@ -10,7 +10,6 @@ fernando.posada@temple.edu
 #include "utils.h"
 
 int utils_factorial2(const int n) {
-
   if (n < 1) {
     return 0;
   } else {
@@ -24,7 +23,6 @@ int utils_factorial2(const int n) {
 
 void utils_multiply_segmented_array(const int size, const int segments,
                                     double *array, double *output) {
-
   for (int i = 0; i < size; ++i) {
     double temp = array[i];
     for (int j = 1; j < segments; ++j) {
@@ -35,7 +33,6 @@ void utils_multiply_segmented_array(const int size, const int segments,
 }
 
 double utils_distance(double a[3], double b[3]) {
-
   double output = 0.0;
   for (int i = 0; i < 3; ++i) {
     double aux = a[i] - b[i];

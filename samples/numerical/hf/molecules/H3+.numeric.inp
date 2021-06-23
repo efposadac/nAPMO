@@ -7,21 +7,25 @@ molecule [e-:-1:1]{
 
 # basis-set specification
 basis {
-    e- AUG-CC-PVDZ
+    e- STO-3G*
 }
 
 # scf options
 scf {
     hf
     numeric
-    #aux_basis
-    #aux_basis_ldep = 1.0e-7
-    #aux_basis_lmax = 0
+    aux_basis
+    aux_basis_ldep = 1.0e-7
+    aux_basis_lmax = 1
 }
 
 grid {
     e- [100, 110]
 }
+
+# Auxiliary basis: -1.29320364188
+# Becke: -1.29344432499
+# Reference (Becke, 1990): -1.300410
 
 code {
 result = lambda x: print("PASS!") if abs(x) < 1e-2  else print("FAILED!")
